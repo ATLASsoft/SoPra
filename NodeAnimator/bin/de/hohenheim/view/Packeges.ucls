@@ -1,0 +1,72 @@
+<class-diagram version="1.0.7" icons="false" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <package id="1" language="java" name="de.hohenheim.view" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view" binary="false">    
+    <position height="43" width="116" x="37" y="26"/>  
+  </package>  
+  <package id="2" language="java" name="de.hohenheim.view.path" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/path" binary="false">    
+    <position height="-1" width="-1" x="177" y="213"/>  
+  </package>  
+  <package id="3" language="java" name="de.hohenheim.view.map" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/map" binary="false">    
+    <position height="-1" width="-1" x="438" y="311"/>  
+  </package>  
+  <package id="4" language="java" name="de.hohenheim.view.node" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/node" binary="false">    
+    <position height="-1" width="-1" x="87" y="329"/>  
+  </package>  
+  <package id="5" language="java" name="de.hohenheim.view.mobile" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile" binary="false">    
+    <position height="-1" width="-1" x="363" y="90"/>  
+  </package>  
+  <package id="6" language="java" name="de.hohenheim.view.constants" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/constants" binary="false">    
+    <position height="43" width="176" x="456" y="184"/>  
+  </package>  
+  <dependency id="7">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="false" visibility="false">    
+    <attributes public="false" package="true" protected="false" private="false"/>    
+    <operations public="false" package="true" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

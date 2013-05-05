@@ -1,0 +1,222 @@
+<class-diagram version="1.0.7" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" 
+    name="de.hohenheim.view.mobile.animation.AnimationFinishedQueueObserver" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/AnimationFinishedQueueObserver.java" binary="false">    
+    <position height="45" width="217" x="34" y="73"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.AnimationFigure" 
+    project="NodeAnimator" file="/NodeAnimator/src/de/hohenheim/view/mobile/AnimationFigure.java" binary="false">    
+    <position height="-1" width="-1" x="343" y="222"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.TrainFigure" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/TrainFigure.java" binary="false">    
+    <position height="-1" width="-1" x="148" y="223"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <interface id="4" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.animation.Animator" 
+    project="NodeAnimator" file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/Animator.java" binary="false">    
+    <position height="-1" width="-1" x="351" y="359"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.animation.BusyAnimator" 
+    project="NodeAnimator" file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/BusyAnimator.java" binary="false">    
+    <position height="-1" width="-1" x="130" y="389"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.animation.BusyWaitAnimator" 
+    project="NodeAnimator" file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/BusyWaitAnimator.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="178" y="464"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.mobile.animation.WalkToAnimator" 
+    project="NodeAnimator" file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/WalkToAnimator.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="378" y="467"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" 
+    name="de.hohenheim.view.mobile.animation.listeners.AnimationEventMulticaster" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/listeners/AnimationEventMulticaster.java" binary="false">    
+    <position height="-1" width="-1" x="571" y="224"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <interface id="9" corner="BOTTOM_RIGHT" language="java" 
+    name="de.hohenheim.view.mobile.animation.listeners.AnimationListener" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/listeners/AnimationListener.java" binary="false">    
+    <position height="-1" width="-1" x="744" y="302"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" 
+    name="de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/listeners/AnimationFinishedEvent.java" binary="false">    
+    <position height="45" width="198" x="718" y="173"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" 
+    name="de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/mobile/animation/listeners/AnimationStartedEvent.java" binary="false">    
+    <position height="45" width="198" x="704" y="381"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.map.NodeMap" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/map/NodeMap.java" binary="false">    
+    <position height="-1" width="-1" x="505" y="59"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" name="de.hohenheim.view.node.NodeFigure" project="NodeAnimator" 
+    file="/NodeAnimator/src/de/hohenheim/view/node/NodeFigure.java" binary="false">    
+    <position height="-1" width="-1" x="709" y="58"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="14">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="15" name="multicaster">        
+        <position height="14" width="58" x="473" y="156"/>      
+      </attribute>      
+      <multiplicity id="16" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="18" name="nodes"/>      
+      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="20">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="21" name="map">        
+        <position height="14" width="26" x="469" y="108"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <realization id="24">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <realization id="26">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
+  <association id="27">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="28" name="currentAnimation">        
+        <position height="14" width="88" x="238" y="305"/>      
+      </attribute>      
+      <multiplicity id="29" minimum="0" maximum="1">        
+        <position height="14" width="18" x="312" y="319"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="30">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <association id="31">    
+    <bendpoint x="343" y="60"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="32" name="mobile_objects">        
+        <position height="14" width="77" x="309" y="138"/>      
+      </attribute>      
+      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="34">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="35" name="listeners"/>      
+      <multiplicity id="36" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="37">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <realization id="38">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <association id="39">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="40" name="animationList">        
+        <position height="14" width="68" x="358" y="303"/>      
+      </attribute>      
+      <multiplicity id="41" minimum="0" maximum="2147483647">        
+        <position height="14" width="16" x="366" y="314"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="42">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

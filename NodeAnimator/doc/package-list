@@ -1,0 +1,13 @@
+de.hohenheim.controller
+de.hohenheim.modell
+de.hohenheim.modell.dijkstra
+de.hohenheim.view
+de.hohenheim.view.constants
+de.hohenheim.view.map
+de.hohenheim.view.mobile
+de.hohenheim.view.mobile.animation
+de.hohenheim.view.mobile.animation.exceptions
+de.hohenheim.view.mobile.animation.listeners
+de.hohenheim.view.node
+de.hohenheim.view.path
+server

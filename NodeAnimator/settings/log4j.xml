@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- 
+c	Category: Kategorie = Name org.apache
+C	Class = Klassennamen
+d	Date. Beispiel: %d{HH:mm:ss,SSS}
+F	Filename
+l	Location. Aufrufende Methode, Quelle, Dateiname und Zeilennummer
+L	Line number
+m	Meldung selbst
+M	Methodennamen
+n	Line-Separator (Plattformabhängig)
+p	Priority: INFO, WARN, ERROR etc.
+r	Anzahl der Millisekunden seit dem Start der VM
+t	Name des Threads
+ -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <appender name="MeinAppender" class="org.apache.log4j.net.SocketAppender">
+    
+    <param name="port" value="4445" />
+    <param name="RemoteHost" value="localhost"/>  
+    <param name="ReconnectionDelay" value="5000"/>  
+    <param name="LocationInfo" value="true"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c: %m%n" />
+    </layout>
+  </appender>
+
+  <root>
+    <priority value="INFO" />
+    <appender-ref ref="MeinAppender" />
+  </root>
+
+</log4j:configuration>
