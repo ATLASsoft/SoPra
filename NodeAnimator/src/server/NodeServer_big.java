@@ -17,7 +17,7 @@ import de.hohenheim.view.map.NodeMap;
 
 public class NodeServer_big {
 	public static void main(String args[]) {
-		
+		// comment
 		Shell shell = new Shell();
 		shell.setText("Train animation example");
 		shell.setImage(new Image(null,"img/forklift-truck-logo.png"));
