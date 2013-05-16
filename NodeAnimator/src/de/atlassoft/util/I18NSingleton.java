@@ -17,8 +17,7 @@ public class I18NSingleton implements I18NService {
 	/**
 	 * The base name of the file containing the translations.
 	 */
-	// TODO: Pfad zum ressourcebundle
-	private static final String MESSAGES_BASE_NAME = "jabi.res.Messages";
+	private static final String MESSAGES_BASE_NAME = "de.atlassoft.res.MsgResources";
 
 	
 	/**
