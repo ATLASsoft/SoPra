@@ -15,7 +15,7 @@ public interface ModelService {
 	
 	void addTrainType(TrainType type);
 	void deleteTrainType(TrainType type);
-	List<TrainType> getRrainTypes();
+	List<TrainType> getTrainTypes();
 	
 	void addSchedule(ScheduleScheme schedule);
 	void deleteSchedule(ScheduleScheme schedule);

@@ -54,7 +54,7 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public List<TrainType> getRrainTypes() {
+	public List<TrainType> getTrainTypes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
