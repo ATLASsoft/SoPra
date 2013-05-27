@@ -27,7 +27,7 @@ public class MainWindow {
 		}		
 	}
 	
-	public void center(Shell shell){
+	public void center(Shell shell){ 
 		
 		Rectangle bdc = shell.getDisplay().getBounds();
 		

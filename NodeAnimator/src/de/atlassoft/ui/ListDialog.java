@@ -1,5 +1,6 @@
 package de.atlassoft.ui;
 
-public class ListDialog {
 
+public class ListDialog {
+	//TODO: implement method
 }
