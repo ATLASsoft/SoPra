@@ -2,6 +2,7 @@ package de.hohenheim.view.mobile.animation;
 
 import java.util.Observable;
 import java.util.Observer;
+
 import de.hohenheim.view.mobile.AnimationFigure;
 /**
  * This class observes animations for events which are fired when an animation is finished.

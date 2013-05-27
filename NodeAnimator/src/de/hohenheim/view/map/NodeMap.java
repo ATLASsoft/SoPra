@@ -2,15 +2,15 @@ package de.hohenheim.view.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 
-
 import de.hohenheim.view.mobile.AnimationFigure;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 public class NodeMap {
 	

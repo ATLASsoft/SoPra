@@ -2,6 +2,7 @@ package de.hohenheim.controller;
 
 import java.util.Arrays;
 import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
@@ -11,6 +12,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+
 import de.hohenheim.modell.State;
 import de.hohenheim.modell.Train;
 import de.hohenheim.view.map.NodeMap;

@@ -3,17 +3,19 @@ package de.hohenheim.view.mobile.animation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
+
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
 import de.hohenheim.view.mobile.Utility;
 import de.hohenheim.view.mobile.animation.exceptions.PathNotFoundException;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
 import de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 /**
  * This class animates a {@link AnimationFigure}. The figure moves form its current position along a path

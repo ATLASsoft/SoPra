@@ -10,8 +10,8 @@ import org.eclipse.draw2d.geometry.PointList;
 import de.hohenheim.modell.dijkstra.Graph;
 import de.hohenheim.modell.dijkstra.Node;
 import de.hohenheim.view.map.NodeMap;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 /**
  * Utility class to help calculate paths, distances and more.
@@ -34,7 +34,7 @@ public class Utility {
 		  Point p1 = points.getPoint(i);
 		  Point p2 = points.getPoint(i+1);
 		  distance+=p1.getDistance(p2);  
-	  }	  
+	  }
 	  return distance;
   }
   /**
