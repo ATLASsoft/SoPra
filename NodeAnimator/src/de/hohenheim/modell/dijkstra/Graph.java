@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hohenheim.view.mobile.Utility;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 /**
  * 

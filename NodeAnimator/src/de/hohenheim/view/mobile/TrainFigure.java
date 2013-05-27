@@ -19,8 +19,8 @@ import de.hohenheim.view.mobile.animation.Animator;
 import de.hohenheim.view.mobile.animation.BusyAnimator;
 import de.hohenheim.view.mobile.animation.BusyWaitAnimator;
 import de.hohenheim.view.mobile.animation.WalkToAnimator;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 /**
  * @author Marc Fernandes

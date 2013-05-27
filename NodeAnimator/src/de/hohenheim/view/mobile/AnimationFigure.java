@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.swt.graphics.Image;
+
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.animation.AnimationFinishedQueueObserver;
 import de.hohenheim.view.mobile.animation.Animator;
@@ -14,8 +15,8 @@ import de.hohenheim.view.mobile.animation.listeners.AnimationEventMulticaster;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
 import de.hohenheim.view.mobile.animation.listeners.AnimationListener;
 import de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
+import de.hohenheim.view.path.PathFigure;
 
 /**
  * This class represents a Figure. To exist in the system a mobile object must 
