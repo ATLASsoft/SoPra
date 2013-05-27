@@ -4,4 +4,3 @@ package de.atlassoft.io.persistence;
 public class PersistenceDummy {
 
 }
-
