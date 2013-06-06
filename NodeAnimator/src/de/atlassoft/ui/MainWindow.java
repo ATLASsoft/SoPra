@@ -1,11 +1,11 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -21,6 +21,8 @@ public class MainWindow {
 
 	private Shell shell;
 	private Display display;
+	private Composite mainComposite;
+	private StackLayout layout;
 	
 	/**
 	 * The constructor for the main window of the application
@@ -29,15 +31,20 @@ public class MainWindow {
 	 */
 	public MainWindow(Display display){
 		
-		//this.display = display;
 		shell = new Shell(display);
 		shell.setText("Choo Choo Motherfucker");
 		shell.setSize(640, 480);
 		
+		mainComposite = new Composite(shell, SWT.BORDER);
+		Rectangle frameRect = shell.getMonitor().getBounds();
+		mainComposite.setBounds(frameRect);
+	    layout = new StackLayout();
+	    mainComposite.setLayout(layout);
+	    layout.topControl = HomeScreenComposite.createHomeScreenComposite(shell, mainComposite);
+	    mainComposite.layout();	    
+		
 		center(shell);
 		createToolbar();
-		initUI();
-		
 		shell.open();
 				
 		while(!shell.isDisposed()){
@@ -48,26 +55,11 @@ public class MainWindow {
 	}
 	
 	/**
-	 * Creates the UI elements of the main window.
-	 * The main window consists of the railsystem, the schedule,
-	 * the traintypes and the schedule selector.
-	 */
-	private void initUI(){
-		
-		Composite mainComposite = new Composite(shell, SWT.BORDER);
-		mainComposite.setLayout(new FillLayout(4));
-		Rectangle frameRect = shell.getMonitor().getBounds();
-		mainComposite.setBounds(frameRect);
-		
-		
-	}
-	
-	/**
 	 * Centers the given shell in the middle of the screen
 	 * 
 	 * @param shell
 	 */
-	public void center(Shell shell){ 
+	public static void center(Shell shell){ 
 		
 		//Rectangle bdc = shell.getDisplay().getBounds();
 		Rectangle bdc = shell.getMonitor().getBounds();
@@ -134,8 +126,8 @@ public class MainWindow {
 		newRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-                System.out.println("Streckennetz erstellen");
-                //TODO: implement function
+		        layout.topControl = RailSysComposite.createRailSysComposite(shell, mainComposite);
+		        mainComposite.layout();
             }
         });
 		
@@ -146,8 +138,8 @@ public class MainWindow {
 		loadRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Streckennetz laden");
-				//TODO: implement function
+				DialogMode load = DialogMode.LOAD;
+				new ListDialog(display, load);
             }
         });
 
@@ -171,15 +163,16 @@ public class MainWindow {
 		startSimulation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-                System.out.println("Simulation starten");
-                //TODO: implement function
+				 layout.topControl = SimulationComposite.createSimulationComposite(shell, mainComposite);
+			     mainComposite.layout();
             }
         });
 		
 		
 		shell.setMenuBar(menuBar);
 	}
-			
+	
+	//TODO: delete in final program
 	public static void main(String[] args){
 		Display display = new Display();
 		new MainWindow(display);
