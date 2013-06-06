@@ -3,6 +3,12 @@ package de.atlassoft.model;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 // TODO: Klasse testen
+/**
+ * Describes a train type.
+ * 
+ * @author Alexander Balogh
+ *
+ */
 public class TrainType {
 
 	/**
