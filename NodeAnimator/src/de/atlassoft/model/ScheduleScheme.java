@@ -182,24 +182,6 @@ public class ScheduleScheme {
 	}
 
 	/**
-	 * Sets the firstRide property. firstRide specifies the start of the first
-	 * ride every day. Only the DAY_OF_THE_WEEK, HOUR and MINUTE property the
-	 * given Calendar object matters. If firstRide is null, an
-	 * <code>IllegalArgumentException</code> is thrown.
-	 * 
-	 * @param lastRide
-	 *            last ride to be set
-	 * @throws IllegalArgumentException
-	 *             if lastRide is null
-	 */
-	public void setFirstRide(Calendar firstRide) {
-		if (firstRide == null) {
-			throw new IllegalArgumentException("firstRide must not be null");
-		}
-		this.firstRide = firstRide;
-	}
-
-	/**
 	 * Sets the lastRide property. lastRide specifies the start of the last ride
 	 * every day. Only the DAY_OF_THE_WEEK, HOUR and MINUTE property the given
 	 * Calendar object matters. If lastRide is null, an
