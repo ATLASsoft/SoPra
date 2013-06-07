@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
  * This is the class for the about dialog where the name of our
  * company and the date is shown.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class AboutDialog {
 	

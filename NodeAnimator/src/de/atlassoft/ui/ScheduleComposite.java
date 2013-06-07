@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This class creates a composite for creating a new schedule.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class ScheduleComposite {
 

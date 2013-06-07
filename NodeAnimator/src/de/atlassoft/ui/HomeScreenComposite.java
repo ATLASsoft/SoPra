@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This class creates a composite for the home screen.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class HomeScreenComposite {
 	

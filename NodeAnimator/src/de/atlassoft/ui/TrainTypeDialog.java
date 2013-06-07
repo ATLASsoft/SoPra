@@ -7,7 +7,7 @@ import de.atlassoft.ui.MainWindow;
 /**
  * This class is for creating a new traintype.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class TrainTypeDialog {
 	

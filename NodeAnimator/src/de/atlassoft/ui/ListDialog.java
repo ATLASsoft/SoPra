@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * The class list dialog is for loading and deleting railsystems.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class ListDialog {
 	

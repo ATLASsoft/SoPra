@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This class is for creating a new railsystem.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class CreateRailSysWindow {
 

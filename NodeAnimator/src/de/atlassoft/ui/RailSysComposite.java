@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This class creates the composite for creating a new railsystem.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class RailSysComposite {
 

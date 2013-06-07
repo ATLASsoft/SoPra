@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This class creates the Composite for viewing a simulation.
  * 
- * @author Silvan
+ * @author Silvan Haeussermann
  */
 public class SimulationComposite {
 
