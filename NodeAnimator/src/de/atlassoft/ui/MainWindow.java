@@ -84,10 +84,14 @@ public class MainWindow {
 		MenuItem cascadeFileMenu2 = new MenuItem(menuBar, SWT.CASCADE);
 		MenuItem cascadeFileMenu3 = new MenuItem(menuBar, SWT.CASCADE);
 		MenuItem cascadeFileMenu4 = new MenuItem(menuBar, SWT.CASCADE);
+		MenuItem cascadeFileMenu5 = new MenuItem(menuBar, SWT.CASCADE);
+		MenuItem cascadeFileMenu6 = new MenuItem(menuBar, SWT.CASCADE);
 		cascadeFileMenu.setText("Datei");
 		cascadeFileMenu2.setText("Streckennetz");
-		cascadeFileMenu3.setText("Zugtyp");
-		cascadeFileMenu4.setText("Simulation");
+		cascadeFileMenu3.setText("Fahrplan");
+		cascadeFileMenu4.setText("Zugtyp");
+		cascadeFileMenu5.setText("Simulation");
+		cascadeFileMenu6.setText("?");
 		
 		//creates the file menu
 		Menu fileMenu = new Menu (shell, SWT.DROP_DOWN);
@@ -97,13 +101,21 @@ public class MainWindow {
 		Menu railsysMenu = new Menu(shell, SWT.DROP_DOWN);
 		cascadeFileMenu2.setMenu(railsysMenu);
 		
+		//creaters the schedule menu
+		Menu scheduleMenu = new Menu(shell, SWT.DROP_DOWN);
+		cascadeFileMenu3.setMenu(scheduleMenu);
+		
 		//creates the traintype menu
 		Menu traintypeMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu3.setMenu(traintypeMenu);
+		cascadeFileMenu4.setMenu(traintypeMenu);
 		
 		//creates the simulation menu
 		Menu simulationMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu4.setMenu(simulationMenu);
+		cascadeFileMenu5.setMenu(simulationMenu);
+		
+		//creates the ? menu
+		Menu helpMenu = new Menu(shell, SWT.DROP_DOWN);
+		cascadeFileMenu6.setMenu(helpMenu);
 		
 		//the dropdown items of the file menu
 			//exit button
@@ -142,6 +154,19 @@ public class MainWindow {
 				new ListDialog(display, load);
             }
         });
+		
+		//the dropdown items of the schedule menu
+			//create schedule
+		MenuItem newScheduleItem = new MenuItem(scheduleMenu, SWT.PUSH);
+		newScheduleItem.setText("Fahrplan erstellen");
+		
+		newScheduleItem.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				layout.topControl = ScheduleComposite.createScheduleComposite(shell, mainComposite);
+				mainComposite.layout();
+			}
+		});
 
 		//the dropdown items of the traintype menu
 			//create traintype
@@ -168,6 +193,17 @@ public class MainWindow {
             }
         });
 		
+		//the dropdown items of the ? menu
+			//about button
+		MenuItem about = new MenuItem(helpMenu, SWT.PUSH);
+		about.setText("Über");
+		
+		about.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				new AboutDialog(display);
+			}
+		});
 		
 		shell.setMenuBar(menuBar);
 	}
