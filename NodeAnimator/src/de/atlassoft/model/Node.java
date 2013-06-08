@@ -1,7 +1,9 @@
 package de.atlassoft.model;
 
+import de.hohenheim.view.FigureFactory;
+import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.node.NodeFigure;
-
+//TODO: Klasse ummodellieren insbesondere das eingügen in die NodeMap
 /**
  * This class provides a node for the railwaysystem
  * of the application.
@@ -11,7 +13,7 @@ import de.hohenheim.view.node.NodeFigure;
 public class Node {
 
 	private State state;
-	private NodeFigure node;
+	private NodeFigure nodeFigure;
 	private String name;
 	
 	/**
@@ -31,9 +33,9 @@ public class Node {
 	 * @param height
 	 * 		The height of the node.
 	 */
-	public Node(int map, String name, int x, int y, int width, int height){
+	public Node(NodeMap map, String name, int x, int y, int width, int height){
 		this.name = name;
-		//TODO: Später fertig implementieren
+		nodeFigure = FigureFactory.createNode(map, name, x, y, 15, 15, this);
 	}
 	
 	/**
@@ -42,8 +44,8 @@ public class Node {
 	 * @return
 	 * 		The NodeFigure of the node.
 	 */
-	public NodeFigure getNode(){
-		return node;
+	public NodeFigure getNodeFigure() {
+		return nodeFigure;
 	}
 	
 	/**
@@ -52,7 +54,7 @@ public class Node {
 	 * @return
 	 * 		The state of the node.
 	 */
-	public State getState(){
+	public State getState() {
 		return state;
 	}
 	
@@ -62,7 +64,7 @@ public class Node {
 	 * @return
 	 * 		The name of the node.
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 }

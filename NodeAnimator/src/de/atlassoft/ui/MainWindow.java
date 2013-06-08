@@ -23,7 +23,7 @@ public class MainWindow {
 	private Display display;
 	private Composite mainComposite;
 	private StackLayout layout;
-	
+	//TODO: Konstruktor sollte so aussehen: MainWindow(ApplicationService), display in der klasse selber verwalten und swt javadoc einfügen
 	/**
 	 * The constructor for the main window of the application
 	 * 

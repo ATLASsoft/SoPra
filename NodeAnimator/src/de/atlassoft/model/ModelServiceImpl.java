@@ -1,25 +1,31 @@
 package de.atlassoft.model;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 //TODO: Klasse implementieren
 public class ModelServiceImpl implements ModelService {
 
+	private PropertyChangeSupport pcSupport;
+	
+	public ModelServiceImpl() {
+		pcSupport = new PropertyChangeSupport(this);
+	}
+	
+	
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		// TODO Auto-generated method stub
-
+		pcSupport.addPropertyChangeListener(listener);
 	}
 
 	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		// TODO Auto-generated method stub
-
+		pcSupport.removePropertyChangeListener(listener);
 	}
 
 	@Override
 	public void firePropertyChangeEvent() {
-		// TODO Auto-generated method stub
+		// TODO Methode noch unklar
 
 	}
 
