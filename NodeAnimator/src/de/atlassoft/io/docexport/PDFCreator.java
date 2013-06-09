@@ -13,7 +13,7 @@ import de.atlassoft.model.ScheduleScheme;
  * @author Andreas Szlatki & Linus Neﬂler
  * 
  */
-public class PDFCreator {
+class PDFCreator {
 	
 	/**
 	 * Represents the path at which the document will be saved.

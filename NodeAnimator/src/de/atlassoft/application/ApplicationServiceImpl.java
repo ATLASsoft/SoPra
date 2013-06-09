@@ -19,7 +19,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model = new ModelServiceImpl();
 		// ... model mit werten füllen
 		
-		window = new MainWindow(this);
+		//window = new MainWindow(this);
 
 	}
 
