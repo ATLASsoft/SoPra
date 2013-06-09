@@ -1,5 +1,9 @@
 package de.atlassoft.model;
 
+import de.hohenheim.view.FigureFactory;
+import de.hohenheim.view.map.NodeMap;
+import de.hohenheim.view.path.PathFigure;
+//TODO: Klasse ummodellieren insbesondere das eingügen in die NodeMap
 /**
  * This class defines a path from one node to another.
  * 
@@ -7,27 +11,31 @@ package de.atlassoft.model;
  */
 public class Path {
 	
-	private int pathFigure;
+	private PathFigure pathFigure;
 	private double topSpeed;
 	private State state;
-	//TODO: auch start und ziel ??
 	
 	/**
 	 * The constructor for the Path.
 	 * 
 	 * @param map
-	 * 		The map in which the path should be saved.
+	 *            The map in which the path should be saved.
 	 * @param start
-	 * 		The start node of the path.
+	 *            The start node of the path.
 	 * @param end
-	 * 		The end node of the path.
+	 *            The end node of the path.
 	 * @param topSpeed
-	 * 		The top speed that is allowed while driving
-	 * 		on this path.
+	 *            The top speed that is allowed while driving on this path.
 	 */
-	public Path(int map, Node start, Node end, double topSpeed){
-		//TODO: fertig machen
+	public Path(NodeMap map, Node start, Node end, double topSpeed) {
+		if (topSpeed < 0) {
+			throw new IllegalArgumentException(
+					"topSpeed must not be a negative number");
+		}
+
 		this.topSpeed = topSpeed;
+		pathFigure = FigureFactory.createPath(map, start.getNodeFigure(),
+				end.getNodeFigure(), this);
 		state = new State();
 		state.setState(State.UNBLOCKED);
 	}
@@ -49,6 +57,10 @@ public class Path {
 	 * 		The top speed which should be set.
 	 */
 	public void setTopSpeed(double topSpeed){
+		if (topSpeed < 0) {
+			throw new IllegalArgumentException(
+					"topSpeed must not be a negative number");
+		}
 		this.topSpeed = topSpeed;
 	}
 	
@@ -58,7 +70,7 @@ public class Path {
 	 * @return
 	 * 		The path figure.
 	 */
-	public int getPathFigure() {
+	public PathFigure getPathFigure() {
 		return pathFigure;
 	}
 	
@@ -72,5 +84,5 @@ public class Path {
 	public State getState(){
 		return state;
 	}
-	//TODO: auch noch setState ??
+	
 }
