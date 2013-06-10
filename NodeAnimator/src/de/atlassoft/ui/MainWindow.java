@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
+
 /**
  * Contains the main window of the application.
  * 
@@ -32,7 +35,7 @@ public class MainWindow {
 	public MainWindow(Display display){
 		
 		shell = new Shell(display);
-		shell.setText("Choo Choo Motherfucker");
+		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(640, 480);
 		
 		mainComposite = new Composite(shell, SWT.BORDER);
@@ -78,6 +81,7 @@ public class MainWindow {
 	 */
 	private void createToolbar(){
 		
+		I18NService I18N = I18NSingleton.getInstance();
 		//creates the menubar
 		Menu menuBar = new Menu(shell, SWT.BAR);
 		MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
@@ -86,11 +90,11 @@ public class MainWindow {
 		MenuItem cascadeFileMenu4 = new MenuItem(menuBar, SWT.CASCADE);
 		MenuItem cascadeFileMenu5 = new MenuItem(menuBar, SWT.CASCADE);
 		MenuItem cascadeFileMenu6 = new MenuItem(menuBar, SWT.CASCADE);
-		cascadeFileMenu.setText("Datei");
-		cascadeFileMenu2.setText("Streckennetz");
-		cascadeFileMenu3.setText("Fahrplan");
-		cascadeFileMenu4.setText("Zugtyp");
-		cascadeFileMenu5.setText("Simulation");
+		cascadeFileMenu.setText(I18N.getMessage("MainWindow.File"));
+		cascadeFileMenu2.setText(I18N.getMessage("MainWindow.Railsystem"));
+		cascadeFileMenu3.setText(I18N.getMessage("MainWindow.Schedule"));
+		cascadeFileMenu4.setText(I18N.getMessage("MainWindow.Traintype"));
+		cascadeFileMenu5.setText(I18N.getMessage("MainWindow.Simulation"));
 		cascadeFileMenu6.setText("?");
 		
 		//creates the file menu
@@ -118,9 +122,9 @@ public class MainWindow {
 		cascadeFileMenu6.setMenu(helpMenu);
 		
 		//the dropdown items of the file menu
-			//exit button
+			//quit button
 		MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-		exitItem.setText("Beenden");
+		exitItem.setText(I18N.getMessage("MainWindow.Quit"));
 		
 		exitItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -133,7 +137,7 @@ public class MainWindow {
 		//the dropdown items of the railsystem menu
 			//new railsystem button
 		MenuItem newRailSysItem = new MenuItem(railsysMenu, SWT.PUSH);
-		newRailSysItem.setText("Streckennetz erstellen");
+		newRailSysItem.setText(I18N.getMessage("MainWindow.CreateRailwaysys"));
 		
 		newRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -145,7 +149,7 @@ public class MainWindow {
 		
 			//load railsystem button
 		MenuItem loadRailSysItem = new MenuItem(railsysMenu, SWT.PUSH);
-		loadRailSysItem.setText("Streckennetz laden");
+		loadRailSysItem.setText(I18N.getMessage("MainWindow.LoadRailwaysys"));
 		
 		loadRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -158,7 +162,7 @@ public class MainWindow {
 		//the dropdown items of the schedule menu
 			//create schedule
 		MenuItem newScheduleItem = new MenuItem(scheduleMenu, SWT.PUSH);
-		newScheduleItem.setText("Fahrplan erstellen");
+		newScheduleItem.setText(I18N.getMessage("MainWindow.CreateSchedule"));
 		
 		newScheduleItem.addSelectionListener(new SelectionAdapter(){
 			@Override
@@ -171,7 +175,7 @@ public class MainWindow {
 		//the dropdown items of the traintype menu
 			//create traintype
 		MenuItem newTraintypeItem = new MenuItem(traintypeMenu, SWT.PUSH);
-		newTraintypeItem.setText("Zugtyp erstellen");
+		newTraintypeItem.setText(I18N.getMessage("MainWindow.CreateTrainType"));
 		
 		newTraintypeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -183,7 +187,7 @@ public class MainWindow {
 		//the dropdown items of the simulation menu
 			//start simulation
 		MenuItem startSimulation = new MenuItem(simulationMenu, SWT.PUSH);
-		startSimulation.setText("Simulation starten");
+		startSimulation.setText(I18N.getMessage("MainWindow.StartSimulation"));
 		
 		startSimulation.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -196,7 +200,7 @@ public class MainWindow {
 		//the dropdown items of the ? menu
 			//about button
 		MenuItem about = new MenuItem(helpMenu, SWT.PUSH);
-		about.setText("Über");
+		about.setText(I18N.getMessage("MainWindow.About"));
 		
 		about.addSelectionListener(new SelectionAdapter() {
 			@Override
