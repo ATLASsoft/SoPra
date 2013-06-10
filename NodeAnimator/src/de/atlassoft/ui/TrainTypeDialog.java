@@ -23,8 +23,8 @@ public class TrainTypeDialog {
 	
 	private Shell shell;
 	
-	public TrainTypeDialog(Display display){
-		shell = new Shell(display);
+	public TrainTypeDialog(Display display) {
+		shell = new Shell(display, SWT.DIALOG_TRIM);
 		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
@@ -34,7 +34,7 @@ public class TrainTypeDialog {
 		shell.open();
 	}
 	
-	private void initUI(){
+	private void initUI() {
 		I18NService I18N = I18NSingleton.getInstance();
 		
 		// First row
