@@ -181,7 +181,7 @@ public class MainWindow {
 		newTraintypeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new TrainTypeDialog(display);
+				new TrainTypeDialog(null); 	// TODO: ApplicationService übergeben
             }
         });
 		
