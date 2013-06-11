@@ -82,14 +82,22 @@ public class NodeMap {
 	public HashMap<String, NodeFigure> getNodes() {
 		return this.nodes;
 	}
+	
 	/**
-	 * Constructor to create a new RoomMap	
-	 * @param {@link String} roomName - the name of the RoomMap. The name is displayed in the titlebar. 
+	 * Constructor to create a new RoomMap
 	 */
-	public NodeMap(Canvas c) {
+	public NodeMap() {
 		nodeLayer = new NodeLayerFigure();
 	    animationLayer = new AnimationLayerFigure();
-	    createNodeContents(c);
+	}
+	
+	/**
+	 * Paints this node map onto the passed {@link Canvas}.
+	 * 
+	 * @param c to be painted onto
+	 */
+	public void paintNodeMap(Canvas c) {
+		createNodeContents(c);
 	}
 	
 	/**

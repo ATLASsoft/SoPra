@@ -32,8 +32,8 @@ public class NodeServer {
 		
 		c.setBackground(ColorConstants.white);
 		c.setBounds(0,0,600,500);
-		NodeMap map = new NodeMap(c);				
-		
+		NodeMap map = new NodeMap();
+		map.paintNodeMap(c);
 		
 	    RouteSectionMarker m_1     = new RouteSectionMarker(map,"1", 75, 25);
 	    RouteSectionMarker m_2     = new RouteSectionMarker(map,"2", 25, 100);	    
