@@ -6,6 +6,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -26,7 +27,7 @@ public class MainWindow {
 	private Display display;
 	private Composite mainComposite;
 	private StackLayout layout;
-	//TODO: Konstruktor sollte so aussehen: MainWindow(ApplicationService), display in der klasse selber verwalten und swt javadoc einfügen
+	//TODO: Konstruktor sollte so aussehen: MainWindow(ApplicationService)
 	/**
 	 * The constructor for the main window of the application
 	 * 
@@ -37,7 +38,7 @@ public class MainWindow {
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
-		shell.setSize(640, 480);
+		shell.setSize(960, 620);
 		
 		mainComposite = new Composite(shell, SWT.BORDER);
 		Rectangle frameRect = shell.getMonitor().getBounds();
@@ -74,7 +75,7 @@ public class MainWindow {
 		int Top = (bdc.height - p.y) / 2;
 		
 		shell.setBounds(Left, Top, p.x, p.y);
-	}
+	}	
 	
 	/**
 	 * Creates the toolbar for the main window
@@ -168,7 +169,9 @@ public class MainWindow {
 		newScheduleItem.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				layout.topControl = ScheduleComposite.createScheduleComposite(shell, mainComposite);
+				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout);
+				layout.topControl = scheduleComposite.getComposite();
+//				layout.topControl = ScheduleComposite.createScheduleComposite(shell, mainComposite);
 				mainComposite.layout();
 			}
 		});
@@ -193,8 +196,10 @@ public class MainWindow {
 		startSimulation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				 layout.topControl = SimulationComposite.createSimulationComposite(shell, mainComposite);
-			     mainComposite.layout();
+				
+				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout);
+				layout.topControl = simComp.getComposite();
+				mainComposite.layout();
             }
         });
 		
@@ -209,9 +214,9 @@ public class MainWindow {
 				new AboutDialog(display);
 			}
 		});
-		
+				
 		shell.setMenuBar(menuBar);
-	}
+	}	
 	
 	//TODO: delete in final program
 	public static void main(String[] args){
