@@ -66,7 +66,7 @@ public class TrainTypeDialog {
 		
 		// Third row
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
-		final String[] prioritySelection = { "1", "2", "3", "4", "5" };
+		final String[] prioritySelection = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboPriority.setItems(prioritySelection);
 	    comboPriority.select(0);
@@ -84,7 +84,6 @@ public class TrainTypeDialog {
 		save.setText(I18N.getMessage("TrainTypeDialog.buttonSave"));
 	    Image saveBild = new Image(null, "img/greencheck.png");
 	    save.setImage(saveBild);
-	    //TODO: Implementieren
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	final String nameOfSchedule = name.getText();
