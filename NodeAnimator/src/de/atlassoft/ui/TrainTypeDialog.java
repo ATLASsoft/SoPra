@@ -1,5 +1,7 @@
 package de.atlassoft.ui;
 
+
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import de.atlassoft.application.ApplicationService;
-import de.atlassoft.ui.MainWindow;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -65,9 +66,9 @@ public class TrainTypeDialog {
 		
 		// Third row
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
-		final String[] priority = { "1", "2", "3", "4", "5" };
+		final String[] prioritySelection = { "1", "2", "3", "4", "5" };
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
-	    comboPriority.setItems(priority);
+	    comboPriority.setItems(prioritySelection);
 	    comboPriority.select(0);
 		new Label(shell, SWT.NONE);
 		comboPriority.setToolTipText(I18N.getMessage("TrainTypeDialog.textPriority"));
@@ -86,11 +87,18 @@ public class TrainTypeDialog {
 	    //TODO: Implementieren
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	          String nameOfSchedule = name.getText();
-	          String topSpeed = speed.getText();
-	          String priority = comboPriority.getText();
-	          System.out.print(nameOfSchedule + " " + topSpeed + " " + priority);
-	          shell.close();
+	        	final String nameOfSchedule = name.getText();
+	        	final String topSpeed = speed.getText();
+	        	final String priority = comboPriority.getText();
+	        	//TODO: ERRORDIALOG + Übergabe an Model implementieren
+	        	if (name.getText() == ""){
+	        		System.out.println("1 Ist leer!");
+	        	}else if (speed.getText() == ""){
+	        		System.out.println("2 Ist leer!");
+	        	}else{
+	        		System.out.print(nameOfSchedule + " " + topSpeed + " " + priority);
+	        		shell.close();
+	        	}
 	        }
 	    });
 	    
