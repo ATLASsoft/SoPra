@@ -32,8 +32,9 @@ public class MainWindow {
 	 * 
 	 * @param display
 	 */
-	public MainWindow(Display display){
+	public MainWindow(){
 		
+		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(640, 480);
@@ -214,8 +215,8 @@ public class MainWindow {
 	
 	//TODO: delete in final program
 	public static void main(String[] args){
-		Display display = new Display();
-		new MainWindow(display);
+		new MainWindow();
+		Display display = Display.getDefault();
 		display.dispose();
 	}
 }

@@ -47,9 +47,6 @@ public class BackgroundLayerdPane extends LayeredPane {
 			graphics.setForegroundColor(ColorConstants.titleGradient);
 		}
 		
-		
-		
-		graphics.drawImage(new Image(null,  "img/Transparent.png"), 420,20);
 		//#2269B5
 		Color c = new Color(null, new RGB(22, 69, 120));
 		graphics.setForegroundColor(c);
