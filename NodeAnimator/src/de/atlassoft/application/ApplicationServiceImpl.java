@@ -28,7 +28,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 		// TODO: unvollständig
 		
 		// load images
-		ImageHelper.createImage("train", "img/trainTypeIcon.png");
+		ImageHelper.createImage("trainTypTitle", "img/trainTypeIcon.png");
+		ImageHelper.createImage("greenCheck", "img/greencheck.png");
+		ImageHelper.createImage("questionMark", "img/fragezeichen.jpg");
+		ImageHelper.createImage("redX", "img/redX.png");
 		
 		window = new MainWindow(this);
 	}
