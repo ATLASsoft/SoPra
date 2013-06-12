@@ -4,9 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -50,46 +48,46 @@ public class HomeScreenComposite {
 	/**
 	 * Creates the UI elements.
 	 */
-	private void initUI(){
+	private void initUI() {
 		
 		homeScreenComposite = new Composite(mainComposite, SWT.BORDER);
 		GridLayout gridLayout = new GridLayout();
 		homeScreenComposite.setLayout(gridLayout);
-		TabFolder tabFolder = new TabFolder (homeScreenComposite, SWT.NONE);
-		GridData gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		tabFolder.setLayoutData(gridData);
-		TabItem trainTypeItem = new TabItem(tabFolder, SWT.NONE);
-		trainTypeItem.setText("Train Type");
-//		tabFolder.setSize(mainComposite.getSize().x-10, mainComposite.getSize().y-10);
 		
-	}
-	
-	public Composite getComposite(){
-		return homeScreenComposite;
+		TabFolder tabFolder = new TabFolder (homeScreenComposite, SWT.NONE);
+		GridData folderGridData = new GridData();
+		folderGridData.grabExcessHorizontalSpace = true;
+		folderGridData.grabExcessVerticalSpace = true;
+		folderGridData.horizontalAlignment = SWT.FILL;
+		folderGridData.verticalAlignment = SWT.FILL;
+		tabFolder.setLayoutData(folderGridData);
+		
+		//Railway system tab
+		TabItem railSysItem = new TabItem(tabFolder, SWT.NONE);
+		railSysItem.setText(I18N.getMessage("HomeScreenComposite.RailwaySystemTab"));
+		CurrentRailSysComposite currentRailSys = new CurrentRailSysComposite(tabFolder);
+		railSysItem.setControl(currentRailSys.getComposite());
+		
+		//Schedule tab
+		TabItem scheduleItem = new TabItem(tabFolder, SWT.NONE);
+		scheduleItem.setText(I18N.getMessage("HomeScreenComposite.ScheduleTab"));
+		AllSchedulesComposite allSchedulesComposite = new AllSchedulesComposite(tabFolder);
+		scheduleItem.setControl(allSchedulesComposite.getComposite());
+		
+		//Train type tab
+		TabItem trainTypeItem = new TabItem(tabFolder, SWT.NONE);
+		trainTypeItem.setText(I18N.getMessage("HomeScreenComposite.TrainTab"));
+		TrainTypeComposite trainTypeComposite = new TrainTypeComposite(tabFolder);
+		trainTypeItem.setControl(trainTypeComposite.getComposite());
 	}
 	
 	/**
-	 * The method createHomeScreenComposite creates the composite for the
-	 * homescreen, which is shown when the application starts.
-	 * 	
-	 * @param shell
-	 * 			The main shell of the application.
-	 * @param mainComposite
-	 * 			The main composite of the application
+	 * Returns the home screen composite
+	 * 
 	 * @return
-	 * 			The homescreen composite.
+	 * 		The composite
 	 */
-	public static Composite createHomeScreenComposite(Shell shell, Composite mainComposite){
-		//TODO: Ausprogrammieren
-
-	    Composite homeScreenComposite = new Composite(mainComposite, SWT.NONE);
-	    homeScreenComposite.setLayout(new RowLayout());
-	    Label label = new Label(homeScreenComposite, SWT.NONE);
-	    label.setText("homescreen");
-	    label.pack();
-		
+	public Composite getComposite() {
 		return homeScreenComposite;
-	}
+	}	
 }

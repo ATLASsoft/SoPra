@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -54,33 +53,35 @@ public class MainWindow {
 		shell.setSize(960, 620);
 		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell.setImage(appIcon);
+		GridLayout shellLayout = new GridLayout();
+		shell.setLayout(shellLayout);
+		GridData shellGridData = new GridData();
+		shellGridData.grabExcessHorizontalSpace = true;
+		shellGridData.grabExcessVerticalSpace = true;
+		shell.setLayoutData(shellGridData);
 		
 		//Creates the overall composite
 		borderComposite = new Composite(shell, SWT.BORDER);
-		Rectangle frameRect = new Rectangle(0, 0, shell.getSize().x-20, shell.getSize().y-40);
-		borderComposite.setBounds(frameRect);
-		//rowLayout = new RowLayout();
-		//rowLayout.type = SWT.VERTICAL;
-		//borderComposite.setLayout(rowLayout);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		borderComposite.setLayout(gridLayout);
 		GridData borderGridData = new GridData();
 		borderGridData.grabExcessHorizontalSpace = true;
 		borderGridData.grabExcessVerticalSpace = true;
+		borderGridData.verticalAlignment = SWT.FILL;
+		borderGridData.horizontalAlignment = SWT.FILL;
 		borderComposite.setLayoutData(borderGridData);
 		
 		createToolbar();
 		
 		//Creates the main screen with the different tabs
 		mainComposite = new Composite(borderComposite, SWT.BORDER);
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessVerticalSpace = true;
-		mainComposite.setLayoutData(gridData);
-		//mainComposite.setLayoutData(new RowData(shell.getSize().x, shell.getSize().y-125));
+		GridData mainCompositeGridData = new GridData();
+		mainCompositeGridData.horizontalAlignment = SWT.FILL;
+		mainCompositeGridData.grabExcessHorizontalSpace = true;
+		mainCompositeGridData.verticalAlignment = SWT.FILL;
+		mainCompositeGridData.grabExcessVerticalSpace = true;
+		mainComposite.setLayoutData(mainCompositeGridData);
 	    layout = new StackLayout();
 	    mainComposite.setLayout(layout);
 	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout);
@@ -126,7 +127,7 @@ public class MainWindow {
 		GridData toolbarGridData = new GridData();
 		toolbarGridData.grabExcessHorizontalSpace = true;
 		toolbarGridData.horizontalAlignment = SWT.FILL;
-		//toolBar.setLayoutData(new RowData(shell.getSize().x, 63));
+		toolBar.setLayoutData(toolbarGridData);
 		
 		//Create schedule item
 		ToolItem createScheduleItem = new ToolItem(toolBar, SWT.PUSH);
