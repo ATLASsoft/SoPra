@@ -8,7 +8,7 @@ import de.atlassoft.model.TrainType;
 /**
  * Service interface providing access to the persistence layer.
  * 
- * @author Linus
+ * @author Linus and
  */
 public interface PersistenceService {
 

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class which provides methods to create, delete, modify and read XML-Files
  * 
- * @author Linus
+ * @author Linus and
  */
 public class XMLParser {
 
