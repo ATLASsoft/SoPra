@@ -39,12 +39,12 @@ public class TrainTypeDialog {
 		shell.setSize(450, 200);
 		shell.setImage(appIcon);
 		shell.setLayout(new GridLayout(3, false));
-		initUI();
+		initUI(display);
 		MainWindow.center(shell);
 		shell.open();
 	}
 	
-	private void initUI() {
+	private void initUI(final Display display) {
 		final I18NService I18N = I18NSingleton.getInstance();
 		
 		// First row
@@ -61,6 +61,7 @@ public class TrainTypeDialog {
 			public void verifyText(VerifyEvent e) {
 				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
 		          e.doit = false;
+		          display.beep();
 		        }
 		      }
 		});
@@ -102,19 +103,31 @@ public class TrainTypeDialog {
 	        	    MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorEmptyTextfield"));
-	        	    messageBox.open();	
+	        	    messageBox.open();
 	        	}else{	        		
 	        		System.out.print(nameOfTrainType + " " + topSpeed + " " + priority);
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
-	        	    shell.close();
+	        	    shell.setVisible(false);
 	        	    messageBox.open();
+	        	    shell.close();
 	        	}
 	        }
 	    });
 	    
-		new Label(shell, SWT.NONE);
+
+		Button help = new Button(shell, SWT.PUSH);
+		Image helpBild = new Image(null, "img/fragezeichen.jpg");
+		help.setImage(helpBild);
+		help.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
+        		messageBox.setText(I18N.getMessage("TrainTypeDialog.helpTitle"));
+        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.helpText"));
+        	    messageBox.open();
+	        }
+	    });
 		
 		Button cancel = new Button(shell, SWT.PUSH);
 		cancel.setText(I18N.getMessage("TrainTypeDialog.buttonCancel"));
@@ -126,6 +139,5 @@ public class TrainTypeDialog {
 	        }
 	    });
 		shell.pack();
-		
 	}
 }
