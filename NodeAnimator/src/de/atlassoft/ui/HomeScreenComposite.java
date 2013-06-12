@@ -50,7 +50,7 @@ public class HomeScreenComposite {
 	 */
 	private void initUI() {
 		
-		homeScreenComposite = new Composite(mainComposite, SWT.BORDER);
+		homeScreenComposite = new Composite(mainComposite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		homeScreenComposite.setLayout(gridLayout);
 		

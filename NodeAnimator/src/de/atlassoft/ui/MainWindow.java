@@ -4,12 +4,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -36,7 +34,6 @@ public class MainWindow {
 	private Composite mainComposite;
 	private Composite borderComposite;
 	private StackLayout layout;
-	private RowLayout rowLayout;
 	private I18NService I18N;
 	//TODO: Konstruktor sollte so aussehen: MainWindow(ApplicationService)
 	/**
@@ -46,7 +43,6 @@ public class MainWindow {
 	 */
 	public MainWindow(ApplicationService applicationService) {
 		
-		createAllImages();
 		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		display = Display.getDefault();
@@ -62,7 +58,7 @@ public class MainWindow {
 		shell.setLayoutData(shellGridData);
 		
 		//Creates the overall composite
-		borderComposite = new Composite(shell, SWT.BORDER);
+		borderComposite = new Composite(shell, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		borderComposite.setLayout(gridLayout);
@@ -76,7 +72,7 @@ public class MainWindow {
 		createToolbar();
 		
 		//Creates the main screen with the different tabs
-		mainComposite = new Composite(borderComposite, SWT.BORDER);
+		mainComposite = new Composite(borderComposite, SWT.NONE);
 		GridData mainCompositeGridData = new GridData();
 		mainCompositeGridData.horizontalAlignment = SWT.FILL;
 		mainCompositeGridData.grabExcessHorizontalSpace = true;
@@ -124,7 +120,7 @@ public class MainWindow {
 	 */
 	private void createToolbar() {
 
-		ToolBar toolBar = new ToolBar(borderComposite, SWT.BORDER);
+		ToolBar toolBar = new ToolBar(borderComposite, SWT.NONE);
 		GridData toolbarGridData = new GridData();
 		toolbarGridData.grabExcessHorizontalSpace = true;
 		toolbarGridData.horizontalAlignment = SWT.FILL;
@@ -132,8 +128,7 @@ public class MainWindow {
 		
 		//Create schedule item
 		ToolItem createScheduleItem = new ToolItem(toolBar, SWT.PUSH);
-		Image createScheduleIcon = new Image (null, "img/scheduleIcon.png");
-		createScheduleItem.setImage(createScheduleIcon);
+		createScheduleItem.setImage(ImageHelper.getImage("scheduleIcon"));
 		createScheduleItem.setText(I18N.getMessage("MainWindow.CreateSchedule"));
 		createScheduleItem.addSelectionListener(new SelectionAdapter(){
 			@Override
@@ -146,8 +141,7 @@ public class MainWindow {
 		
 		//Create railway system item
 		ToolItem createRailSystemItem = new ToolItem(toolBar, SWT.PUSH);
-		Image createRailSysIcon = new Image (null, "img/railSysIcon.png");
-		createRailSystemItem.setImage(createRailSysIcon);
+		createRailSystemItem.setImage(ImageHelper.getImage("railwaySysIcon"));
 		createRailSystemItem.setText(I18N.getMessage("MainWindow.CreateRailwaysys"));
 		createRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -159,8 +153,7 @@ public class MainWindow {
 		
 		//Load RailSystem item
 		ToolItem loadRailSystemItem = new ToolItem(toolBar, SWT.PUSH);
-		Image loadImage = new Image(null, "img/loadButton.png");
-		loadRailSystemItem.setImage(loadImage);
+		loadRailSystemItem.setImage(ImageHelper.getImage("loadButton"));
 		loadRailSystemItem.setText(I18N.getMessage("MainWindow.LoadRailwaysys"));
 		loadRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -169,6 +162,18 @@ public class MainWindow {
 				new ListDialog(load);
             }
         });
+		
+		//Delete RailSystem item
+		ToolItem deleteRailSysItem = new ToolItem(toolBar, SWT.PUSH);
+		deleteRailSysItem.setImage(ImageHelper.getImage("trashIcon"));
+		deleteRailSysItem.setText(I18N.getMessage("MainWindow.DeleteRailwaysys"));
+		deleteRailSysItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				DialogMode delete = DialogMode.DELETE;
+				new ListDialog(delete);
+			}
+		});
 		
 		//Create train type item
 		ToolItem createTrainTypeItem = new ToolItem(toolBar, SWT.PUSH);
@@ -182,9 +187,8 @@ public class MainWindow {
         });
 		
 		//Start simulation item
-		Image startSimulation = new Image(null, "img/startSimulationIcon.png");
 		ToolItem simulationItem = new ToolItem(toolBar, SWT.PUSH);
-		simulationItem.setImage(startSimulation);
+		simulationItem.setImage(ImageHelper.getImage("playIcon"));
 		simulationItem.setText(I18N.getMessage("MainWindow.StartSimulation"));
 		simulationItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -196,9 +200,8 @@ public class MainWindow {
         });
 		
 		//About item
-		Image questionMark = new Image(null, "img/question_mark.png");
 		ToolItem aboutItem = new ToolItem(toolBar, SWT.PUSH);	
-		aboutItem.setImage(questionMark);
+		aboutItem.setImage(ImageHelper.getImage("questionMarkIcon"));
 		aboutItem.setText(I18N.getMessage("MainWindow.About"));
 		aboutItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -349,12 +352,6 @@ public class MainWindow {
 				
 		shell.setMenuBar(menuBar);
 	}	
-	
-	private void createAllImages(){
-		ImageHelper.createImage("loadButton", "img/loadButton.png");
-		ImageHelper.createImage("trainIcon", "img/trainIcon.png");
-		ImageHelper.createImage("cancelIcon", "img/redX.png");
-	}
 	
 	public void close() {
 		Display display = Display.getDefault();

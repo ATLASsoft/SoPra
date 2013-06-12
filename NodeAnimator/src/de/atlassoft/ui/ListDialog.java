@@ -1,8 +1,11 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -26,14 +29,20 @@ public class ListDialog {
 	private Shell shell;
 	private Composite listComposite;
 	private I18NService I18N;
+	private DialogMode dialogMode;
 	
 	public ListDialog(DialogMode dialogMode) {
 		
 		I18N = I18NSingleton.getInstance();
+		this.dialogMode = dialogMode;
 		shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setText("Streckennetz laden");
+		if(dialogMode == DialogMode.LOAD){
+			shell.setText(I18N.getMessage("ListDialog.DialogNameLoad"));	
+		} else {
+			shell.setText(I18N.getMessage("ListDialog.DialogNameDelete"));
+		}
 		shell.setImage(ImageHelper.getImage("trainIcon"));
-		shell.setSize(400, 300);
+		shell.setSize(400, 320);
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);
 		GridData shellGridData = new GridData();
@@ -61,6 +70,7 @@ public class ListDialog {
 		Table table = new Table(listComposite, SWT.NONE);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		table.setToolTipText(I18N.getMessage("ListDialog.TableToolTip"));
 		GridData tableGridData = new GridData();
 		tableGridData.verticalAlignment = SWT.FILL;
 		tableGridData.horizontalAlignment = SWT.FILL;
@@ -71,7 +81,7 @@ public class ListDialog {
 		
 		TableColumn column = new TableColumn(table, SWT.LEFT);
 		column.setText("Streckennetz");
-		column.setWidth(400);
+		column.setWidth(200);
 		
 		for (int i=0; i<10; i++){
 			TableItem item = new TableItem(table, SWT.NONE);
@@ -79,7 +89,7 @@ public class ListDialog {
 		}
 		table.redraw();
 		
-		Composite buttonComposite = new Composite(listComposite, SWT.BORDER);
+		Composite buttonComposite = new Composite(listComposite, SWT.NONE);
 		GridData buttonGridData = new GridData();
 		buttonGridData.horizontalAlignment = SWT.FILL;
 		buttonGridData.grabExcessHorizontalSpace = true;
@@ -91,12 +101,28 @@ public class ListDialog {
 		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
 		cancelButton.setText(I18N.getMessage("ListDialog.Cancel"));
 		cancelButton.setImage(ImageHelper.getImage("cancelIcon"));
-		GridData cancelGridData = new GridData();
+		RowData cancelRowData = new RowData(130, 52);
+		cancelButton.setLayoutData(cancelRowData);
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				shell.close();
+			}
+		});
 		
-		Button loadButton = new Button(buttonComposite, SWT.PUSH);
-		loadButton.setText(I18N.getMessage("ListDialog.Load"));
-		loadButton.setImage(ImageHelper.getImage("loadButton"));
-		GridData loadGridData = new GridData();
+		if(dialogMode == DialogMode.LOAD){
+			Button loadButton = new Button(buttonComposite, SWT.PUSH);
+			loadButton.setText(I18N.getMessage("ListDialog.Load"));
+			loadButton.setImage(ImageHelper.getImage("loadButton"));
+			RowData loadRowData = new RowData(130, 52);
+			loadButton.setLayoutData(loadRowData);
+		} else {
+			Button deleteButton = new Button(buttonComposite, SWT.PUSH);
+			deleteButton.setText(I18N.getMessage("ListDialog.Delete"));
+			deleteButton.setImage(ImageHelper.getImage("trashIcon"));
+			RowData deleteRowData = new RowData(130, 52);
+			deleteButton.setLayoutData(deleteRowData);
+		}
 		
 		listComposite.layout();
 	}
