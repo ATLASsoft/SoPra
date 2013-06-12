@@ -4,11 +4,12 @@ package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import de.atlassoft.util.ImageHelper;
 
 /**
  * This is the class for the about dialog where the name of our
@@ -29,8 +30,9 @@ public class AboutDialog {
 	 */
 	public AboutDialog(Display display){
 		
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Über");
+		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setSize(300, 250);
 		MainWindow.center(shell);
 		initUI(display);

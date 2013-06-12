@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 
 /**
  * Contains the main window of the application.
@@ -45,14 +46,14 @@ public class MainWindow {
 	 */
 	public MainWindow(ApplicationService applicationService) {
 		
+		createAllImages();
 		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(960, 620);
-		Image appIcon = new Image (null, "img/trainTypeIcon.png");
-		shell.setImage(appIcon);
+		shell.setImage(ImageHelper.getImage("trainIcon"));
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);
 		GridData shellGridData = new GridData();
@@ -165,14 +166,13 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DialogMode load = DialogMode.LOAD;
-				new ListDialog(display, load);
+				new ListDialog(load);
             }
         });
 		
 		//Create train type item
 		ToolItem createTrainTypeItem = new ToolItem(toolBar, SWT.PUSH);
-		Image trainTypeImage = new Image(null, "img/trainTypeIcon.png");
-		createTrainTypeItem.setImage(trainTypeImage);
+		createTrainTypeItem.setImage(ImageHelper.getImage("trainIcon"));
 		createTrainTypeItem.setText(I18N.getMessage("MainWindow.CreateTrainType"));
 		createTrainTypeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -199,7 +199,7 @@ public class MainWindow {
 		Image questionMark = new Image(null, "img/question_mark.png");
 		ToolItem aboutItem = new ToolItem(toolBar, SWT.PUSH);	
 		aboutItem.setImage(questionMark);
-		aboutItem.setText("About");
+		aboutItem.setText(I18N.getMessage("MainWindow.About"));
 		aboutItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -289,7 +289,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DialogMode load = DialogMode.LOAD;
-				new ListDialog(display, load);
+				new ListDialog(load);
             }
         });
 		
@@ -349,6 +349,12 @@ public class MainWindow {
 				
 		shell.setMenuBar(menuBar);
 	}	
+	
+	private void createAllImages(){
+		ImageHelper.createImage("loadButton", "img/loadButton.png");
+		ImageHelper.createImage("trainIcon", "img/trainIcon.png");
+		ImageHelper.createImage("cancelIcon", "img/redX.png");
+	}
 	
 	public void close() {
 		Display display = Display.getDefault();

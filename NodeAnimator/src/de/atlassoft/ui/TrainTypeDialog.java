@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 
 /**
  * This class is for creating a new traintype.
@@ -32,12 +33,12 @@ public class TrainTypeDialog {
 	
 	public TrainTypeDialog(ApplicationService application) {
 		Display display = Display.getCurrent();
-		Image appIcon = new Image (null, "img/trainTypeIcon.png");
+//		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
-		shell.setImage(appIcon);
+		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));
 		initUI();
 		MainWindow.center(shell);
