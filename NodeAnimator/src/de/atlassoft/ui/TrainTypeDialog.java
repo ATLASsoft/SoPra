@@ -2,6 +2,9 @@ package de.atlassoft.ui;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 
 /**
  * This class is for creating a new traintype.
@@ -29,15 +33,16 @@ import de.atlassoft.util.I18NSingleton;
 public class TrainTypeDialog {
 	
 	private Shell shell;
+	private ApplicationService application;
 	
 	public TrainTypeDialog(ApplicationService application) {
+		this.application = application;
 		Display display = Display.getCurrent();
-		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
-		shell.setImage(appIcon);
+		shell.setImage(ImageHelper.getImage("train"));
 		shell.setLayout(new GridLayout(3, false));
 		initUI(display);
 		MainWindow.center(shell);
@@ -90,21 +95,38 @@ public class TrainTypeDialog {
 	    save.setImage(saveBild);
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
+	        	// read values
 	        	final String nameOfTrainType = name.getText();
 	        	final String topSpeed = speed.getText();
 	        	final String priority = comboPriority.getText();
 	        	//TODO: Übergabe an ApplicationService implementieren
-	        	if (name.getText() == ""){
-	        	    MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+	        	
+	        	// check constraints
+	        	List<String> errorMessages = new ArrayList<String>();
+	        	
+	        	if (name.getText().trim().equals("")) {
+	        	    errorMessages.add("xxx");
+	        		
+	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorEmptyTextfield"));
 	        	    messageBox.open();	        	    
-	        	}else if (speed.getText() == ""){
-	        	    MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+	        	}
+	        	if (speed.getText() == "") {
+	        		errorMessages.add("xyz");
+	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorEmptyTextfield"));
 	        	    messageBox.open();
-	        	}else{	        		
+	        	}
+	        	// all fields valid
+	        	if (errorMessages.isEmpty()) {
+	        	} else {
+	        		
+//	        		TrainType type = new TrainType(name, topSpeed, priority);
+//	        		application.addTrainType(type);
+	        		
+	        		
 	        		System.out.print(nameOfTrainType + " " + topSpeed + " " + priority);
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
@@ -113,6 +135,9 @@ public class TrainTypeDialog {
 	        	    messageBox.open();
 	        	    shell.close();
 	        	}
+	        	
+	        	
+	        	
 	        }
 	    });
 	    
