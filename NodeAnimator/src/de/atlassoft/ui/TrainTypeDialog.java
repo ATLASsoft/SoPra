@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -47,10 +48,10 @@ public class TrainTypeDialog {
 		final I18NService I18N = I18NSingleton.getInstance();
 		
 		// First row
-		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfSchedule"));
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
 		new Label(shell, SWT.NONE);
-		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfSchedule"));
+		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
 		
 		// Second row
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
@@ -88,17 +89,27 @@ public class TrainTypeDialog {
 	    save.setImage(saveBild);
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	        	final String nameOfSchedule = name.getText();
+	        	final String nameOfTrainType = name.getText();
 	        	final String topSpeed = speed.getText();
 	        	final String priority = comboPriority.getText();
-	        	//TODO: ERRORDIALOG + Übergabe an Model implementieren
+	        	//TODO: Übergabe an ApplicationService implementieren
 	        	if (name.getText() == ""){
-	        		System.out.println("1 Ist leer!");
+	        	    MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
+	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorEmptyTextfield"));
+	        	    messageBox.open();	        	    
 	        	}else if (speed.getText() == ""){
-	        		System.out.println("2 Ist leer!");
-	        	}else{
-	        		System.out.print(nameOfSchedule + " " + topSpeed + " " + priority);
-	        		shell.close();
+	        	    MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
+	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorEmptyTextfield"));
+	        	    messageBox.open();	
+	        	}else{	        		
+	        		System.out.print(nameOfTrainType + " " + topSpeed + " " + priority);
+	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
+	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
+	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
+	        	    shell.close();
+	        	    messageBox.open();
 	        	}
 	        }
 	    });
