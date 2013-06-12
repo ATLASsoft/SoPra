@@ -9,7 +9,7 @@ public class Main {
 	 * @param args command line parameters aren't evaluated.
 	 */
 	public static void main(String[] args) {
-		new ApplicationServiceImpl().initialize();
+		new ApplicationServiceImpl();
 	}
 
 }
