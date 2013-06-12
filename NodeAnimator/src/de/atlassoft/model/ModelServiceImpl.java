@@ -2,17 +2,33 @@ package de.atlassoft.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-//TODO: Klasse implementieren
+
+
+/**
+ * Implementation of the {@link ModelService} interface, providing access to the
+ * data model layer of this application.
+ * 
+ * @author Alexander Balogh
+ * 
+ */
 public class ModelServiceImpl implements ModelService {
 
 	private PropertyChangeSupport pcSupport;
-	
+	private RailwaySystem activeRailSys;
+	private List<String> railSysIDs;
+	private List<TrainType> trainTypes;
+	private List<ScheduleScheme> scheduleSchemes;
+
 	public ModelServiceImpl() {
 		pcSupport = new PropertyChangeSupport(this);
+		railSysIDs = new ArrayList<String>();
+		trainTypes = new ArrayList<TrainType>();
+		scheduleSchemes = new ArrayList<ScheduleScheme>();
 	}
-	
-	
+
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcSupport.addPropertyChangeListener(listener);
@@ -31,61 +47,57 @@ public class ModelServiceImpl implements ModelService {
 
 	@Override
 	public void setActiveRailwaySys(RailwaySystem railSys) {
-		// TODO Auto-generated method stub
-
+		activeRailSys = railSys;
 	}
 
 	@Override
 	public RailwaySystem getActiveRailwaySys() {
-		// TODO Auto-generated method stub
-		return null;
+		return activeRailSys;
 	}
 
 	@Override
 	public List<String> getRailwaySystemIDs() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.unmodifiableList(railSysIDs); // TODO: railsys ids setzten
 	}
 
 	@Override
 	public void addTrainType(TrainType type) {
-		// TODO Auto-generated method stub
+		if (type != null && !trainTypes.contains(type)) {
+			trainTypes.add(type);
+		}
 
 	}
 
 	@Override
 	public void deleteTrainType(TrainType type) {
-		// TODO Auto-generated method stub
-
+		trainTypes.remove(type);
 	}
 
 	@Override
 	public List<TrainType> getTrainTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.unmodifiableList(trainTypes);
 	}
 
 	@Override
 	public void addSchedule(ScheduleScheme schedule) {
-		// TODO Auto-generated method stub
-
+		if (schedule != null && !scheduleSchemes.contains(schedule)) {
+			scheduleSchemes.add(schedule);
+		}
 	}
 
 	@Override
 	public void deleteSchedule(ScheduleScheme schedule) {
-		// TODO Auto-generated method stub
-
+		scheduleSchemes.remove(schedule);
 	}
 
 	@Override
 	public List<ScheduleScheme> getSchedules() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.unmodifiableList(scheduleSchemes);
 	}
 
 	@Override
 	public SimulationStatistic getStatistic() {
-		// TODO Auto-generated method stub
+		// TODO: noch unklar
 		return null;
 	}
 
