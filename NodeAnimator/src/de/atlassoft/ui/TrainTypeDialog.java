@@ -31,10 +31,12 @@ public class TrainTypeDialog {
 	
 	public TrainTypeDialog(ApplicationService application) {
 		Display display = Display.getCurrent();
+		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
+		shell.setImage(appIcon);
 		shell.setLayout(new GridLayout(3, false));
 		initUI();
 		MainWindow.center(shell);

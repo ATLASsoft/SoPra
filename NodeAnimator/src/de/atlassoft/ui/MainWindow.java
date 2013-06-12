@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import de.atlassoft.application.ApplicationService;
+import de.atlassoft.application.ApplicationServiceImpl;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -29,6 +31,7 @@ import de.atlassoft.util.I18NSingleton;
  */
 public class MainWindow {
 
+	private ApplicationService applicationService;
 	private Shell shell;
 	private Display display;
 	private Composite mainComposite;
@@ -42,15 +45,18 @@ public class MainWindow {
 	 * 
 	 * @param display
 	 */
-	public MainWindow(){
+	public MainWindow(ApplicationService applicationService) {
 		
+		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(960, 620);
+		Image appIcon = new Image (null, "img/trainTypeIcon.png");
+		shell.setImage(appIcon);
 		
-		borderComposite = new Composite(shell, SWT.BORDER);
+		borderComposite = new Composite(shell, SWT.NONE);
 		Rectangle frameRect = new Rectangle(0, 0, shell.getSize().x-20, shell.getSize().y-40);
 		borderComposite.setBounds(frameRect);
 		rowLayout = new RowLayout();
@@ -60,8 +66,6 @@ public class MainWindow {
 		
 		mainComposite = new Composite(borderComposite, SWT.BORDER);
 		mainComposite.setLayoutData(new RowData(shell.getSize().x, shell.getSize().y-125));
-		//Rectangle frameRect = shell.getMonitor().getBounds();
-		//mainComposite.setBounds(frameRect);
 	    layout = new StackLayout();
 	    mainComposite.setLayout(layout);
 	    layout.topControl = HomeScreenComposite.createHomeScreenComposite(shell, mainComposite);
@@ -83,7 +87,7 @@ public class MainWindow {
 	 * 
 	 * @param shell
 	 */
-	public static void center(Shell shell){ 
+	public static void center(Shell shell) { 
 		
 		//Rectangle bdc = shell.getDisplay().getBounds();
 		Rectangle bdc = shell.getMonitor().getBounds();
@@ -100,9 +104,9 @@ public class MainWindow {
 	 * Creates the toolbar for the main window
 	 * 
 	 */
-	private void createToolbar(){
+	private void createToolbar() {
 
-		ToolBar toolBar = new ToolBar(borderComposite, SWT.BORDER);
+		ToolBar toolBar = new ToolBar(borderComposite, SWT.NONE);
 		toolBar.setLayoutData(new RowData(shell.getSize().x, 63));
 		
 		//Create schedule item
@@ -159,7 +163,6 @@ public class MainWindow {
         });
 		
 		//Start simulation item
-		//TODO: Resize Image
 		Image startSimulation = new Image(null, "img/startSimulationIcon.png");
 		ToolItem simulationItem = new ToolItem(toolBar, SWT.PUSH);
 		simulationItem.setImage(startSimulation);
@@ -187,11 +190,12 @@ public class MainWindow {
 		});
 	}
 	
+	//TODO: Im finalen Programm löschen
 	/**
 	 * Creates the menuBar for the main window
 	 * 
 	 */
-	private void createMenubar(){
+	private void createMenubar() {
 		
 		I18NService I18N = I18NSingleton.getInstance();
 		//creates the menubar
@@ -328,9 +332,7 @@ public class MainWindow {
 		shell.setMenuBar(menuBar);
 	}	
 	
-	//TODO: delete in final program
-	public static void main(String[] args){
-		new MainWindow();
+	public void close() {
 		Display display = Display.getDefault();
 		display.dispose();
 	}
