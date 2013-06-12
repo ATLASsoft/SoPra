@@ -44,7 +44,10 @@ public class ScheduleComposite {
 		initUI();
 	}
 	
-	public void initUI(){
+	/**
+	 * Creates the UI elements of the ScheduleComposite
+	 */
+	private void initUI(){
 		//TODO: noch etwas dran arbeiten
 		scheduleComposite = new Composite (mainComposite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
@@ -59,28 +62,6 @@ public class ScheduleComposite {
 	}
 	
 	public Composite getComposite(){
-		return scheduleComposite;
-	}
-	
-	/**
-	 * Creates the Composite for creating a schedule.
-	 * 
-	 * @param shell
-	 * 			The main shell of the application.
-	 * @param mainComposite
-	 * 			The main composite of the application
-	 * @return
-	 * 			The schedule composite.
-	 */
-	public static Composite createScheduleComposite(Shell shell, Composite mainComposite){
-		//TODO: Ausprogrammieren
-		
-	    Composite scheduleComposite = new Composite(mainComposite, SWT.NONE);
-	    scheduleComposite.setLayout(new RowLayout());
-	    Label label = new Label(scheduleComposite, SWT.NONE);
-	    label.setText("scheduleComposite");
-	    label.pack();
-		
 		return scheduleComposite;
 	}
 }

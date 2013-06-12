@@ -19,15 +19,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model = new ModelServiceImpl();
 		// ... model mit werten füllen
 		
-		//window = new MainWindow(this);
-
+		window = new MainWindow(this);
 	}
 
 	@Override
 	public void shutDown() {
 		// TODO Auto-generated method stub
-		// window.dispose();
-		
+		window.close();
 	}
 
 	@Override
