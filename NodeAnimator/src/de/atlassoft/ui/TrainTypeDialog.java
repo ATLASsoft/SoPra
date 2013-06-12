@@ -27,7 +27,7 @@ import de.atlassoft.util.ImageHelper;
 
 /**
  * This class is for the TrainType Dialog where
- * you can creating a new traintype.
+ * you can create a new traintype.
  * 
  * @author Silvan Haeussermann, Tobias Ilg
  */
