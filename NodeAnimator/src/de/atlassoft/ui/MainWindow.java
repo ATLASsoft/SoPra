@@ -7,10 +7,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import de.atlassoft.application.ApplicationService;
-import de.atlassoft.application.ApplicationServiceImpl;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -56,19 +55,36 @@ public class MainWindow {
 		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell.setImage(appIcon);
 		
-		borderComposite = new Composite(shell, SWT.NONE);
+		//Creates the overall composite
+		borderComposite = new Composite(shell, SWT.BORDER);
 		Rectangle frameRect = new Rectangle(0, 0, shell.getSize().x-20, shell.getSize().y-40);
 		borderComposite.setBounds(frameRect);
-		rowLayout = new RowLayout();
-		rowLayout.type = SWT.VERTICAL;
-		borderComposite.setLayout(rowLayout);
+		//rowLayout = new RowLayout();
+		//rowLayout.type = SWT.VERTICAL;
+		//borderComposite.setLayout(rowLayout);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		borderComposite.setLayout(gridLayout);
+		GridData borderGridData = new GridData();
+		borderGridData.grabExcessHorizontalSpace = true;
+		borderGridData.grabExcessVerticalSpace = true;
+		borderComposite.setLayoutData(borderGridData);
+		
 		createToolbar();
 		
+		//Creates the main screen with the different tabs
 		mainComposite = new Composite(borderComposite, SWT.BORDER);
-		mainComposite.setLayoutData(new RowData(shell.getSize().x, shell.getSize().y-125));
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessVerticalSpace = true;
+		mainComposite.setLayoutData(gridData);
+		//mainComposite.setLayoutData(new RowData(shell.getSize().x, shell.getSize().y-125));
 	    layout = new StackLayout();
 	    mainComposite.setLayout(layout);
-	    layout.topControl = HomeScreenComposite.createHomeScreenComposite(shell, mainComposite);
+	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout);
+	    layout.topControl = homeScreenComposite.getComposite();
 	    mainComposite.layout();	    
 		
 	    borderComposite.layout();
@@ -106,8 +122,11 @@ public class MainWindow {
 	 */
 	private void createToolbar() {
 
-		ToolBar toolBar = new ToolBar(borderComposite, SWT.NONE);
-		toolBar.setLayoutData(new RowData(shell.getSize().x, 63));
+		ToolBar toolBar = new ToolBar(borderComposite, SWT.BORDER);
+		GridData toolbarGridData = new GridData();
+		toolbarGridData.grabExcessHorizontalSpace = true;
+		toolbarGridData.horizontalAlignment = SWT.FILL;
+		//toolBar.setLayoutData(new RowData(shell.getSize().x, 63));
 		
 		//Create schedule item
 		ToolItem createScheduleItem = new ToolItem(toolBar, SWT.PUSH);
@@ -119,7 +138,6 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e){
 				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout);
 				layout.topControl = scheduleComposite.getComposite();
-//				layout.topControl = ScheduleComposite.createScheduleComposite(shell, mainComposite);
 				mainComposite.layout();
 			}
 		});
@@ -169,8 +187,7 @@ public class MainWindow {
 		simulationItem.setText(I18N.getMessage("MainWindow.StartSimulation"));
 		simulationItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
+			public void widgetSelected(SelectionEvent e) {				
 				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout);
 				layout.topControl = simComp.getComposite();
 				mainComposite.layout();
@@ -184,7 +201,7 @@ public class MainWindow {
 		aboutItem.setText("About");
 		aboutItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e){
+			public void widgetSelected(SelectionEvent e) {
 				new AboutDialog(display);
 			}
 		});

@@ -49,7 +49,7 @@ public class SimulationComposite {
 	 * @param layout
 	 * 		The stack layout of the main window.
 	 */
-	public SimulationComposite (Shell shell, Composite mainComposite, StackLayout layout){
+	public SimulationComposite (Shell shell, Composite mainComposite, StackLayout layout) {
 		//TODO: Ausprogrammieren
 		
 		this.shell = shell;
@@ -62,7 +62,7 @@ public class SimulationComposite {
 	/**
 	 * Builds the elements of the UI of the simulation.
 	 */
-	private void initUI(){
+	private void initUI() {
 		
 		simulationComposite = new Composite(mainComposite, SWT.NONE);		
 	    GridLayout gridLayout = new GridLayout();
@@ -165,7 +165,7 @@ public class SimulationComposite {
 	 * @return
 	 * 		The simulation composite.
 	 */
-	public Composite getComposite(){
+	public Composite getComposite() {
 		return simulationComposite;
 	}
 }
