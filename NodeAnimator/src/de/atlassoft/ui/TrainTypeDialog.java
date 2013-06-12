@@ -116,8 +116,7 @@ public class TrainTypeDialog {
 	        	// read values
 	        	final String nameOfTrainType = name.getText();
 	        	final String topSpeed = speed.getText();
-	        	final String priority = comboPriority.getText();
-	        	
+	        	final String priority = comboPriority.getText();	        	
 	        	// check constraints
 	        	List<String> errorMessages = new ArrayList<String>();
 	        	
