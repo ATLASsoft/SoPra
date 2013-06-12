@@ -15,7 +15,7 @@ import org.eclipse.swt.graphics.Image;
 public class ImageHelper {
 
 	private static Map<String, Image> images = new HashMap<String, Image>();
-	private static Map<String, Image> fileNames = new HashMap<String, Image>();
+
 	
 	
 	/**
