@@ -148,7 +148,8 @@ public class SimulationComposite {
 	    		cancelBild.dispose();
 	    		pauseImage.dispose();
 	    		playImage.dispose();
-	    		layout.topControl = HomeScreenComposite.createHomeScreenComposite(shell, mainComposite);
+	    		HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout);		
+	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 	    	}
 	    });
