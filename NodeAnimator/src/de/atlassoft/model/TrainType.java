@@ -64,7 +64,7 @@ public class TrainType {
 		}
 		if (priority < 0 || priority > 10) {
 			throw new IllegalArgumentException(
-					"priority must be a number beteen 0 and 10 (inclusive)");
+					"priority must be a number between 0 and 10 (inclusive)");
 		}
 
 		// set properties
