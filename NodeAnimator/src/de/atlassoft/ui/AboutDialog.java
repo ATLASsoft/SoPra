@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 
 /**
@@ -20,7 +22,8 @@ import de.atlassoft.util.ImageHelper;
 public class AboutDialog {
 	
 	private Shell shell;
-
+	private I18NService I18N;
+	
 	/**
 	 * Public constructor for the AboutDialog. Creates a new
 	 * about dialog.
@@ -30,8 +33,9 @@ public class AboutDialog {
 	 */
 	public AboutDialog(Display display){
 		
+		I18N = I18NSingleton.getInstance();
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setText("‹ber");
+		shell.setText(I18N.getMessage("AboutDialog.title"));
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setSize(300, 250);
 		MainWindow.center(shell);
@@ -60,9 +64,6 @@ public class AboutDialog {
 		Label alex = new Label(shell, SWT.NONE);
 		alex.setText("Alexander Balogh");
 		
-		Label silvan = new Label(shell, SWT.NONE);
-		silvan.setText("Silvan H‰uﬂermann");
-		
 		Label tobi = new Label(shell, SWT.NONE);
 		tobi.setText("Tobias Ilg");
 		
@@ -71,6 +72,9 @@ public class AboutDialog {
 		
 		Label andi = new Label(shell, SWT.NONE);
 		andi.setText("Andreas Szlatki");
+		
+		Label silvan = new Label(shell, SWT.NONE);
+		silvan.setText("Silvan H‰uﬂermann");
 		
 		Label copyright = new Label(shell, SWT.NONE);
 		copyright.setText("(c) 2013");

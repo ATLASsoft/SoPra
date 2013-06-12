@@ -2,6 +2,10 @@ package de.atlassoft.ui;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PropertyResourceBundle;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -18,20 +22,32 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.TrainType;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 
 /**
- * This class is for creating a new traintype.
+ * This class is for the TrainType Dialog where
+ * you can creating a new traintype.
  * 
  * @author Silvan Haeussermann, Tobias Ilg
  */
 public class TrainTypeDialog {
 	
 	private Shell shell;
+	private ApplicationService application;
+	
+	/**
+	 * Public constructor for the TrainType Dialog. Creates a new
+	 * about shell and open it.
+	 * 
+	 * @param application
+	 * 			??
+	 */
 	
 	public TrainTypeDialog(ApplicationService application) {
+		this.application = application;
 		Display display = Display.getCurrent();
 //		Image appIcon = new Image (null, "img/trainTypeIcon.png");
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -39,13 +55,23 @@ public class TrainTypeDialog {
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
+		shell.setImage(ImageHelper.getImage("trainTypTitle"));
 		shell.setLayout(new GridLayout(3, false));
-		initUI();
+		initUI(display);
 		MainWindow.center(shell);
 		shell.open();
 	}
 	
-	private void initUI() {
+	/**
+	 * A method which creates the contet, 
+	 * label, text, buttons and tooltips of
+	 * the shell of the TrainType Dialog.
+	 * 
+	 * @param display
+	 * 			The currently used display.
+	 */
+	
+	private void initUI(final Display display) {
 		final I18NService I18N = I18NSingleton.getInstance();
 		
 		// First row
