@@ -91,7 +91,7 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
 		speed.setToolTipText(I18N.getMessage("TrainTypeDialog.textSpeed"));
 		
-		// Third row with a label and a combo for the Priority (1-10=
+		// Third row with a label and a combo for the Priority (1-10)
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
 		final String[] prioritySelection = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
