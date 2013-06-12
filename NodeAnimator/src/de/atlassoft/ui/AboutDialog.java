@@ -4,11 +4,13 @@ package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 
 /**
  * This is the class for the about dialog where the name of our
@@ -28,9 +30,11 @@ public class AboutDialog {
 	 * 			The currently used display.
 	 */
 	public AboutDialog(Display display){
+
+		final I18NService I18N = I18NSingleton.getInstance();
 		
 		shell = new Shell(display);
-		shell.setText("‹ber");
+		shell.setText(I18N.getMessage("AboutDialog.title"));
 		shell.setSize(300, 250);
 		MainWindow.center(shell);
 		initUI(display);
@@ -58,9 +62,6 @@ public class AboutDialog {
 		Label alex = new Label(shell, SWT.NONE);
 		alex.setText("Alexander Balogh");
 		
-		Label silvan = new Label(shell, SWT.NONE);
-		silvan.setText("Silvan H‰uﬂermann");
-		
 		Label tobi = new Label(shell, SWT.NONE);
 		tobi.setText("Tobias Ilg");
 		
@@ -69,6 +70,9 @@ public class AboutDialog {
 		
 		Label andi = new Label(shell, SWT.NONE);
 		andi.setText("Andreas Szlatki");
+		
+		Label silvan = new Label(shell, SWT.NONE);
+		silvan.setText("Silvan H‰uﬂermann");
 		
 		Label copyright = new Label(shell, SWT.NONE);
 		copyright.setText("(c) 2013");

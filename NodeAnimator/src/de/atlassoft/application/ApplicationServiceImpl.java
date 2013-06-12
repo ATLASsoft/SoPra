@@ -26,6 +26,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void initialize() {
 		model = new ModelServiceImpl();
 		// TODO: unvollständig
+		
+		// load images
+		ImageHelper.createImage("train", "img/trainTypeIcon.png");
+		
 		window = new MainWindow(this);
 	}
 
