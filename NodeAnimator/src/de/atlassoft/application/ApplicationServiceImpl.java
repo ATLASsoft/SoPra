@@ -10,6 +10,7 @@ import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
+import de.atlassoft.ui.SplashScreen;
 import de.atlassoft.util.ImageHelper;
 
 public class ApplicationServiceImpl implements ApplicationService {
@@ -41,6 +42,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.createImage("questionMarkIcon", "img/question_mark.png");
 		ImageHelper.createImage("trashIcon", "img/trashIcon.png");
 		
+		SplashScreen.showSplashScreen(3);		
 		window = new MainWindow(this);
 	}
 
