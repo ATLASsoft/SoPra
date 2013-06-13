@@ -51,7 +51,7 @@ public class TrainTypeDialog {
 		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
-		shell.setImage(ImageHelper.getImage("trainTypTitle"));
+		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));
 		initUI(display);
 		MainWindow.center(shell);
@@ -165,7 +165,7 @@ public class TrainTypeDialog {
 		// Cancel Button
 		Button cancel = new Button(shell, SWT.PUSH);
 		cancel.setText(I18N.getMessage("TrainTypeDialog.buttonCancel"));
-	    cancel.setImage(ImageHelper.getImage("redX"));
+	    cancel.setImage(ImageHelper.getImage("cancelIcon"));
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	          shell.close();

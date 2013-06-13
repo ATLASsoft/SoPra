@@ -18,7 +18,7 @@ public class SplashScreen {
 		MainWindow.center(shell);
 		
 		final GifCLabel label = new GifCLabel(shell, SWT.CENTER);
-		label.setGifImage("img/ATLASsoftLogo.gif");
+		label.setGifImage("img/ATLASsoftLogo1.gif");
 		
 		ProgressBar pb1 = new ProgressBar(shell, SWT.HORIZONTAL | SWT.SMOOTH);
 	    pb1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

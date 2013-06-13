@@ -3,7 +3,6 @@ package de.atlassoft.ui;
 
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -37,7 +36,7 @@ public class AboutDialog {
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText(I18N.getMessage("AboutDialog.title"));
 		shell.setImage(ImageHelper.getImage("trainIcon"));
-		shell.setSize(300, 250);
+		shell.setSize(300, 300);
 		MainWindow.center(shell);
 		initUI(display);
 		shell.open();
@@ -56,10 +55,12 @@ public class AboutDialog {
 		shell.setLayout(rowLayout);
 		
 		Label atlassoft = new Label(shell, SWT.NONE);
-		Font f = new Font (display,"Calibri", 26, SWT.BOLD);
-		atlassoft.setText("ATLASsoft");
-		atlassoft.setFont(f);
-		atlassoft.setSize(20, 10);
+//		Font f = new Font (display,"Calibri", 26, SWT.BOLD);
+//		atlassoft.setText("ATLASsoft");
+//		atlassoft.setFont(f);
+//		atlassoft.setSize(20, 10);
+		atlassoft.setImage(ImageHelper.getImage("ATLASsoftLogo"));
+		
 		
 		Label alex = new Label(shell, SWT.NONE);
 		alex.setText("Alexander Balogh");

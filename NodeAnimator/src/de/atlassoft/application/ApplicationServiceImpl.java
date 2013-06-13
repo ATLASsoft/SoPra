@@ -29,10 +29,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		// TODO: unvollständig
 		
 		// load images
-		ImageHelper.createImage("trainTypTitle", "img/trainIcon.png");
+		
 		ImageHelper.createImage("greenCheck", "img/greencheck.png");
 		ImageHelper.createImage("questionMark", "img/fragezeichen.jpg");
-		ImageHelper.createImage("redX", "img/redX.png");
 		ImageHelper.createImage("loadButton", "img/loadButton.png");
 		ImageHelper.createImage("trainIcon", "img/trainIcon.png");
 		ImageHelper.createImage("cancelIcon", "img/redX.png");
@@ -41,6 +40,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.createImage("playIcon", "img/playButton.png");
 		ImageHelper.createImage("questionMarkIcon", "img/question_mark.png");
 		ImageHelper.createImage("trashIcon", "img/trashIcon.png");
+		ImageHelper.createImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
 		
 		SplashScreen.showSplashScreen(3);		
 		window = new MainWindow(this);
