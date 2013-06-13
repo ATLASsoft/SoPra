@@ -18,5 +18,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/itextpdf-5.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Lyn/Documents/Studium Winfo/eclipse/jdom-2.0.5/jdom-2.0.5.jar"/>
+	<classpathentry kind="lib" path="libs/jdom-2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
