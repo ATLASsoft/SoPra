@@ -31,18 +31,14 @@ public class ListDialog {
 	private I18NService I18N;
 	private DialogMode dialogMode;
 	
-	public ListDialog(DialogMode dialogMode) {
+	public ListDialog() {
 		
 		I18N = I18NSingleton.getInstance();
 		this.dialogMode = dialogMode;
 		shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		if(dialogMode == DialogMode.LOAD){
-			shell.setText(I18N.getMessage("ListDialog.DialogNameLoad"));	
-		} else {
-			shell.setText(I18N.getMessage("ListDialog.DialogNameDelete"));
-		}
+		shell.setText(I18N.getMessage("ListDialog.Title"));
 		shell.setImage(ImageHelper.getImage("trainIcon"));
-		shell.setSize(400, 320);
+		shell.setSize(500, 320);
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);
 		GridData shellGridData = new GridData();
@@ -58,7 +54,7 @@ public class ListDialog {
 		//TODO: implement method
 		listComposite = new Composite(shell, SWT.NONE);
 		GridLayout listGridLayout = new GridLayout();
-		listGridLayout.numColumns = 2;
+		listGridLayout.numColumns = 3;
 		listComposite.setLayout(listGridLayout);
 		GridData listGridData = new GridData();
 		listGridData.verticalAlignment = SWT.FILL;
@@ -76,7 +72,7 @@ public class ListDialog {
 		tableGridData.horizontalAlignment = SWT.FILL;
 		tableGridData.grabExcessHorizontalSpace = true;
 		tableGridData.grabExcessVerticalSpace = true;
-		tableGridData.horizontalSpan = 2;
+		tableGridData.horizontalSpan = 3;
 		table.setLayoutData(tableGridData);
 		
 		TableColumn column = new TableColumn(table, SWT.LEFT);
@@ -98,6 +94,18 @@ public class ListDialog {
 		buttonLayout.justify = true;
 		buttonComposite.setLayout(buttonLayout);
 		
+		Button loadButton = new Button(buttonComposite, SWT.PUSH);
+		loadButton.setText(I18N.getMessage("ListDialog.Load"));
+		loadButton.setImage(ImageHelper.getImage("loadButton"));
+		RowData loadRowData = new RowData(130, 52);
+		loadButton.setLayoutData(loadRowData);
+
+		Button deleteButton = new Button(buttonComposite, SWT.PUSH);
+		deleteButton.setText(I18N.getMessage("ListDialog.Delete"));
+		deleteButton.setImage(ImageHelper.getImage("trashIcon"));
+		RowData deleteRowData = new RowData(130, 52);
+		deleteButton.setLayoutData(deleteRowData);	
+		
 		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
 		cancelButton.setText(I18N.getMessage("ListDialog.Cancel"));
 		cancelButton.setImage(ImageHelper.getImage("cancelIcon"));
@@ -109,20 +117,6 @@ public class ListDialog {
 				shell.close();
 			}
 		});
-		
-		if(dialogMode == DialogMode.LOAD){
-			Button loadButton = new Button(buttonComposite, SWT.PUSH);
-			loadButton.setText(I18N.getMessage("ListDialog.Load"));
-			loadButton.setImage(ImageHelper.getImage("loadButton"));
-			RowData loadRowData = new RowData(130, 52);
-			loadButton.setLayoutData(loadRowData);
-		} else {
-			Button deleteButton = new Button(buttonComposite, SWT.PUSH);
-			deleteButton.setText(I18N.getMessage("ListDialog.Delete"));
-			deleteButton.setImage(ImageHelper.getImage("trashIcon"));
-			RowData deleteRowData = new RowData(130, 52);
-			deleteButton.setLayoutData(deleteRowData);
-		}
 		
 		listComposite.layout();
 	}

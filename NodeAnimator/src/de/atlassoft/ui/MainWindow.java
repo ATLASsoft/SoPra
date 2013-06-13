@@ -151,27 +151,14 @@ public class MainWindow {
             }
         });
 		
-		//Load RailSystem item
-		ToolItem loadRailSystemItem = new ToolItem(toolBar, SWT.PUSH);
-		loadRailSystemItem.setImage(ImageHelper.getImage("loadButton"));
-		loadRailSystemItem.setText(I18N.getMessage("MainWindow.LoadRailwaysys"));
-		loadRailSystemItem.addSelectionListener(new SelectionAdapter() {
+		//manage RailSystem item
+		ToolItem manageRailSystemItem = new ToolItem(toolBar, SWT.PUSH);
+		manageRailSystemItem.setImage(ImageHelper.getImage("settingsIcon"));
+		manageRailSystemItem.setText(I18N.getMessage("MainWindow.ManageRailwaysys"));
+		manageRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DialogMode load = DialogMode.LOAD;
-				new ListDialog(load);
-            }
-        });
-		
-		//Delete RailSystem item
-		ToolItem deleteRailSysItem = new ToolItem(toolBar, SWT.PUSH);
-		deleteRailSysItem.setImage(ImageHelper.getImage("trashIcon"));
-		deleteRailSysItem.setText(I18N.getMessage("MainWindow.DeleteRailwaysys"));
-		deleteRailSysItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				DialogMode delete = DialogMode.DELETE;
-				new ListDialog(delete);
+				new ListDialog();
 			}
 		});
 		
@@ -292,7 +279,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DialogMode load = DialogMode.LOAD;
-				new ListDialog(load);
+				new ListDialog();
             }
         });
 		
