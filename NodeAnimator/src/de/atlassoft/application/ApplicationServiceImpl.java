@@ -42,7 +42,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.createImage("trashIcon", "img/trashIcon.png");
 		ImageHelper.createImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
 		
-		SplashScreen.showSplashScreen(3);		
+		//TODO: Wieder aktivieren
+//		SplashScreen.showSplashScreen(3);		
 		window = new MainWindow(this);
 	}
 
