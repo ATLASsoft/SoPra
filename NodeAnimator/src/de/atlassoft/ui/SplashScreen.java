@@ -7,8 +7,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * This class is for the SplashScreen
+ * which appears at the beginning of
+ * the system 
+ * 
+ * @author Tobias Ilg
+ *
+ */
+
 
 public class SplashScreen {
+	
+	/**
+	 * A method which generates a
+	 * (Shell, CLabel with a GIF-Image and a Progessbar)
+	 * Splashscreen.
+	 * 
+	 * @param duration
+	 */
 	
 	public static void showSplashScreen(int duration) {
 		Display display = Display.getCurrent();
