@@ -131,7 +131,7 @@ public interface ModelService {
 	 * @param schedule
 	 *            The {@link ScheduleScheme} to be added
 	 */
-	void addSchedule(ScheduleScheme schedule);
+	void addScheduleScheme(ScheduleScheme schedule);
 
 	/**
 	 * Removes a {@link ScheduleScheme} from the list of schedule schemes.
@@ -141,7 +141,7 @@ public interface ModelService {
 	 * @param schedule
 	 *            The {@link ScheduleScheme} to be removed
 	 */
-	void deleteSchedule(ScheduleScheme schedule);
+	void deleteScheduleScheme(ScheduleScheme schedule);
 
 	/**
 	 * Returns a list containing all <code>ScheduleSchemes</code>.
@@ -149,7 +149,7 @@ public interface ModelService {
 	 * @return List of all <code>ScheduleSchemes</code> or an empty list if
 	 *         there are no schedule schemes
 	 */
-	List<ScheduleScheme> getSchedules();
+	List<ScheduleScheme> getScheduleSchemes();
 
 	/**
 	 * Returns the latest {@link SimulationStatistic}.

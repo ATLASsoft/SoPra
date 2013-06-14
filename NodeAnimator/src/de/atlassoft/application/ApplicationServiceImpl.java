@@ -30,18 +30,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		// load images
 		
-		ImageHelper.createImage("greenCheck", "img/greencheck.png");
-		ImageHelper.createImage("questionMark", "img/fragezeichen.jpg");
-		ImageHelper.createImage("loadButton", "img/loadButton.png");
-		ImageHelper.createImage("trainIcon", "img/trainIcon.png");
-		ImageHelper.createImage("cancelIcon", "img/redX.png");
-		ImageHelper.createImage("scheduleIcon", "img/scheduleIcon.png");
-		ImageHelper.createImage("railwaySysIcon", "img/railSysIcon.png");
-		ImageHelper.createImage("playIcon", "img/playButton.png");
-		ImageHelper.createImage("questionMarkIcon", "img/question_mark.png");
-		ImageHelper.createImage("trashIcon", "img/trashIcon.png");
-		ImageHelper.createImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
-		ImageHelper.createImage("settingsIcon", "img/settingsIcon.png");
+		ImageHelper.loadImage("greenCheck", "img/greencheck.png");
+		ImageHelper.loadImage("questionMark", "img/fragezeichen.jpg");
+		ImageHelper.loadImage("loadButton", "img/loadButton.png");
+		ImageHelper.loadImage("trainIcon", "img/trainIcon.png");
+		ImageHelper.loadImage("cancelIcon", "img/redX.png");
+		ImageHelper.loadImage("scheduleIcon", "img/scheduleIcon.png");
+		ImageHelper.loadImage("railwaySysIcon", "img/railSysIcon.png");
+		ImageHelper.loadImage("playIcon", "img/playButton.png");
+		ImageHelper.loadImage("questionMarkIcon", "img/question_mark.png");
+		ImageHelper.loadImage("trashIcon", "img/trashIcon.png");
+		ImageHelper.loadImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
+		ImageHelper.loadImage("settingsIcon", "img/settingsIcon.png");
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		

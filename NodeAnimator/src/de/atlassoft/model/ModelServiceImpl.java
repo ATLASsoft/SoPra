@@ -91,19 +91,19 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public void addSchedule(ScheduleScheme schedule) {
+	public void addScheduleScheme(ScheduleScheme schedule) {
 		if (schedule != null && !scheduleSchemes.contains(schedule)) {
 			scheduleSchemes.add(schedule);
 		}
 	}
 
 	@Override
-	public void deleteSchedule(ScheduleScheme schedule) {
+	public void deleteScheduleScheme(ScheduleScheme schedule) {
 		scheduleSchemes.remove(schedule);
 	}
 
 	@Override
-	public List<ScheduleScheme> getSchedules() {
+	public List<ScheduleScheme> getScheduleSchemes() {
 		return Collections.unmodifiableList(scheduleSchemes);
 	}
 

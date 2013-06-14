@@ -19,7 +19,7 @@ public class ImageHelper {
 	
 	
 	/**
-	 * Creates a new {@link Image} from the given file.
+	 * Loads a new {@link Image} from the given file.
 	 * 
 	 * @param key
 	 *            to access this {@link Image}
@@ -28,7 +28,7 @@ public class ImageHelper {
 	 * @throws IllegalArgumentException
 	 *             if key is already used
 	 */
-	public static void createImage(String key, String fileName) {
+	public static void loadImage(String key, String fileName) {
 		if (images.keySet().contains(key)) {
 			throw new IllegalArgumentException("key is already used");
 		}
