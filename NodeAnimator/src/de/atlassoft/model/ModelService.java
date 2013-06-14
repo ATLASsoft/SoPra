@@ -1,5 +1,6 @@
 package de.atlassoft.model;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
@@ -11,6 +12,25 @@ import java.util.List;
  */
 public interface ModelService {
 
+	/**
+	 * Property name of the active railway system. Use to invoke a {@link PropertyChangeEvent}
+	 * after using {@link ModelService#setActiveRailwaySys(RailwaySystem)}.
+	 */
+	public static String ACTIVE_RAILSYS_PROPNAME = "activeRailSys";
+	
+	/**
+	 * Property name of the train type property. Use to invoke a {@link PropertyChangeEvent}
+	 * after updating the list of train types.
+	 */
+	public static String TRAIN_TYPES_PROPNAME = "trainTypes";
+	
+	/**
+	 * Property name of the schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
+	 * after updating the list of schedule schemes.
+	 */
+	public static String SCHEDULE_SCHEMES_PROPNAME = "scheduleSchemes";
+	
+	
 	/**
 	 * Add a {@link PropertyChangeListener} to the listener list. The listener is
 	 * registered for all properties. The same listener object may be added more
@@ -35,9 +55,19 @@ public interface ModelService {
 	void removePropertyChangeListener(PropertyChangeListener listener);
 
 	/**
-	 * NOCH UNKLAR!
+	 * Reports a property update of the property affiliated with propertyName to
+	 * all listeners that have been registered to this model by invoking a
+	 * {@link PropertyChangeEvent}. Note that oldValue of the fired
+	 * {@link PropertyChangeEvent} is not supported. Only the XXX_PROPNAME
+	 * constants of this interface are valid parameters for this method.
+	 * 
+	 * @param propertyName
+	 *            name of the changed property, must be one of the XXX_PROPNAME
+	 *            constants of this interface
+	 * @throws IllegalArgumentException
+	 *             if propertyName is none of the XXX_PROPNAME constants
 	 */
-	void firePropertyChangeEvent(); // TODO: unklare Spezifikation
+	void firePropertyChangeEvent(String propertyName); // TODO: unklare Spezifikation
 
 	/**
 	 * Removes the currently active railway system from the model and sets the
