@@ -8,10 +8,11 @@ package de.atlassoft.model;
  */
 public class State {
 
-	//TODO: Nochmal ankucken
 	public static final int UNBLOCKED = 0;
 	public static final int BLOCKED = 1;
 	private int state;
+	
+	
 	
 	/**
 	 * Returns the current state

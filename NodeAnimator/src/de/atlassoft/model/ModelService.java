@@ -25,11 +25,21 @@ public interface ModelService {
 	public static String TRAIN_TYPES_PROPNAME = "trainTypes";
 	
 	/**
-	 * Property name of the schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
-	 * after updating the list of schedule schemes.
+	 * Property name of the active schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
+	 * after updating the list of active schedule schemes.
 	 */
-	public static String SCHEDULE_SCHEMES_PROPNAME = "scheduleSchemes";
+	public static String ACTIVE_SCHEDULE_SCHEMES_PROPNAME = "activeSchemes";
 	
+	/**
+	 * Property name of the passive schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
+	 * after updating the list of passive schedule schemes.
+	 */
+	public static String PASSIVE_SCHEDULE_SCHEMES_PROPNAME = "passiveSchemes";
+	
+	/**
+	 * Property name of the railway system ids property. Use to invoke a {@link PropertyChangeEvent}
+	 * after updating the list of railway system ids.
+	 */
 	public static String RAILSYS_IDS_PROPNAME = "railsysIDs";
 	
 	
@@ -92,7 +102,27 @@ public interface ModelService {
 	RailwaySystem getActiveRailwaySys();
 
 	/**
-	 * Returns a list containing all IDs of all <code>RailwaySystems</code>.
+	 * Adds a new {@link String} to the list of railway system IDs. If id is
+	 * null, empty or has already been added, an
+	 * {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param id
+	 *            The {@link String} to be added
+	 */
+	void addRailwaySystemID(String id);
+
+	/**
+	 * Removes a {@link String} from the list of railway system IDs. If id is
+	 * null, or was never added no exception is thrown and no action is taken.
+	 * 
+	 * @param type
+	 *            The {@link String} to be removed
+	 */
+	void removeRailwaySystemID(String id);
+
+	/**
+	 * Returns a list of {@link Strings}, containing all IDs of all
+	 * <code>RailwaySystems</code>.
 	 * 
 	 * @return List of all <code>RailwaySystems</code> or an empty list if there
 	 *         are no <code>RailwaySystems</code>
@@ -127,33 +157,61 @@ public interface ModelService {
 	List<TrainType> getTrainTypes();
 
 	/**
-	 * Adds a new {@link ScheduleScheme} to the list of schedule schemes. If
-	 * schedule is null or has already been added, no exception is thrown and no
-	 * action is taken.
+	 * Adds a new {@link ScheduleScheme} to the list of active schedule schemes.
+	 * If schedule is null or has already been added, no exception is thrown and
+	 * no action is taken.
 	 * 
-	 * @param schedule
+	 * @param scheme
 	 *            The {@link ScheduleScheme} to be added
 	 */
-	void addScheduleScheme(ScheduleScheme schedule);
+	void addActiveScheduleScheme(ScheduleScheme scheme);
 
 	/**
-	 * Removes a {@link ScheduleScheme} from the list of schedule schemes.
-	 * If schedule is null, or was never added no exception is thrown and no
-	 * action is taken.
+	 * Removes a {@link ScheduleScheme} from the list of active schedule
+	 * schemes. If schedule is null, or was never added no exception is thrown
+	 * and no action is taken.
 	 * 
-	 * @param schedule
+	 * @param scheme
 	 *            The {@link ScheduleScheme} to be removed
 	 */
-	void deleteScheduleScheme(ScheduleScheme schedule);
+	void removeActiveScheduleScheme(ScheduleScheme scheme);
 
 	/**
-	 * Returns a list containing all <code>ScheduleSchemes</code>.
+	 * Returns a list containing all active <code>ScheduleSchemes</code>.
 	 * 
 	 * @return List of all <code>ScheduleSchemes</code> or an empty list if
 	 *         there are no schedule schemes
 	 */
-	List<ScheduleScheme> getScheduleSchemes();
+	List<ScheduleScheme> getActiveScheduleSchemes();
 
+	/**
+	 * Adds a new {@link ScheduleScheme} to the list of passive schedule schemes.
+	 * If schedule is null or has already been added, no exception is thrown and
+	 * no action is taken.
+	 * 
+	 * @param scheme
+	 *            The {@link ScheduleScheme} to be added
+	 */
+	void addPassiveScheduleScheme(ScheduleScheme scheme);
+	
+	/**
+	 * Removes a {@link ScheduleScheme} from the list of passive schedule
+	 * schemes. If schedule is null, or was never added no exception is thrown
+	 * and no action is taken.
+	 * 
+	 * @param scheme
+	 *            The {@link ScheduleScheme} to be removed
+	 */
+	void removePassiveScheduleScheme(ScheduleScheme scheme);
+	
+	/**
+	 * Returns a list containing all passive <code>ScheduleSchemes</code>.
+	 * 
+	 * @return List of all <code>ScheduleSchemes</code> or an empty list if
+	 *         there are no schedule schemes
+	 */
+	List<ScheduleScheme> getPassiveScheduleSchemes();
+	
 	/**
 	 * Returns the latest {@link SimulationStatistic}.
 	 * 

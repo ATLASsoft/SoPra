@@ -20,14 +20,20 @@ public class ModelServiceImpl implements ModelService {
 	private RailwaySystem activeRailSys;
 	private List<String> railSysIDs;
 	private List<TrainType> trainTypes;
-	private List<ScheduleScheme> scheduleSchemes;
+	private List<ScheduleScheme> activeSchemes;
+	private List<ScheduleScheme> passiveSchemes;
+
+
 
 	public ModelServiceImpl() {
 		pcSupport = new PropertyChangeSupport(this);
 		railSysIDs = new ArrayList<String>();
 		trainTypes = new ArrayList<TrainType>();
-		scheduleSchemes = new ArrayList<ScheduleScheme>();
+		activeSchemes = new ArrayList<ScheduleScheme>();
+		passiveSchemes = new ArrayList<ScheduleScheme>();
 	}
+
+
 
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -41,22 +47,25 @@ public class ModelServiceImpl implements ModelService {
 
 	@Override
 	public void firePropertyChangeEvent(String propertyName) {
-//		switch (propertyName) {
-//		case ACTIVE_RAILSYS_PROPNAME:
-//			pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
-//			break;
-//		case TRAIN_TYPES_PROPNAME:
-//			pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
-//			break;
-//		case SCHEDULE_SCHEMES_PROPNAME:
-//			pcSupport.firePropertyChange(SCHEDULE_SCHEMES_PROPNAME, null, getSchedules());
-//			break;
-//		case RAILSYS_IDS_PROPNAME:
-//			pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailSysIDs());
-//			break;
-//		default:
-//			throw new IllegalArgumentException("unknown property");
-//		}
+		switch (propertyName) {
+		case ACTIVE_RAILSYS_PROPNAME:
+			pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
+			break;
+		case TRAIN_TYPES_PROPNAME:
+			pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
+			break;
+		case ACTIVE_SCHEDULE_SCHEMES_PROPNAME:
+			pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
+			break;
+		case PASSIVE_SCHEDULE_SCHEMES_PROPNAME:
+			pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, getPassiveScheduleSchemes());
+			break;
+		case RAILSYS_IDS_PROPNAME:
+			pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailwaySystemIDs());
+			break;
+		default:
+			throw new IllegalArgumentException("unknown property");
+		}
 
 	}
 
@@ -69,10 +78,20 @@ public class ModelServiceImpl implements ModelService {
 	public RailwaySystem getActiveRailwaySys() {
 		return activeRailSys;
 	}
+	
+	@Override
+	public void addRailwaySystemID(String id) {
+		
+	}
+	
+	@Override
+	public void removeRailwaySystemID(String id) {
+		
+	}
 
 	@Override
 	public List<String> getRailwaySystemIDs() {
-		return Collections.unmodifiableList(railSysIDs); // TODO: railsys ids setzten
+		return Collections.unmodifiableList(railSysIDs);
 	}
 
 	@Override
@@ -94,20 +113,37 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public void addScheduleScheme(ScheduleScheme schedule) {
-		if (schedule != null && !scheduleSchemes.contains(schedule)) {
-			scheduleSchemes.add(schedule);
+	public void addActiveScheduleScheme(ScheduleScheme schedule) {
+		if (schedule != null && !activeSchemes.contains(schedule)) {
+			activeSchemes.add(schedule);
 		}
 	}
 
 	@Override
-	public void deleteScheduleScheme(ScheduleScheme schedule) {
-		scheduleSchemes.remove(schedule);
+	public void removeActiveScheduleScheme(ScheduleScheme schedule) {
+		activeSchemes.remove(schedule);
 	}
 
 	@Override
-	public List<ScheduleScheme> getScheduleSchemes() {
-		return Collections.unmodifiableList(scheduleSchemes);
+	public List<ScheduleScheme> getActiveScheduleSchemes() {
+		return Collections.unmodifiableList(activeSchemes);
+	}
+	
+	@Override
+	public void addPassiveScheduleScheme(ScheduleScheme schedule) {
+		if (schedule != null && !passiveSchemes.contains(schedule)) {
+			passiveSchemes.add(schedule);
+		}
+	}
+
+	@Override
+	public void removePassiveScheduleScheme(ScheduleScheme schedule) {
+		passiveSchemes.remove(schedule);
+	}
+
+	@Override
+	public List<ScheduleScheme> getPassiveScheduleSchemes() {
+		return Collections.unmodifiableList(passiveSchemes);
 	}
 
 	@Override
