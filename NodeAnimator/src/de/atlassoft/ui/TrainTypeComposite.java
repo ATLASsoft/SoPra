@@ -5,7 +5,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -41,14 +43,15 @@ public class TrainTypeComposite {
 	
 	
 	private void initUI(){
-		// TODO: Buttons Funktionen implementieren
+		// TODO: Buttons Funktionen implementieren und autoresize Table
 		Composite trainTypeCompositeSplit1 = new Composite (trainTypeComposite, SWT.NULL);
 		trainTypeCompositeSplit1.setLayout(new GridLayout(1, true));
 		
 		// Table with Information of selected TrainType
-		Table infoTrainType = new Table(trainTypeCompositeSplit1, SWT.BORDER);
-	    new TableColumn(infoTrainType, SWT.NONE);
-	    new TableColumn(infoTrainType, SWT.NONE);
+		final Table infoTrainTypeTable = new Table(trainTypeCompositeSplit1, SWT.BORDER);
+		new TableColumn(infoTrainTypeTable, SWT.NONE);
+		new TableColumn(infoTrainTypeTable, SWT.NONE);
+	    infoTrainTypeTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 	    
 	    Composite trainTypeCompositeSplit2 = new Composite (trainTypeCompositeSplit1, SWT.NULL);
 		trainTypeCompositeSplit2.setLayout(new FillLayout());
@@ -64,31 +67,38 @@ public class TrainTypeComposite {
 	 	delete.setImage(ImageHelper.getImage("trashIcon"));
 		
 	 	// List of TrainTypes
-		final String[] ITEMS = { "Zugtyp A", "Zugtyp B", "Zugtyp C", "Zugtyp D" };
-		List trainType = new List(trainTypeComposite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+		final String[] ITEMS = { "Zugtyp A", "Zugtyp B", "Zugtyp C", "Zugtyp Deutschland" };
+		final List trainTypeList = new List(trainTypeComposite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 		for (int i = 0, n = ITEMS.length; i < n; i++) {
-		      trainType.add(ITEMS[i]);
+			trainTypeList.add(ITEMS[i]);
 		}
-		trainType.select(0);
-		getInformation(infoTrainType, ITEMS, trainType.getSelectionIndex());
-		
+		trainTypeList.select(0);
+		getInformation(infoTrainTypeTable, ITEMS, 0);
+		trainTypeList.addListener(SWT.Selection, new Listener() {
+		      public void handleEvent(Event e) {
+		        getInformation(infoTrainTypeTable, ITEMS, trainTypeList.getSelectionIndex());
+		      }
+		});
 	}
 	
-	private static void getInformation(Table infoTrainType, String[] ITEMS, int Index){
+	private static void getInformation(Table infoTrainTypeTable, String[] ITEMS, int Index){
 		//TODO: XML auslesen und Infos erlangen
-		TableItem name = new TableItem(infoTrainType, SWT.NONE);
+		infoTrainTypeTable.clearAll();
+		infoTrainTypeTable.setItemCount(0);
+		TableItem name = new TableItem(infoTrainTypeTable, SWT.NONE);
 	    name.setText(0, "Name");
 	    name.setText(1, ITEMS[Index]);
-		TableItem topSpeed = new TableItem(infoTrainType, SWT.NONE);
+		TableItem topSpeed = new TableItem(infoTrainTypeTable, SWT.NONE);
 	    topSpeed.setText(0, "Höchstgeschwindigkeit");
 	    topSpeed.setText(1, "100" + " km/h");
-		TableItem priority = new TableItem(infoTrainType, SWT.NONE);
+		TableItem priority = new TableItem(infoTrainTypeTable, SWT.NONE);
 	    priority.setText(0, "Priorität");
 	    priority.setText(1, "5");
-	    infoTrainType.getColumn(0).pack ();
-	    infoTrainType.getColumn(1).pack ();
+	    infoTrainTypeTable.getColumn(0).pack ();
+	    infoTrainTypeTable.getColumn(1).pack ();
+	    infoTrainTypeTable.update();
 	}
-	
+		
 	/**
 	 * Returns the trainTypeComposite
 	 * 
