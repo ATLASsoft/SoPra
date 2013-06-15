@@ -1,8 +1,6 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -78,15 +76,15 @@ public class TrainTypeComposite {
 	
 	private static void getInformation(Table infoTrainType, String[] ITEMS, int Index){
 		//TODO: XML auslesen und Infos erlangen
-		TableItem item1 = new TableItem(infoTrainType, SWT.NONE);
-	    item1.setText(0, "Name");
-	    item1.setText(1, "Zugtyp A");
-		TableItem item2 = new TableItem(infoTrainType, SWT.NONE);
-	    item2.setText(0, "Höchstgeschwindigkeit");
-	    item2.setText(1, "100" + " km/h");
-		TableItem item3 = new TableItem(infoTrainType, SWT.NONE);
-	    item3.setText(0, "Priorität");
-	    item3.setText(1, "5");
+		TableItem name = new TableItem(infoTrainType, SWT.NONE);
+	    name.setText(0, "Name");
+	    name.setText(1, ITEMS[Index]);
+		TableItem topSpeed = new TableItem(infoTrainType, SWT.NONE);
+	    topSpeed.setText(0, "Höchstgeschwindigkeit");
+	    topSpeed.setText(1, "100" + " km/h");
+		TableItem priority = new TableItem(infoTrainType, SWT.NONE);
+	    priority.setText(0, "Priorität");
+	    priority.setText(1, "5");
 	    infoTrainType.getColumn(0).pack ();
 	    infoTrainType.getColumn(1).pack ();
 	}
