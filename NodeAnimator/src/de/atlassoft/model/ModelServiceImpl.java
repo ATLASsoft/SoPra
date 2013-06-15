@@ -51,6 +51,9 @@ public class ModelServiceImpl implements ModelService {
 //		case SCHEDULE_SCHEMES_PROPNAME:
 //			pcSupport.firePropertyChange(SCHEDULE_SCHEMES_PROPNAME, null, getSchedules());
 //			break;
+//		case RAILSYS_IDS_PROPNAME:
+//			pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailSysIDs());
+//			break;
 //		default:
 //			throw new IllegalArgumentException("unknown property");
 //		}

@@ -1,19 +1,15 @@
 package de.atlassoft.application;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
-import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
-import de.atlassoft.ui.SplashScreen;
 import de.atlassoft.util.ImageHelper;
 
 public class ApplicationServiceImpl implements ApplicationService {
@@ -117,13 +113,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public void deleteRailwaySystem(RailwaySystem railSys) {
+	public void deleteRailwaySystem(String railSysID) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setActiveRailwaySystem(RailwaySystem railsSys) {
+	public void setActiveRailwaySystem(String railsSysID) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -147,7 +143,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public void shwoScheduleDoc(ScheduleScheme scheduleScheme) {
+	public void showScheduleDoc(ScheduleScheme scheduleScheme) {
 		// TODO Auto-generated method stub
 		
 	}

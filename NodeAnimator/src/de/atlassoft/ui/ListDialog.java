@@ -1,5 +1,8 @@
 package de.atlassoft.ui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,6 +18,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.ModelService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
@@ -31,11 +35,27 @@ public class ListDialog {
 	private I18NService I18N;
 	private List trainSysList;
 	private ApplicationService applicationService;
+	private ModelService model;
 	
 	public ListDialog(ApplicationService applicationService) {
 		
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
+		model = applicationService.getModel();
+		model.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if (evt.getPropertyName().equals(ModelService.RAILSYS_IDS_PROPNAME)) {
+					trainSysList.removeAll();
+					@SuppressWarnings("unchecked")
+					java.util.List<String> railSysIDs = (java.util.List<String>) evt.getNewValue();
+					for (String id : railSysIDs) {
+						trainSysList.add(id);
+					}
+				}
+			}
+		});
+		
 		shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText(I18N.getMessage("ListDialog.Title"));
 		shell.setImage(ImageHelper.getImage("trainIcon"));
@@ -74,17 +94,11 @@ public class ListDialog {
 		listGridData.verticalAlignment = SWT.FILL;
 		listGridData.grabExcessVerticalSpace = true;
 		trainSysList.setLayoutData(listGridData);
-		//TODO: Mit richtigen Daten füllen
-		trainSysList.add("Streckennetz 1");
-		trainSysList.add("Streckennetz 2");
-		trainSysList.add("Streckennetz 3");
-		trainSysList.add("Streckennetz 4");
-		trainSysList.add("Streckennetz 5");
-		trainSysList.add("Streckennetz 6");
-		trainSysList.add("Streckennetz 7");
-		trainSysList.add("Streckennetz 8");
-		trainSysList.add("Streckennetz 9");
-		trainSysList.add("Streckennetz 10");
+		java.util.List<String> railSysIDs = model.getRailwaySystemIDs();
+		for (String id : railSysIDs) {
+			trainSysList.add(id);
+		}
+		
 		
 		
 		Composite buttonComposite = new Composite(listComposite, SWT.NONE);
@@ -104,8 +118,9 @@ public class ListDialog {
 		loadButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//TODO: Mit richtigen Daten ausführen
-				applicationService.setActiveRailwaySystem(null);
+				String[] selection = trainSysList.getSelection();
+				applicationService.setActiveRailwaySystem(selection[0]);
+				shell.close();
 			}
 		});
 
@@ -117,8 +132,8 @@ public class ListDialog {
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//TODO: Mit richtigen Daten füllen
-				applicationService.deleteRailwaySystem(null);
+				String[] selection = trainSysList.getSelection();
+				applicationService.deleteRailwaySystem(selection[0]);
 			}
 		});
 		

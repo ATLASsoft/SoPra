@@ -30,6 +30,9 @@ public interface ModelService {
 	 */
 	public static String SCHEDULE_SCHEMES_PROPNAME = "scheduleSchemes";
 	
+	public static String RAILSYS_IDS_PROPNAME = "railsysIDs";
+	
+	
 	
 	/**
 	 * Add a {@link PropertyChangeListener} to the listener list. The listener is

@@ -44,9 +44,9 @@ public interface ApplicationService {
 	
 	void saveRailwaySystem(RailwaySystem railSys);
 	
-	void deleteRailwaySystem(RailwaySystem railSys);
+	void deleteRailwaySystem(String railSysID);
 	
-	void setActiveRailwaySystem(RailwaySystem railsSys);
+	void setActiveRailwaySystem(String railsSysID);
 	
 	void addTrainType(TrainType trainType);
 	
@@ -54,7 +54,7 @@ public interface ApplicationService {
 	
 	void showStatisticDoc(SimulationStatistic statistic);
 	
-	void shwoScheduleDoc(ScheduleScheme scheduleScheme);
+	void showScheduleDoc(ScheduleScheme scheduleScheme);
 	
 	void showDepartureBoardDoc(Node station);
 }
