@@ -3,6 +3,7 @@ package de.atlassoft.io.persistence;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.Attribute;
@@ -101,8 +102,33 @@ public class PersistenceServiceXMLImpl implements PersistenceService {
 
 	@Override
 	public List<TrainType> getTrainTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		List<TrainType> res = new ArrayList<TrainType>();
+		SAXBuilder builder = new SAXBuilder();
+		  File xmlFile = new File("E:\\traintypes.xml");
+	 
+		  try {
+	 
+			Document document = (Document) builder.build(xmlFile);
+			Element rootNode = document.getRootElement();
+			List<Element> list = rootNode.getChildren("Train");
+		
+			
+			for (int i = 0; i < list.size(); i++) {
+				
+			   Element node = (Element) list.get(i);
+			   
+			   TrainType add = new TrainType(node.getChildText("id"), Double.parseDouble(node.getChildText("topspeed")),Integer.parseInt(node.getChildText("priority")));
+			   res.add(add); 
+			}
+	 
+		  } catch (IOException io) {
+			System.out.println(io.getMessage());
+		  } catch (JDOMException jdomex) {
+			System.out.println(jdomex.getMessage());
+		  }
+		
+		return res;
+
 	}
 
 	@Override
