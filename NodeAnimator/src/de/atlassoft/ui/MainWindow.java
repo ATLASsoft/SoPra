@@ -35,7 +35,7 @@ public class MainWindow {
 	private Composite borderComposite;
 	private StackLayout layout;
 	private I18NService I18N;
-	//TODO: Konstruktor sollte so aussehen: MainWindow(ApplicationService)
+	
 	/**
 	 * The constructor for the main window of the application
 	 * 
@@ -158,7 +158,7 @@ public class MainWindow {
 		manageRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new ListDialog();
+				new ListDialog(applicationService);
 			}
 		});
 		
@@ -203,6 +203,7 @@ public class MainWindow {
 	 * Creates the menuBar for the main window
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private void createMenubar() {
 		
 		I18NService I18N = I18NSingleton.getInstance();
@@ -278,8 +279,7 @@ public class MainWindow {
 		loadRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DialogMode load = DialogMode.LOAD;
-				new ListDialog();
+				new ListDialog(applicationService);
             }
         });
 		

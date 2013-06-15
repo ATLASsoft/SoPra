@@ -40,8 +40,20 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public void firePropertyChangeEvent() {
-		// TODO Methode noch unklar
+	public void firePropertyChangeEvent(String propertyName) {
+//		switch (propertyName) {
+//		case ACTIVE_RAILSYS_PROPNAME:
+//			pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
+//			break;
+//		case TRAIN_TYPES_PROPNAME:
+//			pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
+//			break;
+//		case SCHEDULE_SCHEMES_PROPNAME:
+//			pcSupport.firePropertyChange(SCHEDULE_SCHEMES_PROPNAME, null, getSchedules());
+//			break;
+//		default:
+//			throw new IllegalArgumentException("unknown property");
+//		}
 
 	}
 
@@ -79,19 +91,19 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public void addSchedule(ScheduleScheme schedule) {
+	public void addScheduleScheme(ScheduleScheme schedule) {
 		if (schedule != null && !scheduleSchemes.contains(schedule)) {
 			scheduleSchemes.add(schedule);
 		}
 	}
 
 	@Override
-	public void deleteSchedule(ScheduleScheme schedule) {
+	public void deleteScheduleScheme(ScheduleScheme schedule) {
 		scheduleSchemes.remove(schedule);
 	}
 
 	@Override
-	public List<ScheduleScheme> getSchedules() {
+	public List<ScheduleScheme> getScheduleSchemes() {
 		return Collections.unmodifiableList(scheduleSchemes);
 	}
 
