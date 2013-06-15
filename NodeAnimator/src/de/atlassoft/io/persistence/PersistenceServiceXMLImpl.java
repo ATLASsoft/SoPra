@@ -21,7 +21,7 @@ import de.atlassoft.model.TrainType;
 /**
  * Class which implements the PersistenceService
  * 
- * @author Linus and
+ * @author Linus, Andreas
  */
 public class PersistenceServiceXMLImpl implements PersistenceService {
 
