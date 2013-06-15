@@ -6,8 +6,10 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -68,26 +70,6 @@ public class AllSchedulesComposite {
 	    activeSchedules.add("Fahrplan 3");
 	    activeSchedules.add("Fahrplan 4");
 	    activeSchedules.select(0);
-	    DragSource drag = new DragSource(activeSchedules, DND.DROP_COPY|DND.DROP_MOVE);
-	    drag.addDragListener(new DragSourceListener() {
-	    	//TODO: Ausimplementieren
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				if (event.detail == DND.DROP_DEFAULT){
-					System.out.println("Drag Finished");
-				}
-			}
-
-			@Override
-			public void dragSetData(DragSourceEvent event) {
-				
-			}
-
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				System.out.println("Drag Start");
-			}	    	
-	    });
 	    
 	    Composite buttonComposite = new Composite(allScheduleComposite, SWT.BORDER);
 	    FillLayout buttonLayout = new FillLayout();
@@ -139,42 +121,54 @@ public class AllSchedulesComposite {
 	    passiveSchedules.add("schedule 3");
 	    passiveSchedules.add("schedule 4");
 	    passiveSchedules.select(0);
-	    DropTarget target = new DropTarget(passiveSchedules, DND.DROP_MOVE|DND.DROP_DEFAULT);
-	    target.addDropListener(new DropTargetListener() {
-
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-				System.out.println("drag enter");
-			}
-
-			@Override
-			public void dragLeave(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void dragOver(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void drop(DropTargetEvent event) {
-				System.out.println("Ich wurde gedroppt");
-			}
-
-			@Override
-			public void dropAccept(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-				
-			}	    	
-	    });	    
+	    
+	    setDragDrop(passiveSchedules);
+	    setDragDrop(activeSchedules);
 	}
+	
+	/**
+	 * Adds Drag and Drop Listeners to the given list.
+	 * 
+	 * @param list
+	 * 			The list
+	 */
+	private void setDragDrop (final List list) {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		
+		DragSource source = new DragSource(list, DND.DROP_MOVE);
+		source.setTransfer(types);
+		source.addDragListener(new DragSourceListener() {
+			@Override
+			public void dragFinished(DragSourceEvent event) {
+				if (event.detail == DND.DROP_MOVE){
+					list.remove(list.getSelectionIndex());
+					list.select(0);
+				}
+			}
+
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				event.data = list.getItem(list.getSelectionIndex());
+			}
+
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				if (list.getItemCount() == 0) {
+					event.doit = false;
+				}
+			}			
+		});
+		
+		DropTarget target = new DropTarget(list, DND.DROP_MOVE);
+		target.setTransfer(types);
+		target.addDropListener(new DropTargetAdapter() {
+			@Override
+			public void drop(DropTargetEvent event){
+				list.add((String) event.data);
+			}
+		});
+	}
+	
 	
 	/**
 	 * Moves the selected schedule from the passiveSchedules list to
