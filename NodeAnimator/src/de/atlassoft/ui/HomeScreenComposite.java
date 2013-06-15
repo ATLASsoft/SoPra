@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -24,6 +25,7 @@ public class HomeScreenComposite {
 	private Composite mainComposite;
 	private Composite homeScreenComposite;
 	private I18NService I18N;
+	private ApplicationService applicationService;
 	
 	/**
 	 * The constructor for the HomeScreenComposite class.
@@ -35,8 +37,9 @@ public class HomeScreenComposite {
 	 * @return
 	 * 			The homescreen composite.
 	 */
-	public HomeScreenComposite(Shell shell, Composite mainComposite, StackLayout layout) {
+	public HomeScreenComposite(Shell shell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		
+		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		this.shell = shell;
 		this.mainComposite = mainComposite;
@@ -71,7 +74,7 @@ public class HomeScreenComposite {
 		//Schedule tab
 		TabItem scheduleItem = new TabItem(tabFolder, SWT.NONE);
 		scheduleItem.setText(I18N.getMessage("HomeScreenComposite.ScheduleTab"));
-		AllSchedulesComposite allSchedulesComposite = new AllSchedulesComposite(tabFolder);
+		AllSchedulesComposite allSchedulesComposite = new AllSchedulesComposite(tabFolder, applicationService);
 		scheduleItem.setControl(allSchedulesComposite.getComposite());
 		
 		//Train type tab

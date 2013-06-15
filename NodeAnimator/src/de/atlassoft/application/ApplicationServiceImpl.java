@@ -1,12 +1,15 @@
 package de.atlassoft.application;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
+import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
@@ -23,11 +26,22 @@ public class ApplicationServiceImpl implements ApplicationService {
 		initialize();
 	}
 	
+	
+	//TODO: im Finalen Programm löschen
+	// Nur für Testzwecke, hier kann jeder seine Dummy Daten einspeisen,
+	// falls er welche benötigt
+	private void createDummy(){
+		TrainType testType = new TrainType("Testzug", 150, 10);
+		model.addTrainType(testType);
+		
+	}
+	
 	@Override
 	public void initialize() {
 		model = new ModelServiceImpl();
 		// TODO: unvollständig
 		
+		createDummy();
 		// load images
 		
 		ImageHelper.loadImage("greenCheck", "img/greencheck.png");

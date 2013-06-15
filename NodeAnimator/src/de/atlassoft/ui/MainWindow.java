@@ -42,7 +42,7 @@ public class MainWindow {
 	 * @param display
 	 */
 	public MainWindow(ApplicationService applicationService) {
-		
+				
 		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		display = Display.getDefault();
@@ -81,7 +81,7 @@ public class MainWindow {
 		mainComposite.setLayoutData(mainCompositeGridData);
 	    layout = new StackLayout();
 	    mainComposite.setLayout(layout);
-	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout);
+	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);
 	    layout.topControl = homeScreenComposite.getComposite();
 	    mainComposite.layout();	    
 		
@@ -180,7 +180,7 @@ public class MainWindow {
 		simulationItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
-				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout);
+				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
 				layout.topControl = simComp.getComposite();
 				mainComposite.layout();
             }
@@ -319,7 +319,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout);
+				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
 				layout.topControl = simComp.getComposite();
 				mainComposite.layout();
             }

@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 
+import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.hohenheim.controller.ControllerCanvas;
@@ -38,6 +39,7 @@ public class SimulationComposite {
 	private Image cancelBild;
 	private Image playImage;
 	private Image pauseImage;
+	private ApplicationService applicationService;
 	
 	/**
 	 * Constructor for the SimulationComposite class.
@@ -49,9 +51,9 @@ public class SimulationComposite {
 	 * @param layout
 	 * 		The stack layout of the main window.
 	 */
-	public SimulationComposite (Shell shell, Composite mainComposite, StackLayout layout) {
+	public SimulationComposite (Shell shell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		//TODO: Ausprogrammieren
-		
+		this.applicationService = applicationService;
 		this.shell = shell;
 		this.layout = layout;
 		this.mainComposite = mainComposite;
@@ -148,7 +150,7 @@ public class SimulationComposite {
 	    		cancelBild.dispose();
 	    		pauseImage.dispose();
 	    		playImage.dispose();
-	    		HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout);		
+	    		HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 	    	}

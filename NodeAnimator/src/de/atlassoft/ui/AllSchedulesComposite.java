@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
+import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -36,14 +37,16 @@ public class AllSchedulesComposite {
 	final private List passiveSchedules;
 	private Composite allScheduleComposite;
 	private I18NService I18N;
+	private ApplicationService applicationService;
 	
 	/**
 	 * Constructor for the class AllScheduleComposite
 	 * 
 	 * @param tabFolder
 	 */
-	public AllSchedulesComposite(TabFolder tabFolder){
+	public AllSchedulesComposite(TabFolder tabFolder, ApplicationService applicationService){
 		
+		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		allScheduleComposite = new Composite(tabFolder, SWT.BORDER);
 		GridLayout allScheduleCompositeLayout = new GridLayout();
@@ -67,7 +70,7 @@ public class AllSchedulesComposite {
 	    activeSchedules.select(0);
 	    DragSource drag = new DragSource(activeSchedules, DND.DROP_COPY|DND.DROP_MOVE);
 	    drag.addDragListener(new DragSourceListener() {
-
+	    	//TODO: Ausimplementieren
 			@Override
 			public void dragFinished(DragSourceEvent event) {
 				if (event.detail == DND.DROP_DEFAULT){
