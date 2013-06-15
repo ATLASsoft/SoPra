@@ -19,9 +19,9 @@ import de.atlassoft.util.ImageHelper;
 
 /**
  * This class creates the composite where you can see
- * all existing traintypes.
+ * all existing train types.
  * 
- * @author Silvan Haeussermann
+ * @author Tobias Ilg
  */
 public class TrainTypeComposite {
 

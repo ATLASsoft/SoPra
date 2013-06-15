@@ -158,7 +158,7 @@ public class MainWindow {
 		manageRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new ListDialog(applicationService);
+				new RailSysDialog(applicationService);
 			}
 		});
 		
@@ -279,7 +279,7 @@ public class MainWindow {
 		loadRailSysItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new ListDialog(applicationService);
+				new RailSysDialog(applicationService);
             }
         });
 		

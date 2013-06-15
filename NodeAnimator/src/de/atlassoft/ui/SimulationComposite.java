@@ -156,6 +156,8 @@ public class SimulationComposite {
 	    	}
 	    });
 	    
+	    
+	    //TODO: richtige nodemap holen: applicationService.getModel().getActiveRailwaySys().getNodeMap();
 	    NodeMap map = new NodeMap();
 	    map.paintNodeMap(c);
 	    

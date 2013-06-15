@@ -24,20 +24,19 @@ import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 
 /**
- * The class list dialog is for loading and deleting railwaysystems.
+ * The class list dialog is for loading and deleting railway systems.
  * 
  * @author Silvan Haeussermann
  */
-public class ListDialog {
-	
+public class RailSysDialog {
+	//TODO: fehler falls nichts ausgewählt ist
 	private Shell shell;
-	private Composite listComposite;
 	private I18NService I18N;
 	private List trainSysList;
 	private ApplicationService applicationService;
 	private ModelService model;
 	
-	public ListDialog(ApplicationService applicationService) {
+	public RailSysDialog(ApplicationService applicationService) {
 		
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
@@ -73,7 +72,7 @@ public class ListDialog {
 	
 	private void initUI() {
 		
-		listComposite = new Composite(shell, SWT.NONE);
+		Composite listComposite = new Composite(shell, SWT.NONE);
 		GridLayout listGridLayout = new GridLayout();
 		listGridLayout.numColumns = 3;
 		listComposite.setLayout(listGridLayout);

@@ -1,5 +1,5 @@
 package de.atlassoft.model;
-// TODO: Werte eintragen
+// TODO: evtl weitere typen
 public enum ScheduleType {
-
+	INTERVALL, SINGLE_RIDE,
 }

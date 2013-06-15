@@ -27,12 +27,12 @@ import de.atlassoft.util.ImageHelper;
 
 /**
  * This class is for the TrainType Dialog where
- * you can create a new traintype.
+ * you can create a new train type.
  * 
- * @author Silvan Haeussermann, Tobias Ilg
+ * @author Tobias Ilg
  */
 public class TrainTypeDialog {
-	
+	//TODO: Überprüfen ob TrainType Name bereits vergeben ist, Möglichkeit Bilder einzufügen und on the fly Korrektur statt Fehlermeldung bei ungültiger eingabe
 	private Shell shell;
 	private ApplicationService application;
 	
@@ -41,26 +41,28 @@ public class TrainTypeDialog {
 	 * about shell and open it.
 	 * 
 	 * @param application
-	 * 			??
+	 * 			to access application layer
 	 */
 	
 	public TrainTypeDialog(ApplicationService application) {
 		this.application = application;
+		I18NService I18N = I18NSingleton.getInstance();
+		
 		Display display = Display.getCurrent();
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		I18NService I18N = I18NSingleton.getInstance();
 		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
 		shell.setSize(450, 200);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));
+		
 		initUI(display);
 		MainWindow.center(shell);
 		shell.open();
 	}
 	
 	/**
-	 * A method which creates the contet, 
-	 * label, text, buttons and tooltips of
+	 * A method which creates the content, 
+	 * label, text, buttons and tool tips of
 	 * the shell of the TrainType Dialog.
 	 * 
 	 * @param display
@@ -91,15 +93,14 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
 		speed.setToolTipText(I18N.getMessage("TrainTypeDialog.textSpeed"));
 		
-		// Third row with a label and a combo for the Priority (1-10)
+		// Third row with a label and a combo for the Priority (1-5)
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
-		final String[] prioritySelection = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+		final String[] prioritySelection = { "1", "2", "3", "4", "5" };
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboPriority.setItems(prioritySelection);
 	    comboPriority.select(0);
 		new Label(shell, SWT.NONE);
 		comboPriority.setToolTipText(I18N.getMessage("TrainTypeDialog.textPriority"));
-		
 		
 		// Third (empty) row for the optics
 		new Label(shell, SWT.NONE);
@@ -117,6 +118,7 @@ public class TrainTypeDialog {
 	        	final String nameOfTrainType = name.getText();
 	        	final String topSpeed = speed.getText();
 	        	final String priority = comboPriority.getText();	        	
+	        	
 	        	// check constraints
 	        	List<String> errorMessages = new ArrayList<String>();
 	        	
@@ -126,6 +128,7 @@ public class TrainTypeDialog {
 	        	if (speed.getText().trim().equals("")) {
 	        		errorMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptySpeed"));
 	        	}
+	        	
 	        	// generating and open ErrorMessageBox
 	        	if (!errorMessages.isEmpty()) {
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
@@ -138,6 +141,7 @@ public class TrainTypeDialog {
 	        	    	messageBox.setMessage(errorMessages.get(0));
 		        	    messageBox.open();
 	        	    }
+	        	
 	        	// surrender Inputs to ApplicationService and generating and open InformationMessageBox
 	        	} else {
 	        		TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
@@ -151,6 +155,7 @@ public class TrainTypeDialog {
 	        	}
 	        }
 	    });
+	    
 	    // Information Button
 		Button help = new Button(shell, SWT.PUSH);
 		help.setImage(ImageHelper.getImage("questionMark"));
@@ -162,6 +167,7 @@ public class TrainTypeDialog {
         	    messageBox.open();
 	        }
 	    });
+		
 		// Cancel Button
 		Button cancel = new Button(shell, SWT.PUSH);
 		cancel.setText(I18N.getMessage("TrainTypeDialog.buttonCancel"));
@@ -171,6 +177,7 @@ public class TrainTypeDialog {
 	          shell.close();
 	        }
 	    });
+	    
 		shell.pack();
 	}
 }

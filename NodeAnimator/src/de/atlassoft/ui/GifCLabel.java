@@ -34,8 +34,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 /**
- * <p><b>This class supports gif animation in label and is derived from {@link GifCLabel} SWT class (see {@link #setGifImage(InputStream)} or {@link #setGifImage(String)})</b><br />
- * <b>Changes by Sorceror, (a)sync.exec(...) call fix by YAMaiDie</b></p>
+ * 
+ * @author Sorceror, YAMaiDie
+ *         <p>
+ *         <b>This class supports gif animation in label and is derived from
+ *         {@link GifCLabel} SWT class (see {@link #setGifImage(InputStream)} or
+ *         {@link #setGifImage(String)})</b><br />
+ *         <b>Changes by Sorceror, (a)sync.exec(...) call fix by YAMaiDie</b>
+ *         </p>
  */
 public class GifCLabel extends Canvas {
 
