@@ -1,7 +1,11 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.TabFolder;
@@ -11,6 +15,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 
 /**
  * This class creates the composite where you can see
@@ -38,12 +43,29 @@ public class TrainTypeComposite {
 	
 	
 	private void initUI(){
+		// TODO: Buttons Funktionen implementieren
+		Composite trainTypeCompositeSplit1 = new Composite (trainTypeComposite, SWT.NULL);
+		trainTypeCompositeSplit1.setLayout(new GridLayout(1, true));
 		
-
-	    Table infoTrainType = new Table(trainTypeComposite, SWT.BORDER);
-	    TableColumn column1 = new TableColumn(infoTrainType, SWT.NONE);
-	    TableColumn column2 = new TableColumn(infoTrainType, SWT.NONE);
+		// Table with Information of selected TrainType
+		Table infoTrainType = new Table(trainTypeCompositeSplit1, SWT.BORDER);
+	    new TableColumn(infoTrainType, SWT.NONE);
+	    new TableColumn(infoTrainType, SWT.NONE);
+	    
+	    Composite trainTypeCompositeSplit2 = new Composite (trainTypeCompositeSplit1, SWT.NULL);
+		trainTypeCompositeSplit2.setLayout(new FillLayout());
 		
+		// Cancel Button
+		Button modify = new Button(trainTypeCompositeSplit2, SWT.PUSH);
+		modify.setText(I18N.getMessage("TrainTypeComposite.buttonModify"));
+		modify.setImage(ImageHelper.getImage("settingsIcon"));
+	    
+		// Cancel Button
+	 	Button delete = new Button(trainTypeCompositeSplit2, SWT.PUSH);
+	 	delete.setText(I18N.getMessage("TrainTypeComposite.buttonDelete"));
+	 	delete.setImage(ImageHelper.getImage("trashIcon"));
+		
+	 	// List of TrainTypes
 		final String[] ITEMS = { "Zugtyp A", "Zugtyp B", "Zugtyp C", "Zugtyp D" };
 		List trainType = new List(trainTypeComposite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 		for (int i = 0, n = ITEMS.length; i < n; i++) {
