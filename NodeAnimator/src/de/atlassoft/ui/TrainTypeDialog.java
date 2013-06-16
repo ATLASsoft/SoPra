@@ -191,11 +191,12 @@ public class TrainTypeDialog {
 	    });
 	    
 	    // On the Fly Exception
-		name.addListener(SWT.KeyDown, new Listener() {
+		name.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
-		    Boolean twice = false;
+				System.out.print(e.text);
+		    	Boolean twice = false;
 		    	for (TrainType type : trainTypes) {
-		    		if (type.getName().trim().equals(name.getText().trim())) {
+		    		if (type.getName().equals(name.getText() + e.text)) {
 		    			twice = true;
 		    		}
 		    	}
