@@ -54,6 +54,7 @@ public class Node {
 		NodeFigure nodeFigure = new NodeFigure(this);
 		nodeFigure.setName(name);    
 		nodeFigure.setBounds(new Rectangle(x, y, width, height));	
+		this.nodeFigure = nodeFigure;
 	}
 	
 	

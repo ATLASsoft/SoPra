@@ -30,6 +30,7 @@ public class RailwaySystem {
 		if (id == null || id.trim().isEmpty()) {
 			throw new IllegalArgumentException("id must not be null or empty");
 		}
+		this.id = id;
 		nodes = new ArrayList<Node>();
 		paths = new ArrayList<Path>();
 		map = new NodeMap();
@@ -56,9 +57,9 @@ public class RailwaySystem {
 		
 		// add node to NodeMap
 		NodeFigure fig = node.getNodeFigure();
-		 map.getNodeLayer().add(fig);
-		 map.getPaths().put(fig, new ArrayList<PathFigure>());
-		 map.getNodes().put(fig.getName(), fig);
+		map.getNodeLayer().add(fig);
+		map.getPaths().put(fig, new ArrayList<PathFigure>());
+		map.getNodes().put(fig.getName(), fig);
 	}
 	
 	/**
