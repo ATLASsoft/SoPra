@@ -2,6 +2,8 @@ package de.atlassoft.application;
 
 import java.util.Calendar;
 
+import de.atlassoft.io.persistence.PersistenceService;
+import de.atlassoft.io.persistence.PersistenceServiceXMLImpl;
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
@@ -16,6 +18,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	private ModelService model;
 	private MainWindow window;
+	private PersistenceService persistence;
 	
 	
 	protected ApplicationServiceImpl() {
@@ -35,6 +38,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void initialize() {
 		model = new ModelServiceImpl();
+		//persistence = new PersistenceServiceXMLImpl();
 		// TODO: unvollständig
 		
 		createDummy();
@@ -52,6 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("trashIcon", "img/trashIcon.png");
 		ImageHelper.loadImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
 		ImageHelper.loadImage("settingsIcon", "img/settingsIcon.png");
+		ImageHelper.loadImage("standardTrainIcon", "img/train.gif");
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		
@@ -114,26 +119,29 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void deleteRailwaySystem(String railSysID) {
-		// TODO Auto-generated method stub
-		
+		String activeRailSysID = model.getActiveRailwaySys().getID();
+		if (activeRailSysID.equals(railSysID)) {
+			model.setActiveRailwaySys(null);
+		}
+		//persistence.deleteRailwaySystem(activeRailSysID); // TODO: im finalen programm aktivieren
 	}
 
 	@Override
 	public void setActiveRailwaySystem(String railsSysID) {
-		// TODO Auto-generated method stub
-		
+//		RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID); // TODO: im finalen programm aktivieren
+//		model.setActiveRailwaySys(railSys);
 	}
 
 	@Override
 	public void addTrainType(TrainType trainType) {
 		model.addTrainType(trainType);
-		// TODO: traintype persistieren
+		//persistence.saveTrainType(trainType); // TODO: im finalen programm aktivieren
 	}
 
 	@Override
 	public void deleteTrainType(TrainType trainType) {
 		model.deleteTrainType(trainType);
-		// TODO: aus xml entfernen
+		//persistence.deleteTrainType(trainType); // TODO: im finalen programm aktivieren
 	}
 
 	@Override

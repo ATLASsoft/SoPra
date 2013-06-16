@@ -10,7 +10,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 
+import de.atlassoft.util.ImageHelper;
 import de.hohenheim.modell.State;
 import de.hohenheim.view.constants.Constants;
 import de.hohenheim.view.map.NodeMap;
@@ -40,7 +42,8 @@ public class TrainFigure extends AnimationFigure {
 	Animator currentAnimation = null;
 	ArrayList<Animator> animationList = new ArrayList<Animator>();
 	Iterator<Animator> animationIterator = animationList.iterator();
-		
+	private Image image;
+	
 	/**
 	 * Constructor. Sets the mobile object we want to create inside a room (as starting point)
 	 * @param {@link NodeMap} map - The map where the figure should be placed. 
@@ -50,6 +53,10 @@ public class TrainFigure extends AnimationFigure {
 	public TrainFigure(NodeMap map, NodeFigure in_room, int id, Object modellObject) {
 		super(map,in_room, id, modellObject);
 		this.setFont(Constants.TRAIN_FONT);
+		image = ((de.atlassoft.model.Train) modellObject).getTrainType().getImg();
+		if (image == null) {
+			image = ImageHelper.getImage("standardTrainIcon");
+		}
 	}	
 	
 	/**
@@ -69,7 +76,7 @@ public class TrainFigure extends AnimationFigure {
 	    Rectangle r = bounds;
 	     
 	    g.setForegroundColor(ColorConstants.white);	    
-	    g.drawImage(ImageHelper.train, r.x,r.y);
+	    g.drawImage(image, r.x,r.y);
 	    
 	    Font f = this.getFont();
 	    Dimension dim_text = FigureUtilities.getTextExtents(""+getFigureId(), f);
