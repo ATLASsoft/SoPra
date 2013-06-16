@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
@@ -109,7 +110,31 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE);
 		comboPriority.setToolTipText(I18N.getMessage("TrainTypeDialog.textPriority"));
 		
-		// Third (empty) row for the optics
+		// Third row with text and button, to get an image
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage"));
+		final Text image = new Text(shell, SWT.BORDER);
+		Button imageSearch = new Button(shell, SWT.NULL);
+		imageSearch.setText(I18N.getMessage("TrainTypeDialog.buttonImage"));
+		imageSearch.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	FileDialog fd = new FileDialog(shell, SWT.OPEN);
+	            fd.setText(I18N.getMessage("TrainTypeDialog.openFileDialog"));
+	            fd.setFilterPath("C:/");
+	            String[] filterN = {"Alle Bilddateien", "Bitmap (*.bmp)", "JointPhotographersExpertGroup (*.jpg, *.jpeg, *.jpe)",
+	            		"GraphicImageFormat (*.gif)", "Icon (*.ico)", "WindowsMetaFile (*.wmf)", "Komprimierte Bitmap (*.pcx)",
+	            		"Portable Network Graphics (*.png)", "CorelDraw (*.cdr)", "CorelPaint (*.cpt)", "Picture-Bitmap-Date (*.pic)"};
+	            fd.setFilterNames(filterN);
+	            String[] filterExt = { "*.jpg; *.jpeg; *.jpe; *.tif; *.tiff; *.ico; " +
+	            		"*.ani; *.wmf; *.pcx; *.cdr; *.cpt; *.pci; *.png; *.gif; *.bmp",
+	            		"*.bmp", "*.jpg; *.jpeg; *.jpe", "*.gif", "*.ico", "*.wmf", "*.pcx",
+	            		"*.png", "*.cdr", "*.cpt", "*.pci" };
+	            fd.setFilterExtensions(filterExt);
+	            String selected = fd.open();
+	            image.setText(selected);
+	        }
+	    });		
+		
+		// empty row for the optics
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
@@ -176,7 +201,7 @@ public class TrainTypeDialog {
 	    });
 		
 		// Cancel Button
-		Button cancel = new Button(shell, SWT.PUSH);
+		Button cancel = new Button(shell, SWT.PUSH | SWT.RIGHT);
 		cancel.setText(I18N.getMessage("TrainTypeDialog.buttonCancel"));
 	    cancel.setImage(ImageHelper.getImage("cancelIcon"));
 	    cancel.addSelectionListener(new SelectionAdapter() {
