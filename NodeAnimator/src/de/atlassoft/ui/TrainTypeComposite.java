@@ -127,7 +127,7 @@ public class TrainTypeComposite {
 		    	            messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
 		    	            int rc = messageBox.open();
 		    	            if (rc == SWT.YES) {
-		    	            	application.getModel().deleteTrainType(type);
+		    	            	application.deleteTrainType(type);
 		    	            }
 		    			}
 		    		}
