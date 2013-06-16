@@ -111,8 +111,13 @@ public class TrainTypeDialog {
 		comboPriority.setToolTipText(I18N.getMessage("TrainTypeDialog.textPriority"));
 		
 		// Third row with text and button, to get an image
-		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage"));
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage1"));
 		final Text image = new Text(shell, SWT.BORDER);
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
+		
+		
+		// Search row for the optics
+		new Label(shell, SWT.NONE);
 		Button imageSearch = new Button(shell, SWT.NULL);
 		imageSearch.setText(I18N.getMessage("TrainTypeDialog.buttonImage"));
 		imageSearch.addSelectionListener(new SelectionAdapter() {
@@ -132,12 +137,17 @@ public class TrainTypeDialog {
 	            String selected = fd.open();
 	            image.setText(selected);
 	        }
-	    });		
+	        // TODO: Abbrechen Fehler beheben
+	        public void widgetDefaultSelected(SelectionEvent event) {
+	        	
+	        }
+	    });
+		new Label(shell, SWT.NONE);
 		
-		// empty row for the optics
+		//Empty Row
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);		
 		
 		// Fourth row with three buttons for Save, Information and Cancel
 		// Save Button
