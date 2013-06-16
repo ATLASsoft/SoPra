@@ -6,12 +6,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
@@ -44,24 +42,34 @@ public class TrainTypeComposite {
 	
 	private void initUI(){
 		// TODO: Buttons Funktionen implementieren und autoresize Table
-		Composite trainTypeCompositeSplit1 = new Composite (trainTypeComposite, SWT.NULL);
-		trainTypeCompositeSplit1.setLayout(new GridLayout(1, true));
+		Composite trainTypeCompositeSplit = new Composite (trainTypeComposite, SWT.NULL);
+		trainTypeCompositeSplit.setLayout(new GridLayout(1, false));
 		
-		// Table with Information of selected TrainType
-		final Table infoTrainTypeTable = new Table(trainTypeCompositeSplit1, SWT.BORDER);
-		new TableColumn(infoTrainTypeTable, SWT.NONE);
-		new TableColumn(infoTrainTypeTable, SWT.NONE);
-	    infoTrainTypeTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		Composite trainTypeCompositeSplit1 = new Composite (trainTypeCompositeSplit, SWT.NULL);
+		trainTypeCompositeSplit1.setLayout(new GridLayout(2, false));
+		
+		// Label with Description
+		final Label descriptionTrainTypeLabel = new Label(trainTypeCompositeSplit1, SWT.LEFT);
+		descriptionTrainTypeLabel.setText("Name:   ");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "Höchstgeschwindigkeit:   ");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "Priorität:   ");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
+		
+		// Label with Information of the selected TrainTyp
+		final Label infoTrainTypeLabel = new Label(trainTypeCompositeSplit1, SWT.RIGHT);
+		
 	    
-	    Composite trainTypeCompositeSplit2 = new Composite (trainTypeCompositeSplit1, SWT.NULL);
+	    Composite trainTypeCompositeSplit2 = new Composite (trainTypeCompositeSplit, SWT.NULL);
 		trainTypeCompositeSplit2.setLayout(new FillLayout());
 		
-		// Cancel Button
+		// Modify Button
 		Button modify = new Button(trainTypeCompositeSplit2, SWT.PUSH);
 		modify.setText(I18N.getMessage("TrainTypeComposite.buttonModify"));
 		modify.setImage(ImageHelper.getImage("settingsIcon"));
 	    
-		// Cancel Button
+		// Delete Button
 	 	Button delete = new Button(trainTypeCompositeSplit2, SWT.PUSH);
 	 	delete.setText(I18N.getMessage("TrainTypeComposite.buttonDelete"));
 	 	delete.setImage(ImageHelper.getImage("trashIcon"));
@@ -72,31 +80,33 @@ public class TrainTypeComposite {
 		for (int i = 0, n = ITEMS.length; i < n; i++) {
 			trainTypeList.add(ITEMS[i]);
 		}
-		trainTypeList.select(0);
-		getInformation(infoTrainTypeTable, ITEMS, 0);
+		getInformation(infoTrainTypeLabel, "Es wurde noch kein Zugtyp ausgewählt");
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
-		        getInformation(infoTrainTypeTable, ITEMS, trainTypeList.getSelectionIndex());
+		        getInformation(infoTrainTypeLabel, ITEMS [trainTypeList.getSelectionIndex()]);
 		      }
 		});
 	}
 	
-	private static void getInformation(Table infoTrainTypeTable, String[] ITEMS, int Index){
+	private static void getInformation(Label infoTrainTypeLabel, String TrainType){
 		//TODO: XML auslesen und Infos erlangen
-		infoTrainTypeTable.clearAll();
-		infoTrainTypeTable.setItemCount(0);
-		TableItem name = new TableItem(infoTrainTypeTable, SWT.NONE);
-	    name.setText(0, "Name");
-	    name.setText(1, ITEMS[Index]);
-		TableItem topSpeed = new TableItem(infoTrainTypeTable, SWT.NONE);
-	    topSpeed.setText(0, "Höchstgeschwindigkeit");
-	    topSpeed.setText(1, "100" + " km/h");
-		TableItem priority = new TableItem(infoTrainTypeTable, SWT.NONE);
-	    priority.setText(0, "Priorität");
-	    priority.setText(1, "5");
-	    infoTrainTypeTable.getColumn(0).pack ();
-	    infoTrainTypeTable.getColumn(1).pack ();
-	    infoTrainTypeTable.update();
+		infoTrainTypeLabel.setText(TrainType);
+		infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+		if (TrainType.equals("Es wurde noch kein Zugtyp ausgewählt")) {
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
+		    infoTrainTypeLabel.update();
+		} else {
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "100");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "5");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
+		    infoTrainTypeLabel.update();
+		}
 	}
 		
 	/**
