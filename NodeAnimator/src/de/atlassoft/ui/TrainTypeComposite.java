@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -12,6 +14,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
 import de.atlassoft.application.ApplicationService;
@@ -33,6 +37,7 @@ public class TrainTypeComposite {
 	private I18NService I18N;
 	private ApplicationService application;
 	private List trainTypeList;
+	private Shell shell;
 	
 	/**
 	 * Constructor for the TrainTypeComposite class
@@ -40,7 +45,8 @@ public class TrainTypeComposite {
 	 * @param tabFolder
 	 * 		The tab folder in which the composite should be placed.
 	 */
-	public TrainTypeComposite(TabFolder tabFolder, ApplicationService applicationService) {
+	public TrainTypeComposite(TabFolder tabFolder, ApplicationService applicationService, Shell shell) {
+		this.shell = shell;
 		I18N = I18NSingleton.getInstance();
 		this.application = applicationService;
 		application.getModel().addPropertyChangeListener(new PropertyChangeListener() {
@@ -54,13 +60,10 @@ public class TrainTypeComposite {
 						for (TrainType type : trainTypes) {
 							trainTypeList.add(type.getName());
 						}
-						trainTypeList.setSelection(0);
 					}
 				}
 			}
 		});
-		
-		
 		this.trainTypeComposite = new Composite (tabFolder, SWT.BORDER);
 		trainTypeComposite.setLayout(new FillLayout());
 		initUI();
@@ -107,6 +110,30 @@ public class TrainTypeComposite {
 	 	Button delete = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
 	 	delete.setText(I18N.getMessage("TrainTypeComposite.buttonDelete"));
 	 	delete.setImage(ImageHelper.getImage("trashIcon"));
+	 	delete.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	// No selected TrainType
+	        	if (trainTypeList.getSelectionCount() == 0) {
+	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+    	            messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteError"));
+    	            messageBox.open();
+    	        // Selected TrainType
+	        	} else {
+			    	String[] selection = trainTypeList.getSelection();
+					java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
+		        	for (TrainType type : trainTypes) {
+		    			if (type.getName().equals(selection[0])) {
+		    				MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
+		    	            messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
+		    	            int rc = messageBox.open();
+		    	            if (rc == SWT.YES) {
+		    	            	application.getModel().deleteTrainType(type);
+		    	            }
+		    			}
+		    		}
+	        	}
+	        }
+	    });
 		
 	 	// List of TrainTypes
 	 	java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
@@ -137,35 +164,35 @@ public class TrainTypeComposite {
 	 */
 	
 	private void getInformation(Label infoTrainTypeLabel, String trainTypeName) {
+		String priority = "";
+		String topSpeed = "";
+		// Read the information of the selected TrainType
 		java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
 		for (TrainType type : trainTypes) {
 			if (type.getName().equals(trainTypeName)) {
-				// set values
-				break;
+				priority = String.valueOf(type.getPriority());
+				topSpeed = String.valueOf(type.getTopSpeed());
 			}
 		}
-		
-		
-		
-//		infoTrainTypeLabel.setText(trainTypeName);
-//		infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
-//		// no TrainType is selected
-//		if (trainTypeName.equals("Es wurde noch kein Zugtyp ausgewählt")) {
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
-//		    infoTrainTypeLabel.update();
-//		// A TrainType is selected
-//		} else {
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "100");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "5");
-//			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
-//		    infoTrainTypeLabel.update();
-//		}
+		// write the Information in the Label
+		infoTrainTypeLabel.setText(trainTypeName);
+		infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+		// no TrainType is selected
+		if (trainTypeName.equals("Es wurde noch kein Zugtyp ausgewählt")) {
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
+		    infoTrainTypeLabel.update();
+		// A TrainType is selected
+		} else {
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + topSpeed);
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + priority);
+			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
+		    infoTrainTypeLabel.update();
+		}
 	}
 		
 	/**

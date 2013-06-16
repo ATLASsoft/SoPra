@@ -14,7 +14,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -55,7 +57,7 @@ public class TrainTypeDialog {
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));
 		
-		initUI(display);
+		initUI();
 		MainWindow.center(shell);
 		shell.open();
 	}
@@ -69,14 +71,31 @@ public class TrainTypeDialog {
 	 * 			The currently used display.
 	 */
 	
-	private void initUI(final Display display) {
+	private void initUI() {
 		final I18NService I18N = I18NSingleton.getInstance();
+		final Display display = Display.getCurrent();
 		
 		// First row with a label and a text for the name
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
 		new Label(shell, SWT.NONE);
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
+		// ALEX HELP! :D
+//		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
+//		name.addListener(SWT.KeyDown, new Listener() {
+//		      public void handleEvent(Event e) {
+//		    	  for (TrainType type : trainTypes) {
+//		    		  if (type.getName().equals(name.getText())) {
+//		    			  Label error = new Label(shell, SWT.NONE);
+//		    			  error.setText(I18N.getMessage("TrainTypeDialog.labelErrorName"));
+//		    			  error.setForeground(display.getSystemColor(SWT.COLOR_RED));
+//		    		  } else {
+//		    			  new Label(shell, SWT.NONE);
+//		    		  }
+//		    	  }
+//		      }
+//		});
+
 		
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
@@ -95,7 +114,7 @@ public class TrainTypeDialog {
 		
 		// Third row with a label and a combo for the Priority (1-5)
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
-		final String[] prioritySelection = { "1", "2", "3", "4", "5" };
+		final String[] prioritySelection = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboPriority.setItems(prioritySelection);
 	    comboPriority.select(0);
@@ -145,7 +164,7 @@ public class TrainTypeDialog {
 	        	// surrender Inputs to ApplicationService and generating and open InformationMessageBox
 	        	} else {
 	        		TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
-	        		application.addTrainType(type);
+	        		application.getModel().addTrainType(type);
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
@@ -174,7 +193,12 @@ public class TrainTypeDialog {
 	    cancel.setImage(ImageHelper.getImage("cancelIcon"));
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	          shell.close();
+	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
+	            messageBox.setMessage(I18N.getMessage("TrainTypeDialog.cancelQuestion"));
+	            int rc = messageBox.open();
+	            if (rc == SWT.YES) {
+	            	shell.close();
+	            }
 	        }
 	    });
 	    
