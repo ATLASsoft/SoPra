@@ -169,7 +169,7 @@ public class MainWindow {
 		createTrainTypeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new TrainTypeDialog(null); 	// TODO: ApplicationService übergeben
+				new TrainTypeDialog(applicationService);
             }
         });
 		

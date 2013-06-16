@@ -78,23 +78,21 @@ public class TrainTypeDialog {
 		// First row with a label and a text for the name
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
-		new Label(shell, SWT.NONE);
+		final Label error = new Label(shell, SWT.NONE);
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
-		// ALEX HELP! :D
-//		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
-//		name.addListener(SWT.KeyDown, new Listener() {
-//		      public void handleEvent(Event e) {
-//		    	  for (TrainType type : trainTypes) {
-//		    		  if (type.getName().equals(name.getText())) {
-//		    			  Label error = new Label(shell, SWT.NONE);
-//		    			  error.setText(I18N.getMessage("TrainTypeDialog.labelErrorName"));
-//		    			  error.setForeground(display.getSystemColor(SWT.COLOR_RED));
-//		    		  } else {
-//		    			  new Label(shell, SWT.NONE);
-//		    		  }
-//		    	  }
-//		      }
-//		});
+		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
+		name.addListener(SWT.KeyDown, new Listener() {
+		      public void handleEvent(Event e) {
+		    	  for (TrainType type : trainTypes) {
+		    		  if (type.getName().equals(name.getText().trim())) {
+		    			  error.setText(I18N.getMessage("TrainTypeDialog.labelErrorExistingName"));
+		    			  error.setForeground(display.getSystemColor(SWT.COLOR_RED));
+		    			  error.update();
+		    			  shell.update();
+		    		  }
+		    	  }
+		      }
+		});
 
 		
 		// Second row with two labels and a text for the topSpeed
@@ -164,7 +162,7 @@ public class TrainTypeDialog {
 	        	// surrender Inputs to ApplicationService and generating and open InformationMessageBox
 	        	} else {
 	        		TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
-	        		application.getModel().addTrainType(type);
+	        		application.addTrainType(type);
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
