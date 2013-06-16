@@ -120,17 +120,19 @@ public class TrainTypeComposite {
     	        // Selected TrainType
 	        	} else {
 			    	String[] selection = trainTypeList.getSelection();
+			    	TrainType deleteType = null;
 					java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
 		        	for (TrainType type : trainTypes) {
 		    			if (type.getName().equals(selection[0])) {
-		    				MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
-		    	            messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
-		    	            int rc = messageBox.open();
-		    	            if (rc == SWT.YES) {
-		    	            	application.deleteTrainType(type);
-		    	            }
+		    				deleteType = type;
 		    			}
 		    		}
+    				MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
+    	            messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
+    	            int rc = messageBox.open();
+    	            if (rc == SWT.YES) {
+    	            	application.deleteTrainType(deleteType);
+    	            }
 	        	}
 	        }
 	    });

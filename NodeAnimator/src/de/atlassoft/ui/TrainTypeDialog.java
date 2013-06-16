@@ -79,21 +79,11 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
 		final Label error = new Label(shell, SWT.NONE);
+		error.setText(I18N.getMessage("TrainTypeDialog.labelErrorExistingName"));
+		error.setForeground(display.getSystemColor(SWT.COLOR_RED));
+		error.setVisible(false);		
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
 		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
-		name.addListener(SWT.KeyDown, new Listener() {
-		      public void handleEvent(Event e) {
-		    	  for (TrainType type : trainTypes) {
-		    		  if (type.getName().equals(name.getText().trim())) {
-		    			  error.setText(I18N.getMessage("TrainTypeDialog.labelErrorExistingName"));
-		    			  error.setForeground(display.getSystemColor(SWT.COLOR_RED));
-		    			  error.update();
-		    			  shell.update();
-		    		  }
-		    	  }
-		      }
-		});
-
 		
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
@@ -126,7 +116,7 @@ public class TrainTypeDialog {
 		
 		// Fourth row with three buttons for Save, Information and Cancel
 		// Save Button
-		Button save = new Button(shell, SWT.PUSH);
+		final Button save = new Button(shell, SWT.PUSH);
 		save.setText(I18N.getMessage("TrainTypeDialog.buttonSave"));
 	    save.setImage(ImageHelper.getImage("greenCheck"));
 	    save.addSelectionListener(new SelectionAdapter() {
@@ -199,6 +189,26 @@ public class TrainTypeDialog {
 	            }
 	        }
 	    });
+	    
+	    // On the Fly Exception
+		name.addListener(SWT.KeyDown, new Listener() {
+			public void handleEvent(Event e) {
+		    Boolean twice = false;
+		    	for (TrainType type : trainTypes) {
+		    		if (type.getName().trim().equals(name.getText().trim())) {
+		    			twice = true;
+		    		}
+		    	}
+		    	if (twice == true) {
+		    		error.setVisible(true);
+		   		  	save.setEnabled(false);
+		    	} else {
+		    		error.setVisible(false);
+		    		save.setEnabled(true);
+		    	}
+			}
+		});
+	    
 	    
 		shell.pack();
 	}
