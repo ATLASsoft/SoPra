@@ -132,8 +132,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void deleteTrainType(TrainType trainType) {
-		// TODO Auto-generated method stub
-		
+		model.deleteTrainType(trainType);
+		// TODO: aus xml entfernen
 	}
 
 	@Override
