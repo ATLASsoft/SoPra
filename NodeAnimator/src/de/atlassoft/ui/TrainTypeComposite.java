@@ -149,8 +149,10 @@ public class TrainTypeComposite {
 		// Shows the Information of te selected Traintype
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
-		    	  String[] selection = trainTypeList.getSelection();
-		    	  getInformation(infoTrainTypeLabel, selection[0]);
+		    	  if (trainTypeList.getSelectionCount() != 0) {
+		    		  String[] selection = trainTypeList.getSelection();
+			    	  getInformation(infoTrainTypeLabel, selection[0]);
+		    	  }
 		      }
 		});
 	}

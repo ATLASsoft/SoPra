@@ -34,7 +34,7 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class TrainTypeDialog {
-	//TODO: Überprüfen ob TrainType Name bereits vergeben ist, Möglichkeit Bilder einzufügen und on the fly Korrektur statt Fehlermeldung bei ungültiger eingabe
+	//TODO: Möglichkeit Bilder einzufügen
 	private Shell shell;
 	private ApplicationService application;
 	
@@ -193,11 +193,18 @@ public class TrainTypeDialog {
 	    // On the Fly Exception
 		name.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
-				System.out.print(e.text);
 		    	Boolean twice = false;
-		    	for (TrainType type : trainTypes) {
-		    		if (type.getName().equals(name.getText() + e.text)) {
-		    			twice = true;
+		    	if (e.keyCode != 8) {
+		    		for (TrainType type : trainTypes) {
+		    			if (type.getName().equals(name.getText() + e.text)) {
+		    				twice = true;
+		    			}
+		    		}
+		    	} else {
+		    		for (TrainType type : trainTypes) {
+		    			if (type.getName().equals(name.getText().substring(0, name.getText().length() - 1))) {
+		    				twice = true;
+		    			}
 		    		}
 		    	}
 		    	if (twice == true) {
