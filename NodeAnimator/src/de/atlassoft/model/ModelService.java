@@ -13,31 +13,30 @@ import java.util.List;
 public interface ModelService {
 
 	/**
-	 * Property name of the active railway system. Use to invoke a {@link PropertyChangeEvent}
-	 * after using {@link ModelService#setActiveRailwaySys(RailwaySystem)}.
+	 * Property name of the active railway system. Used by {@link PropertyChangeEvent}.
 	 */
 	public static String ACTIVE_RAILSYS_PROPNAME = "activeRailSys";
 	
 	/**
-	 * Property name of the train type property. Use to invoke a {@link PropertyChangeEvent}
+	 * Property name of the train type property. Used by {@link PropertyChangeEvent}
 	 * after updating the list of train types.
 	 */
 	public static String TRAIN_TYPES_PROPNAME = "trainTypes";
 	
 	/**
-	 * Property name of the active schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
+	 * Property name of the active schedule scheme property. Used by {@link PropertyChangeEvent}
 	 * after updating the list of active schedule schemes.
 	 */
 	public static String ACTIVE_SCHEDULE_SCHEMES_PROPNAME = "activeSchemes";
 	
 	/**
-	 * Property name of the passive schedule scheme property. Use to invoke a {@link PropertyChangeEvent}
+	 * Property name of the passive schedule scheme property. Used by {@link PropertyChangeEvent}
 	 * after updating the list of passive schedule schemes.
 	 */
 	public static String PASSIVE_SCHEDULE_SCHEMES_PROPNAME = "passiveSchemes";
 	
 	/**
-	 * Property name of the railway system ids property. Use to invoke a {@link PropertyChangeEvent}
+	 * Property name of the railway system ids property. Used by {@link PropertyChangeEvent}
 	 * after updating the list of railway system ids.
 	 */
 	public static String RAILSYS_IDS_PROPNAME = "railsysIDs";
@@ -66,21 +65,6 @@ public interface ModelService {
 	 *            The PropertyChangeListener to be removed
 	 */
 	void removePropertyChangeListener(PropertyChangeListener listener);
-
-	/**
-	 * Reports a property update of the property affiliated with propertyName to
-	 * all listeners that have been registered to this model by invoking a
-	 * {@link PropertyChangeEvent}. Note that oldValue of the fired
-	 * {@link PropertyChangeEvent} is not supported. Only the XXX_PROPNAME
-	 * constants of this interface are valid parameters for this method.
-	 * 
-	 * @param propertyName
-	 *            name of the changed property, must be one of the XXX_PROPNAME
-	 *            constants of this interface
-	 * @throws IllegalArgumentException
-	 *             if propertyName is none of the XXX_PROPNAME constants
-	 */
-	void firePropertyChangeEvent(String propertyName); // TODO: unklare Spezifikation
 
 	/**
 	 * Removes the currently active railway system from the model and sets the

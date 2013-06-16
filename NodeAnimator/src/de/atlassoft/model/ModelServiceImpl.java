@@ -46,32 +46,9 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public void firePropertyChangeEvent(String propertyName) {
-		switch (propertyName) {
-		case ACTIVE_RAILSYS_PROPNAME:
-			pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
-			break;
-		case TRAIN_TYPES_PROPNAME:
-			pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
-			break;
-		case ACTIVE_SCHEDULE_SCHEMES_PROPNAME:
-			pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
-			break;
-		case PASSIVE_SCHEDULE_SCHEMES_PROPNAME:
-			pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, getPassiveScheduleSchemes());
-			break;
-		case RAILSYS_IDS_PROPNAME:
-			pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailwaySystemIDs());
-			break;
-		default:
-			throw new IllegalArgumentException("unknown property");
-		}
-
-	}
-
-	@Override
 	public void setActiveRailwaySys(RailwaySystem railSys) {
 		activeRailSys = railSys;
+		pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
 	}
 
 	@Override
@@ -81,12 +58,20 @@ public class ModelServiceImpl implements ModelService {
 	
 	@Override
 	public void addRailwaySystemID(String id) {
-		
+		if (id == null || id.trim().isEmpty()) {
+			throw new IllegalArgumentException("id must not be null or empty");
+		}
+		if (railSysIDs.contains(id)) {
+			throw new IllegalArgumentException("id has already been added");
+		}
+		railSysIDs.add(id);
+		pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailwaySystemIDs());
 	}
 	
 	@Override
 	public void removeRailwaySystemID(String id) {
-		
+		railSysIDs.remove(id);
+		pcSupport.firePropertyChange(RAILSYS_IDS_PROPNAME, null, getRailwaySystemIDs());
 	}
 
 	@Override
@@ -98,6 +83,7 @@ public class ModelServiceImpl implements ModelService {
 	public void addTrainType(TrainType type) {
 		if (type != null && !trainTypes.contains(type)) {
 			trainTypes.add(type);
+			pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
 		}
 
 	}
@@ -105,6 +91,7 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public void deleteTrainType(TrainType type) {
 		trainTypes.remove(type);
+		pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
 	}
 
 	@Override
@@ -116,12 +103,14 @@ public class ModelServiceImpl implements ModelService {
 	public void addActiveScheduleScheme(ScheduleScheme schedule) {
 		if (schedule != null && !activeSchemes.contains(schedule)) {
 			activeSchemes.add(schedule);
+			pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
 		}
 	}
 
 	@Override
 	public void removeActiveScheduleScheme(ScheduleScheme schedule) {
 		activeSchemes.remove(schedule);
+		pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
 	}
 
 	@Override
@@ -133,12 +122,14 @@ public class ModelServiceImpl implements ModelService {
 	public void addPassiveScheduleScheme(ScheduleScheme schedule) {
 		if (schedule != null && !passiveSchemes.contains(schedule)) {
 			passiveSchemes.add(schedule);
+			pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, getPassiveScheduleSchemes());
 		}
 	}
 
 	@Override
 	public void removePassiveScheduleScheme(ScheduleScheme schedule) {
 		passiveSchemes.remove(schedule);
+		pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, getPassiveScheduleSchemes());
 	}
 
 	@Override

@@ -80,7 +80,7 @@ public class HomeScreenComposite {
 		//Train type tab
 		TabItem trainTypeItem = new TabItem(tabFolder, SWT.NONE);
 		trainTypeItem.setText(I18N.getMessage("HomeScreenComposite.TrainTab"));
-		TrainTypeComposite trainTypeComposite = new TrainTypeComposite(tabFolder);
+		TrainTypeComposite trainTypeComposite = new TrainTypeComposite(tabFolder, applicationService);
 		trainTypeItem.setControl(trainTypeComposite.getComposite());
 	}
 	

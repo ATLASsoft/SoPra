@@ -126,8 +126,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void addTrainType(TrainType trainType) {
-		// TODO Auto-generated method stub
-		
+		model.addTrainType(trainType);
+		// TODO: traintype persistieren
 	}
 
 	@Override
