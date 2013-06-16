@@ -39,38 +39,45 @@ public class TrainTypeComposite {
 		initUI();
 	}
 	
+	/**
+	 * A method which creates the content, 
+	 * composites labels, buttons and a list of
+	 * the composite of the TrainTypeComposite.
+	 */
 	
 	private void initUI(){
 		// TODO: Buttons Funktionen implementieren und autoresize Table
-		Composite trainTypeCompositeSplit = new Composite (trainTypeComposite, SWT.NULL);
-		trainTypeCompositeSplit.setLayout(new GridLayout(1, false));
+		//Left side of the composite
+		Composite trainTypeCompositeLeft = new Composite (trainTypeComposite, SWT.NULL);
+		trainTypeCompositeLeft.setLayout(new GridLayout(1, false));
 		
-		Composite trainTypeCompositeSplit1 = new Composite (trainTypeCompositeSplit, SWT.NULL);
-		trainTypeCompositeSplit1.setLayout(new GridLayout(2, false));
+		// Left Top side of the composite
+		Composite trainTypeCompositeLeftTop = new Composite (trainTypeCompositeLeft, SWT.NULL);
+		trainTypeCompositeLeftTop.setLayout(new GridLayout(2, false));
 		
 		// Label with Description
-		final Label descriptionTrainTypeLabel = new Label(trainTypeCompositeSplit1, SWT.LEFT);
-		descriptionTrainTypeLabel.setText("Name:   ");
+		final Label descriptionTrainTypeLabel = new Label(trainTypeCompositeLeftTop, SWT.LEFT);
+		descriptionTrainTypeLabel.setText(I18N.getMessage("TrainTypeComposite.name"));
 		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
-		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "Höchstgeschwindigkeit:   ");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + I18N.getMessage("TrainTypeComposite.topSpeed") + "   ");
 		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
-		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "Priorität:   ");
+		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + I18N.getMessage("TrainTypeComposite.priority"));
 		descriptionTrainTypeLabel.setText(descriptionTrainTypeLabel.getText() + "\n");
 		
 		// Label with Information of the selected TrainTyp
-		final Label infoTrainTypeLabel = new Label(trainTypeCompositeSplit1, SWT.RIGHT);
+		final Label infoTrainTypeLabel = new Label(trainTypeCompositeLeftTop, SWT.RIGHT);
 		
-	    
-	    Composite trainTypeCompositeSplit2 = new Composite (trainTypeCompositeSplit, SWT.NULL);
-		trainTypeCompositeSplit2.setLayout(new FillLayout());
+		// Left Bottom side of the Composite
+	    Composite trainTypeCompositeLeftBottom = new Composite (trainTypeCompositeLeft, SWT.NULL);
+		trainTypeCompositeLeftBottom.setLayout(new FillLayout());
 		
 		// Modify Button
-		Button modify = new Button(trainTypeCompositeSplit2, SWT.PUSH);
+		Button modify = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
 		modify.setText(I18N.getMessage("TrainTypeComposite.buttonModify"));
 		modify.setImage(ImageHelper.getImage("settingsIcon"));
 	    
 		// Delete Button
-	 	Button delete = new Button(trainTypeCompositeSplit2, SWT.PUSH);
+	 	Button delete = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
 	 	delete.setText(I18N.getMessage("TrainTypeComposite.buttonDelete"));
 	 	delete.setImage(ImageHelper.getImage("trashIcon"));
 		
@@ -80,7 +87,9 @@ public class TrainTypeComposite {
 		for (int i = 0, n = ITEMS.length; i < n; i++) {
 			trainTypeList.add(ITEMS[i]);
 		}
+		// Shows a text when no Traintype is selected
 		getInformation(infoTrainTypeLabel, "Es wurde noch kein Zugtyp ausgewählt");
+		// Shows the Information of te selected Traintype
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
 		        getInformation(infoTrainTypeLabel, ITEMS [trainTypeList.getSelectionIndex()]);
@@ -88,10 +97,21 @@ public class TrainTypeComposite {
 		});
 	}
 	
+	/**
+	 * 
+	 * Creates the content of the infoTrainTypeLabel.
+	 * First we read the Information, then we create
+	 * the text.
+	 * 
+	 * @param infoTrainTypeLabel
+	 * @param TrainType
+	 */
+	
 	private static void getInformation(Label infoTrainTypeLabel, String TrainType){
 		//TODO: XML auslesen und Infos erlangen
 		infoTrainTypeLabel.setText(TrainType);
 		infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
+		// no TrainType is selected
 		if (TrainType.equals("Es wurde noch kein Zugtyp ausgewählt")) {
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
@@ -99,6 +119,7 @@ public class TrainTypeComposite {
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");	
 		    infoTrainTypeLabel.update();
+		// A TrainType is selected
 		} else {
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "100");
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + " km/h");
