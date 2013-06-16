@@ -50,6 +50,7 @@ public class Path {
 		PathFigure path = new PathFigure(this);
 		path.setSourceAnchor(new CenterAnchor(start.getNodeFigure())); // new ChopboxAnchor(start)
 		path.setTargetAnchor(new CenterAnchor(end.getNodeFigure()));// new ChopboxAnchor(end)
+		this.pathFigure = path;
 	}
 	
 	

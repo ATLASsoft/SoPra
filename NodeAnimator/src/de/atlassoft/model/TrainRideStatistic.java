@@ -47,6 +47,7 @@ public class TrainRideStatistic {
 					"scheduleScheme must not be null");
 		}
 
+		this.schedule = scheduleScheme;
 		stations = new ArrayList<Node>();
 		delay = new HashMap<Node, Integer>();
 	}
