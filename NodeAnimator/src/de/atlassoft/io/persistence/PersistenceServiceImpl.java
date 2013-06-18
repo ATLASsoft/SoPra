@@ -3,10 +3,12 @@ package de.atlassoft.io.persistence;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -23,85 +25,43 @@ import de.atlassoft.model.TrainType;
  * 
  * @author Linus, Andreas
  */
-public class PersistenceServiceXMLImpl implements PersistenceService {
+public class PersistenceServiceImpl implements PersistenceService {
 
+	private static final Path SAVE_DATA_PATH = Paths.get("D", "savedata");//getJarPath().resolveSibling("savedata");
+	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
+	
+	
+	private static Path getJarPath() {
+		String classpath = System.getProperty("java.class.path");
+		if (classpath.contains(";")) {
+			String[] split = classpath.split(";");
+			classpath = split[0];
+		}
+		return Paths.get(classpath);
+	}
+	
+	
+	private XMLParser xmlParser;
+	
+	public PersistenceServiceImpl() {
+		xmlParser = new XMLParser();
+	}
+	
+	
 	@Override
-	public void saveTrainType(TrainType type) {
-
-		File f = new File("D:\\traintypes.xml");
-		
-		/**
-		 * If the XML already exists
-		 */
-		if (f.exists()) {
-			try {
-
-				SAXBuilder builder = new SAXBuilder();
-				File xmlFile = new File("D:\\traintypes.xml");
-
-				Document doc = (Document) builder.build(xmlFile);
-
-				Element train = new Element(type.getName());
-
-				train.addContent(new Element("topspeed").setText(Double
-						.toString(type.getTopSpeed())));
-
-				train.addContent(new Element("priority").setText(Integer
-						.toString(type.getPriority())));
-
-				doc.getRootElement().addContent(train);
-				
-
-				XMLOutputter xmlOutput = new XMLOutputter();
-
-				// display nice nice
-				xmlOutput.setFormat(Format.getPrettyFormat());
-				xmlOutput.output(doc, new FileWriter("D:\\traintypes.xml"));
-
-				// xmlOutput.output(doc, System.out);
-
-				System.out.println("File updated!");
-			} catch (IOException io) {
-				io.printStackTrace();
-			} catch (JDOMException e) {
-				e.printStackTrace();
-			}
-		}
-
-		/**
-		 * If the XML does not exists already
-		 */
-		else {
-			try {
-
-				Element traintypes = new Element("TrainTypes");
-				Document doc = new Document(traintypes);
-
-				Element train = new Element(type.getName());
-
-				train.addContent(new Element("topspeed").setText(Double
-						.toString(type.getTopSpeed())));
-
-				train.addContent(new Element("priority").setText(Integer
-						.toString(type.getPriority())));
-
-				doc.getRootElement().addContent(train);
-
-				// new XMLOutputter().output(doc, System.out);
-				XMLOutputter xmlOutput = new XMLOutputter();
-
-				xmlOutput.setFormat(Format.getPrettyFormat());
-				xmlOutput.output(doc, new FileWriter("D:\\traintypes.xml"));
-
-				System.out.println("File Saved!");
-			} catch (IOException io) {
-				System.out.println(io.getMessage());
-			}
-		}
+	public void saveTrainType(TrainType type) throws IOException {
+		//xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
 	}
 
 	@Override
 	public List<TrainType> getTrainTypes() {
+		//Traintype t1 = new TrainType(name, topSpeed, priority)
+		
+		
+		//xmlParser.get(...)
+		
+		
+		
 		List<TrainType> res = new ArrayList<TrainType>();
 		SAXBuilder builder = new SAXBuilder();
 		  File xmlFile = new File("E:\\traintypes.xml");

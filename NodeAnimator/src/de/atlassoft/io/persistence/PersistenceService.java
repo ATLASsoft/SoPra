@@ -1,5 +1,6 @@
 package de.atlassoft.io.persistence;
 
+import java.io.IOException;
 import java.util.List;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
@@ -18,7 +19,7 @@ public interface PersistenceService {
 	 * @param type
 	 *            The TrainType that is to be saved by the System
 	 */
-	public void saveTrainType(TrainType type);
+	public void saveTrainType(TrainType type) throws IOException;
 
 	/**
 	 * Returns a List of all TrainTypes saved

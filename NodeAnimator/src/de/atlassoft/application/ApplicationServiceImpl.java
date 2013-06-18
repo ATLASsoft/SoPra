@@ -3,7 +3,7 @@ package de.atlassoft.application;
 import java.util.Calendar;
 
 import de.atlassoft.io.persistence.PersistenceService;
-import de.atlassoft.io.persistence.PersistenceServiceXMLImpl;
+import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;

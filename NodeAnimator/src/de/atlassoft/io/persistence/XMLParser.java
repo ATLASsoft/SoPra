@@ -1,57 +1,100 @@
 package de.atlassoft.io.persistence;
 
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import de.atlassoft.model.TrainType;
 
 /**
  * Class which provides methods to create, delete, modify and read XML-Files
  * 
  * @author Linus and
  */
-public class XMLParser {
+class XMLParser {
 
-	/**
-	 * Returns a list of Objects (TrainTypes, ScheduleSchemes, RailwaySystems)
-	 * form a XML-File
-	 * 
-	 * @param fileName
-	 *            The name of the XML-File which is to be read
-	 * @return List<Object> The list of Objects (TrainTypes, ScheduleSchemes,
-	 *         RailwaySystems) stored in the XML-File
-	 */
-	protected List<Object> readXML(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected void saveTrainType(TrainType type, Path path) throws IOException {
+		// if file does not exist, create new
+				if (!Files.exists(path)) {
+					// createNewTrainTypeXML(TRAIN_TYPE_PATH);
+				}
 
-	/**
-	 * Edits an existing XML-File
-	 * 
-	 * @param fileName
-	 *            The name of the XML-File which is to be edited
-	 */
-	protected void editXML(String fileName) {
-		// TODO Auto-generated method stub
-	}
+				// add content
+				FileWriter out = null;
 
-	/**
-	 * Creates a new XML-File with the given fileName and the specific Object
-	 * 
-	 * @param fileName
-	 *            The name of the XML-File which is to be created
-	 * @param toSave
-	 *            The Object that is to be saved in the XML-File
-	 */
-	protected void createXML(String fileName, Object toSave) {
-		// TODO Auto-generated method stub
-	}
+				try {
 
-	/**
-	 * Deletes an existing XML-File with the given fileName
-	 * 
-	 * @param fileName
-	 *            The name of the XML-File which is to be deleted
-	 */
-	protected void deleteXML(String fileName) {
-		// TODO Auto-generated method stub
+					SAXBuilder builder = new SAXBuilder();
+
+					Document doc = (Document) builder.build(path.toFile());
+
+					Element train = new Element(type.getName());
+
+					train.addContent(new Element("topspeed").setText(Double
+							.toString(type.getTopSpeed())));
+
+					train.addContent(new Element("priority").setText(Integer
+							.toString(type.getPriority())));
+
+					doc.getRootElement().addContent(train);
+
+					XMLOutputter xmlOutput = new XMLOutputter();
+
+					// display nice nice
+					out = new FileWriter("D:\\traintypes.xml");
+					xmlOutput.setFormat(Format.getPrettyFormat());
+					xmlOutput.output(doc, out);
+
+					System.out.println("File updated!");
+				} catch (JDOMException exp) {
+					throw new IOException(exp);
+				} finally {
+					if (out != null) {
+						out.close();
+					}
+
+				}
+				
+
+				/*
+				 * If the XML does not exists already
+				 */
+//				else {
+//					try {
+		//
+//						Element traintypes = new Element("TrainTypes");
+//						Document doc = new Document(traintypes);
+		//
+//						Element train = new Element(type.getName());
+		//
+//						train.addContent(new Element("topspeed").setText(Double
+//								.toString(type.getTopSpeed())));
+		//
+//						train.addContent(new Element("priority").setText(Integer
+//								.toString(type.getPriority())));
+		//
+//						doc.getRootElement().addContent(train);
+		//
+//						// new XMLOutputter().output(doc, System.out);
+//						XMLOutputter xmlOutput = new XMLOutputter();
+		//
+//						xmlOutput.setFormat(Format.getPrettyFormat());
+//						xmlOutput.output(doc, new FileWriter("D:\\traintypes.xml"));
+		//
+//						System.out.println("File Saved!");
+//					} catch (IOException io) {
+//						System.out.println(io.getMessage());
+//					}
+//				}
 	}
+	
+	
 }
