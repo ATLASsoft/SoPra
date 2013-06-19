@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -85,6 +86,15 @@ public class TrainTypeComposite {
 		Composite trainTypeCompositeLeftTop = new Composite (trainTypeCompositeLeft, SWT.NULL);
 		trainTypeCompositeLeftTop.setLayout(new GridLayout(2, false));
 		
+		//Image of TrainType
+		final Label labelImage = new Label(trainTypeCompositeLeftTop, SWT.NULL);
+		GridData labelGridData = new GridData();
+		labelGridData.heightHint = 35;
+		labelGridData.widthHint = 35;
+		labelImage.setLayoutData(labelGridData);
+		labelImage.setSize(35,35);
+		new Label (trainTypeCompositeLeftTop, SWT.NULL);
+		
 		// Label with Description
 		final Label descriptionTrainTypeLabel = new Label(trainTypeCompositeLeftTop, SWT.LEFT);
 		descriptionTrainTypeLabel.setText(I18N.getMessage("TrainTypeComposite.name"));
@@ -145,13 +155,13 @@ public class TrainTypeComposite {
 	 	}
 	 	
 		// Shows a text when no Traintype is selected
-		getInformation(infoTrainTypeLabel, "Es wurde noch kein Zugtyp ausgewählt");
+		getInformation(labelImage, infoTrainTypeLabel, "Es wurde noch kein Zugtyp ausgewählt");
 		// Shows the Information of te selected Traintype
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
 		    	  if (trainTypeList.getSelectionCount() != 0) {
 		    		  String[] selection = trainTypeList.getSelection();
-			    	  getInformation(infoTrainTypeLabel, selection[0]);
+			    	  getInformation(labelImage, infoTrainTypeLabel, selection[0]);
 		    	  }
 		      }
 		});
@@ -167,7 +177,7 @@ public class TrainTypeComposite {
 	 * @param trainTypeName
 	 */
 	
-	private void getInformation(Label infoTrainTypeLabel, String trainTypeName) {
+	private void getInformation(Label labelImage, Label infoTrainTypeLabel, String trainTypeName) {
 		String priority = "";
 		String topSpeed = "";
 		// Read the information of the selected TrainType
@@ -176,6 +186,7 @@ public class TrainTypeComposite {
 			if (type.getName().equals(trainTypeName)) {
 				priority = String.valueOf(type.getPriority());
 				topSpeed = String.valueOf(type.getTopSpeed());
+				labelImage.setImage(type.getImg());
 			}
 		}
 		// write the Information in the Label
