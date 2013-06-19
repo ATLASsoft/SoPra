@@ -68,7 +68,7 @@ public class HomeScreenComposite {
 		//Railway system tab
 		TabItem railSysItem = new TabItem(tabFolder, SWT.NONE);
 		railSysItem.setText(I18N.getMessage("HomeScreenComposite.RailwaySystemTab"));
-		CurrentRailSysComposite currentRailSys = new CurrentRailSysComposite(tabFolder);
+		CurrentRailSysComposite currentRailSys = new CurrentRailSysComposite(tabFolder, applicationService);
 		railSysItem.setControl(currentRailSys.getComposite());
 		
 		//Schedule tab

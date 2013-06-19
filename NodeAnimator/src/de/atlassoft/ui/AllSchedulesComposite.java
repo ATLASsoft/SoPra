@@ -57,10 +57,10 @@ public class AllSchedulesComposite {
 				
 	    Label scheduleInformation = new Label(allScheduleComposite, SWT.BORDER);
 	    GridData scheduleInformationData = new GridData();
-//	    scheduleInformationData.grabExcessHorizontalSpace = true;
-//	    scheduleInformationData.grabExcessVerticalSpace = true;
-//	    scheduleInformationData.verticalAlignment = SWT.FILL;
-//	    scheduleInformationData.horizontalAlignment = SWT.FILL;
+	    scheduleInformationData.grabExcessHorizontalSpace = true;
+	    scheduleInformationData.grabExcessVerticalSpace = true;
+	    scheduleInformationData.verticalAlignment = SWT.FILL;
+	    scheduleInformationData.horizontalAlignment = SWT.FILL;
 	    scheduleInformation.setLayoutData(scheduleInformationData);
 	    
 //	    ActiveSchedules list

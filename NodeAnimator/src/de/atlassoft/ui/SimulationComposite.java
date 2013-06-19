@@ -50,6 +50,8 @@ public class SimulationComposite {
 	 * 		The composite of the main window.
 	 * @param layout
 	 * 		The stack layout of the main window.
+	 * @param applicationService
+	 * 		The ApplicationService of the program.
 	 */
 	public SimulationComposite (Shell shell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		//TODO: Ausprogrammieren

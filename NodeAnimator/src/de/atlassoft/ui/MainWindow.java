@@ -48,7 +48,7 @@ public class MainWindow {
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
-		shell.setSize(960, 620);
+		shell.setSize(960, 670);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);

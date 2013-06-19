@@ -27,7 +27,7 @@ public class RailSysComposite {
 	public static Composite createRailSysComposite(Shell shell, Composite mainComposite){
 		//TODO: Ausprogrammieren
 		
-	    Composite railSysComposite = new Composite(mainComposite, SWT.NONE);
+	    Composite railSysComposite = new Composite(mainComposite, SWT.BORDER);
 	    railSysComposite.setLayout(new RowLayout());
 	    Label label = new Label(railSysComposite, SWT.NONE);
 	    label.setText("railsyscomp");

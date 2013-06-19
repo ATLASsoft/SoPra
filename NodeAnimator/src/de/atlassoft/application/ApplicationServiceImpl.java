@@ -33,6 +33,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 		TrainType testType = new TrainType("Testzug", 150, 10);
 		model.addTrainType(testType);
 		
+		RailwaySystem testRailSys = new RailwaySystem("1");
+		model.setActiveRailwaySys(testRailSys);
+		model.addRailwaySystemID("1");
+		
+		Node node1 = new Node("Node 1", 15, 23, 15, 15);
+		model.getActiveRailwaySys().addNode(node1);
+		Node node2 = new Node("Node 2", 555, 200, 15, 15);
+		model.getActiveRailwaySys().addNode(node2);
+		Node node3 = new Node("Node 3", 400, 300, 15, 15);
+		model.getActiveRailwaySys().addNode(node3);
+		Node node4 = new Node("Node 4", 356, 400, 15, 15);
+		model.getActiveRailwaySys().addNode(node4);
+		Node node5 = new Node("Node 5", 100, 53, 15, 15);
+		model.getActiveRailwaySys().addNode(node5);
 	}
 	
 	@Override

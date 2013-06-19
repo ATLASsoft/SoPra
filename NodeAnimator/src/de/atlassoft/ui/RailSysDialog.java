@@ -98,7 +98,7 @@ public class RailSysDialog {
 			trainSysList.add(id);
 		}
 		
-		
+		System.out.println(model.getRailwaySystemIDs().isEmpty());
 		
 		Composite buttonComposite = new Composite(listComposite, SWT.NONE);
 		GridData buttonGridData = new GridData();
