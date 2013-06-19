@@ -13,12 +13,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
+import de.atlassoft.model.Path;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.hohenheim.view.map.NodeMap;
@@ -37,6 +40,8 @@ public class CurrentRailSysComposite {
 	private Text xCoord, yCoord;
 	private NodeMap map;
 	private Canvas c;
+	private List nodeInformation;
+	private Combo combo1, combo2;
 	
 	/**
 	 * Constructor for the class CurrentRailSysComposite
@@ -83,10 +88,11 @@ public class CurrentRailSysComposite {
 			public void mouseUp(MouseEvent e) {
 //				Node node = new Node("Node", e.x - 7, e.y - 7, 15, 15);
 //				applicationService.getModel().getActiveRailwaySys().addNode(node);
-//				map.paintNodeMap(c);
-				for (Iterator<Node> i = applicationService.getModel().getActiveRailwaySys().getNodes().iterator(); i.hasNext();) {
-					if (i.next().getNodeFigure().getBounds().contains(new Point(e.x, e.y)) == true) {
-						System.out.println("yippiayea");
+				for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
+					if (temp.getNodeFigure().getBounds().contains(new Point(e.x, e.y))) {
+						nodeInformation.removeAll();
+						nodeInformation.add(temp.getName());
+						nodeInformation.add(temp.getNodeFigure().getBounds().toString());
 					}
 				}
 			}	    	
@@ -120,9 +126,46 @@ public class CurrentRailSysComposite {
 			public void widgetSelected(SelectionEvent e) {
 				Node node = new Node("Node 1", Integer.parseInt(xCoord.getText()), Integer.parseInt(yCoord.getText()), 30, 30);
 				applicationService.getModel().getActiveRailwaySys().addNode(node);
-				map.paintNodeMap(c);
 			}
 		});
+		
+		combo1 = new Combo(buttonComposite, SWT.NULL);
+		combo2 = new Combo(buttonComposite, SWT.NULL);
+		for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
+			combo1.add(temp.getName());
+			combo2.add(temp.getName());
+		}
+		combo1.select(0);
+		combo2.select(1);
+		
+		Button createPath = new Button(buttonComposite, SWT.PUSH);
+		createPath.setText("Create Path");
+		createPath.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Node node1 = null, node2;
+				for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
+					if (temp.getName().equals(combo1.getItem(combo1.getSelectionIndex()))) {
+						node1 = temp;
+					}
+					if (temp.getName().equals(combo2.getItem(combo2.getSelectionIndex()))) {
+						node2 = temp;
+						applicationService.getModel().getActiveRailwaySys().addPath(new Path(node1, node2, 0));
+					}
+				}
+			}
+		});
+		
+		nodeInformation = new List(buttonComposite, SWT.BORDER);
+		nodeInformation.setEnabled(false);
+		GridData nodeInformationData = new GridData();
+		nodeInformationData.horizontalSpan = 3;
+		nodeInformationData.verticalAlignment = SWT.FILL;
+		nodeInformationData.horizontalAlignment = SWT.FILL;
+		nodeInformationData.grabExcessHorizontalSpace = true;
+		nodeInformationData.grabExcessVerticalSpace = true;
+		nodeInformation.setLayoutData(nodeInformationData);
+		nodeInformation.add("Auf einen Knoten klicken");
 	}
 	
 	/**
