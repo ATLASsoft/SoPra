@@ -10,6 +10,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -139,7 +140,7 @@ public class TrainTypeDialog {
 	            if (!fd.getFileName().equals("")) {
 	            	selected = fd.getFilterPath() + "/" + fd.getFileName();
 	            	image.setText(selected);
-	        	}
+	            }
 			}
 	    });
 		new Label(shell, SWT.NONE);
@@ -188,6 +189,8 @@ public class TrainTypeDialog {
 	        	} else {
 	        		TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
 	        		application.addTrainType(type);
+	            	Image img = new Image(null, image.getText());
+	        		type.setImg(img);
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
