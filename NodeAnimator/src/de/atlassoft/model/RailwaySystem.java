@@ -49,7 +49,7 @@ public class RailwaySystem {
 	public void addNode(Node node) {
 		// check constraints
 		if (node == null) {
-			throw new IllegalArgumentException("node must not be null");
+			throw new IllegalArgumentException("node must not be null");//TODO: name muss eindeutig sein
 		}
 		
 		// add node to data structure
