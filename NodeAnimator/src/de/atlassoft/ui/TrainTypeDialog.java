@@ -14,6 +14,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -79,27 +80,29 @@ public class TrainTypeDialog {
 		// First row with a label and a text for the name
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
-		final Label error = new Label(shell, SWT.NONE);
-		error.setText(I18N.getMessage("TrainTypeDialog.labelErrorExistingName"));
-		error.setForeground(display.getSystemColor(SWT.COLOR_RED));
-		error.setVisible(false);		
+		final Label errorName = new Label(shell, SWT.NONE);
+		errorName.setText(I18N.getMessage("TrainTypeDialog.labelErrorExistingName"));
+		errorName.setForeground(display.getSystemColor(SWT.COLOR_RED));
+		errorName.setVisible(false);		
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
 		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
 		
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
-		final Text speed = new Text(shell, SWT.BORDER);
+		final Text textSpeed = new Text(shell, SWT.BORDER);
+		Composite trainTypeDialogSpeed = new Composite (shell, SWT.NULL);
+		trainTypeDialogSpeed.setLayout(new GridLayout(2, false));
+		new Label(trainTypeDialogSpeed, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
+		textSpeed.setToolTipText(I18N.getMessage("TrainTypeDialog.textSpeed"));
 		// Only numbers are allowed to enter
-		speed.addVerifyListener(new VerifyListener() {
+		textSpeed.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
 				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
 		          e.doit = false;
 		          display.beep();
 		        }
-		      }
+			}
 		});
-		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
-		speed.setToolTipText(I18N.getMessage("TrainTypeDialog.textSpeed"));
 		
 		// Third row with a label and a combo for the Priority (1-5)
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
@@ -158,29 +161,32 @@ public class TrainTypeDialog {
 	        public void widgetSelected(SelectionEvent e) {
 	        	// read values
 	        	final String nameOfTrainType = name.getText();
-	        	final String topSpeed = speed.getText();
+	        	final String topSpeed = textSpeed.getText();
 	        	final String priority = comboPriority.getText();	        	
 	        	
 	        	// check constraints
-	        	List<String> errorMessages = new ArrayList<String>();
+	        	List<String> errorNameMessages = new ArrayList<String>();
 	        	
 	        	if (name.getText().trim().equals("")) {
-	        	    errorMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptyName"));   	    
+	        	    errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptyName"));   	    
 	        	}
-	        	if (speed.getText().trim().equals("")) {
-	        		errorMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptySpeed"));
+	        	if (textSpeed.getText().equals("")) {
+	        		errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptySpeed"));
+	        	}
+	        	if (textSpeed.getText().substring(0, 1).equals("0")){
+	        		errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorZeroSpeed"));
 	        	}
 	        	
-	        	// generating and open ErrorMessageBox
-	        	if (!errorMessages.isEmpty()) {
+	        	// generating and open errorNameMessageBox
+	        	if (!errorNameMessages.isEmpty()) {
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 	        	    messageBox.setText(I18N.getMessage("TrainTypeDialog.errorMissingInput"));
-	        	    int number = errorMessages.size();
+	        	    int number = errorNameMessages.size();
 	        	    if (number == 2) {
-	        	    	messageBox.setMessage(errorMessages.get(0) + "\n" + errorMessages.get(1));
+	        	    	messageBox.setMessage(errorNameMessages.get(0) + "\n" + errorNameMessages.get(1));
 		        	    messageBox.open();
 	        	    } else {
-	        	    	messageBox.setMessage(errorMessages.get(0));
+	        	    	messageBox.setMessage(errorNameMessages.get(0));
 		        	    messageBox.open();
 	        	    }
 	        	
@@ -247,15 +253,14 @@ public class TrainTypeDialog {
 		    		}
 		    	}
 		    	if (twice == true) {
-		    		error.setVisible(true);
+		    		errorName.setVisible(true);
 		   		  	save.setEnabled(false);
 		    	} else {
-		    		error.setVisible(false);
+		    		errorName.setVisible(false);
 		    		save.setEnabled(true);
 		    	}
 			}
 		});
-	    
 	    
 		shell.pack();
 	}
