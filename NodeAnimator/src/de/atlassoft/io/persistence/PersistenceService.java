@@ -36,7 +36,7 @@ public interface PersistenceService {
 	 * @param type
 	 *            The TrainType that is to be saved by the System
 	 */
-	public void deleteTrainType(TrainType type);
+	public void deleteTrainType(TrainType type) throws IOException;
 
 	/**
 	 * Saves a ScheduleScheme in the specific XML-File for ScheduleSchemes

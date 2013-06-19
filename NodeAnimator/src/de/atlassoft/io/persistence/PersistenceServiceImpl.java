@@ -27,9 +27,8 @@ import de.atlassoft.model.TrainType;
  */
 public class PersistenceServiceImpl implements PersistenceService {
 
-	private static final Path SAVE_DATA_PATH = Paths.get("D", "savedata");//getJarPath().resolveSibling("savedata");
+	private static final Path SAVE_DATA_PATH = Paths.get("E:\\savedata");//getJarPath().resolveSibling("savedata");
 	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
-	
 	
 	private static Path getJarPath() {
 		String classpath = System.getProperty("java.class.path");
@@ -50,50 +49,20 @@ public class PersistenceServiceImpl implements PersistenceService {
 	
 	@Override
 	public void saveTrainType(TrainType type) throws IOException {
-		//xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
+		xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
 	}
 
 	@Override
 	public List<TrainType> getTrainTypes() {
 		//Traintype t1 = new TrainType(name, topSpeed, priority)
 		
-		
-		//xmlParser.get(...)
-		
-		
-		
-		List<TrainType> res = new ArrayList<TrainType>();
-		SAXBuilder builder = new SAXBuilder();
-		  File xmlFile = new File("E:\\traintypes.xml");
-	 
-		  try {
-	 
-			Document document = (Document) builder.build(xmlFile);
-			Element rootNode = document.getRootElement();
-			List<Element> list = rootNode.getChildren("Train");
-		
-			
-			for (int i = 0; i < list.size(); i++) {
-				
-			   Element node = (Element) list.get(i);
-			   
-			   TrainType add = new TrainType(node.getChildText("id"), Double.parseDouble(node.getChildText("topspeed")),Integer.parseInt(node.getChildText("priority")));
-			   res.add(add); 
-			}
-	 
-		  } catch (IOException io) {
-			System.out.println(io.getMessage());
-		  } catch (JDOMException jdomex) {
-			System.out.println(jdomex.getMessage());
-		  }
-		
-		return res;
-
+		 List<TrainType> test = xmlParser.getTrainTypes(TRAIN_TYPE_PATH);
+		 return test;
 	}
 
 	@Override
-	public void deleteTrainType(TrainType type) {
-		// TODO Auto-generated method stub
+	public void deleteTrainType(TrainType type) throws IOException {
+		xmlParser.deleteTrainType(type, TRAIN_TYPE_PATH);
 
 	}
 
