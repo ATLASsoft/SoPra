@@ -173,8 +173,10 @@ public class TrainTypeDialog {
 	        	if (textSpeed.getText().equals("")) {
 	        		errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptySpeed"));
 	        	}
-	        	if (textSpeed.getText().substring(0, 1).equals("0")){
-	        		errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorZeroSpeed"));
+	        	if (!textSpeed.getText().isEmpty()) {
+	        		if (textSpeed.getText().substring(0, 1).equals("0")){
+	        			errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorZeroSpeed"));
+	        		}
 	        	}
 	        	
 	        	// generating and open errorNameMessageBox
