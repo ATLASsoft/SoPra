@@ -122,6 +122,7 @@ public class TrainTypeDialog {
 		imageSearch.setText(I18N.getMessage("TrainTypeDialog.buttonImage"));
 		imageSearch.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
+	    		final String selected;
 	        	FileDialog fd = new FileDialog(shell, SWT.OPEN);
 	            fd.setText(I18N.getMessage("TrainTypeDialog.openFileDialog"));
 	            fd.setFilterPath("C:/");
@@ -134,13 +135,12 @@ public class TrainTypeDialog {
 	            		"*.bmp", "*.jpg; *.jpeg; *.jpe", "*.gif", "*.ico", "*.wmf", "*.pcx",
 	            		"*.png", "*.cdr", "*.cpt", "*.pci" };
 	            fd.setFilterExtensions(filterExt);
-	            String selected = fd.open();
-	            image.setText(selected);
-	        }
-	        // TODO: Abbrechen Fehler beheben
-	        public void widgetDefaultSelected(SelectionEvent event) {
-	        	
-	        }
+	            fd.open();
+	            if (!fd.getFileName().equals("")) {
+	            	selected = fd.getFilterPath() + "/" + fd.getFileName();
+	            	image.setText(selected);
+	        	}
+			}
 	    });
 		new Label(shell, SWT.NONE);
 		
