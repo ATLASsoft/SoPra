@@ -77,7 +77,7 @@ public class TrainTypeComposite {
 	 */
 	
 	private void initUI(){
-		// TODO: Buttons Funktionen implementieren und autoresize Table
+		// TODO: Buttons Funktionen implementieren
 		//Left side of the composite
 		Composite trainTypeCompositeLeft = new Composite (trainTypeComposite, SWT.NULL);
 		trainTypeCompositeLeft.setLayout(new GridLayout(1, false));
@@ -143,6 +143,7 @@ public class TrainTypeComposite {
     	            if (rc == SWT.YES) {
     	            	application.deleteTrainType(deleteType);
     	            }
+    	    		getInformation(labelImage, infoTrainTypeLabel, I18N.getMessage("TrainTypeComposite.noSelectedTrainType"));
 	        	}
 	        }
 	    });
@@ -155,7 +156,7 @@ public class TrainTypeComposite {
 	 	}
 	 	
 		// Shows a text when no Traintype is selected
-		getInformation(labelImage, infoTrainTypeLabel, "Es wurde noch kein Zugtyp ausgewählt");
+		getInformation(labelImage, infoTrainTypeLabel, I18N.getMessage("TrainTypeComposite.noSelectedTrainType"));
 		// Shows the Information of te selected Traintype
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
@@ -193,7 +194,7 @@ public class TrainTypeComposite {
 		infoTrainTypeLabel.setText(trainTypeName);
 		infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
 		// no TrainType is selected
-		if (trainTypeName.equals("Es wurde noch kein Zugtyp ausgewählt")) {
+		if (trainTypeName.equals(I18N.getMessage("TrainTypeComposite.noSelectedTrainType"))) {
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "\n");
 			infoTrainTypeLabel.setText(infoTrainTypeLabel.getText() + "N.A");

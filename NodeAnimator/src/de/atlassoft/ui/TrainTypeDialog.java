@@ -36,7 +36,6 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class TrainTypeDialog {
-	//TODO: Möglichkeit Bilder einzufügen
 	private Shell shell;
 	private ApplicationService application;
 	
@@ -113,7 +112,7 @@ public class TrainTypeDialog {
 		
 		// Third row with text and button, to get an image
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage1"));
-		final Text image = new Text(shell, SWT.BORDER);
+		final Text textImage = new Text(shell, SWT.BORDER);
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
 		
 		
@@ -139,7 +138,7 @@ public class TrainTypeDialog {
 	            fd.open();
 	            if (!fd.getFileName().equals("")) {
 	            	selected = fd.getFilterPath() + "/" + fd.getFileName();
-	            	image.setText(selected);
+	            	textImage.setText(selected);
 	            }
 			}
 	    });
@@ -189,8 +188,10 @@ public class TrainTypeDialog {
 	        	} else {
 	        		TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
 	        		application.addTrainType(type);
-	            	Image img = new Image(null, image.getText());
-	        		type.setImg(img);
+	        		if (!textImage.getText().equals("")){
+	        			Image img = new Image(null, textImage.getText());
+	        			type.setImg(img);
+	        		}
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
 	        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
