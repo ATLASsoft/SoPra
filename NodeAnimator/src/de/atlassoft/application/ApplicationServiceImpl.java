@@ -7,6 +7,7 @@ import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
+import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
@@ -47,6 +48,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model.getActiveRailwaySys().addNode(node4);
 		Node node5 = new Node("Node 5", 100, 53, 15, 15);
 		model.getActiveRailwaySys().addNode(node5);
+		
+//		Path path = new Path(node1, node2, 0);
+//		model.getActiveRailwaySys().addPath(path);
 	}
 	
 	@Override
