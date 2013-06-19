@@ -17,6 +17,24 @@ public class Node {
 	private String name;
 	
 	
+	/**
+	 * Constructor for creating a new Node with standard size (15x15)
+	 * 
+	 * @param name
+	 *            The name of the node.
+	 * @param x
+	 *            The x-coordinate in the railway system. Must not be a negative
+	 *            number.
+	 * @param y
+	 *            The y-coordinate in the railway system. Must not be a negative
+	 *            number.
+	 * @throws IllegalArgumentException
+	 *             if name is null or one coordinate is a negative
+	 *             number
+	 */
+	public Node(String name, int x, int y) {
+		this(name, x, y, 15, 15);
+	}
 	
 	/**
 	 * Constructor for creating a new Node.
@@ -37,7 +55,7 @@ public class Node {
 	 *             if name is null or one coordinate or dimension is a negative
 	 *             number
 	 */
-	public Node(String name, int x, int y, int width, int height){
+	public Node(String name, int x, int y, int width, int height) {
 		// check constraints
 		if (name == null || name.trim().isEmpty()) {
 			throw new IllegalArgumentException("name must not be null or empty");
