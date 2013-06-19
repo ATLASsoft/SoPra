@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class ScheduleScheme {
 
+	private String railSysID;
+	
 	/**
 	 * The train type of this schedule. Must not be null.
 	 */
@@ -95,12 +97,15 @@ public class ScheduleScheme {
 	 *            Specifies the start of the first ride every day. Only the
 	 *            DAY_OF_THE_WEEK, HOUR and MINUTE property the given Calendar
 	 *            object matters
+	 * @param railSysID
+	 *            ID of the {@link RailwaySystem} this object belongs to. Must
+	 *            not be null or empty
 	 * @throws IllegalArgumentException
 	 *             if at least one parameter is null or days contains illegal
 	 *             entries
 	 */
 	public ScheduleScheme(ScheduleType scheduleType, TrainType trainType,
-			List<Integer> days, Calendar firstRide) {
+			List<Integer> days, Calendar firstRide, String railSysID) {
 		if (scheduleType == null) {
 			throw new IllegalArgumentException("scheduleType must not be null");
 		}
@@ -112,6 +117,9 @@ public class ScheduleScheme {
 		}
 		if (firstRide == null) {
 			throw new IllegalArgumentException("firstRide must not be null");
+		}
+		if (railSysID == null || railSysID.isEmpty()) {
+			throw new IllegalArgumentException("railSysID must not be null or empty");
 		}
 		for (int d : days) {
 			if (d != Calendar.MONDAY && d != Calendar.TUESDAY
@@ -127,6 +135,7 @@ public class ScheduleScheme {
 		this.trainType = trainType;
 		this.days = days;
 		this.firstRide = firstRide;
+		this.railSysID = railSysID;
 
 		stations = new ArrayList<Node>();
 		arrivalTimes = new ArrayList<Long>();
@@ -308,6 +317,15 @@ public class ScheduleScheme {
 	 */
 	public List<Integer> getDays() {
 		return Collections.unmodifiableList(days);
+	}
+	
+	/**
+	 * Returns the ID of the {@link RailwaySystem} this objects belongs to.
+	 * 
+	 * @return the id
+	 */
+	public String getRailSysID() {
+		return railSysID;
 	}
 
 }
