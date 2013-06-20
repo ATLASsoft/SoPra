@@ -73,7 +73,6 @@ public class TrainTypeDialog {
 	 * @param display
 	 * 			The currently used display.
 	 */
-	// TODO: 32x32 überprüfen
 	private void initUI() {
 		final I18NService I18N = I18NSingleton.getInstance();
 		final Display display = Display.getCurrent();
@@ -126,7 +125,7 @@ public class TrainTypeDialog {
 		imageSearch.setText(I18N.getMessage("TrainTypeDialog.buttonImage"));
 		imageSearch.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	    		final String selected;
+	    		String selected;
 	        	FileDialog fd = new FileDialog(shell, SWT.OPEN);
 	            fd.setText(I18N.getMessage("TrainTypeDialog.openFileDialog"));
 	            fd.setFilterPath("C:/");
@@ -139,7 +138,7 @@ public class TrainTypeDialog {
 	            		"*.bmp", "*.jpg; *.jpeg; *.jpe", "*.gif", "*.ico", "*.wmf", "*.pcx",
 	            		"*.png", "*.cdr", "*.cpt", "*.pci" };
 	            fd.setFilterExtensions(filterExt);
-	            if ((selected = fd.open()) != null) {
+	            while ((selected = fd.open()) != null) {
 	            	Image imageTrainType = new Image (null, selected);
 	            	Rectangle xy = imageTrainType.getBounds();
 	            	if (xy.width == 32 && xy.height == 32) {
@@ -149,7 +148,6 @@ public class TrainTypeDialog {
 		        		messageBox.setText("TrainTypeDialog.errorWrongBoundsTitle");
 		        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorWrongBoundsMessage"));
 		        	    messageBox.open();
-		        	    fd.open();
 	            	}
 	            }
 			}
