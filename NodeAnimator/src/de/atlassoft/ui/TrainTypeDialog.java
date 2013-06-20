@@ -11,6 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -72,7 +73,7 @@ public class TrainTypeDialog {
 	 * @param display
 	 * 			The currently used display.
 	 */
-	
+	// TODO: 32x32 überprüfen
 	private void initUI() {
 		final I18NService I18N = I18NSingleton.getInstance();
 		final Display display = Display.getCurrent();
@@ -138,10 +139,18 @@ public class TrainTypeDialog {
 	            		"*.bmp", "*.jpg; *.jpeg; *.jpe", "*.gif", "*.ico", "*.wmf", "*.pcx",
 	            		"*.png", "*.cdr", "*.cpt", "*.pci" };
 	            fd.setFilterExtensions(filterExt);
-	            fd.open();
-	            if (!fd.getFileName().equals("")) {
-	            	selected = fd.getFilterPath() + "/" + fd.getFileName();
-	            	textImage.setText(selected);
+	            if ((selected = fd.open()) != null) {
+	            	Image imageTrainType = new Image (null, selected);
+	            	Rectangle xy = imageTrainType.getBounds();
+	            	if (xy.width == 32 && xy.height == 32) {
+	            		textImage.setText(selected);
+	            	} else {
+		        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+		        		messageBox.setText("TrainTypeDialog.errorWrongBoundsTitle");
+		        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorWrongBoundsMessage"));
+		        	    messageBox.open();
+		        	    fd.open();
+	            	}
 	            }
 			}
 	    });
@@ -237,7 +246,7 @@ public class TrainTypeDialog {
 	        }
 	    });
 	    
-	    // On the Fly Exception
+	    // Name On the Fly Exception
 		name.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
