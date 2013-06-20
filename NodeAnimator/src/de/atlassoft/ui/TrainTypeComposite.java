@@ -85,6 +85,10 @@ public class TrainTypeComposite {
 		// Left Top side of the composite
 		Composite trainTypeCompositeLeftTop = new Composite (trainTypeCompositeLeft, SWT.NULL);
 		trainTypeCompositeLeftTop.setLayout(new GridLayout(2, false));
+		GridData compositeGridData = new GridData();
+		compositeGridData.grabExcessHorizontalSpace = true;
+		compositeGridData.grabExcessVerticalSpace = true;
+		trainTypeCompositeLeftTop.setLayoutData(compositeGridData);
 		
 		//Image of TrainType
 		final Label labelImage = new Label(trainTypeCompositeLeftTop, SWT.NULL);
@@ -109,7 +113,9 @@ public class TrainTypeComposite {
 		
 		// Left Bottom side of the Composite
 	    Composite trainTypeCompositeLeftBottom = new Composite (trainTypeCompositeLeft, SWT.NULL);
-		trainTypeCompositeLeftBottom.setLayout(new FillLayout());
+	    FillLayout fillLayout = new FillLayout();
+		fillLayout.spacing = 150; 
+		trainTypeCompositeLeftBottom.setLayout(fillLayout);
 		
 		// Modify Button
 		Button modify = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
@@ -157,7 +163,7 @@ public class TrainTypeComposite {
 	 	
 		// Shows a text when no Traintype is selected
 		getInformation(labelImage, infoTrainTypeLabel, I18N.getMessage("TrainTypeComposite.noSelectedTrainType"));
-		// Shows the Information of te selected Traintype
+		// Shows the Information of the selected Traintype
 		trainTypeList.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event e) {
 		    	  if (trainTypeList.getSelectionCount() != 0) {
