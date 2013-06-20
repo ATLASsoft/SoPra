@@ -138,19 +138,20 @@ public class TrainTypeDialog {
 	            		"*.bmp", "*.jpg; *.jpeg; *.jpe", "*.gif", "*.ico", "*.wmf", "*.pcx",
 	            		"*.png", "*.cdr", "*.cpt", "*.pci" };
 	            fd.setFilterExtensions(filterExt);
-	            while ((selected = fd.open()) != null) {
+	            while ((selected =fd.open()) != null) {
 	            	Image imageTrainType = new Image (null, selected);
 	            	Rectangle xy = imageTrainType.getBounds();
 	            	if (xy.width == 32 && xy.height == 32) {
 	            		textImage.setText(selected);
+	            		break;
 	            	} else {
-		        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-		        		messageBox.setText("TrainTypeDialog.errorWrongBoundsTitle");
-		        	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorWrongBoundsMessage"));
-		        	    messageBox.open();
+	            		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+	            		messageBox.setText("TrainTypeDialog.errorWrongBoundsTitle");
+	            		messageBox.setMessage(I18N.getMessage("TrainTypeDialog.errorWrongBoundsMessage"));
+	            		messageBox.open();
 	            	}
 	            }
-			}
+	        }
 	    });
 		new Label(shell, SWT.NONE);
 		
