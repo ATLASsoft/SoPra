@@ -55,7 +55,7 @@ public class TrainTypeDialog {
 		
 		Display display = Display.getCurrent();
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setText(I18N.getMessage("TrainTypeDialog.title"));
+		shell.setText(I18N.getMessage("TrainTypeDialog.titleGenerate"));
 		shell.setSize(450, 200);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));

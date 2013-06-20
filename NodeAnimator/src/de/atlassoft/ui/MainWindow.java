@@ -206,7 +206,7 @@ public class MainWindow {
 	@SuppressWarnings("unused")
 	private void createMenubar() {
 		
-		I18NService I18N = I18NSingleton.getInstance();
+		final I18NService I18N = I18NSingleton.getInstance();
 		//creates the menubar
 		Menu menuBar = new Menu(shell, SWT.BAR);
 		MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
@@ -306,8 +306,8 @@ public class MainWindow {
 		newTraintypeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new TrainTypeDialog(null); 	// TODO: ApplicationService übergeben
-            }
+				new TrainTypeDialog(applicationService);
+			}
         });
 		
 		//the dropdown items of the simulation menu

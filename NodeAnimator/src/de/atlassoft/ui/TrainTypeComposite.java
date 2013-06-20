@@ -121,6 +121,11 @@ public class TrainTypeComposite {
 		Button modify = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
 		modify.setText(I18N.getMessage("TrainTypeComposite.buttonModify"));
 		modify.setImage(ImageHelper.getImage("settingsIcon"));
+		modify.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	
+	        }
+		});
 	    
 		// Delete Button
 	 	Button delete = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);
