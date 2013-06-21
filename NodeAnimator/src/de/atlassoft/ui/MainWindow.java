@@ -10,8 +10,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -133,7 +131,7 @@ public class MainWindow {
 		createScheduleItem.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout);
+				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout, applicationService);
 				layout.topControl = scheduleComposite.getComposite();
 				mainComposite.layout();
 			}
@@ -197,148 +195,6 @@ public class MainWindow {
 			}
 		});
 	}
-	
-	//TODO: Im finalen Programm löschen
-	/**
-	 * Creates the menuBar for the main window
-	 * 
-	 */
-	@SuppressWarnings("unused")
-	private void createMenubar() {
-		
-		final I18NService I18N = I18NSingleton.getInstance();
-		//creates the menubar
-		Menu menuBar = new Menu(shell, SWT.BAR);
-		MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
-		MenuItem cascadeFileMenu2 = new MenuItem(menuBar, SWT.CASCADE);
-		MenuItem cascadeFileMenu3 = new MenuItem(menuBar, SWT.CASCADE);
-		MenuItem cascadeFileMenu4 = new MenuItem(menuBar, SWT.CASCADE);
-		MenuItem cascadeFileMenu5 = new MenuItem(menuBar, SWT.CASCADE);
-		MenuItem cascadeFileMenu6 = new MenuItem(menuBar, SWT.CASCADE);
-		cascadeFileMenu.setText(I18N.getMessage("MainWindow.File"));
-		cascadeFileMenu2.setText(I18N.getMessage("MainWindow.Railsystem"));
-		cascadeFileMenu3.setText(I18N.getMessage("MainWindow.Schedule"));
-		cascadeFileMenu4.setText(I18N.getMessage("MainWindow.Traintype"));
-		cascadeFileMenu5.setText(I18N.getMessage("MainWindow.Simulation"));
-		cascadeFileMenu6.setText("?");
-		
-		//creates the file menu
-		Menu fileMenu = new Menu (shell, SWT.DROP_DOWN);
-		cascadeFileMenu.setMenu(fileMenu);
-		
-		//creates the railsystem menu
-		Menu railsysMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu2.setMenu(railsysMenu);
-		
-		//creaters the schedule menu
-		Menu scheduleMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu3.setMenu(scheduleMenu);
-		
-		//creates the traintype menu
-		Menu traintypeMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu4.setMenu(traintypeMenu);
-		
-		//creates the simulation menu
-		Menu simulationMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu5.setMenu(simulationMenu);
-		
-		//creates the ? menu
-		Menu helpMenu = new Menu(shell, SWT.DROP_DOWN);
-		cascadeFileMenu6.setMenu(helpMenu);
-		
-		//the dropdown items of the file menu
-			//quit button
-		MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-		exitItem.setText(I18N.getMessage("MainWindow.Quit"));
-		
-		exitItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-                shell.getDisplay().dispose();
-                System.exit(0);
-            }
-        });
-		
-		//the dropdown items of the railsystem menu
-			//new railsystem button
-		MenuItem newRailSysItem = new MenuItem(railsysMenu, SWT.PUSH);
-		newRailSysItem.setText(I18N.getMessage("MainWindow.CreateRailwaysys"));
-		
-		newRailSysItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-		        layout.topControl = RailSysComposite.createRailSysComposite(shell, mainComposite);
-		        mainComposite.layout();
-            }
-        });
-		
-			//load railsystem button
-		MenuItem loadRailSysItem = new MenuItem(railsysMenu, SWT.PUSH);
-		loadRailSysItem.setText(I18N.getMessage("MainWindow.LoadRailwaysys"));
-		
-		loadRailSysItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				new RailSysDialog(applicationService);
-            }
-        });
-		
-		//the dropdown items of the schedule menu
-			//create schedule
-		MenuItem newScheduleItem = new MenuItem(scheduleMenu, SWT.PUSH);
-		newScheduleItem.setText(I18N.getMessage("MainWindow.CreateSchedule"));
-		
-		newScheduleItem.addSelectionListener(new SelectionAdapter(){
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout);
-				layout.topControl = scheduleComposite.getComposite();
-//				layout.topControl = ScheduleComposite.createScheduleComposite(shell, mainComposite);
-				mainComposite.layout();
-			}
-		});
-
-		//the dropdown items of the traintype menu
-			//create traintype
-		MenuItem newTraintypeItem = new MenuItem(traintypeMenu, SWT.PUSH);
-		newTraintypeItem.setText(I18N.getMessage("MainWindow.CreateTrainType"));
-		
-		newTraintypeItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				new TrainTypeDialog(applicationService);
-			}
-        });
-		
-		//the dropdown items of the simulation menu
-			//start simulation
-		MenuItem startSimulation = new MenuItem(simulationMenu, SWT.PUSH);
-		startSimulation.setText(I18N.getMessage("MainWindow.StartSimulation"));
-		
-		startSimulation.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
-				layout.topControl = simComp.getComposite();
-				mainComposite.layout();
-            }
-        });
-		
-		//the dropdown items of the ? menu
-			//about button
-		MenuItem about = new MenuItem(helpMenu, SWT.PUSH);
-		about.setText(I18N.getMessage("MainWindow.About"));
-		
-		about.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				new AboutDialog(display);
-			}
-		});
-				
-		shell.setMenuBar(menuBar);
-	}	
 	
 	public void close() {
 		Display display = Display.getDefault();
