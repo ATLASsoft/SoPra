@@ -34,6 +34,7 @@ import de.hohenheim.view.map.NodeMap;
  */
 public class CurrentRailSysComposite {
 	
+	//TODO: internationalisieren
 	private Composite currentRailSysComposite;
 	private ApplicationService applicationService;
 	private I18NService I18N;
@@ -102,6 +103,7 @@ public class CurrentRailSysComposite {
 		map.paintNodeMap(c);
 		currentRailSysComposite.layout();
 		
+		// the composite with the controls
 		Composite buttonComposite = new Composite(currentRailSysComposite, SWT.BORDER);
 		GridLayout buttonLayout = new GridLayout();
 		buttonLayout.numColumns = 3;
@@ -113,11 +115,14 @@ public class CurrentRailSysComposite {
 		buttonGridData.verticalAlignment = SWT.FILL;
 		buttonComposite.setLayoutData(buttonGridData);
 		
+		// create node row
 		xCoord = new Text(buttonComposite, SWT.BORDER);
 		xCoord.setText("X Koordinate");
+		xCoord.selectAll();
 		
 		yCoord = new Text(buttonComposite, SWT.BORDER);
 		yCoord.setText("Y Koordinate");
+		yCoord.selectAll();
 		
 		Button createNode = new Button(buttonComposite, SWT.PUSH);
 		createNode.setText("Punkt hinzufügen");
@@ -129,6 +134,7 @@ public class CurrentRailSysComposite {
 			}
 		});
 		
+		// add path row
 		combo1 = new Combo(buttonComposite, SWT.NULL);
 		combo2 = new Combo(buttonComposite, SWT.NULL);
 		for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
@@ -156,6 +162,7 @@ public class CurrentRailSysComposite {
 			}
 		});
 		
+		//node information list
 		nodeInformation = new List(buttonComposite, SWT.BORDER);
 		nodeInformation.setEnabled(false);
 		GridData nodeInformationData = new GridData();
