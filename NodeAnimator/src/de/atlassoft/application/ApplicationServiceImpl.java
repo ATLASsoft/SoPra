@@ -1,5 +1,6 @@
 package de.atlassoft.application;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import de.atlassoft.io.persistence.PersistenceService;
@@ -119,47 +120,86 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void addScheduleScheme(ScheduleScheme scheduleScheme) {
-		// TODO Auto-generated method stub
+		String activeRailSysID = model.getActiveRailwaySys().getID();
+		try {
+			persistence.saveSchedule(scheduleScheme, activeRailSysID);
+			model.addActiveScheduleScheme(scheduleScheme);
+		} catch (IOException e) {
+			// TODO: Fehlerbehebung
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void deleteScheduleScheme(ScheduleScheme scheduleScheme) {
-		// TODO Auto-generated method stub
-		
+		String activeRailSysID = model.getActiveRailwaySys().getID();
+//		try { // TODO: Methode deleteSchedules anpassen
+//			persistence.deleteSchedule(scheduleScheme, activeRailSysID);
+//			model.removeActiveScheduleScheme(scheduleScheme);
+//			model.removePassiveScheduleScheme(scheduleScheme);
+//		} catch (IOException e) {
+//			// TODO: Fehlerbehebung
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
 	public void saveRailwaySystem(RailwaySystem railSys) {
-		// TODO Auto-generated method stub
-		
+		try {
+			persistence.saveRailwaySystem(railSys);
+			model.setActiveRailwaySys(railSys);
+		} catch (IOException e) {
+			// TODO: Fehlerbehebung
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void deleteRailwaySystem(String railSysID) {
 		String activeRailSysID = model.getActiveRailwaySys().getID();
-		if (activeRailSysID.equals(railSysID)) {
-			model.setActiveRailwaySys(null);
+		try {
+			persistence.deleteRailwaySystem(activeRailSysID);
+			if (activeRailSysID.equals(railSysID)) {
+				model.setActiveRailwaySys(null);
+			}
+		} catch (IOException e) {
+			// TODO: Fehlerbehandlung
+			e.printStackTrace();
 		}
-		//persistence.deleteRailwaySystem(activeRailSysID); // TODO: im finalen programm aktivieren
 	}
 
 	@Override
 	public void setActiveRailwaySystem(String railsSysID) {
-//		RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID); // TODO: im finalen programm aktivieren
-//		model.setActiveRailwaySys(railSys);
+		try {
+			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID);
+			model.setActiveRailwaySys(railSys);
+		} catch (IOException e) {
+			// TODO: Fehlerbehandlung
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void addTrainType(TrainType trainType) {
-		model.addTrainType(trainType);
-		//persistence.saveTrainType(trainType); // TODO: im finalen programm aktivieren
+		try {
+			persistence.saveTrainType(trainType);
+			model.addTrainType(trainType);
+		} catch (IOException e) {
+			// TODO: Fehlerbehandlung
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void deleteTrainType(TrainType trainType) {
-		model.deleteTrainType(trainType);
-		//persistence.deleteTrainType(trainType); // TODO: im finalen programm aktivieren
+		try {
+			persistence.deleteTrainType(trainType);
+			model.deleteTrainType(trainType);
+		} catch (IOException e) {
+			// TODO Fehlerbehandlung
+			e.printStackTrace();
+		}
 	}
 
 	@Override

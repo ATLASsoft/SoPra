@@ -1,10 +1,15 @@
 package de.atlassoft.ai;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class SimulationLoop {
 
-	private long delta;
+	private int delta;
 	private long last;
-	private boolean run;
+	private boolean running;
+	private Calendar simTime;
+	private Loop loop;
 	
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
@@ -20,18 +25,47 @@ public class SimulationLoop {
 	
 	
 	protected SimulationLoop() {
-		
+		timeLapse = 1;
+		loop = new Loop();
+	}
+	
+	/**
+	 * Starts a new run.
+	 * @param startTime
+	 */
+	protected void startRun(Calendar startTime) {
+		delta = 0;
+		passedSimTime = 0;
+		simTime = startTime;
+		running = true;
+		last = System.currentTimeMillis();
+		new Thread(loop).start();
+	}
+	
+	/**
+	 * Continues the last run.
+	 */
+	protected void continueRun() {
+		delta = 0;
+		last = System.currentTimeMillis();
+		running = true;
+		new Thread(loop).start();
+	}
+	
+	protected void stopRun() {
+		running = false;
 	}
 	
 	
 	
 	private void computeDelta() {
-		delta = System.currentTimeMillis() - last;
+		delta = (int) (System.currentTimeMillis() - last);
 		last = System.currentTimeMillis();
 	}
 	
 	private void updateSimTime() {
 		passedSimTime += delta * timeLapse;
+		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
 	}
 	
 	private void createNewTrains() {
@@ -43,11 +77,10 @@ public class SimulationLoop {
 		
 		@Override
 		public void run() {
-			while (run) {
-				computeDelta();
+			while (running) {
+				computeDelta(); System.out.println(delta);
 				updateSimTime();
 				createNewTrains();
-				
 				
 				try {
 					Thread.sleep(10);
@@ -57,6 +90,23 @@ public class SimulationLoop {
 			}
 			
 		}
+		
+	}
+	
+	//TODO: mainmethode entfernen
+	public static void main(String[] args) throws InterruptedException {
+		Calendar cal = new GregorianCalendar();
+		SimulationLoop loop = new SimulationLoop();
+		loop.startRun(cal);
+		
+		Thread.sleep(4000);
+		
+		loop.stopRun();
+		Thread.sleep(4000);
+		loop.continueRun();
+		Thread.sleep(4000);
+		loop.stopRun();
+		
 		
 	}
 }
