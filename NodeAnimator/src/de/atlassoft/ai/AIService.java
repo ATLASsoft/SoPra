@@ -11,6 +11,7 @@ public interface AIService {
 	void pauseSimulation();
 	void continueSimulation();
 	void stopSimulation();
+	boolean isConnected(RailwaySystem railSys);
 	
 	/**
 	 * Computes the quickest possible travel time from start to goal i.e. going along the

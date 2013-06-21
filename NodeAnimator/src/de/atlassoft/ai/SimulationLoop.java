@@ -34,6 +34,9 @@ public class SimulationLoop {
 		passedSimTime += delta * timeLapse;
 	}
 	
+	private void createNewTrains() {
+		
+	}
 	
 	
 	private class Loop implements Runnable {
@@ -43,7 +46,7 @@ public class SimulationLoop {
 			while (run) {
 				computeDelta();
 				updateSimTime();
-				
+				createNewTrains();
 				
 				
 				try {

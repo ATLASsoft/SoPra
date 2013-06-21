@@ -56,13 +56,13 @@ public class ScheduleScheme {
 	private List<Long> idleTimes;
 
 	/**
-	 * Specifies the start of the first ride. Only the DAY_OF_THE_WEEK, HOUR and
+	 * Specifies the start of the first ride. Only the HOUR and
 	 * MINUTE property contain meaningful information.
 	 */
 	private Calendar firstRide;
 
 	/**
-	 * Specifies the start of the last ride. Only the DAY_OF_THE_WEEK, HOUR and
+	 * Specifies the start of the last ride. Only the HOUR and
 	 * MINUTE property contain meaningful information.
 	 */
 	private Calendar lastRide;

@@ -38,6 +38,12 @@ public class AIServiceImpl implements AIService {
 		return 0;
 	}
 
+	@Override
+	public boolean isConnected(RailwaySystem railSys) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	
 	
 }
