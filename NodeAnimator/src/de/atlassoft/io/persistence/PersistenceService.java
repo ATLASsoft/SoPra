@@ -27,7 +27,7 @@ public interface PersistenceService {
 	 * @return List<TrainType> The list which contains all TrainTypes saved so
 	 *         far
 	 */
-	public List<TrainType> getTrainTypes();
+	public List<TrainType> getTrainTypes() throws IOException;
 
 	/**
 	 * Deletes a TrainType from the TrainTypes stored in the specific XML-File
@@ -44,7 +44,7 @@ public interface PersistenceService {
 	 * @param schedule
 	 *            The ScheduleScheme that is to be saved
 	 */
-	public void saveSchedule(ScheduleScheme schedule);
+	public void saveSchedule(ScheduleScheme schedule, String railSysID) throws IOException;
 
 	/**
 	 * Returns a List of all ScheduleSchemes that have been saved
@@ -55,7 +55,7 @@ public interface PersistenceService {
 	 * @return List<ScheduleScheme> The List of all the ScheduleSchemes that
 	 *         belong to the RailwaySystem
 	 */
-	public List<ScheduleScheme> loadSchedules(String railSysID);
+	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException;
 
 	/**
 	 * Deletes all Schedules belonging to a specific RailwaySystem
@@ -64,7 +64,7 @@ public interface PersistenceService {
 	 *            The ID of the RailwaySystem, of which the Schedules are to be
 	 *            deleted
 	 */
-	public void deleteSchedules(String railSysID);
+	public void deleteSchedules(String railSysID) throws IOException;
 
 	/**
 	 * Saves a RailwaySystem in the specific file for RailwaySystems
@@ -74,7 +74,7 @@ public interface PersistenceService {
 	 * @param id
 	 *            The ID of this RailwaySystem
 	 */
-	public void saveRailwaySystem(RailwaySystem railSys, String id);
+	public void saveRailwaySystem(RailwaySystem railSys) throws IOException;
 
 	/**
 	 * Loads a specific RailwaySystem
@@ -83,7 +83,7 @@ public interface PersistenceService {
 	 *            The ID of the RailwaySystem that is to be loaded
 	 * @return RailwaySystem The RailwaySystem that was requested
 	 */
-	public RailwaySystem loadRailwaySystem(String railSysID);
+	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException;
 
 	/**
 	 * Deletes a RailwaySystem from the file which stores all RailwaySystems
@@ -91,7 +91,7 @@ public interface PersistenceService {
 	 * @param railSysID
 	 *            The ID of the RailwaySystem that is to be deleated
 	 */
-	public void deleteRailwaySystem(String railSysID);
+	public void deleteRailwaySystem(String railSysID) throws IOException;
 
 	/**
 	 * Returns a List of all the ID of all RailwaySystems that are stored in the
@@ -99,5 +99,5 @@ public interface PersistenceService {
 	 * 
 	 * @return List<String> The List of all ID of all RailwaySystems
 	 */
-	public List<String> getRailwaySystemIDs();
+	public List<String> getRailwaySystemIDs() throws IOException;
 }

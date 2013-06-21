@@ -29,7 +29,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 
 	private static final Path SAVE_DATA_PATH = Paths.get("E:\\savedata");//getJarPath().resolveSibling("savedata");
 	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
-	
+	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
 	private static Path getJarPath() {
 		String classpath = System.getProperty("java.class.path");
 		if (classpath.contains(";")) {
@@ -49,61 +49,60 @@ public class PersistenceServiceImpl implements PersistenceService {
 	
 	@Override
 	public void saveTrainType(TrainType type) throws IOException {
-		xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
+		//xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen, id als para hinzufügen
 	}
 
 	@Override
-	public List<TrainType> getTrainTypes() {
+	public List<TrainType> getTrainTypes() throws IOException {
 		//Traintype t1 = new TrainType(name, topSpeed, priority)
-		
-		 List<TrainType> test = xmlParser.getTrainTypes(TRAIN_TYPE_PATH);
-		 return test;
+		return null;
+		 //return xmlParser.getTrainTypes(TRAIN_TYPE_PATH); //TODO: testmodus entfernen
 	}
 
 	@Override
 	public void deleteTrainType(TrainType type) throws IOException {
-		xmlParser.deleteTrainType(type, TRAIN_TYPE_PATH);
+		//xmlParser.deleteTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
 
 	}
 
 	@Override
-	public void saveSchedule(ScheduleScheme schedule) {
-		// TODO Auto-generated method stub
+	public void saveSchedule(ScheduleScheme schedule, String railSysID) throws IOException {
+		//xmlParser.saveSchedule(schedule, railSysID, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
 
 	}
 
 	@Override
-	public List<ScheduleScheme> loadSchedules(String railSysID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteSchedules(String railSysID) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void saveRailwaySystem(RailwaySystem railSys, String id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public RailwaySystem loadRailwaySystem(String railSysID) {
+	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deleteRailwaySystem(String railSysID) {
+	public void deleteSchedules(String railSysID) throws IOException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public List<String> getRailwaySystemIDs() {
+	public void saveRailwaySystem(RailwaySystem railSys) throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteRailwaySystem(String railSysID) throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<String> getRailwaySystemIDs() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
