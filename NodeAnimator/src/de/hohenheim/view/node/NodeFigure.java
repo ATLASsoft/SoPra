@@ -4,6 +4,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Font;
@@ -57,6 +58,7 @@ public class NodeFigure extends Figure {
 	 */
 	public void setName(String roomName) {
 	    name = roomName;
+	    setToolTip(new Label(name));
 	    repaint();
 	}	
 	/**
@@ -86,8 +88,12 @@ public class NodeFigure extends Figure {
       
       g.setForegroundColor(ColorConstants.white);
       
+      String nam = name;
+      if (nam.length() > 2) {
+    	  nam = nam.substring(0, 2);
+      }
       Font f = g.getFont();
-      Dimension dim = FigureUtilities.getStringExtents(name, f);
-      g.drawText(name, r.x+r.width/2-dim.width/2 , r.y+r.height/2-dim.height/2);
+      Dimension dim = FigureUtilities.getStringExtents(nam, f);
+      g.drawText(nam, r.x+r.width/2-dim.width/2 , r.y+r.height/2-dim.height/2);
   }  
 }
