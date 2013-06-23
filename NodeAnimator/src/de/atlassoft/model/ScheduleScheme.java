@@ -22,6 +22,12 @@ public class ScheduleScheme {
 	private String railSysID;
 	
 	/**
+	 * Name of this {@link ScheduleScheme}. Must be unique within the name space
+	 * of the affiliated {@link RailwaySystem}.
+	 */
+	private String name;
+	
+	/**
 	 * The train type of this schedule. Must not be null.
 	 */
 	private TrainType trainType;
@@ -105,7 +111,7 @@ public class ScheduleScheme {
 	 *             entries
 	 */
 	public ScheduleScheme(ScheduleType scheduleType, TrainType trainType,
-			List<Integer> days, Calendar firstRide, String railSysID) {
+			List<Integer> days, Calendar firstRide, String railSysID, String name) {
 		if (scheduleType == null) {
 			throw new IllegalArgumentException("scheduleType must not be null");
 		}
@@ -121,6 +127,10 @@ public class ScheduleScheme {
 		if (railSysID == null || railSysID.isEmpty()) {
 			throw new IllegalArgumentException("railSysID must not be null or empty");
 		}
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("id must not be null or empty");
+		}
+		
 		for (int d : days) {
 			if (d != Calendar.MONDAY && d != Calendar.TUESDAY
 					&& d != Calendar.WEDNESDAY && d != Calendar.THURSDAY
@@ -136,6 +146,7 @@ public class ScheduleScheme {
 		this.days = days;
 		this.firstRide = firstRide;
 		this.railSysID = railSysID;
+		this.name = name;
 
 		stations = new ArrayList<Node>();
 		arrivalTimes = new ArrayList<Long>();
@@ -326,6 +337,15 @@ public class ScheduleScheme {
 	 */
 	public String getRailSysID() {
 		return railSysID;
+	}
+	
+	/**
+	 * Returns the id of this {@link ScheduleScheme}.
+	 * 
+	 * @return the id
+	 */
+	public String getID() {
+		return name;
 	}
 
 }
