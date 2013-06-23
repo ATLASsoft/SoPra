@@ -50,8 +50,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 		Node node5 = new Node("Node 5", 100, 53, 15, 15);
 		model.getActiveRailwaySys().addNode(node5);
 		
-//		Path path = new Path(node1, node2, 0);
-//		model.getActiveRailwaySys().addPath(path);
+		Path path = new Path(node1, node5, 0);
+		model.getActiveRailwaySys().addPath(path);
+		path = new Path(node5, node3, 0);
+		model.getActiveRailwaySys().addPath(path);
+		path = new Path(node4, node3, 0);
+		model.getActiveRailwaySys().addPath(path);
+		path = new Path(node3, node2, 0);
+		model.getActiveRailwaySys().addPath(path);
 	}
 	
 	@Override
@@ -76,6 +82,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("ATLASsoftLogo", "img/ATLASsoftLogo.gif");
 		ImageHelper.loadImage("settingsIcon", "img/settingsIcon.png");
 		ImageHelper.loadImage("standardTrainIcon", "img/train.gif");
+		ImageHelper.loadImage("questionMarkSmall", "img/questionMarkSmall.png");
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		
