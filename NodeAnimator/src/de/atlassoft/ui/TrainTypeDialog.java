@@ -168,7 +168,7 @@ public class TrainTypeDialog {
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	// read values
-	        	final String nameOfTrainType = name.getText();
+	        	final String nameOfTrainType = name.getText().trim();
 	        	final String topSpeed = textSpeed.getText();
 	        	final String priority = comboPriority.getText();	        	
 	        	
@@ -246,22 +246,14 @@ public class TrainTypeDialog {
 	    });
 	    
 	    // Name On the Fly Exception
-		name.addListener(SWT.Verify, new Listener() {
+		name.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
-		    	if (e.keyCode != 8) {
-		    		for (TrainType type : trainTypes) {
-		    			if (type.getName().toLowerCase().equals((name.getText() + e.text).toLowerCase())) {
-		    				twice = true;
-		    			}
-		    		}
-		    	} else {
-		    		for (TrainType type : trainTypes) {
-		    			if (type.getName().toLowerCase().equals(name.getText().substring(0, name.getText().length() - 1).toLowerCase())) {
-		    				twice = true;
-		    			}
-		    		}
-		    	}
+		    	for (TrainType type : trainTypes) {
+		    		if (type.getName().toLowerCase().equals((name.getText()).toLowerCase().trim())) {
+		   				twice = true;
+		   			}
+		   		}
 		    	if (twice == true) {
 		    		errorName.setVisible(true);
 		   		  	save.setEnabled(false);
