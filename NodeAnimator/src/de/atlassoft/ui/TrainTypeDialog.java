@@ -251,13 +251,13 @@ public class TrainTypeDialog {
 		    	Boolean twice = false;
 		    	if (e.keyCode != 8) {
 		    		for (TrainType type : trainTypes) {
-		    			if (type.getName().equals(name.getText() + e.text)) {
+		    			if (type.getName().toLowerCase().equals((name.getText() + e.text).toLowerCase())) {
 		    				twice = true;
 		    			}
 		    		}
 		    	} else {
 		    		for (TrainType type : trainTypes) {
-		    			if (type.getName().equals(name.getText().substring(0, name.getText().length() - 1))) {
+		    			if (type.getName().toLowerCase().equals(name.getText().substring(0, name.getText().length() - 1).toLowerCase())) {
 		    				twice = true;
 		    			}
 		    		}
