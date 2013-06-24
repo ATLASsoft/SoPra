@@ -53,13 +53,13 @@ public class ScheduleScheme {
 	 * the position i in stations. Must not be null but may be empty. Must have
 	 * the same size as stations.
 	 */
-	private List<Long> arrivalTimes;
+	private List<Integer> arrivalTimes;
 
 	/**
 	 * Specifies the idle time for each station in seconds where the element at
 	 * position i belongs to the station stations.get(i).
 	 */
-	private List<Long> idleTimes;
+	private List<Integer> idleTimes;
 
 	/**
 	 * Specifies the start of the first ride. Only the HOUR and
@@ -106,6 +106,8 @@ public class ScheduleScheme {
 	 * @param railSysID
 	 *            ID of the {@link RailwaySystem} this object belongs to. Must
 	 *            not be null or empty
+	 * @param name
+	 *            Name of this scheme. Must not be null or empty
 	 * @throws IllegalArgumentException
 	 *             if at least one parameter is null or days contains illegal
 	 *             entries
@@ -128,7 +130,7 @@ public class ScheduleScheme {
 			throw new IllegalArgumentException("railSysID must not be null or empty");
 		}
 		if (name == null || name.isEmpty()) {
-			throw new IllegalArgumentException("id must not be null or empty");
+			throw new IllegalArgumentException("name must not be null or empty");
 		}
 		
 		for (int d : days) {
@@ -146,11 +148,11 @@ public class ScheduleScheme {
 		this.days = days;
 		this.firstRide = firstRide;
 		this.railSysID = railSysID;
-		this.name = name;
+		this.name = name; //TODO: sicherstellen, dass name für streckennetz eindeutig
 
 		stations = new ArrayList<Node>();
-		arrivalTimes = new ArrayList<Long>();
-		idleTimes = new ArrayList<Long>();
+		arrivalTimes = new ArrayList<Integer>();
+		idleTimes = new ArrayList<Integer>();
 	}
 
 	/**
@@ -171,7 +173,7 @@ public class ScheduleScheme {
 	 *             if station is null</br> if idleTime is a negative number</br>
 	 *             if arrival is too early.
 	 */
-	public void addStop(Node station, long arrival, long idleTime) {
+	public void addStop(Node station, int arrival, int idleTime) {
 		// check constraints
 		if (station == null) {
 			throw new IllegalArgumentException("station must not be null");
@@ -274,7 +276,7 @@ public class ScheduleScheme {
 	 * 
 	 * @return list of arrival times
 	 */
-	public List<Long> getArrivalTimes() {
+	public List<Integer> getArrivalTimes() {
 		return Collections.unmodifiableList(arrivalTimes);
 	}
 
@@ -284,7 +286,7 @@ public class ScheduleScheme {
 	 * 
 	 * @return list of idle times
 	 */
-	public List<Long> getIdleTimes() {
+	public List<Integer> getIdleTimes() {
 		return Collections.unmodifiableList(idleTimes);
 	}
 
