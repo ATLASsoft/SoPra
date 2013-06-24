@@ -59,7 +59,7 @@ public class ScheduleComposite {
 	private NodeMap map;
 	private ApplicationService applicationService;
 	private Button monday, tuesday, wednesday, thursday, friday,
-			saturday, holiday, save, deleteStation;
+			saturday, sunday, save, deleteStation;
 	private Boolean addStationState = false;
 	private Spinner delaySpinner, timeSpinner;
 	private List stationList, firstStationList, lastStationList;
@@ -97,7 +97,8 @@ public class ScheduleComposite {
 	 * Creates the UI elements of the ScheduleComposite
 	 */
 	private void initUI() {
-		
+		//TODO: On-the-fly implementieren, nicht zwei gleiche Knoten hintereinander,
+		//TODO: Wartezeit überprüfen
 		//the overall composite
 		scheduleComposite = new Composite (mainComposite, SWT.BORDER);
 		GridLayout scheduleCompositeLayout = new GridLayout();
@@ -217,7 +218,17 @@ public class ScheduleComposite {
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<24; i++) {
+		hourCombo.add("00");
+		hourCombo.add("01");
+		hourCombo.add("02");
+		hourCombo.add("03");
+		hourCombo.add("04");
+		hourCombo.add("05");
+		hourCombo.add("06");
+		hourCombo.add("07");
+		hourCombo.add("08");
+		hourCombo.add("09");
+		for (int i=10; i<24; i++) {
 			hourCombo.add(Integer.toString(i));
 		}
 		hourCombo.select(0);
@@ -226,7 +237,17 @@ public class ScheduleComposite {
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<=59; i=i+1) {
+		minuteCombo.add("00");
+		minuteCombo.add("01");
+		minuteCombo.add("02");
+		minuteCombo.add("03");
+		minuteCombo.add("04");
+		minuteCombo.add("05");
+		minuteCombo.add("06");
+		minuteCombo.add("07");
+		minuteCombo.add("08");
+		minuteCombo.add("09");
+		for (int i=10; i<=59; i=i+1) {
 			minuteCombo.add(Integer.toString(i));
 		}
 		minuteCombo.select(0);
@@ -245,18 +266,23 @@ public class ScheduleComposite {
 		
 		monday = new Button(dayComposite, SWT.CHECK);
 		monday.setText(I18N.getMessage("ScheduleComposite.Monday"));
+		monday.setSelection(true);
 		tuesday = new Button(dayComposite, SWT.CHECK);
 		tuesday.setText(I18N.getMessage("ScheduleComposite.Tuesday"));
+		tuesday.setSelection(true);
 		wednesday = new Button(dayComposite, SWT.CHECK);
 		wednesday.setText(I18N.getMessage("ScheduleComposite.Wednesday"));
+		wednesday.setSelection(true);
 		thursday = new Button(dayComposite, SWT.CHECK);
 		thursday.setText(I18N.getMessage("ScheduleComposite.Thursday"));
+		thursday.setSelection(true);
 		friday = new Button(dayComposite, SWT.CHECK);
 		friday.setText(I18N.getMessage("ScheduleComposite.Friday"));
+		friday.setSelection(true);
 		saturday = new Button(dayComposite, SWT.CHECK);
 		saturday.setText(I18N.getMessage("ScheduleComposite.Saturday"));
-		holiday = new Button(dayComposite, SWT.CHECK);
-		holiday.setText(I18N.getMessage("ScheduleComposite.Holiday"));
+		sunday = new Button(dayComposite, SWT.CHECK);
+		sunday.setText(I18N.getMessage("ScheduleComposite.Holiday"));
 		
 		/*
 		 * 6th row (station selection)
@@ -332,8 +358,6 @@ public class ScheduleComposite {
 		Button addStation = new Button(delayComposite, SWT.TOGGLE);
 		addStation.setText("Station hinzufügen");
 		GridData stationButtonData = new GridData();
-//		stationButtonData.grabExcessHorizontalSpace = true;
-//		stationButtonData.horizontalAlignment = SWT.FILL;
 		stationButtonData.horizontalSpan = 2;
 		addStation.setLayoutData(stationButtonData);
 		addStation.addSelectionListener(new SelectionAdapter() {
@@ -417,8 +441,8 @@ public class ScheduleComposite {
 		delaySpinner = new Spinner(delayComposite, SWT.BORDER|SWT.READ_ONLY);
 		delaySpinner.setMinimum(0);
 		delaySpinner.setMaximum(60);
-		delaySpinner.setIncrement(5);
-		delaySpinner.setSelection(5);
+		delaySpinner.setIncrement(1);
+		delaySpinner.setSelection(3);
 		delaySpinner.setEnabled(false);
 		delaySpinner.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -491,7 +515,7 @@ public class ScheduleComposite {
 				}
 				
 				//check the days
-				if (!holiday.getSelection() && !monday.getSelection()
+				if (!sunday.getSelection() && !monday.getSelection()
 						&& !tuesday.getSelection() && !wednesday.getSelection()
 						&& !thursday.getSelection() && !friday.getSelection()) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
@@ -546,7 +570,7 @@ public class ScheduleComposite {
 				if (saturday.getSelection() == true) {
 					days.add(Calendar.SATURDAY);
 				}
-				if (holiday.getSelection() == true) {
+				if (sunday.getSelection() == true) {
 					days.add(Calendar.SUNDAY);
 				}
 				
@@ -569,12 +593,12 @@ public class ScheduleComposite {
 				idleTime.set(idleTime.size()-1, 0);
 				
 				ScheduleScheme schedule = new ScheduleScheme(scheduleType, trainType, days, firstRide, railSysID, nameField.getText());
-				//TODO: Hinzufügen wenn funktioniert
-//				applicationService.addScheduleScheme(schedule);
 				
 				for (int i=0; i<arrivalTime.size(); i++) {
 					schedule.addStop(nodeList.get(i), arrivalTime.get(i), idleTime.get(i));
 				}
+				
+				applicationService.addScheduleScheme(schedule);
 				
 				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
@@ -667,7 +691,17 @@ public class ScheduleComposite {
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<24; i++) {
+		hourCombo.add("00");
+		hourCombo.add("01");
+		hourCombo.add("02");
+		hourCombo.add("03");
+		hourCombo.add("04");
+		hourCombo.add("05");
+		hourCombo.add("06");
+		hourCombo.add("07");
+		hourCombo.add("08");
+		hourCombo.add("09");
+		for (int i=10; i<24; i++) {
 			hourCombo.add(Integer.toString(i));
 		}
 		hourCombo.select(0);
@@ -676,7 +710,17 @@ public class ScheduleComposite {
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<=59; i=i+1) {
+		minuteCombo.add("00");
+		minuteCombo.add("01");
+		minuteCombo.add("02");
+		minuteCombo.add("03");
+		minuteCombo.add("04");
+		minuteCombo.add("05");
+		minuteCombo.add("06");
+		minuteCombo.add("07");
+		minuteCombo.add("08");
+		minuteCombo.add("09");
+		for (int i=10; i<=59; i=i+1) {
 			minuteCombo.add(Integer.toString(i));
 		}
 		minuteCombo.select(0);
@@ -699,16 +743,36 @@ public class ScheduleComposite {
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<24; i++) {
+		hourCombo.add("00");
+		hourCombo.add("01");
+		hourCombo.add("02");
+		hourCombo.add("03");
+		hourCombo.add("04");
+		hourCombo.add("05");
+		hourCombo.add("06");
+		hourCombo.add("07");
+		hourCombo.add("08");
+		hourCombo.add("09");
+		for (int i=10; i<24; i++) {
 			hourCombo.add(Integer.toString(i));
 		}
-		hourCombo.select(0);
+		hourCombo.select(00);
 		
 		Label pointLabel = new Label(timeComposite, SWT.NONE);
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
-		for (int i=0; i<=59; i=i+1) {
+		minuteCombo.add("00");
+		minuteCombo.add("01");
+		minuteCombo.add("02");
+		minuteCombo.add("03");
+		minuteCombo.add("04");
+		minuteCombo.add("05");
+		minuteCombo.add("06");
+		minuteCombo.add("07");
+		minuteCombo.add("08");
+		minuteCombo.add("09");
+		for (int i=10; i<=59; i=i+1) {
 			minuteCombo.add(Integer.toString(i));
 		}
 		minuteCombo.select(0);
@@ -723,7 +787,17 @@ public class ScheduleComposite {
 		timeComposite2.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite2, SWT.READ_ONLY);
-		for (int i=0; i<24; i++) {
+		hourCombo.add("00");
+		hourCombo.add("01");
+		hourCombo.add("02");
+		hourCombo.add("03");
+		hourCombo.add("04");
+		hourCombo.add("05");
+		hourCombo.add("06");
+		hourCombo.add("07");
+		hourCombo.add("08");
+		hourCombo.add("09");
+		for (int i=10; i<24; i++) {
 			hourCombo.add(Integer.toString(i));
 		}
 		hourCombo.select(1);
@@ -732,7 +806,17 @@ public class ScheduleComposite {
 		pointLabel2.setText(":");
 		
 		minuteCombo = new Combo(timeComposite2, SWT.READ_ONLY);
-		for (int i=0; i<=59; i=i+1) {
+		minuteCombo.add("00");
+		minuteCombo.add("01");
+		minuteCombo.add("02");
+		minuteCombo.add("03");
+		minuteCombo.add("04");
+		minuteCombo.add("05");
+		minuteCombo.add("06");
+		minuteCombo.add("07");
+		minuteCombo.add("08");
+		minuteCombo.add("09");
+		for (int i=10; i<=59; i=i+1) {
 			minuteCombo.add(Integer.toString(i));
 		}
 		minuteCombo.select(0);
@@ -747,7 +831,17 @@ public class ScheduleComposite {
 		timeComposite3.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite3, SWT.READ_ONLY);
-		for (int i=0; i<24; i++) {
+		hourCombo.add("00");
+		hourCombo.add("01");
+		hourCombo.add("02");
+		hourCombo.add("03");
+		hourCombo.add("04");
+		hourCombo.add("05");
+		hourCombo.add("06");
+		hourCombo.add("07");
+		hourCombo.add("08");
+		hourCombo.add("09");
+		for (int i=10; i<24; i++) {
 			hourCombo.add(Integer.toString(i));
 		}
 		hourCombo.select(0);
@@ -756,7 +850,17 @@ public class ScheduleComposite {
 		pointLabel3.setText("h");
 		
 		minuteCombo = new Combo(timeComposite3, SWT.READ_ONLY);
-		for (int i=0; i<=59; i=i+5) {
+		minuteCombo.add("00");
+		minuteCombo.add("01");
+		minuteCombo.add("02");
+		minuteCombo.add("03");
+		minuteCombo.add("04");
+		minuteCombo.add("05");
+		minuteCombo.add("06");
+		minuteCombo.add("07");
+		minuteCombo.add("08");
+		minuteCombo.add("09");
+		for (int i=10; i<=59; i=i+5) {
 			minuteCombo.add(Integer.toString(i));
 		}
 		minuteCombo.select(1);
