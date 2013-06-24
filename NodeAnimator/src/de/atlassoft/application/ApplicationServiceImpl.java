@@ -63,7 +63,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void initialize() {
 		model = new ModelServiceImpl();
-		//persistence = new PersistenceServiceXMLImpl();
+		persistence = new PersistenceServiceImpl();
 		// TODO: unvollständig
 		
 		createDummy();
