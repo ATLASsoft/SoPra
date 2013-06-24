@@ -10,9 +10,11 @@ class Vertex {
 	private Node modelObject;
 	private List<Edge> outgoingEdges;
 	private boolean blocked;
+	private int id;
 	
-	Vertex(Node modelObject) {
+	Vertex(Node modelObject, int id) {
 		this.modelObject = modelObject;
+		this.id = id;
 		outgoingEdges = new ArrayList<>();
 	}
 	
@@ -22,6 +24,10 @@ class Vertex {
 	
 	List<Edge> getOutgoingEdges() {
 		return outgoingEdges;
+	}
+	
+	int getID() {
+		return id;
 	}
 	
 	boolean isBlocked() {
