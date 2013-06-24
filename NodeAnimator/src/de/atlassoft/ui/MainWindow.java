@@ -26,6 +26,8 @@ import de.atlassoft.util.ImageHelper;
  */
 public class MainWindow {
 
+	//TODO: Schließen Button überarbeiten
+	
 	private ApplicationService applicationService;
 	private Shell shell;
 	private Display display;
@@ -46,7 +48,7 @@ public class MainWindow {
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
-		shell.setSize(960, 670);
+		shell.setSize(1050, 670);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);

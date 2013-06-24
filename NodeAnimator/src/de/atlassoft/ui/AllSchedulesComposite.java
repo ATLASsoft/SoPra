@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 
@@ -65,11 +66,12 @@ public class AllSchedulesComposite {
 	    
 //	    ActiveSchedules list
 	    activeSchedules = new List(allScheduleComposite, SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
-	    activeSchedules.add("Fahrplan 1");
-	    activeSchedules.add("Fahrplan 2");
-	    activeSchedules.add("Fahrplan 3");
-	    activeSchedules.add("Fahrplan 4");
-	    activeSchedules.select(0);
+	    for(ScheduleScheme schedule : applicationService.getModel().getActiveScheduleSchemes()) {
+	    	activeSchedules.add(schedule.getID());
+	    }
+	    if (activeSchedules.getItemCount() < 0) {
+	    	activeSchedules.select(0);	    	
+	    }
 	    
 	    Composite buttonComposite = new Composite(allScheduleComposite, SWT.BORDER);
 	    FillLayout buttonLayout = new FillLayout();
@@ -116,11 +118,12 @@ public class AllSchedulesComposite {
 	    
 	    //passiveSchedules list
 	    passiveSchedules = new List (allScheduleComposite, SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
-	    passiveSchedules.add("schedule 1");
-	    passiveSchedules.add("schedule 2");
-	    passiveSchedules.add("schedule 3");
-	    passiveSchedules.add("schedule 4");
-	    passiveSchedules.select(0);
+	    for (ScheduleScheme schedule : applicationService.getModel().getPassiveScheduleSchemes()) {
+	    	passiveSchedules.add(schedule.getID());
+	    }
+	    if (passiveSchedules.getItemCount() > 0) {
+	    	passiveSchedules.select(0);
+	    }
 	    
 	    setDragDrop(passiveSchedules);
 	    setDragDrop(activeSchedules);
