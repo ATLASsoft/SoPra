@@ -4,13 +4,42 @@ import java.util.Calendar;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
+import de.atlassoft.model.SimulationStatistic;
 //TODO: unvollständig
+/**
+ * Provides access to the AI layer and the graph processing algorithms of this
+ * application.
+ * 
+ * @author Alexander Balogh
+ * 
+ */
 public interface AIService {
 
+	/**
+	 * Starts a new simulation run at the passed start time (simulation time).
+	 * Only the {@link Calendar#DAY_OF_WEEK}, {@link Calendar#HOUR_OF_DAY} and
+	 * {@link Calendar#MINUTE} property of start are considered. If there is
+	 * already an ongoing simulation no action is taken and no exception is
+	 * thrown.
+	 * 
+	 * @param start
+	 *            Simulation time the simulation should start at
+	 */
 	void startSimulation(Calendar start);
+	
+	/**
+	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no
+	 * action is taken and no exception is thrown.
+	 */
 	void pauseSimulation();
+	
+	/**
+	 * Continues an ongoing but paused simulation run. If there is no ongoing
+	 * simulation or the run is not paused, no action is taken and no exception
+	 * is thrown.
+	 */
 	void continueSimulation();
-	void stopSimulation();
+	SimulationStatistic finishSimulation();
 	boolean isConnected(RailwaySystem railSys);
 	
 	/**

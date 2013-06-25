@@ -8,7 +8,12 @@ import java.util.List;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ScheduleFactory;
-
+//TODO: unvollständig
+/**
+ * 
+ * @author Alexander Balogh
+ *
+ */
 public class SimulationLoop {
 
 	private int delta;
@@ -40,8 +45,13 @@ public class SimulationLoop {
 	}
 	
 	/**
-	 * Starts a new run.
+	 * Starts a new run at specified time with passed schemes.
+	 * 
 	 * @param startTime
+	 *            Simulation time the simulation should start at
+	 * @param schemes
+	 *            {@link ScheduleScheme}s that should participate in the
+	 *            simulation
 	 */
 	protected void startRun(Calendar startTime, List<ScheduleScheme> schemes) {
 		readySchedules.clear();
@@ -60,8 +70,8 @@ public class SimulationLoop {
 	 */
 	protected void continueRun() {
 		delta = 0;
-		last = System.currentTimeMillis();
 		alive = true;
+		last = System.currentTimeMillis();
 		new Thread(loop).start();
 	}
 	
@@ -69,30 +79,11 @@ public class SimulationLoop {
 		alive = false;
 	}
 	
-	
-	
-	private void computeDelta() {
-		delta = (int) (System.currentTimeMillis() - last);
-		last = System.currentTimeMillis();
+	protected boolean isAlive() {
+		return alive;
 	}
 	
-	private void updateSimTime() {
-		passedSimTime += delta * timeLapse;
-		lastTime.setTime(simTime.getTime());
-		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
-	}
 	
-	private void createNewSchedules() {
-		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes, lastTime, simTime));
-	}
-	
-	private void createNewTrains() {
-		
-	}
-	 
-	private void deleteFinishedTrains() {
-		
-	}
 	
 	
 	
@@ -115,6 +106,31 @@ public class SimulationLoop {
 			}
 			
 		}
+		
+	}
+	
+	
+	
+	private void computeDelta() {
+		delta = (int) (System.currentTimeMillis() - last);
+		last = System.currentTimeMillis();
+	}
+	
+	private void updateSimTime() {
+		passedSimTime += delta * timeLapse;
+		lastTime.setTime(simTime.getTime());
+		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
+	}
+	
+	private void createNewSchedules() {
+		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes, lastTime, simTime));
+	}
+	
+	private void createNewTrains() {
+		
+	}
+	
+	private void deleteFinishedTrains() {
 		
 	}
 	

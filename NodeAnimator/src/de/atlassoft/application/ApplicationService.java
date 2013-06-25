@@ -10,6 +10,13 @@ import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 
 //TODO: Interface auskommentieren
+/**
+ * Interface provideing access to the application service layer (highest
+ * abstraction) of this application.
+ * 
+ * @author Alexander Balogh
+ * 
+ */
 public interface ApplicationService {
 
 	/**
@@ -30,10 +37,29 @@ public interface ApplicationService {
 	 */
 	ModelService getModel();
 	
+	/**
+	 * Starts a new simulation run at the passed start time (simulation time).
+	 * Only the {@link Calendar#DAY_OF_WEEK}, {@link Calendar#HOUR_OF_DAY} and
+	 * {@link Calendar#MINUTE} property of time are considered. If there is
+	 * already an ongoing simulation no action is taken and no exception is
+	 * thrown.
+	 * 
+	 * @param time
+	 *            Simulation time the simulation should start at
+	 */
 	void startSimulation(Calendar time);
 	
+	/**
+	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no
+	 * action is taken and no exception is thrown.
+	 */
 	void pauseSimulation();
 	
+	/**
+	 * Continues an ongoing but paused simulation run. If there is no ongoing
+	 * simulation or the run is not paused, no action is taken and no exception
+	 * is thrown.
+	 */
 	void continueSimulation();
 	
 	void quitSimulation();
