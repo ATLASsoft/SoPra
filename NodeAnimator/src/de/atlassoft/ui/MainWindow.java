@@ -27,7 +27,7 @@ import de.atlassoft.util.ImageHelper;
 public class MainWindow {
 
 	//TODO: Schließen Button überarbeiten
-	
+	//TODO: Fenstergröße verändern
 	private ApplicationService applicationService;
 	private Shell shell;
 	private Display display;
