@@ -7,7 +7,8 @@ public class SimulationLoop {
 
 	private int delta;
 	private long last;
-	private boolean running;
+	private boolean alive;
+	private Calendar lastTime;
 	private Calendar simTime;
 	private Loop loop;
 	
@@ -36,8 +37,9 @@ public class SimulationLoop {
 	protected void startRun(Calendar startTime) {
 		delta = 0;
 		passedSimTime = 0;
-		simTime = startTime;
-		running = true;
+		simTime = (Calendar) startTime.clone();
+		lastTime = (Calendar) startTime.clone();
+		alive = true;
 		last = System.currentTimeMillis();
 		new Thread(loop).start();
 	}
@@ -48,12 +50,12 @@ public class SimulationLoop {
 	protected void continueRun() {
 		delta = 0;
 		last = System.currentTimeMillis();
-		running = true;
+		alive = true;
 		new Thread(loop).start();
 	}
 	
 	protected void stopRun() {
-		running = false;
+		alive = false;
 	}
 	
 	
@@ -65,6 +67,7 @@ public class SimulationLoop {
 	
 	private void updateSimTime() {
 		passedSimTime += delta * timeLapse;
+		lastTime.setTime(simTime.getTime());
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
 	}
 	
@@ -73,15 +76,15 @@ public class SimulationLoop {
 	}
 	
 	
-	private class Loop implements Runnable {
+	private class Loop implements Runnable { //TODO: shutdown sicherstellen
 		
 		@Override
 		public void run() {
-			while (running) {
+			while (alive) {
 				computeDelta(); System.out.println(delta);
 				updateSimTime();
 				createNewTrains();
-				
+
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
