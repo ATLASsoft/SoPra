@@ -11,7 +11,7 @@ import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ScheduleFactory;
 
-//TODO: implementieren
+//TODO: Klasse löschen (in die Simloop intergriet)
 class TrainAgentMultiScheduler {
 
 	private List<ScheduleScheme> activeSchemes;

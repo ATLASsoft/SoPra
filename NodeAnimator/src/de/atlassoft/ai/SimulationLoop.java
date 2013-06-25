@@ -2,6 +2,12 @@ package de.atlassoft.ai;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+
+import de.atlassoft.model.Schedule;
+import de.atlassoft.model.ScheduleScheme;
+import de.atlassoft.util.ScheduleFactory;
 
 public class SimulationLoop {
 
@@ -10,6 +16,8 @@ public class SimulationLoop {
 	private boolean alive;
 	private Calendar lastTime;
 	private Calendar simTime;
+	private List<ScheduleScheme> activeSchemes;
+	private List<Schedule> readySchedules;
 	private Loop loop;
 	
 	/**
@@ -27,6 +35,7 @@ public class SimulationLoop {
 	
 	protected SimulationLoop() {
 		timeLapse = 1;
+		readySchedules = new LinkedList<>();
 		loop = new Loop();
 	}
 	
@@ -34,7 +43,9 @@ public class SimulationLoop {
 	 * Starts a new run.
 	 * @param startTime
 	 */
-	protected void startRun(Calendar startTime) {
+	protected void startRun(Calendar startTime, List<ScheduleScheme> schemes) {
+		readySchedules.clear();
+		activeSchemes = schemes;
 		delta = 0;
 		passedSimTime = 0;
 		simTime = (Calendar) startTime.clone();
@@ -71,9 +82,18 @@ public class SimulationLoop {
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
 	}
 	
+	private void createNewSchedules() {
+		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes, lastTime, simTime));
+	}
+	
 	private void createNewTrains() {
 		
 	}
+	 
+	private void deleteFinishedTrains() {
+		
+	}
+	
 	
 	
 	private class Loop implements Runnable { //TODO: shutdown sicherstellen
@@ -83,7 +103,9 @@ public class SimulationLoop {
 			while (alive) {
 				computeDelta(); System.out.println(delta);
 				updateSimTime();
+				createNewSchedules();
 				createNewTrains();
+				deleteFinishedTrains();
 
 				try {
 					Thread.sleep(10);
@@ -100,7 +122,7 @@ public class SimulationLoop {
 	public static void main(String[] args) throws InterruptedException {
 		Calendar cal = new GregorianCalendar();
 		SimulationLoop loop = new SimulationLoop();
-		loop.startRun(cal);
+		loop.startRun(cal, null);
 		
 		Thread.sleep(4000);
 		
