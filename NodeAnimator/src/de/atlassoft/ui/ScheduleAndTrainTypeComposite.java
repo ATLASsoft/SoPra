@@ -1,7 +1,7 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 
@@ -19,16 +19,21 @@ public class ScheduleAndTrainTypeComposite {
 		I18N = I18NSingleton.getInstance();
 		this.application = applicationService;
 		this.scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
-		scheduleAndTrainTypeComposite.setLayout(new FillLayout());
-		initUI();
+		scheduleAndTrainTypeComposite.setLayout(new RowLayout());
+		initScheduleUI();
+		initTrainTypeUI();
 	}
 	
-	private void initUI(){
-		// TODO: Implementieren
+	private void initScheduleUI(){
+		// TODO: ImplementierenO
+	}
+	
+	private void initTrainTypeUI(){
+		// TODO: ImplementierenO
 	}
 	
 	/**
-	 * Returns the trainTypeComposite
+	 * Returns the scheduleAndTrainTypeComposite
 	 * 
 	 * @return
 	 * 		The composite
