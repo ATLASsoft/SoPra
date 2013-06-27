@@ -77,9 +77,9 @@ public class TrainTypeComposite {
 	 */
 	
 	private void initUI(){
-		// TODO: Buttons Funktionen implementieren
+		// TODO: Modify Funktion implementieren
 		//Left side of the composite
-		Composite trainTypeCompositeLeft = new Composite (trainTypeComposite, SWT.NULL);
+		Composite trainTypeCompositeLeft = new Composite (trainTypeComposite, SWT.BORDER);
 		trainTypeCompositeLeft.setLayout(new GridLayout(1, false));
 		
 		// Left Top side of the composite
@@ -112,10 +112,10 @@ public class TrainTypeComposite {
 		final Label infoTrainTypeLabel = new Label(trainTypeCompositeLeftTop, SWT.RIGHT);
 		
 		// Left Bottom side of the Composite
-	    Composite trainTypeCompositeLeftBottom = new Composite (trainTypeCompositeLeft, SWT.NULL);
-	    FillLayout fillLayout = new FillLayout();
-		fillLayout.spacing = 150; 
-		trainTypeCompositeLeftBottom.setLayout(fillLayout);
+	    Composite trainTypeCompositeLeftBottom = new Composite (trainTypeCompositeLeft, SWT.BUTTON_MASK);
+	    GridLayout gridLayout = new GridLayout(2, false);
+//	    gridLayout.horizontalSpacing = trainTypeComposite;
+		trainTypeCompositeLeftBottom.setLayout(gridLayout);
 		
 		// Modify Button
 		Button modify = new Button(trainTypeCompositeLeftBottom, SWT.PUSH);

@@ -27,6 +27,7 @@ import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+// TODO: Klasse umbennen in "ScheduleAndTrainTypeComposite"
 
 /**
  * This class creates a composite where you can see

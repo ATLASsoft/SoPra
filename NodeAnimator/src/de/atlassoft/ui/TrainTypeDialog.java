@@ -168,7 +168,7 @@ public class TrainTypeDialog {
 	    save.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	// read values
-	        	final String nameOfTrainType = name.getText().trim();
+	        	final String nameOfTrainType = name.getText().trim(); //.replaceAll( " ", "");
 	        	final String topSpeed = textSpeed.getText();
 	        	final String priority = comboPriority.getText();	        	
 	        	
@@ -176,7 +176,6 @@ public class TrainTypeDialog {
 	        	List<String> errorNameMessages = new ArrayList<String>();
 	        	
 	        	if (name.getText().trim().equals("")) {
-	        	    errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptyName"));   	    
 	        	}
 	        	if (textSpeed.getText().equals("")) {
 	        		errorNameMessages.add(I18N.getMessage("TrainTypeDialog.errorEmptySpeed"));
@@ -250,6 +249,7 @@ public class TrainTypeDialog {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
 		    	for (TrainType type : trainTypes) {
+		    		// .replaceAll(" ", "")
 		    		if (type.getName().toLowerCase().equals((name.getText()).toLowerCase().trim())) {
 		   				twice = true;
 		   			}

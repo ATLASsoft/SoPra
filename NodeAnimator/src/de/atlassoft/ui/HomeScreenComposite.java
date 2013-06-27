@@ -71,17 +71,11 @@ public class HomeScreenComposite {
 		CurrentRailSysComposite currentRailSys = new CurrentRailSysComposite(tabFolder, applicationService);
 		railSysItem.setControl(currentRailSys.getComposite());
 		
-		//Schedule tab
+		//Schedule and TrainType tab
 		TabItem scheduleItem = new TabItem(tabFolder, SWT.NONE);
 		scheduleItem.setText(I18N.getMessage("HomeScreenComposite.ScheduleTab"));
-		AllSchedulesComposite allSchedulesComposite = new AllSchedulesComposite(tabFolder, applicationService);
-		scheduleItem.setControl(allSchedulesComposite.getComposite());
-		
-		//Train type tab
-		TabItem trainTypeItem = new TabItem(tabFolder, SWT.NONE);
-		trainTypeItem.setText(I18N.getMessage("HomeScreenComposite.TrainTab"));
-		TrainTypeComposite trainTypeComposite = new TrainTypeComposite(tabFolder, applicationService, shell);
-		trainTypeItem.setControl(trainTypeComposite.getComposite());
+		ScheduleAndTrainTypeComposite scheduleAndTrainTypeComposite = new ScheduleAndTrainTypeComposite(tabFolder, applicationService);
+		scheduleItem.setControl(scheduleAndTrainTypeComposite.getComposite());
 	}
 	
 	/**
