@@ -12,7 +12,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -88,9 +87,7 @@ public class TrainTypeDialog {
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
 		final Text textSpeed = new Text(shell, SWT.BORDER);
-		Composite trainTypeDialogSpeed = new Composite (shell, SWT.NULL);
-		trainTypeDialogSpeed.setLayout(new GridLayout(2, false));
-		final Label errorField2 = new Label(trainTypeDialogSpeed, SWT.NONE);
+		final Label errorField2 = new Label(shell, SWT.NONE);
 		errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.NoSpeed"));
 		errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		textSpeed.setToolTipText(I18N.getMessage("TrainTypeDialog.textSpeed"));
