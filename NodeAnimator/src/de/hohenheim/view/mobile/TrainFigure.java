@@ -2,6 +2,7 @@ package de.hohenheim.view.mobile;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
@@ -20,6 +21,7 @@ import de.hohenheim.view.mobile.animation.AnimationFinishedQueueObserver;
 import de.hohenheim.view.mobile.animation.Animator;
 import de.hohenheim.view.mobile.animation.BusyAnimator;
 import de.hohenheim.view.mobile.animation.BusyWaitAnimator;
+import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
 import de.hohenheim.view.mobile.animation.WalkToAnimator;
 import de.hohenheim.view.node.NodeFigure;
 import de.hohenheim.view.path.PathFigure;
@@ -102,6 +104,14 @@ public class TrainFigure extends AnimationFigure {
 		AnimationFinishedQueueObserver handler = new AnimationFinishedQueueObserver();
 		anim.addObserver(handler);		
 		addAnimation(anim);		
+	}
+	
+	public Animator walkAlong(List<PathFigure> paths) { //TODO: vervollständigen
+		SimpleWalkToAnimator anim = new SimpleWalkToAnimator(this.map, this, null);
+		AnimationFinishedQueueObserver handler = new AnimationFinishedQueueObserver();
+		anim.addObserver(handler);
+		addAnimation(anim);
+		return anim;
 	}
 	
 	/**

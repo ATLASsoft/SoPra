@@ -2,6 +2,7 @@ package de.atlassoft.ai;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -123,11 +124,19 @@ public class SimulationLoop {
 	}
 	
 	private void createNewSchedules() {
-		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes, lastTime, simTime));
+		readySchedules.addAll(ScheduleFactory.createSchedules(
+				activeSchemes, lastTime, simTime));
 	}
 	
 	private void createNewTrains() {
-		
+		Iterator<Schedule> it = readySchedules.iterator();
+		Schedule s;
+		while (it.hasNext()) {
+			s = it.next();
+//			if (man kann zug setzten) {
+//				it.remove();
+//			}
+		}
 	}
 	
 	private void deleteFinishedTrains() {
