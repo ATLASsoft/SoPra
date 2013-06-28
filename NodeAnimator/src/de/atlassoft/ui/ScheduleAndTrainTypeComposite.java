@@ -1,13 +1,20 @@
 package de.atlassoft.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.TrainType;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 
 /**
  * This class creates the Tab Folder in which the train types
@@ -36,7 +43,7 @@ public class ScheduleAndTrainTypeComposite {
 		this.scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
 		scheduleAndTrainTypeComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		Composite scheduleComposite = new Composite(scheduleAndTrainTypeComposite, SWT.BORDER);
-		Composite trainTypeComposite = new Composite (scheduleAndTrainTypeComposite, SWT.BORDER);
+		ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.V_SCROLL);
 		initScheduleUI(scheduleComposite);
 		initTrainTypeUI(trainTypeComposite);
 	}
@@ -57,8 +64,32 @@ public class ScheduleAndTrainTypeComposite {
 	 * @param
 	 * 		The composite for the elements.
 	 */
-	private void initTrainTypeUI(Composite mainComposite) {
+	private void initTrainTypeUI(ScrolledComposite scrolledTrainTypeComposite) {
 		// TODO: Implementieren
+		Composite trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
+		trainTypeComposite.setLayout(new GridLayout (3, false));
+		
+		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
+	 	for (TrainType type : trainTypes) {
+	 		//TODO: if-Bedinung rausnehmen, wenn fertig
+	 		if (type.getImg() == null) {
+	 			new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
+	 		} else {
+	 		new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
+	 		}
+			new CLabel(trainTypeComposite, SWT.NULL).setText("Name:" + "\t\t\t" + type.getName() + "\n" +
+															 "Höchstgeschwindigkeit:" + "\t" + type.getTopSpeed() + "\n" +
+															 "Priorität:" + "\t\t\t" + type.getPriority()); 
+			Button delete = new Button(trainTypeComposite, SWT.PUSH);
+		 	delete.setImage(ImageHelper.getImage("trashIcon"));			
+		}
+	 	
+	 	
+		
+		trainTypeComposite.setSize(400, 400);
+		scrolledTrainTypeComposite.setExpandVertical(true);
+		scrolledTrainTypeComposite.setExpandHorizontal(true);
+		scrolledTrainTypeComposite.setContent(trainTypeComposite);
 	}
 	
 	/**

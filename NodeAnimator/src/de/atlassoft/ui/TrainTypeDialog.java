@@ -206,6 +206,8 @@ public class TrainTypeDialog {
 	        		if (!textImage.getText().equals("")){
 	        			Image img = new Image(null, textImage.getText());
 	        			type.setImg(img);
+	        		} else {
+	        			type.setImg(null);
 	        		}
 	        		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	        		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
