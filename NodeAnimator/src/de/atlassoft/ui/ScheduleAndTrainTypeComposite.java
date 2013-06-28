@@ -3,11 +3,15 @@ package de.atlassoft.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
 import de.atlassoft.application.ApplicationService;
@@ -25,6 +29,7 @@ import de.atlassoft.util.ImageHelper;
  */
 public class ScheduleAndTrainTypeComposite {
 	
+	private Shell shell;
 	private Composite scheduleAndTrainTypeComposite;
 	private I18NService I18N;
 	private ApplicationService applicationService;
@@ -37,7 +42,8 @@ public class ScheduleAndTrainTypeComposite {
 	 * @param applicationService
 	 * 		The application Service of the application.
 	 */
-	public ScheduleAndTrainTypeComposite(TabFolder tabFolder, ApplicationService applicationService) {
+	public ScheduleAndTrainTypeComposite(Shell shell, TabFolder tabFolder, ApplicationService applicationService) {
+		this.shell = shell;
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
 		this.scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
@@ -70,25 +76,34 @@ public class ScheduleAndTrainTypeComposite {
 		trainTypeComposite.setLayout(new GridLayout (3, false));
 		
 		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
-	 	for (TrainType type : trainTypes) {
-	 		//TODO: if-Bedinung rausnehmen, wenn fertig
-	 		if (type.getImg() == null) {
-	 			new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
-	 		} else {
-	 		new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
-	 		}
+		for (final TrainType type : trainTypes) {
+		//TODO: if-Bedinung rausnehmen, wenn fertig
+		if (type.getImg() == null) {
+			new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
+		 	} else {
+		 		new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
+		 	}
 			new CLabel(trainTypeComposite, SWT.NULL).setText("Name:" + "\t\t\t" + type.getName() + "\n" +
 															 "Höchstgeschwindigkeit:" + "\t" + type.getTopSpeed() + "\n" +
 															 "Priorität:" + "\t\t\t" + type.getPriority()); 
 			Button delete = new Button(trainTypeComposite, SWT.PUSH);
-		 	delete.setImage(ImageHelper.getImage("trashIcon"));			
+			delete.setImage(ImageHelper.getImage("trashIcon"));			 
+			 	
+			delete.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+		    		MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
+		    	    messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
+		    	    int rc = messageBox.open();
+		    	    if (rc == SWT.YES) {
+		    	      	applicationService.deleteTrainType(type);
+		            }
+		    	}
+			});
 		}
 	 	
-	 	
-		
-		trainTypeComposite.setSize(400, 400);
 		scrolledTrainTypeComposite.setExpandVertical(true);
 		scrolledTrainTypeComposite.setExpandHorizontal(true);
+		scrolledTrainTypeComposite.setMinSize(trainTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		scrolledTrainTypeComposite.setContent(trainTypeComposite);
 	}
 	

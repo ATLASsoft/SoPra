@@ -143,7 +143,7 @@ public class TrainTypeComposite {
 			    	String[] selection = trainTypeList.getSelection();
 			    	TrainType deleteType = null;
 					java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
-		        	for (TrainType type : trainTypes) {
+		        	for (TrainType type : trainTypes) { 
 		    			if (type.getName().equals(selection[0])) {
 		    				deleteType = type;
 		    			}

@@ -74,7 +74,7 @@ public class HomeScreenComposite {
 		//Schedule and TrainType tab
 		TabItem scheduleItem = new TabItem(tabFolder, SWT.NONE);
 		scheduleItem.setText(I18N.getMessage("HomeScreenComposite.ScheduleTab"));
-		ScheduleAndTrainTypeComposite scheduleAndTrainTypeComposite = new ScheduleAndTrainTypeComposite(tabFolder, applicationService);
+		ScheduleAndTrainTypeComposite scheduleAndTrainTypeComposite = new ScheduleAndTrainTypeComposite(shell, tabFolder, applicationService);
 		scheduleItem.setControl(scheduleAndTrainTypeComposite.getComposite());
 	}
 	
