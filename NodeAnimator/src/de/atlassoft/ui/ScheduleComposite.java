@@ -51,7 +51,7 @@ import de.hohenheim.view.map.NodeMap;
  */
 public class ScheduleComposite {
 
-	//TODO: internationalisieren, evtl. Button Bilder einfügen
+	//TODO: evtl. Button Bilder einfügen
 	private Shell shell;
 	private StackLayout layout;
 	private Composite mainComposite, scheduleComposite, departureComposite, buttonComposite;
@@ -97,8 +97,6 @@ public class ScheduleComposite {
 	 * Creates the UI elements of the ScheduleComposite
 	 */
 	private void initUI() {
-		//TODO: On-the-fly implementieren, nicht zwei gleiche Knoten hintereinander,
-		//TODO: Wartezeit überprüfen
 		//the overall composite
 		scheduleComposite = new Composite (mainComposite, SWT.BORDER);
 		GridLayout scheduleCompositeLayout = new GridLayout();
@@ -121,19 +119,25 @@ public class ScheduleComposite {
 		/*
 		 * 1st row (name of the schedule)
 		 */
-		createQuestionMark(buttonComposite, null);
+		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Name"));
 		
 		Label nameLabel = new Label(buttonComposite, SWT.NONE);
 		nameLabel.setText(I18N.getMessage("ScheduleComposite.NameLabel"));
 		
 		Composite textComposite = new Composite(buttonComposite, SWT.NONE);
-		textComposite.setLayout(new RowLayout());
+		textComposite.setLayout(new RowLayout(SWT.VERTICAL));
 		nameField = new Text(textComposite, SWT.SINGLE|SWT.BORDER);
+		nameField.setLayoutData(new RowData(80, 15));
 		nameField.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
+		    	if (nameField.getCharCount() == 0) {
+		    		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
+		    		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		    		save.setEnabled(false);
+		    		return;
+		    	}
 		    	if (e.keyCode != 8) {
-		    		//TODO: Testen
 		    		for (ScheduleScheme schedule : applicationService.getModel().getActiveScheduleSchemes()) {
 		    			if (schedule.getID().toLowerCase().equals(nameField.getText().toLowerCase().trim())) {
 		    				twice = true;
@@ -142,9 +146,12 @@ public class ScheduleComposite {
 		    	}
 		    	if (twice == true) {
 		    		errorField.setVisible(true);
+		    		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
+		    		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		   		  	save.setEnabled(false);
 		    	} else {
-		    		errorField.setVisible(false);
+		    		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameAvailable"));
+		    		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		    		save.setEnabled(true);
 		    	}
 			}
@@ -152,14 +159,13 @@ public class ScheduleComposite {
 		
 		
 		errorField = new Label(textComposite, SWT.SINGLE);
-		errorField.setText("ERROR");
+		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-		errorField.setVisible(false);
 		
 		/*
 		 * 2nd row (traintype of the schedule)
 		 */
-		createQuestionMark(buttonComposite, null);
+		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.TrainType"));
 		
 		Label trainTypeLabel = new Label(buttonComposite, SWT.NONE);
 		trainTypeLabel.setText(I18N.getMessage("ScheduleComposite.TrainTypeLabel"));
@@ -173,7 +179,7 @@ public class ScheduleComposite {
 		/*
 		 * 3rd row (repeat type of the schedule)
 		 */
-		createQuestionMark(buttonComposite, null);
+		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Repetition"));
 		
 		Label repeatLabel = new Label (buttonComposite, SWT.NONE);
 		repeatLabel.setText(I18N.getMessage("ScheduleComposite.RepeatLabel"));
@@ -202,17 +208,16 @@ public class ScheduleComposite {
 		/*
 		 * 4th row (the selection of departure times)
 		 */
-		createQuestionMark(buttonComposite, null);
-		
 		departureComposite = new Composite(buttonComposite, SWT.BORDER);
 		GridLayout departureCompositeLayout = new GridLayout(2, false);
 		departureComposite.setLayout(departureCompositeLayout);
 		GridData departureCompositeData = new GridData();
-		departureCompositeData.horizontalSpan = 2;
+		departureCompositeData.horizontalSpan = 3;
+		departureCompositeData.horizontalAlignment = SWT.CENTER;
 		departureComposite.setLayoutData(departureCompositeData);
 		
 		Label departureLabel = new Label(departureComposite, SWT.NONE);
-		departureLabel.setText(I18N.getMessage("ScheduleComposite.DepartureLabel"));
+		departureLabel.setText(I18N.getMessage("ScheduleComposite.Departure"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
 		timeComposite.setLayout(new RowLayout());
@@ -255,7 +260,7 @@ public class ScheduleComposite {
 		/*
 		 * 5th row (day selection)
 		 */
-		createQuestionMark(buttonComposite, null);
+		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Days"));
 		
 		Label daysLabel = new Label(buttonComposite, SWT.NONE);
 		daysLabel.setText(I18N.getMessage("ScheduleComposite.DaysLabel"));
@@ -287,7 +292,7 @@ public class ScheduleComposite {
 		/*
 		 * 6th row (station selection)
 		 */
-		createQuestionMark(buttonComposite, null);
+		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Stations"));
 		
 		Composite stationComposite = new Composite(buttonComposite, SWT.BORDER|SWT.FULL_SELECTION);
 		GridData stationCompositeData = new GridData();
@@ -300,7 +305,7 @@ public class ScheduleComposite {
 		stationListComposite.setLayout(stationListCompositeLayout);
 
 		Label firstStation = new Label(stationListComposite, SWT.NONE);
-		firstStation.setText("Erste Station:");
+		firstStation.setText(I18N.getMessage("ScheduleComposite.FirstStation"));
 		firstStationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		RowData firstStationListData = new RowData();
 		firstStationListData.height = 15;
@@ -317,7 +322,7 @@ public class ScheduleComposite {
 		});
 		
 		Label stopoverStation = new Label(stationListComposite, SWT.NONE);
-		stopoverStation.setText("Zwischenstationen:");
+		stopoverStation.setText(I18N.getMessage("ScheduleComposite.StopoverStation"));
 		stationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		stationList.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -331,7 +336,7 @@ public class ScheduleComposite {
 		});
 		
 		Label lastStation = new Label(stationListComposite, SWT.NONE);
-		lastStation.setText("Endstation:");
+		lastStation.setText(I18N.getMessage("ScheduleComposite.LastStation"));
 		lastStationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		RowData lastStationListData = new RowData();
 		lastStationListData.height = 15;
@@ -351,12 +356,15 @@ public class ScheduleComposite {
 			 * delayComp
 			 */
 		Composite delayComposite = new Composite(stationComposite, SWT.NONE);
+		RowData delayCompositeData = new RowData();
+		delayCompositeData.width = 120;
+		delayComposite.setLayoutData(delayCompositeData);
 		GridLayout delayCompositeLayout = new GridLayout();
 		delayCompositeLayout.numColumns = 2;
 		delayComposite.setLayout(delayCompositeLayout);
 		
 		Button addStation = new Button(delayComposite, SWT.TOGGLE);
-		addStation.setText("Station hinzufügen");
+		addStation.setText(I18N.getMessage("ScheduleComposite.AddStation"));
 		GridData stationButtonData = new GridData();
 		stationButtonData.horizontalSpan = 2;
 		addStation.setLayoutData(stationButtonData);
@@ -372,7 +380,7 @@ public class ScheduleComposite {
 		});
 		
 		deleteStation = new Button(delayComposite, SWT.PUSH);
-		deleteStation.setText("Station entfernen");
+		deleteStation.setText(I18N.getMessage("ScheduleComposite.RemoveStation"));
 		deleteStation.setEnabled(false);
 		deleteStation.setLayoutData(stationButtonData);
 		deleteStation.addSelectionListener(new SelectionAdapter() {
@@ -397,6 +405,7 @@ public class ScheduleComposite {
 					}
 					else {
 						deleteStation.setEnabled(false);
+						timeSpinner.setEnabled(false);
 					}
 				}
 				// delete last station selected
@@ -432,7 +441,7 @@ public class ScheduleComposite {
 		});
 		
 		Label delayLabel = new Label(delayComposite, SWT.NONE);
-		delayLabel.setText("Wartezeit: ");
+		delayLabel.setText(I18N.getMessage("ScheduleComposite.WaitingTime"));
 		GridData delayData = new GridData();
 		delayData.horizontalSpan = 2;
 		delayData.heightHint = 18;
@@ -457,7 +466,7 @@ public class ScheduleComposite {
 		min.setText("min");
 		
 		Label timeElapsed = new Label(delayComposite, SWT.NONE);
-		timeElapsed.setText("Zeit ab Start:");
+		timeElapsed.setText(I18N.getMessage("ScheduleComposite.TimeFromStart"));
 		GridData timeElapsedData = new GridData();
 		timeElapsedData.horizontalSpan = 2;
 		timeElapsed.setLayoutData(timeElapsedData);
@@ -482,8 +491,6 @@ public class ScheduleComposite {
 		
 		min = new Label(delayComposite, SWT.NONE);
 		min.setText("min");
-		
-		stationComposite.layout();
 
 		/*
 		 * 8th row (save and cancel Buttons)
@@ -499,7 +506,8 @@ public class ScheduleComposite {
 		saveComposite.setLayoutData(saveCompositeData);
 		
 		save = new Button(saveComposite, SWT.PUSH);
-		save.setText("Speichern");
+		save.setText(I18N.getMessage("ScheduleComposite.Save"));
+		save.setEnabled(false);
 //		save.setImage(ImageHelper.getImage("loadButton"));
 		save.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -508,8 +516,8 @@ public class ScheduleComposite {
 				//check the arrays
 				if (nodeList.isEmpty()|nodeList.size()<2) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setText("Fehler");
-					messageBox.setMessage("Bitte mindestens zwei Stationen auswählen");
+					messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
+					messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.NoStations"));
 					messageBox.open();
 					return;
 				}
@@ -519,19 +527,21 @@ public class ScheduleComposite {
 						&& !tuesday.getSelection() && !wednesday.getSelection()
 						&& !thursday.getSelection() && !friday.getSelection()) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setText("Fehler");
-					messageBox.setMessage("Bitte einen Tag auswählen");
+					messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
+					messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.NoDays"));
 					messageBox.open();
 					return;
 				}
 				
-				//check the name field
-				if (nameField.getText() == "") {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setText("Fehler");
-					messageBox.setMessage("Bitte einen Namen auswählen");
-					messageBox.open();
-					return;
+				//check the time of arrival
+				for (int i = 1; i<arrivalTime.size(); i++) {
+					if (arrivalTime.get(i) < arrivalTime.get(i-1)) {
+						MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+						messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
+						messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.ImpossibleArrival"));
+						messageBox.open();
+						return;
+					}
 				}
 				
 				//Get the schedule type
@@ -607,7 +617,7 @@ public class ScheduleComposite {
 		});
 		
 		Button cancel = new Button(saveComposite, SWT.PUSH);
-		cancel.setText("Abbrechen");
+		cancel.setText(I18N.getMessage("ScheduleComposite.Cancel"));
 //		cancel.setImage(ImageHelper.getImage("cancelIcon"));
 		cancel.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -658,19 +668,34 @@ public class ScheduleComposite {
 							}
 							// add last station
 							else if(firstStationList.getItemCount() == 1 && lastStationList.getItemCount() == 0) {
-								lastStationList.add(temp.getName());
-								arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
-								idleTime.add(5);
-								nodeList.add(temp);
+								if (temp.getName().equals(firstStationList.getItem(0))) {
+									MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+									messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
+									messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.TwoStations"));
+									messageBox.open();
+								} else {
+									lastStationList.add(temp.getName());
+									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
+									idleTime.add(5);
+									nodeList.add(temp);
+								}
 							}
 							// add normal station
 							else {
-								stationList.add(lastStationList.getItem(0));
-								lastStationList.removeAll();
-								lastStationList.add(temp.getName());
-								arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
-								idleTime.add(5);
-								nodeList.add(temp);
+								if (temp.getName().equals(lastStationList.getItem(0))) {
+									MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+									messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
+									messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.TwoStations"));
+									messageBox.open();
+								}
+								else {
+									stationList.add(lastStationList.getItem(0));
+									lastStationList.removeAll();
+									lastStationList.add(temp.getName());
+									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
+									idleTime.add(5);
+									nodeList.add(temp);
+								}
 							}
 						}
 					}
@@ -685,7 +710,7 @@ public class ScheduleComposite {
 	 */
 	private void createSingularRide() {
 		Label departureLabel = new Label(departureComposite, SWT.NONE);
-		departureLabel.setText("Abfahrtszeit: ");
+		departureLabel.setText(I18N.getMessage("ScheduleComposite.Departure"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
 		timeComposite.setLayout(new RowLayout());
@@ -737,7 +762,7 @@ public class ScheduleComposite {
 		 * 1st row (first ride)
 		 */
 		Label firstRideLabel = new Label(departureComposite, SWT.NONE);
-		firstRideLabel.setText("Erste Fahrt: ");
+		firstRideLabel.setText(I18N.getMessage("ScheduleComposite.FirstRide"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
 		timeComposite.setLayout(new RowLayout());
@@ -781,7 +806,7 @@ public class ScheduleComposite {
 		 * 2nd row (last ride) 
 		 */
 		Label lastRideLabel = new Label(departureComposite, SWT.NONE);
-		lastRideLabel.setText("Letzte Fahrt: ");
+		lastRideLabel.setText(I18N.getMessage("ScheduleComposite.LastRide"));
 		
 		Composite timeComposite2 = new Composite(departureComposite, SWT.NONE);
 		timeComposite2.setLayout(new RowLayout());
@@ -825,7 +850,7 @@ public class ScheduleComposite {
 		 * 3rd row (interval)
 		 */
 		Label intervallLabel = new Label(departureComposite, SWT.NONE);
-		intervallLabel.setText("Intervall: ");
+		intervallLabel.setText(I18N.getMessage("ScheduleComposite.Intervall"));
 		
 		Composite timeComposite3 = new Composite(departureComposite, SWT.NONE);
 		timeComposite3.setLayout(new RowLayout());
@@ -914,7 +939,7 @@ public class ScheduleComposite {
 		tipShell.setLayout(new RowLayout());
 		
 		Label information = new Label(tipShell, SWT.NONE);
-		information.setText("hallo");
+		information.setText(message);
 		tipShell.layout();
 		tipShell.setSize(information.getSize().x + 10, information.getSize().y + 10);
 		
