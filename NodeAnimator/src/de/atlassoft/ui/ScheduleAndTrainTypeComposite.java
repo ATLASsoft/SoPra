@@ -1,5 +1,8 @@
 package de.atlassoft.ui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -28,6 +31,7 @@ import de.atlassoft.util.ImageHelper;
  *
  */
 public class ScheduleAndTrainTypeComposite {
+	// TODO: I18N TraintypeComposite zu ScheduleAndTrainTypeComposite.TrainTypeComposie ändern
 	
 	private Shell shell;
 	private Composite scheduleAndTrainTypeComposite;
@@ -49,7 +53,15 @@ public class ScheduleAndTrainTypeComposite {
 		this.scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
 		scheduleAndTrainTypeComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		Composite scheduleComposite = new Composite(scheduleAndTrainTypeComposite, SWT.BORDER);
-		ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.V_SCROLL);
+		final ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.V_SCROLL);
+		trainTypeComposite.setSize(tabFolder.getSize().x , tabFolder.getSize().y);
+		applicationService.getModel().addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				// TODO: Schöner Lösen
+				initTrainTypeUI(trainTypeComposite);
+			}
+		});
 		initScheduleUI(scheduleComposite);
 		initTrainTypeUI(trainTypeComposite);
 	}
