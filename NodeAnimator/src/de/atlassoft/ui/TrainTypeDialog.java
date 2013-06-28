@@ -9,6 +9,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -190,6 +191,9 @@ public class TrainTypeDialog {
 	    // Information Button
 		Button help = new Button(shell, SWT.PUSH);
 		help.setImage(ImageHelper.getImage("questionMark"));
+		GridData dataHelp = new GridData(GridData.FILL);
+		dataHelp.horizontalAlignment = GridData.CENTER;
+	    help.setLayoutData(dataHelp);
 		help.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
@@ -203,6 +207,9 @@ public class TrainTypeDialog {
 		Button cancel = new Button(shell, SWT.PUSH | SWT.RIGHT);
 		cancel.setText(I18N.getMessage("TrainTypeDialog.buttonCancel"));
 	    cancel.setImage(ImageHelper.getImage("cancelIcon"));
+	    GridData dataCancel = new GridData(GridData.FILL);
+		dataCancel.horizontalAlignment = GridData.END;
+	    cancel.setLayoutData(dataCancel);
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
