@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
@@ -163,6 +164,7 @@ public class CurrentRailSysComposite {
 		//node information list
 		nodeInformation = new List(buttonComposite, SWT.BORDER);
 		nodeInformation.setEnabled(false);
+		nodeInformation.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		GridData nodeInformationData = new GridData();
 		nodeInformationData.horizontalSpan = 3;
 		nodeInformationData.verticalAlignment = SWT.FILL;

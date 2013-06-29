@@ -83,6 +83,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("settingsIcon", "img/settingsIcon.png");
 		ImageHelper.loadImage("standardTrainIcon", "img/train.gif");
 		ImageHelper.loadImage("questionMarkSmall", "img/questionMarkSmall.png");
+		ImageHelper.loadImage("crosshair", "img/crosshair.png");
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		
