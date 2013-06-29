@@ -8,6 +8,7 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -51,10 +52,15 @@ public class ScheduleAndTrainTypeComposite {
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
 		this.scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
-		scheduleAndTrainTypeComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+//		scheduleAndTrainTypeComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+		scheduleAndTrainTypeComposite.setLayout(new GridLayout(2, false));
 		Composite scheduleComposite = new Composite(scheduleAndTrainTypeComposite, SWT.BORDER);
 		final ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.V_SCROLL);
-		trainTypeComposite.setSize(tabFolder.getSize().x , tabFolder.getSize().y);
+		trainTypeComposite.setLayout(new GridLayout (3, false));
+		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
+		dataComposite.grabExcessHorizontalSpace = true;
+		dataComposite.grabExcessVerticalSpace = true;
+		trainTypeComposite.setLayoutData(dataComposite);
 		applicationService.getModel().addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
