@@ -1,38 +1,477 @@
 package de.atlassoft.ui;
 
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.Node;
+import de.atlassoft.model.Path;
+import de.atlassoft.model.RailwaySystem;
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
+import de.hohenheim.view.map.NodeMap;
 
 /**
- * This class creates the composite for creating a new railsystem.
+ * This class creates the composite for creating a new railway system.
  * 
  * @author Silvan Haeussermann
  */
 public class RailSysComposite {
 
+	private Shell shell;
+	private Composite mainComposite, railSysComposite;
+	private StackLayout layout;
+	private ApplicationService applicationService;
+	private I18NService I18N;
+	private NodeMap map;
+	private RailwaySystem railSys;
+	private Text railSysNameText, stationNameText, xCoord, yCoord;
+	private boolean manualCoordActive;
+	private Button fromMap, addStation, addPath, save;
+	private Label errorRailSysName, errorStationName;
+	private List<Node> nodeList;
+	private Combo startCombo, endCombo;
+	
 	/**
-	 * The method createHomeScreenComposite creates the composite for the
-	 * homescreen, which is shown when the application starts.
-	 * 	
-	 * @param shell
-	 * 			The main shell of the application.
+	 * The constructor for the class RailSysComposite.
+	 * 
 	 * @param mainComposite
-	 * 			The main composite of the application
-	 * @return
-	 * 			The homescreen composite.
+	 * 		The main composite of the application.
+	 * @param layout
+	 * 		The stack layout of the main window.
+	 * @param applicationService
+	 * 		The ApplicationService of the application. 
 	 */
-	public static Composite createRailSysComposite(Shell shell, Composite mainComposite){
-		//TODO: Ausprogrammieren
+	public RailSysComposite(Shell shell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
+		this.shell = shell;
+		this.mainComposite = mainComposite;
+		this.applicationService = applicationService;
+		this.layout = layout;
+		railSysComposite = new Composite(mainComposite, SWT.BORDER);
+		I18N = I18NSingleton.getInstance();
+		railSys = new RailwaySystem("temp");
+		map = railSys.getNodeMap();
+		manualCoordActive = false;
+		nodeList = new ArrayList<Node>();
 		
-	    Composite railSysComposite = new Composite(mainComposite, SWT.BORDER);
-	    railSysComposite.setLayout(new RowLayout());
-	    Label label = new Label(railSysComposite, SWT.NONE);
-	    label.setText("railsyscomp");
-	    label.pack();
+		railSysComposite.setLayout(new RowLayout());
+		initUI();
+	}
+	
+	private void initUI() {
+		//Controls
+		Composite buttonComposite = new Composite(railSysComposite, SWT.NONE);
+		buttonComposite.setLayout(new GridLayout(2, false));
 		
+		//RailSys Name
+		createQuestionMark(buttonComposite, "hallo");
+		
+		Composite railSysNameComposite = new Composite(buttonComposite, SWT.BORDER);
+		railSysNameComposite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		railSysNameComposite.setLayout(new GridLayout(2, false));
+		
+		Label railSysLabel = new Label(railSysNameComposite, SWT.NONE);
+		railSysLabel.setText("Streckennetz");
+		railSysLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 2, 1));
+		
+		Label railSysNameLabel = new Label(railSysNameComposite, SWT.NONE);
+		railSysNameLabel.setText("Name:");
+		
+			//Name of the railSys and on-the-fly correction
+		Composite textErrorComposite = new Composite(railSysNameComposite, SWT.NONE);
+		textErrorComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		textErrorComposite.setLayout(new GridLayout(1, false));
+		
+		railSysNameText = new Text(textErrorComposite, SWT.BORDER);
+		railSysNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		railSysNameText.addListener(SWT.KeyUp, new Listener() {
+			public void handleEvent(Event e) {
+		    	Boolean twice = false;
+		    	if (railSysNameText.getCharCount() == 0) {
+		    		errorRailSysName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
+		    		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		    		save.setEnabled(false);
+		    		return;
+		    	}
+		    	if (e.keyCode != 8) {
+		    		for (String temp : applicationService.getModel().getRailwaySystemIDs()) {
+		    			if (temp.toLowerCase().equals(railSysNameText.getText().toLowerCase().trim())) {
+		    				twice = true;
+		    			}
+		    		}
+		    	}
+		    	if (twice == true) {
+		    		errorRailSysName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
+		    		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		   		  	save.setEnabled(false);
+		    	} else {
+		    		errorRailSysName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameAvailable"));
+		    		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+		    		save.setEnabled(true);
+		    	}
+			}
+		});
+		
+		errorRailSysName = new Label(textErrorComposite, SWT.NONE);
+		errorRailSysName.setText("Kein Name eingegeben");
+		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		
+		//Station Buttons
+		createQuestionMark(buttonComposite, "hallo");
+		
+		Composite stationButtons = new Composite(buttonComposite, SWT.BORDER);
+		GridLayout stationButtonsLayout = new GridLayout();
+		stationButtonsLayout.numColumns = 3;
+		stationButtons.setLayout(stationButtonsLayout);
+		
+		Label stationLabel = new Label(stationButtons, SWT.NONE);
+		stationLabel.setText("Neue Station");
+		stationLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 3, 1));
+		
+		Label stationNameLabel = new Label(stationButtons, SWT.NONE);
+		stationNameLabel.setText("Name:");
+		
+			//Name of the station and on-the-fly correction
+		Composite stationNameComposite = new Composite(stationButtons, SWT.NONE);
+		stationNameComposite.setLayout(new GridLayout());
+		GridData stationNameData = new GridData();
+		stationNameData.horizontalSpan = 2;
+		stationNameData.horizontalAlignment = SWT.FILL;
+		stationNameComposite.setLayoutData(stationNameData);
+		
+		stationNameText = new Text(stationNameComposite, SWT.BORDER);
+		stationNameText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		stationNameText.addListener(SWT.KeyUp, new Listener() {
+			public void handleEvent(Event e) {
+		    	Boolean twice = false;
+		    	if (stationNameText.getCharCount() == 0) {
+		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
+		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		    		addStation.setEnabled(false);
+		    		return;
+		    	}
+		    	if (e.keyCode != 8) {
+		    		for (Node temp : nodeList) {
+		    			if (temp.getName().toLowerCase().equals(stationNameText.getText().toLowerCase().trim())) {
+		    				twice = true;
+		    			}
+		    		}
+		    	}
+		    	if (twice == true) {
+		    		addStation.setEnabled(false);
+		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
+		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		    	} else {
+		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameAvailable"));
+		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+		    		addStation.setEnabled(true);
+		    	}
+			}
+		});
+		
+		errorStationName = new Label(stationNameComposite, SWT.NONE);
+		errorStationName.setText("Kein Name eingegeben");
+		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		
+		Label coordsNameLabel = new Label(stationButtons, SWT.NONE);
+		coordsNameLabel.setText("Koordinaten:");
+		
+		Composite coordComposite = new Composite(stationButtons, SWT.BORDER);
+		coordComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.NULL, true, false, 2, 1));
+		coordComposite.setLayout(new RowLayout());
+		
+			//coord buttons
+		xCoord = new Text(coordComposite, SWT.BORDER);
+		xCoord.setToolTipText("X-Koordinate");
+		xCoord.setLayoutData(new RowData(22, 15));
+		xCoord.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				//block letters
+				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
+		          e.doit = false;
+		          Display.getCurrent().beep();
+		        }
+				//TODO: Ausimplementieren wenn Zeit reicht
+				//block values over 600
+//				else if(xCoord.getText().length() == 0) {
+//					if (Integer.parseInt(Character.toString(e.character)) > 6) {
+//						e.doit = false;
+//				        Display.getCurrent().beep();
+//					}
+//				}
+//				else if(xCoord.getText().length() == 1) {
+//					if (xCoord.getText(0, 0).equals("6")) {
+//					}
+//				}
+//				else if(xCoord.getText().length() >= 3) {
+//					if(e.keyCode != 8 && e.keyCode != SWT.DEL) {
+//						e.doit = false;
+//				        Display.getCurrent().beep();
+//					}
+//				}
+			}
+		});
+		
+		yCoord = new Text(coordComposite, SWT.BORDER);
+		yCoord.setToolTipText("Y-Koordinate");
+		yCoord.setLayoutData(new RowData(22, 15));
+		yCoord.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
+		          e.doit = false;
+		          Display.getCurrent().beep();
+		        }
+			}
+		});
+		
+		fromMap = new Button(coordComposite, SWT.TOGGLE);
+		fromMap.setLayoutData(new RowData(22, 22));
+		fromMap.setImage(ImageHelper.getImage("crosshair"));
+		fromMap.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!manualCoordActive) {
+					manualCoordActive = true;
+				} else {
+					manualCoordActive = false;
+				}
+			}
+		});
+		
+		addStation = new Button(stationButtons, SWT.PUSH);
+		addStation.setText("Station hinzufügen");
+		addStation.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 3, 1));
+		addStation.setEnabled(false);
+		addStation.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (Integer.parseInt(xCoord.getText()) > 600 && Integer.parseInt(yCoord.getText()) > 500) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setText(I18N.getMessage("RailSysComposite.Error.RangeTitle"));
+					messageBox.setMessage(I18N.getMessage("RailSysComposite.Error.CoordinateRange"));
+					messageBox.open();
+					return;
+				}
+				
+				Node node = new Node(stationNameText.getText(),
+						Integer.parseInt(xCoord.getText()), Integer.parseInt(yCoord.getText()));
+				nodeList.add(node);
+				railSys.addNode(node);
+				
+				stationNameText.setText("");
+				xCoord.setText("0");
+				yCoord.setText("0");
+	    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
+	    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+	    		addStation.setEnabled(false);
+	    		
+	    		startCombo.add(node.getName());
+	    		endCombo.add(node.getName());
+	    		if (startCombo.getItemCount() == 2) {
+	    			startCombo.setEnabled(true);
+	    			startCombo.select(0);
+	    			endCombo.setEnabled(true);
+	    			endCombo.select(1);
+	    			addPath.setEnabled(true);
+	    		}
+			}
+		});
+		
+		//Path Buttons
+		createQuestionMark(buttonComposite, "hallo");
+		
+		Composite createPathButtons = new Composite(buttonComposite, SWT.BORDER);
+		createPathButtons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		createPathButtons.setLayout(new GridLayout(2, true));
+		
+		Label addPathLabel = new Label(createPathButtons, SWT.NONE);
+		addPathLabel.setText("Strecke hinzufügen");
+		addPathLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		startCombo = new Combo(createPathButtons, SWT.DROP_DOWN|SWT.READ_ONLY);
+		startCombo.setEnabled(false);
+		startCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (startCombo.getItem(startCombo.getSelectionIndex()).equals
+						(endCombo.getItem(endCombo.getSelectionIndex()))) {
+					addPath.setEnabled(false);
+				}
+				else {
+					addPath.setEnabled(true);
+				}
+			}
+		});
+		
+		endCombo = new Combo(createPathButtons, SWT.DROP_DOWN|SWT.READ_ONLY);
+		endCombo.setEnabled(false);
+		endCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (endCombo.getItem(endCombo.getSelectionIndex()).equals
+						(startCombo.getItem(startCombo.getSelectionIndex()))) {
+					addPath.setEnabled(false);
+				}
+				else {
+					addPath.setEnabled(true);
+				}
+			}
+		});
+		
+		addPath = new Button(createPathButtons, SWT.PUSH);
+		addPath.setText("Strecke hinzufügen");
+		addPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		addPath.setEnabled(false);
+		addPath.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Node start = getNode(startCombo.getItem(startCombo.getSelectionIndex()));
+				Node end = getNode(endCombo.getItem(endCombo.getSelectionIndex()));
+				Path path = new Path(start, end , 100);
+				railSys.addPath(path);
+			}
+		});
+		
+		//Place holder
+		Label placeHolder = new Label (buttonComposite, SWT.NONE);
+		placeHolder.setVisible(false);
+		
+		Composite saveCancelComposite = new Composite(buttonComposite, SWT.BORDER);
+		saveCancelComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		RowLayout saveCancelLayout = new RowLayout();
+		saveCancelLayout.justify = true;
+		saveCancelComposite.setLayout(saveCancelLayout);
+		
+		save = new Button(saveCancelComposite, SWT.PUSH);
+		save.setText("Speichern");
+		save.setEnabled(false);
+		
+		Button cancel = new Button(saveCancelComposite, SWT.PUSH);
+		cancel.setText("Abbrechen");
+		cancel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+	    		layout.topControl = homeScreenComposite.getComposite();
+	    		mainComposite.layout();
+			}
+		});
+		
+		//Map
+		Canvas c = new Canvas(railSysComposite, SWT.FILL);
+	    c.setBackground(ColorConstants.white);
+	    c.setBounds(0, 0, 600, 500);
+	    RowData canvasData = new RowData(600, 500);
+	    c.setLayoutData(canvasData);
+	    c.addMouseMoveListener(new MouseMoveListener() {
+			
+			@Override
+			public void mouseMove(MouseEvent e) {
+				if (manualCoordActive) {
+					xCoord.setText(Integer.toString(e.x));
+					yCoord.setText(Integer.toString(e.y));
+				}
+			}
+		});
+	    c.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseUp(MouseEvent e) {
+	    		manualCoordActive = false;
+	    		fromMap.setSelection(false);
+	    	}
+	    });
+	    	
+	    map.paintNodeMap(c);
+	}
+	
+	/**
+	 * Returns the node from the nodeList with the given name.
+	 * 
+	 * @param name
+	 * 		The name of the wanted node.
+	 * @return
+	 * 		The node with the given name.
+	 */
+	private Node getNode(String name) {
+		for (Node temp : nodeList) {
+			if (temp.getName().equals(name)) {
+				return temp;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a help icon that shows some tips when hovering over it.
+	 * 
+	 * @param composite
+	 * 			The parent composite of the icon.
+	 * @param message
+	 * 			The message that should be displayed.
+	 */
+	public void createQuestionMark(Composite composite, String message) {
+		final Shell tipShell = new Shell(new Shell(), SWT.TOOL|SWT.ON_TOP);
+		tipShell.setVisible(false);
+		tipShell.setLayout(new RowLayout());
+		
+		Label information = new Label(tipShell, SWT.NONE);
+		information.setText(message);
+		tipShell.layout();
+		tipShell.setSize(information.getSize().x + 10, information.getSize().y + 10);
+		
+		final Label questionLabel = new Label(composite, SWT.NONE);
+		questionLabel.setImage(ImageHelper.getImage("questionMarkSmall"));
+		questionLabel.addMouseTrackListener(new MouseTrackAdapter() {
+			public void mouseEnter(MouseEvent e) {
+				PointerInfo a = MouseInfo.getPointerInfo();
+				java.awt.Point b = a.getLocation();
+				tipShell.setLocation(b.x + 15, b.y + 20);
+				tipShell.setVisible(true);
+			}
+			
+			public void mouseExit(MouseEvent e) {
+				tipShell.setVisible(false);
+			}
+		});
+	}
+	
+	/**
+	 * Returns the main composite of the RailSysComposite class.
+	 * 
+	 * @return
+	 * 		The composite.
+	 */
+	public Composite getComposite() {
 		return railSysComposite;
 	}
 }

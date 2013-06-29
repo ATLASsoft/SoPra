@@ -152,7 +152,7 @@ public class SimulationComposite {
 	    		cancelBild.dispose();
 	    		pauseImage.dispose();
 	    		playImage.dispose();
-	    		HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);		
+	    		HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 	    	}

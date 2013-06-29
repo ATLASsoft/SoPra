@@ -1,7 +1,5 @@
 package de.atlassoft.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;

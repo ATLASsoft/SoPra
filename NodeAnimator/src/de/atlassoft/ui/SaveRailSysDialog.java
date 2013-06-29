@@ -13,7 +13,7 @@ public class SaveRailSysDialog {
 	private Shell shell;
 	
 	public SaveRailSysDialog(Display display){
-		//TODO: Ausprogrammieren
+		//TODO: Wird diese Klasse noch gebraucht ??
 		shell = new Shell(display);
 		shell.setText("Streckennetz speichern");
 		shell.setSize(200, 200);

@@ -21,7 +21,6 @@ import de.atlassoft.util.I18NSingleton;
 public class HomeScreenComposite {
 	
 	private Shell shell;
-	private StackLayout layout;
 	private Composite mainComposite;
 	private Composite homeScreenComposite;
 	private I18NService I18N;
@@ -37,13 +36,12 @@ public class HomeScreenComposite {
 	 * @return
 	 * 			The homescreen composite.
 	 */
-	public HomeScreenComposite(Shell shell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
+	public HomeScreenComposite(Shell shell, Composite mainComposite, ApplicationService applicationService) {
 		
 		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		this.shell = shell;
 		this.mainComposite = mainComposite;
-		this.layout = layout;
 		
 		initUI();
 	}

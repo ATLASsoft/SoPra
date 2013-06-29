@@ -29,7 +29,7 @@ import de.atlassoft.util.ImageHelper;
  * @author Silvan Haeussermann
  */
 public class RailSysDialog {
-	//TODO: fehler falls nichts ausgewählt ist
+	//TODO: Fehler abfangen, wenn letztes Streckennetz gelöscht wird
 	private Shell shell;
 	private I18NService I18N;
 	private List trainSysList;
@@ -97,8 +97,7 @@ public class RailSysDialog {
 		for (String id : railSysIDs) {
 			trainSysList.add(id);
 		}
-		
-		System.out.println(model.getRailwaySystemIDs().isEmpty());
+		trainSysList.select(0);
 		
 		Composite buttonComposite = new Composite(listComposite, SWT.NONE);
 		GridData buttonGridData = new GridData();

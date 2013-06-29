@@ -127,7 +127,7 @@ public class ScheduleComposite {
 		Composite textComposite = new Composite(buttonComposite, SWT.NONE);
 		textComposite.setLayout(new RowLayout(SWT.VERTICAL));
 		nameField = new Text(textComposite, SWT.SINGLE|SWT.BORDER);
-		nameField.setLayoutData(new RowData(80, 15));
+		nameField.setLayoutData(new RowData(70, 15));
 		nameField.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
@@ -145,7 +145,6 @@ public class ScheduleComposite {
 		    		}
 		    	}
 		    	if (twice == true) {
-		    		errorField.setVisible(true);
 		    		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
 		    		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		   		  	save.setEnabled(false);
@@ -610,7 +609,7 @@ public class ScheduleComposite {
 				
 				applicationService.addScheduleScheme(schedule);
 				
-				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);		
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 			}
@@ -622,7 +621,7 @@ public class ScheduleComposite {
 		cancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);		
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 			}
@@ -933,7 +932,7 @@ public class ScheduleComposite {
 	 * @param message
 	 * 			The message that should be displayed.
 	 */
-	private void createQuestionMark(Composite composite, String message) {
+	public void createQuestionMark(Composite composite, String message) {
 		final Shell tipShell = new Shell(shell, SWT.TOOL|SWT.ON_TOP);
 		tipShell.setVisible(false);
 		tipShell.setLayout(new RowLayout());

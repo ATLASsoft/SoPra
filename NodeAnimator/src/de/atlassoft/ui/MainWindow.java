@@ -81,7 +81,7 @@ public class MainWindow {
 		mainComposite.setLayoutData(mainCompositeGridData);
 	    layout = new StackLayout();
 	    mainComposite.setLayout(layout);
-	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, layout, applicationService);
+	    HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);
 	    layout.topControl = homeScreenComposite.getComposite();
 	    mainComposite.layout();	    
 		
@@ -146,7 +146,8 @@ public class MainWindow {
 		createRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-		        layout.topControl = RailSysComposite.createRailSysComposite(shell, mainComposite);
+				RailSysComposite railSysComposite = new RailSysComposite(shell, mainComposite, layout, applicationService);
+		        layout.topControl = railSysComposite.getComposite();
 		        mainComposite.layout();
             }
         });
