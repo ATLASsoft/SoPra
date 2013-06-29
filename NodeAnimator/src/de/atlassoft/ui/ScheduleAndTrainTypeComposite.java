@@ -10,7 +10,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -32,7 +31,6 @@ import de.atlassoft.util.ImageHelper;
  *
  */
 public class ScheduleAndTrainTypeComposite {
-	// TODO: I18N TraintypeComposite zu ScheduleAndTrainTypeComposite.TrainTypeComposie ändern
 	
 	private Shell shell;
 	private Composite scheduleAndTrainTypeComposite;
@@ -55,16 +53,17 @@ public class ScheduleAndTrainTypeComposite {
 //		scheduleAndTrainTypeComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		scheduleAndTrainTypeComposite.setLayout(new GridLayout(2, false));
 		Composite scheduleComposite = new Composite(scheduleAndTrainTypeComposite, SWT.BORDER);
-		final ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.V_SCROLL);
+		final ScrolledComposite trainTypeComposite = new ScrolledComposite (scheduleAndTrainTypeComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		trainTypeComposite.setLayout(new GridLayout (3, false));
 		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
+//		GridData dataComposite = new GridData (GridData.FILL_BOTH);
 		dataComposite.grabExcessHorizontalSpace = true;
 		dataComposite.grabExcessVerticalSpace = true;
 		trainTypeComposite.setLayoutData(dataComposite);
 		applicationService.getModel().addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				// TODO: Schöner Lösen
+				// TODO: Schöner Lösen??? Alex fragen :D
 				initTrainTypeUI(trainTypeComposite);
 			}
 		});
@@ -89,28 +88,27 @@ public class ScheduleAndTrainTypeComposite {
 	 * 		The composite for the elements.
 	 */
 	private void initTrainTypeUI(ScrolledComposite scrolledTrainTypeComposite) {
-		// TODO: Implementieren
 		Composite trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
 		trainTypeComposite.setLayout(new GridLayout (3, false));
 		
 		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
 		for (final TrainType type : trainTypes) {
-		//TODO: if-Bedinung rausnehmen, wenn fertig
-		if (type.getImg() == null) {
-			new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
-		 	} else {
-		 		new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
-		 	}
-			new CLabel(trainTypeComposite, SWT.NULL).setText("Name:" + "\t\t\t" + type.getName() + "\n" +
-															 "Höchstgeschwindigkeit:" + "\t" + type.getTopSpeed() + "\n" +
-															 "Priorität:" + "\t\t\t" + type.getPriority()); 
+			//TODO: if-Bedinung rausnehmen, wenn fertig
+			if (type.getImg() == null) {
+				new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
+			} else {
+				new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
+			}
+			new CLabel(trainTypeComposite, SWT.NULL).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
+															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + "\n" +
+															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
 			Button delete = new Button(trainTypeComposite, SWT.PUSH);
 			delete.setImage(ImageHelper.getImage("trashIcon"));			 
 			 	
 			delete.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 		    		MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
-		    	    messageBox.setMessage(I18N.getMessage("TrainTypeComposite.deleteQuestion"));
+		    	    messageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.deleteQuestion"));
 		    	    int rc = messageBox.open();
 		    	    if (rc == SWT.YES) {
 		    	      	applicationService.deleteTrainType(type);
