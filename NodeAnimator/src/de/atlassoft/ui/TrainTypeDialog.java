@@ -1,7 +1,5 @@
 package de.atlassoft.ui;
 
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,24 +34,24 @@ import de.atlassoft.util.ImageHelper;
  */
 public class TrainTypeDialog {
 	private Shell shell;
-	private ApplicationService application;
+	private ApplicationService applicationService;
 	
 	/**
 	 * Public constructor for the TrainType Dialog. Creates a new
-	 * about shell and open it.
+	 * TrainTypeCreate shell and open it.
 	 * 
-	 * @param application
+	 * @param applicationService
 	 * 			to access application layer
 	 */
 	
-	public TrainTypeDialog(ApplicationService application) {
-		this.application = application;
+	public TrainTypeDialog(ApplicationService applicationService) {
+		this.applicationService = applicationService;
 		I18NService I18N = I18NSingleton.getInstance();
 		
 		Display display = Display.getCurrent();
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText(I18N.getMessage("TrainTypeDialog.titleGenerate"));
-		shell.setSize(450, 200);
+		shell.setSize(SWT.DEFAULT, SWT.DEFAULT);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setLayout(new GridLayout(3, false));
 		
@@ -67,8 +65,6 @@ public class TrainTypeDialog {
 	 * label, text, buttons and tool tips of
 	 * the shell of the TrainType Dialog.
 	 * 
-	 * @param display
-	 * 			The currently used display.
 	 */
 	private void initUI() {
 		final I18NService I18N = I18NSingleton.getInstance();
@@ -83,7 +79,6 @@ public class TrainTypeDialog {
 		errorField.setSize(20, 100);
 		errorField.setVisible(true);		
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
-		final java.util.List<TrainType> trainTypes = application.getModel().getTrainTypes();
 		
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
@@ -172,7 +167,7 @@ public class TrainTypeDialog {
 	        	final String priority = comboPriority.getText();	        	
 	        	
 	        	TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
-	        	application.addTrainType(type);
+	        	applicationService.addTrainType(type);
 	       		if (!textImage.getText().equals("")){
 	       			Image img = new Image(null, textImage.getText());
 	       			type.setImg(img);
@@ -232,6 +227,7 @@ public class TrainTypeDialog {
 		    		return;
 		    	}
 				Boolean twice = false;
+				final java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
 		    	for (TrainType type : trainTypes) {
 		    		// .replaceAll(" ", "")
 		    		if (type.getName().toLowerCase().equals((name.getText()).toLowerCase().trim())) {

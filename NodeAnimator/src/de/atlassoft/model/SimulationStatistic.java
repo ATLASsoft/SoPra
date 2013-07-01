@@ -1,10 +1,17 @@
 package de.atlassoft.model;
+
+/**
+ * 
+ * @author Tobias Ilg
+ *
+ */
 public class SimulationStatistic {
+	// TODO : Kommentieren
 
 	java.util.List<TrainRideStatistic> trainRideStatistic;
 	
 	public SimulationStatistic() {
-		
+		trainRideStatistic = null;
 	}
 	
 	public void addStatistic(TrainRideStatistic statistic) {
@@ -18,23 +25,27 @@ public class SimulationStatistic {
 	}
 	
 	public double getTotalDelay() {
-		double totalDelay = 0;
+		double totalDelay = 0.0;
 		for (TrainRideStatistic statistic : trainRideStatistic) {
 			java.util.List<Node> stationList = statistic.getStations();
 			for (Node station : stationList) {
-				totalDelay = totalDelay + statistic.getDelay(station);
+				if (statistic.getDelay(station) > 0) {
+					totalDelay = totalDelay + statistic.getDelay(station);
+				}
 			}
  		}
 		return totalDelay;
 	}
 	
 	public double getMeanDelay(TrainType trainType) {
-		double meanDelay = 0;
+		double meanDelay = 0.0;
 		for (TrainRideStatistic statistic : trainRideStatistic) {
-			if (statistic.getScheduleScheme().getTrainType() == trainType) {
+			if (statistic.getScheduleScheme().getTrainType().equals(trainType)) {
 				java.util.List<Node> stationList = statistic.getStations();
 				for (Node station : stationList) {
-					meanDelay = meanDelay + statistic.getDelay(station);
+					if (statistic.getDelay(station) > 0) {
+						meanDelay = meanDelay + statistic.getDelay(station);
+					}
 				}
 			}
 		}
@@ -48,9 +59,11 @@ public class SimulationStatistic {
 		for (TrainRideStatistic statistic : trainRideStatistic) {
 			java.util.List<Node> stationList = statistic.getStations();
 			for (Node allStation : stationList) {
-				if (allStation == station) {
-					meanDelay = meanDelay + statistic.getDelay(station);
-					numberOfRides++;
+				if (allStation.equals(station)) {
+					if (statistic.getDelay(station) > 0) {
+						meanDelay = meanDelay + statistic.getDelay(station);
+						numberOfRides++;
+					}
 				}
 			}
  		}
@@ -61,10 +74,12 @@ public class SimulationStatistic {
 	public double getMeanDelay(ScheduleScheme scheduleScheme) {
 		double meanDelay = 0.0;
 		for (TrainRideStatistic statistic : trainRideStatistic) {
-			if (statistic.getScheduleScheme() == scheduleScheme) {
+			if (statistic.getScheduleScheme().equals(scheduleScheme)) {
 				java.util.List<Node> stationList = statistic.getStations();
 				for (Node station : stationList) {
-					meanDelay = meanDelay + statistic.getDelay(station);
+					if (statistic.getDelay(station) > 0) {
+						meanDelay = meanDelay + statistic.getDelay(station);
+					}
 				}
 			}
  		}
@@ -75,11 +90,13 @@ public class SimulationStatistic {
 	public double getMeanDelay(ScheduleScheme scheduleScheme, Node station) {
 		double meanDelay = 0.0;
 		for (TrainRideStatistic statistic : trainRideStatistic) {
-			if (statistic.getScheduleScheme() == scheduleScheme) {
+			if (statistic.getScheduleScheme().equals(scheduleScheme)) {
 				java.util.List<Node> stationList = statistic.getStations();
 				for (Node allStation : stationList) {
-					if (allStation == station) {
-						meanDelay = meanDelay + statistic.getDelay(station);
+					if (allStation.equals(station)) {
+						if (statistic.getDelay(station) > 0) {
+							meanDelay = meanDelay + statistic.getDelay(station);
+						}
 					}
 				}
 			}
@@ -89,15 +106,14 @@ public class SimulationStatistic {
 	}
 	
 	public int getNumberOfRides() {
-		int numberOfRides;
-		numberOfRides = trainRideStatistic.size();
+		int numberOfRides = trainRideStatistic.size();
 		return numberOfRides;
 	}
 	
 	public int getNumberOfRides(TrainType trainType) {
 		int numberOfRides = 0;
 		for (TrainRideStatistic statistic : trainRideStatistic){
-			if (statistic.getScheduleScheme().getTrainType() == trainType) {
+			if (statistic.getScheduleScheme().getTrainType().equals(trainType)) {
 				numberOfRides++;
 			}
 		}
@@ -107,7 +123,7 @@ public class SimulationStatistic {
 	public int getNumberOfRides(ScheduleScheme scheduleScheme) {
 		int numberOfRides = 0;
 		for (TrainRideStatistic statistic : trainRideStatistic){
-			if (statistic.getScheduleScheme() == scheduleScheme) {
+			if (statistic.getScheduleScheme().equals(scheduleScheme)) {
 				numberOfRides++;
 			}
 		}

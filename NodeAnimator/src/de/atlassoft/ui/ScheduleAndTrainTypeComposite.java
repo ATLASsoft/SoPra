@@ -199,8 +199,8 @@ public class ScheduleAndTrainTypeComposite {
 	private void initTrainTypeUI(ScrolledComposite scrolledTrainTypeComposite) {
 		
 		scrolledTrainTypeComposite.setLayout(new GridLayout (3, false));
-		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
-//		GridData dataComposite = new GridData (GridData.FILL_BOTH);
+//		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
+		GridData dataComposite = new GridData (GridData.FILL_BOTH);
 		dataComposite.grabExcessHorizontalSpace = true;
 		dataComposite.grabExcessVerticalSpace = true;
 		scrolledTrainTypeComposite.setLayoutData(dataComposite);
