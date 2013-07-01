@@ -78,6 +78,6 @@ public class AboutDialog {
 		silvan.setText("Silvan H‰uﬂermann");
 		
 		Label copyright = new Label(shell, SWT.NONE);
-		copyright.setText("(c) 2013");
+		copyright.setText("\u00A9 2013");
 	}
 }
