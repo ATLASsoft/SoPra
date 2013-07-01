@@ -55,7 +55,7 @@ public class RailSysComposite {
 	private I18NService I18N;
 	private NodeMap map;
 	private RailwaySystem railSys;
-	private Text railSysNameText, stationNameText, xCoord, yCoord;
+	private Text railSysNameText, stationNameText, xCoord, yCoord, topSpeed;
 	private boolean manualCoordActive;
 	private Button fromMap, addStation, addPath, save;
 	private Label errorRailSysName, errorStationName;
@@ -94,18 +94,18 @@ public class RailSysComposite {
 		buttonComposite.setLayout(new GridLayout(2, false));
 		
 		//RailSys Name
-		createQuestionMark(buttonComposite, "hallo");
+		createQuestionMark(buttonComposite, I18N.getMessage("RailSysComposite.Help.Name"));
 		
 		Composite railSysNameComposite = new Composite(buttonComposite, SWT.BORDER);
 		railSysNameComposite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		railSysNameComposite.setLayout(new GridLayout(2, false));
 		
 		Label railSysLabel = new Label(railSysNameComposite, SWT.NONE);
-		railSysLabel.setText("Streckennetz");
+		railSysLabel.setText(I18N.getMessage("RailSysComposite.Railsystem"));
 		railSysLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 2, 1));
 		
 		Label railSysNameLabel = new Label(railSysNameComposite, SWT.NONE);
-		railSysNameLabel.setText("Name:");
+		railSysNameLabel.setText(I18N.getMessage("RailSysComposite.Name"));
 		
 			//Name of the railSys and on-the-fly correction
 		Composite textErrorComposite = new Composite(railSysNameComposite, SWT.NONE);
@@ -143,23 +143,24 @@ public class RailSysComposite {
 		});
 		
 		errorRailSysName = new Label(textErrorComposite, SWT.NONE);
-		errorRailSysName.setText("Kein Name eingegeben");
+		errorRailSysName.setText(I18N.getMessage("RailSysComposite.Help.NoName"));
 		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		
 		//Station Buttons
-		createQuestionMark(buttonComposite, "hallo");
+		createQuestionMark(buttonComposite, I18N.getMessage("RailSysComposite.Help.Station"));
 		
 		Composite stationButtons = new Composite(buttonComposite, SWT.BORDER);
+		stationButtons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout stationButtonsLayout = new GridLayout();
 		stationButtonsLayout.numColumns = 3;
 		stationButtons.setLayout(stationButtonsLayout);
 		
 		Label stationLabel = new Label(stationButtons, SWT.NONE);
-		stationLabel.setText("Neue Station");
+		stationLabel.setText(I18N.getMessage("RailSysComposite.NewStation"));
 		stationLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 3, 1));
 		
 		Label stationNameLabel = new Label(stationButtons, SWT.NONE);
-		stationNameLabel.setText("Name:");
+		stationNameLabel.setText(I18N.getMessage("RailSysComposite.Name"));
 		
 			//Name of the station and on-the-fly correction
 		Composite stationNameComposite = new Composite(stationButtons, SWT.NONE);
@@ -188,69 +189,86 @@ public class RailSysComposite {
 		    		}
 		    	}
 		    	if (twice == true) {
-		    		addStation.setEnabled(false);
+		    		checkStationButton();
 		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
 		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    	} else {
 		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameAvailable"));
 		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
-		    		addStation.setEnabled(true);
+		    		checkStationButton();
 		    	}
 			}
 		});
 		
 		errorStationName = new Label(stationNameComposite, SWT.NONE);
-		errorStationName.setText("Kein Name eingegeben");
+		errorStationName.setText(I18N.getMessage("RailSysComposite.Help.NoName"));
 		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		
 		Label coordsNameLabel = new Label(stationButtons, SWT.NONE);
-		coordsNameLabel.setText("Koordinaten:");
+		coordsNameLabel.setText(I18N.getMessage("RailSysComposite.Coordinates"));
 		
-		Composite coordComposite = new Composite(stationButtons, SWT.BORDER);
+		Composite coordComposite = new Composite(stationButtons, SWT.NONE);
 		coordComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.NULL, true, false, 2, 1));
 		coordComposite.setLayout(new RowLayout());
 		
 			//coord buttons
 		xCoord = new Text(coordComposite, SWT.BORDER);
-		xCoord.setToolTipText("X-Koordinate");
+		xCoord.setToolTipText(I18N.getMessage("RailSysComposite.XCoordinate"));
 		xCoord.setLayoutData(new RowData(22, 15));
+		xCoord.setText("0");
 		xCoord.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
-				//block letters
+				//catches non numbers
 				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
 		          e.doit = false;
 		          Display.getCurrent().beep();
 		        }
-				//TODO: Ausimplementieren wenn Zeit reicht
-				//block values over 600
-//				else if(xCoord.getText().length() == 0) {
-//					if (Integer.parseInt(Character.toString(e.character)) > 6) {
-//						e.doit = false;
-//				        Display.getCurrent().beep();
-//					}
-//				}
-//				else if(xCoord.getText().length() == 1) {
-//					if (xCoord.getText(0, 0).equals("6")) {
-//					}
-//				}
-//				else if(xCoord.getText().length() >= 3) {
-//					if(e.keyCode != 8 && e.keyCode != SWT.DEL) {
-//						e.doit = false;
-//				        Display.getCurrent().beep();
-//					}
-//				}
+				//catches numbers higher than 600
+				else if(e.text.equals("") == false) {
+					final String oldS = xCoord.getText();
+					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
+					if(Integer.parseInt(newS) > 600) {
+						e.doit = false;
+						Display.getCurrent().beep();
+					}
+				}
+			}
+		});
+		xCoord.addListener(SWT.KeyUp, new Listener() {
+			//Checks if the text area is empty
+			@Override
+			public void handleEvent(Event event) {
+				checkStationButton();
 			}
 		});
 		
 		yCoord = new Text(coordComposite, SWT.BORDER);
-		yCoord.setToolTipText("Y-Koordinate");
+		yCoord.setToolTipText(I18N.getMessage("RailSysComposite.YCoordinate"));
 		yCoord.setLayoutData(new RowData(22, 15));
+		yCoord.setText("0");
 		yCoord.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
+				//catches non numbers
 				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
 		          e.doit = false;
 		          Display.getCurrent().beep();
 		        }
+				//catches numbers higher than 600
+				else if(e.text.equals("") == false) {
+					final String oldS = yCoord.getText();
+					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
+					if(Integer.parseInt(newS) > 500) {
+						e.doit = false;
+						Display.getCurrent().beep();
+					}
+				}
+			}
+		});
+		yCoord.addListener(SWT.KeyUp, new Listener() {
+			//Checks if the text area is empty
+			@Override
+			public void handleEvent(Event event) {
+				checkStationButton();
 			}
 		});
 		
@@ -269,13 +287,13 @@ public class RailSysComposite {
 		});
 		
 		addStation = new Button(stationButtons, SWT.PUSH);
-		addStation.setText("Station hinzufügen");
+		addStation.setText(I18N.getMessage("RailSysComposite.AddStation"));
 		addStation.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 3, 1));
 		addStation.setEnabled(false);
 		addStation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (Integer.parseInt(xCoord.getText()) > 600 && Integer.parseInt(yCoord.getText()) > 500) {
+				if (Integer.parseInt(xCoord.getText()) > 600 | Integer.parseInt(yCoord.getText()) > 500) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 					messageBox.setText(I18N.getMessage("RailSysComposite.Error.RangeTitle"));
 					messageBox.setMessage(I18N.getMessage("RailSysComposite.Error.CoordinateRange"));
@@ -291,6 +309,7 @@ public class RailSysComposite {
 				stationNameText.setText("");
 				xCoord.setText("0");
 				yCoord.setText("0");
+				fromMap.setSelection(false);
 	    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
 	    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 	    		addStation.setEnabled(false);
@@ -303,19 +322,20 @@ public class RailSysComposite {
 	    			endCombo.setEnabled(true);
 	    			endCombo.select(1);
 	    			addPath.setEnabled(true);
+	    			topSpeed.setEnabled(true);
 	    		}
 			}
 		});
 		
 		//Path Buttons
-		createQuestionMark(buttonComposite, "hallo");
+		createQuestionMark(buttonComposite, I18N.getMessage("RailSysComposite.Help.Path"));
 		
 		Composite createPathButtons = new Composite(buttonComposite, SWT.BORDER);
 		createPathButtons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		createPathButtons.setLayout(new GridLayout(2, true));
 		
 		Label addPathLabel = new Label(createPathButtons, SWT.NONE);
-		addPathLabel.setText("Strecke hinzufügen");
+		addPathLabel.setText(I18N.getMessage("RailSysComposite.AddPath"));
 		addPathLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		startCombo = new Combo(createPathButtons, SWT.DROP_DOWN|SWT.READ_ONLY);
@@ -343,13 +363,59 @@ public class RailSysComposite {
 					addPath.setEnabled(false);
 				}
 				else {
-					addPath.setEnabled(true);
+					if (topSpeed.getCharCount() != 0) {
+						addPath.setEnabled(true);
+					}
+				}
+			}
+		});
+		
+		//Top speed label and text field of the path
+		Composite topSpeedComposite = new Composite(createPathButtons, SWT.NONE);
+		topSpeedComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		topSpeedComposite.setLayout(new GridLayout(2, false));
+		
+		Label topSpeedLabel = new Label(topSpeedComposite, SWT.NONE);
+		topSpeedLabel.setText(I18N.getMessage("RailSysComposite.TopSpeed"));
+		
+		topSpeed = new Text(topSpeedComposite, SWT.BORDER);
+		topSpeed.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		topSpeed.setEnabled(false);
+		topSpeed.setText("0");
+		topSpeed.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				//catches non numbers
+				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
+		          e.doit = false;
+		          Display.getCurrent().beep();
+		        }
+				//catches numbers higher than 300
+				else if(e.text.equals("") == false) {
+					final String oldS = topSpeed.getText();
+					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
+					if(Integer.parseInt(newS) > 300) {
+						e.doit = false;
+						Display.getCurrent().beep();
+					}
+				}
+			}
+		});
+		topSpeed.addListener(SWT.KeyUp, new Listener() {
+			public void handleEvent(Event e) {
+				if (topSpeed.getCharCount() == 0) {
+					addPath.setEnabled(false);
+				}
+				else {
+					if (!startCombo.getItem(startCombo.getSelectionIndex()).equals
+							(endCombo.getItem(endCombo.getSelectionIndex()))) {
+						addPath.setEnabled(true);
+					}
 				}
 			}
 		});
 		
 		addPath = new Button(createPathButtons, SWT.PUSH);
-		addPath.setText("Strecke hinzufügen");
+		addPath.setText(I18N.getMessage("RailSysComposite.AddPath"));
 		addPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		addPath.setEnabled(false);
 		addPath.addSelectionListener(new SelectionAdapter() {
@@ -357,8 +423,10 @@ public class RailSysComposite {
 			public void widgetSelected(SelectionEvent e) {
 				Node start = getNode(startCombo.getItem(startCombo.getSelectionIndex()));
 				Node end = getNode(endCombo.getItem(endCombo.getSelectionIndex()));
-				Path path = new Path(start, end , 100);
+				Path path = new Path(start, end , Integer.parseInt(topSpeed.getText()));
 				railSys.addPath(path);
+				//TODO: Richtig ausimplementieren
+				addPath.setEnabled(false);
 			}
 		});
 		
@@ -366,24 +434,37 @@ public class RailSysComposite {
 		Label placeHolder = new Label (buttonComposite, SWT.NONE);
 		placeHolder.setVisible(false);
 		
-		Composite saveCancelComposite = new Composite(buttonComposite, SWT.BORDER);
+		Composite saveCancelComposite = new Composite(buttonComposite, SWT.NONE);
 		saveCancelComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		RowLayout saveCancelLayout = new RowLayout();
 		saveCancelLayout.justify = true;
 		saveCancelComposite.setLayout(saveCancelLayout);
 		
+		//Save button
 		save = new Button(saveCancelComposite, SWT.PUSH);
-		save.setText("Speichern");
+		save.setText(I18N.getMessage("RailSysComposite.Save"));
 		save.setEnabled(false);
+		save.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				applicationService.saveRailwaySystem(railSys);
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+	    		layout.topControl = homeScreenComposite.getComposite();
+	    		mainComposite.layout();
+	    		railSysComposite.dispose();
+			}
+		});
 		
+		//Cancel button
 		Button cancel = new Button(saveCancelComposite, SWT.PUSH);
-		cancel.setText("Abbrechen");
+		cancel.setText(I18N.getMessage("RailSysComposite.Cancel"));
 		cancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
+	    		railSysComposite.dispose();
 			}
 		});
 		
@@ -406,12 +487,26 @@ public class RailSysComposite {
 	    c.addMouseListener(new MouseAdapter() {
 	    	@Override
 	    	public void mouseUp(MouseEvent e) {
+	    		checkStationButton();
 	    		manualCoordActive = false;
 	    		fromMap.setSelection(false);
 	    	}
 	    });
 	    	
 	    map.paintNodeMap(c);
+	}
+	
+	/**
+	 * Checks if it is allowed to set the addStation button active. If
+	 * it is allowed it sets the button active otherwise passive.
+	 */
+	private void checkStationButton() {
+		if (yCoord.getText().equals("") | xCoord.getText().equals("") | stationNameText.equals("")) {
+			addStation.setEnabled(false);
+		}
+		else if (!yCoord.getText().equals("") && !xCoord.getText().equals("") && !stationNameText.getText().equals("")){
+			addStation.setEnabled(true);
+		}
 	}
 	
 	/**

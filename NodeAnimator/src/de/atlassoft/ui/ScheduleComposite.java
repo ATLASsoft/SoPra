@@ -51,7 +51,6 @@ import de.hohenheim.view.map.NodeMap;
  */
 public class ScheduleComposite {
 
-	//TODO: evtl. Button Bilder einfügen
 	private Shell shell;
 	private StackLayout layout;
 	private Composite mainComposite, scheduleComposite, departureComposite, buttonComposite;
@@ -639,16 +638,6 @@ public class ScheduleComposite {
 	    c.setBackground(ColorConstants.white);
 	    c.setBounds(0, 0, 600, 500);
 	    c.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseDoubleClick(MouseEvent arg0) {
-				
-			}
-
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-
-			}
 
 			@Override
 			public void mouseUp(MouseEvent e) {
