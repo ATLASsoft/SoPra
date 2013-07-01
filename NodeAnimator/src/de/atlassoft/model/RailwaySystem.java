@@ -24,7 +24,7 @@ public class RailwaySystem {
 	
 	/**
 	 * Creates a new railway system.
-	 * @param id Name of this railway system
+	 * @param id Name of this railway system. Must not be null or empty
 	 */
 	public RailwaySystem(String id) {
 		if (id == null || id.trim().isEmpty()) {
@@ -37,6 +37,17 @@ public class RailwaySystem {
 	}
 	
 	
+	
+	/**
+	 * Sets the id of this railway system.
+	 * @param id ID to be set. Must not be null or empty
+	 */
+	public void setID(String id) {
+		if (id == null || id.trim().isEmpty()) {
+			throw new IllegalArgumentException("id must not be null or empty");
+		}
+		this.id = id;
+	}
 	
 	/**
 	 * Adds a node to this railway system.
