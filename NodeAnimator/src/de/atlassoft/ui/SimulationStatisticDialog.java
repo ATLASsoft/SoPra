@@ -28,7 +28,6 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class SimulationStatisticDialog {
-	// TODO: Auskommentierte Teile wieder einbauen
 	private Shell shell;
 	private ApplicationService applicationService;
 	
@@ -68,14 +67,16 @@ public class SimulationStatisticDialog {
 		
 		// First row with three labels for "TotalDelay"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.TotalDelay") + "\t");
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getTotalDelay()));
+		Label totalDelay = new Label(mainComposite, SWT.NONE);
+		totalDelay.setText(String.valueOf(applicationService.getModel().getStatistic().getTotalDelay()));
+		toTheEnd(totalDelay);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Second row with three labels for "MeanDelay"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelay") + "\t");
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay()));
+		Label meanDelay = new Label(mainComposite, SWT.NONE);
+		meanDelay.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay()));
+		toTheEnd(meanDelay);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Third row with three labels for "MeanDelay (TrainType)"
@@ -100,8 +101,9 @@ public class SimulationStatisticDialog {
 				selectedTrainType = type;
 			}
 		}
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedTrainType)));
+		Label meanDelayTrainType = new Label(mainComposite, SWT.NONE);
+		meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedTrainType)));
+		toTheEnd(meanDelayTrainType);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Fifth row with "MeanDelay (Node)"
@@ -126,8 +128,9 @@ public class SimulationStatisticDialog {
 				selectedNode = node;
 			}
 		}
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedNode)));
+		Label meanDelayNode = new Label(mainComposite, SWT.NONE);
+		meanDelayNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedNode)));
+		toTheEnd(meanDelayNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Seventh row with "MeanDelay (ScheduleScheme)"
@@ -152,8 +155,9 @@ public class SimulationStatisticDialog {
 				selectedScheduleScheme = scheduleScheme;
 			}
 		}
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme)));
+		Label meanDelayScheduleScheme = new Label(mainComposite, SWT.NONE);
+		meanDelayScheduleScheme.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme)));
+		toTheEnd(meanDelayScheduleScheme);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Ninth row with "MeanDelay (ScheduleScheme, Node)"
@@ -179,14 +183,16 @@ public class SimulationStatisticDialog {
 				selectedNode2 = node;
 			}
 		}
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+		Label meanDelayScheduleSchemeAndNode = new Label(mainComposite, SWT.NONE);
+		meanDelayScheduleSchemeAndNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
 		// Eleventh row with "NumberOfRides"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.NumberOfRides") + "\t");
-		new Label(mainComposite, SWT.NONE);
-//		.setText(String.valueOf(applicationService.getModel().getStatistic().getNumberOfRides()));
+		Label meanDelayRides = new Label(mainComposite, SWT.NONE);
+		meanDelayRides.setText(String.valueOf(applicationService.getModel().getStatistic().getNumberOfRides()));
+		toTheEnd(meanDelayRides);
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.Rides"));
 		
 		// Twelfth row with Button "Save as PDF"
@@ -210,5 +216,11 @@ public class SimulationStatisticDialog {
 	    });
 		
 		shell.pack();
+	}
+	
+	private void toTheEnd(Label label) {
+		GridData dataEnd = new GridData(GridData.FILL);
+		dataEnd.horizontalAlignment = GridData.END;
+		label.setLayoutData(dataEnd);
 	}
 }
