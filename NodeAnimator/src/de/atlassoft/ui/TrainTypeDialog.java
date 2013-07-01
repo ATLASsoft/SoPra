@@ -124,7 +124,7 @@ public class TrainTypeDialog {
 		
 		// Third row with text and button, to get an image
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage1"));
-		final Text textImage = new Text(shell, SWT.BORDER);
+		final Text textImage = new Text(shell, SWT.READ_ONLY | SWT.BORDER);
 		textImage.setLayoutData(dataFill);
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
 		
