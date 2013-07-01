@@ -136,4 +136,29 @@ public class TrainType {
 		return priority;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		// Does not check for identical images
+		TrainType other;
+		if (obj instanceof TrainType) {
+			other = (TrainType) obj;
+		} else {
+			return false;
+		}
+		
+		if (!other.name.equals(this.name)) {
+			return false;
+		}
+		
+		if (other.topSpeed != this.topSpeed) {
+			return false;
+		}
+		
+		if (other.priority != this.priority) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
