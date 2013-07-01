@@ -5,7 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,8 +20,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
-
-import sun.misc.GC.LatencyRequest;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.ScheduleScheme;
@@ -52,6 +49,8 @@ public class ScheduleAndTrainTypeComposite {
 	/**
 	 * Constructor for the class ScheduleAndTrainTypeComposite
 	 * 
+	 * @param shell
+	 * 		The shell in which the tabFolder lays.
 	 * @param tabFolder
 	 * 		The tab folder in which the composite lays.
 	 * @param applicationService
@@ -198,6 +197,7 @@ public class ScheduleAndTrainTypeComposite {
 	 */
 	private void initTrainTypeUI(ScrolledComposite scrolledTrainTypeComposite) {
 		
+		// Here we fill this composite over the whole area
 		scrolledTrainTypeComposite.setLayout(new GridLayout (3, false));
 //		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
 		GridData dataComposite = new GridData (GridData.FILL_BOTH);
@@ -205,10 +205,15 @@ public class ScheduleAndTrainTypeComposite {
 		dataComposite.grabExcessVerticalSpace = true;
 		scrolledTrainTypeComposite.setLayoutData(dataComposite);
 		
+		// This is the composite where we generate the content of mainComposite (scrolledTrainTypeComposite)
 		Composite trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
 		trainTypeComposite.setLayout(new GridLayout (3, false));
 		
+		// First we will get a List of all trainTypes
 		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
+		// Now we generate for each TrainTypes a Label with the picture of the TrainType,
+		// an other Label with the Information of this TrainType,
+		// an an Button where we can delete this TrainType
 		for (final TrainType type : trainTypes) {
 			//TODO: if-Bedinung rausnehmen, wenn fertig
 			if (type.getImg() == null) {
@@ -216,7 +221,7 @@ public class ScheduleAndTrainTypeComposite {
 			} else {
 				new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
 			}
-			new CLabel(trainTypeComposite, SWT.NULL).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
+			new Label(trainTypeComposite, SWT.NULL).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
 															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + "\n" +
 															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
 			Button delete = new Button(trainTypeComposite, SWT.PUSH);
