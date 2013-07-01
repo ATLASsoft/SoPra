@@ -22,8 +22,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
-import sun.misc.GC.LatencyRequest;
-
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
