@@ -22,6 +22,7 @@ public class ModelServiceImpl implements ModelService {
 	private List<TrainType> trainTypes;
 	private List<ScheduleScheme> activeSchemes;
 	private List<ScheduleScheme> passiveSchemes;
+	private SimulationStatistic simulationStatistic;
 
 
 
@@ -140,7 +141,7 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public SimulationStatistic getStatistic() {
 		// TODO: noch unklar
-		return null;
+		return simulationStatistic;
 	}
 
 }

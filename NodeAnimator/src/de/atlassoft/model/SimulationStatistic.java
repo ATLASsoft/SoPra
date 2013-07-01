@@ -1,5 +1,7 @@
 package de.atlassoft.model;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author Tobias Ilg
@@ -11,7 +13,7 @@ public class SimulationStatistic {
 	java.util.List<TrainRideStatistic> trainRideStatistic;
 	
 	public SimulationStatistic() {
-		trainRideStatistic = null;
+		trainRideStatistic = new ArrayList <TrainRideStatistic>();
 	}
 	
 	public void addStatistic(TrainRideStatistic statistic) {
