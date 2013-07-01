@@ -70,19 +70,33 @@ public class TrainTypeDialog {
 		final I18NService I18N = I18NSingleton.getInstance();
 		final Display display = Display.getCurrent();
 		
+		// GridDatas to optimize the Layout
+		GridData dataFill = new GridData(GridData.FILL_HORIZONTAL);
+		GridData dataCenter = new GridData(GridData.FILL);
+		dataCenter.horizontalAlignment = GridData.CENTER;
+		
 		// First row with a label and a text for the name
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
+		name.setLayoutData(dataFill);
+		new Label(shell, SWT.NONE);
+		
+		new Label(shell, SWT.NONE);
 		final Label errorField = new Label(shell, SWT.NONE);
 		errorField.setText(I18N.getMessage("TrainTypeDialog.ErrorField.NoName") + "      ");
 		errorField.setForeground(display.getSystemColor(SWT.COLOR_RED));
 		errorField.setSize(20, 100);
 		errorField.setVisible(true);		
 		name.setToolTipText(I18N.getMessage("TrainTypeDialog.textNameOfTrainType"));
+		new Label(shell, SWT.NONE);
 		
 		// Second row with two labels and a text for the topSpeed
 		new Label (shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label1Speed"));
 		final Text textSpeed = new Text(shell, SWT.BORDER);
+		textSpeed.setLayoutData(dataFill);
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
+		
+		new Label(shell, SWT.NONE);
 		final Label errorField2 = new Label(shell, SWT.NONE);
 		errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.NoSpeed"));
 		errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
@@ -96,6 +110,7 @@ public class TrainTypeDialog {
 		        }
 			}
 		});
+		new Label(shell, SWT.NONE);
 		
 		// Third row with a label and a combo for the Priority (1-5)
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelPriority"));
@@ -103,19 +118,21 @@ public class TrainTypeDialog {
 		final Combo comboPriority = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboPriority.setItems(prioritySelection);
 	    comboPriority.select(0);
+//	    comboPriority.setLayoutData(dataCenter);
 		new Label(shell, SWT.NONE);
 		comboPriority.setToolTipText(I18N.getMessage("TrainTypeDialog.textPriority"));
 		
 		// Third row with text and button, to get an image
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage1"));
 		final Text textImage = new Text(shell, SWT.BORDER);
+		textImage.setLayoutData(dataFill);
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
-		
 		
 		// Search row for the optics
 		new Label(shell, SWT.NONE);
 		Button imageSearch = new Button(shell, SWT.NULL);
 		imageSearch.setText(I18N.getMessage("TrainTypeDialog.buttonImage"));
+		imageSearch.setLayoutData(dataFill);
 		imageSearch.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	    		String selected;
@@ -186,9 +203,7 @@ public class TrainTypeDialog {
 	    // Information Button
 		Button help = new Button(shell, SWT.PUSH);
 		help.setImage(ImageHelper.getImage("questionMark"));
-		GridData dataHelp = new GridData(GridData.FILL);
-		dataHelp.horizontalAlignment = GridData.CENTER;
-	    help.setLayoutData(dataHelp);
+	    help.setLayoutData(dataCenter);
 		help.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
@@ -260,13 +275,7 @@ public class TrainTypeDialog {
         			errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.ZeroSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 					save.setEnabled(false);
-        		} else {
-		    		errorField2.setText(I18N.getMessage("TrainTypeDialog.label2Speed"));
-		    		errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-		    		if (!errorField.isVisible()){
-		    			save.setEnabled(true);
-		    		}
-		    	}
+        		}
 			}
 		});
 	    
