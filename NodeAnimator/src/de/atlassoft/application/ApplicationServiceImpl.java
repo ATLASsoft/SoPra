@@ -156,7 +156,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void saveRailwaySystem(RailwaySystem railSys) {
 		try {
 			persistence.saveRailwaySystem(railSys);
-			model.setActiveRailwaySys(railSys);
+			model.setActiveRailwaySys(railSys); //TODO: railway id adden
 		} catch (IOException e) {
 			// TODO: Fehlerbehebung
 			e.printStackTrace();
