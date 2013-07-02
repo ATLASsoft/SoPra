@@ -207,7 +207,7 @@ public class ScheduleAndTrainTypeComposite {
 		
 		// Here we fill this composite over the whole area
 		scrolledTrainTypeComposite.setLayout(new GridLayout (1, true));
-		scrolledTrainTypeComposite.setLayoutData(new GridData(SWT.NULL, SWT.FILL, false, true));
+		scrolledTrainTypeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
 		
 		// This is the composite where we generate the content of mainComposite (scrolledTrainTypeComposite)
 		trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
