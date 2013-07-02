@@ -1,5 +1,5 @@
 package de.atlassoft.ui;
-
+//TODO: on the fly korrektur überarbeiten
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.util.ArrayList;
@@ -91,7 +91,10 @@ public class RailSysComposite {
 	private void initUI() {
 		//Controls
 		Composite buttonComposite = new Composite(railSysComposite, SWT.NONE);
-		buttonComposite.setLayout(new GridLayout(2, false));
+		GridLayout buttonCompositeLayout = new GridLayout();
+		buttonCompositeLayout.marginRight = 15;
+		buttonCompositeLayout.numColumns = 2;
+		buttonComposite.setLayout(buttonCompositeLayout);
 		
 		//RailSys Name
 		createQuestionMark(buttonComposite, I18N.getMessage("RailSysComposite.Help.Name"));
@@ -192,6 +195,7 @@ public class RailSysComposite {
 		    		checkStationButton();
 		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
 		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		    		addStation.setEnabled(false);
 		    	} else {
 		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameAvailable"));
 		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
@@ -310,7 +314,7 @@ public class RailSysComposite {
 				xCoord.setText("0");
 				yCoord.setText("0");
 				fromMap.setSelection(false);
-	    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NameNotAvailable"));
+	    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 	    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 	    		addStation.setEnabled(false);
 	    		
@@ -347,6 +351,9 @@ public class RailSysComposite {
 						(endCombo.getItem(endCombo.getSelectionIndex()))) {
 					addPath.setEnabled(false);
 				}
+				else if (existsPath(endCombo.getItem(endCombo.getSelectionIndex()), startCombo.getItem(startCombo.getSelectionIndex()))) {
+					addPath.setEnabled(false);
+				}
 				else {
 					addPath.setEnabled(true);
 				}
@@ -362,6 +369,9 @@ public class RailSysComposite {
 						(startCombo.getItem(startCombo.getSelectionIndex()))) {
 					addPath.setEnabled(false);
 				}
+				else if (existsPath(endCombo.getItem(endCombo.getSelectionIndex()), startCombo.getItem(startCombo.getSelectionIndex()))) {
+					addPath.setEnabled(false);
+				}
 				else {
 					if (topSpeed.getCharCount() != 0) {
 						addPath.setEnabled(true);
@@ -373,7 +383,7 @@ public class RailSysComposite {
 		//Top speed label and text field of the path
 		Composite topSpeedComposite = new Composite(createPathButtons, SWT.NONE);
 		topSpeedComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		topSpeedComposite.setLayout(new GridLayout(2, false));
+		topSpeedComposite.setLayout(new GridLayout(3, false));
 		
 		Label topSpeedLabel = new Label(topSpeedComposite, SWT.NONE);
 		topSpeedLabel.setText(I18N.getMessage("RailSysComposite.TopSpeed"));
@@ -414,6 +424,9 @@ public class RailSysComposite {
 			}
 		});
 		
+		Label kilometerLabel = new Label(topSpeedComposite, SWT.NONE);
+		kilometerLabel.setText("km/h");
+		
 		addPath = new Button(createPathButtons, SWT.PUSH);
 		addPath.setText(I18N.getMessage("RailSysComposite.AddPath"));
 		addPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -425,7 +438,6 @@ public class RailSysComposite {
 				Node end = getNode(endCombo.getItem(endCombo.getSelectionIndex()));
 				Path path = new Path(start, end , Integer.parseInt(topSpeed.getText()));
 				railSys.addPath(path);
-				//TODO: Richtig ausimplementieren
 				addPath.setEnabled(false);
 			}
 		});
@@ -497,6 +509,32 @@ public class RailSysComposite {
 	}
 	
 	/**
+	 * Checks if there is already a path in this railway system.
+	 * 
+	 * @param start
+	 * 		The start node.
+	 * @param end
+	 * 		The end node.
+	 * @return
+	 * 		True if there is, false if not.
+	 */
+	private boolean existsPath(String start, String end) {
+		for (Path temp : railSys.getPaths()) {
+			if (temp.getStart().getName().equals(start)) {
+				if (temp.getEnd().getName().equals(end)) {
+					return true;
+				}
+			}
+			else if (temp.getStart().getName().equals(end)) {
+				if (temp.getEnd().getName().equals(start)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Checks if it is allowed to set the addStation button active. If
 	 * it is allowed it sets the button active otherwise passive.
 	 */
@@ -505,7 +543,18 @@ public class RailSysComposite {
 			addStation.setEnabled(false);
 		}
 		else if (!yCoord.getText().equals("") && !xCoord.getText().equals("") && !stationNameText.getText().equals("")){
-			addStation.setEnabled(true);
+			boolean bol = false;
+    		for (Node temp : nodeList) {
+    			if (temp.getName().toLowerCase().equals(stationNameText.getText().toLowerCase().trim())) {
+    				bol = true;
+    			}
+			}
+			if (bol) {
+				addStation.setEnabled(false);
+			}
+			else {
+				addStation.setEnabled(true);
+			}
 		}
 	}
 	
