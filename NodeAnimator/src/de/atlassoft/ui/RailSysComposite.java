@@ -126,11 +126,9 @@ public class RailSysComposite {
 		    		save.setEnabled(false);
 		    		return;
 		    	}
-		    	if (e.keyCode != 8) {
-		    		for (String temp : applicationService.getModel().getRailwaySystemIDs()) {
-		    			if (temp.toLowerCase().equals(railSysNameText.getText().toLowerCase().trim())) {
-		    				twice = true;
-		    			}
+		    	for (String temp : applicationService.getModel().getRailwaySystemIDs()) {
+		    		if (temp.toLowerCase().equals(railSysNameText.getText().toLowerCase().trim())) {
+		    			twice = true;
 		    		}
 		    	}
 		    	if (twice == true) {
@@ -184,11 +182,9 @@ public class RailSysComposite {
 		    		addStation.setEnabled(false);
 		    		return;
 		    	}
-		    	if (e.keyCode != 8) {
-		    		for (Node temp : nodeList) {
-		    			if (temp.getName().toLowerCase().equals(stationNameText.getText().toLowerCase().trim())) {
-		    				twice = true;
-		    			}
+		    	for (Node temp : nodeList) {
+		    		if (temp.getName().toLowerCase().equals(stationNameText.getText().toLowerCase().trim())) {
+		    			twice = true;
 		    		}
 		    	}
 		    	if (twice == true) {

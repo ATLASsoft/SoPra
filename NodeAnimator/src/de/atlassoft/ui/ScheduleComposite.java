@@ -135,11 +135,9 @@ public class ScheduleComposite {
 		    		save.setEnabled(false);
 		    		return;
 		    	}
-		    	if (e.keyCode != 8) {
-		    		for (ScheduleScheme schedule : applicationService.getModel().getActiveScheduleSchemes()) {
-		    			if (schedule.getID().toLowerCase().equals(nameField.getText().toLowerCase().trim())) {
-		    				twice = true;
-		    			}
+		    	for (ScheduleScheme schedule : applicationService.getModel().getActiveScheduleSchemes()) {
+		    		if (schedule.getID().toLowerCase().equals(nameField.getText().toLowerCase().trim())) {
+		    			twice = true;
 		    		}
 		    	}
 		    	if (twice == true) {
