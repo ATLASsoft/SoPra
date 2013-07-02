@@ -112,35 +112,47 @@ public class ScheduleAndTrainTypeComposite {
 		Label noSelection = new Label(informationComposite, SWT.NONE);
 		noSelection.setText("Kein Fahrplan ausgewählt");
 		
+		//Shows the two lists and the buttons to switch
+		Composite listComposite = new Composite(scheduleComposite, SWT.BORDER);
+		listComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		listComposite.setLayout(new GridLayout());
+		
 		//Active schedules list
-		activeSchedules = new List(scheduleComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
+		Label activeSchedulesLabel = new Label(listComposite, SWT.NONE);
+		activeSchedulesLabel.setText("Aktive Fahrpläne:");
+		
+		activeSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
+		activeSchedules.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		for (ScheduleScheme temp: applicationService.getModel().getActiveScheduleSchemes()) {
 			activeSchedules.add(temp.getID());
 		}
 		activeSchedules.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = activeSchedules.getItem(activeSchedules.getSelectionIndex());
-				for (ScheduleScheme temp : active) {
-					if (temp.getID().equals(name)) {
-						activeSchedule = temp;
-						disposeCompsite();
-						createInformation();
-						passiveSchedules.deselectAll();
+				if (activeSchedules.getSelectionIndex() >= 0) {
+					String name = activeSchedules.getItem(activeSchedules.getSelectionIndex());
+					for (ScheduleScheme temp : active) {
+						if (temp.getID().equals(name)) {
+							activeSchedule = temp;
+							disposeCompsite();
+							createInformation();
+							passiveSchedules.deselectAll();
+						}
 					}
 				}
 			}
 		});
 		
 		//The ButtonComposite
-	    Composite buttonComposite = new Composite(scheduleComposite, SWT.NONE);
-	    FillLayout buttonLayout = new FillLayout();
+	    Composite buttonComposite = new Composite(listComposite, SWT.NONE);
+	    buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    RowLayout buttonLayout = new RowLayout();
+	    buttonLayout.justify = true;
 	    buttonComposite.setLayout(buttonLayout);
-	    buttonLayout.type = SWT.VERTICAL;
 	    
 	    	// <- Button
 	    Button setScheduleActive = new Button(buttonComposite, SWT.PUSH);
-	    setScheduleActive.setText("<-");
+	    setScheduleActive.setText("/\\ Aktiv setzen");
 	    setScheduleActive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetActiveTooltip"));
 	    setScheduleActive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
@@ -152,14 +164,14 @@ public class ScheduleAndTrainTypeComposite {
 	    			errorMessageBox.open();	    			
 	    		} else {
 	    			setActive();
-	    			passiveSchedules.select(0);
+	    			activeSchedules.select(activeSchedules.getItemCount()-1);
 	    		}
 	    	}
 	    });
 	    
 	    	// -> Button
 	    Button setSchedulePassive = new Button(buttonComposite, SWT.PUSH);
-	    setSchedulePassive.setText("->");
+	    setSchedulePassive.setText("\\/ Passiv setzen");
 	    setSchedulePassive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetPassiveTooltip"));
 	    setSchedulePassive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
@@ -171,26 +183,32 @@ public class ScheduleAndTrainTypeComposite {
 	    			errorMessageBox.open();
 	    		} else {
 		    		setPassive();
-		    		activeSchedules.select(0);
+		    		passiveSchedules.select(passiveSchedules.getItemCount()-1);
 	    		}    		
 	    	}
 	    });
 		
 		//Passive schedules list
-		passiveSchedules = new List(scheduleComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
+	    Label passiveSchedulesLabel = new Label(listComposite, SWT.NONE);
+	    passiveSchedulesLabel.setText("Passive Fahrpläne:");
+	    
+		passiveSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
+		passiveSchedules.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		for (ScheduleScheme temp: applicationService.getModel().getPassiveScheduleSchemes()) {
 			passiveSchedules.add(temp.getID());
 		}
 		passiveSchedules.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = passiveSchedules.getItem(passiveSchedules.getSelectionIndex());
-				for (ScheduleScheme temp : passive) {
-					if (temp.getID().equals(name)) {
-						activeSchedule = temp;
-						disposeCompsite();
-						createInformation();
-						activeSchedules.deselectAll();
+				if (passiveSchedules.getSelectionIndex() >= 0) {
+					String name = passiveSchedules.getItem(passiveSchedules.getSelectionIndex());
+					for (ScheduleScheme temp : passive) {
+						if (temp.getID().equals(name)) {
+							activeSchedule = temp;
+							disposeCompsite();
+							createInformation();
+							activeSchedules.deselectAll();
+						}
 					}
 				}
 			}

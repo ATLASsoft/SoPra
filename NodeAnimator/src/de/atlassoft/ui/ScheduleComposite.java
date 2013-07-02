@@ -106,13 +106,12 @@ public class ScheduleComposite {
 		//The composite for the controls
 		buttonComposite = new Composite(scheduleComposite, SWT.BORDER);
 		GridData buttonCompositeData = new GridData();
-		buttonCompositeData.horizontalAlignment = GridData.FILL;
-		buttonCompositeData.grabExcessHorizontalSpace = true;
 		buttonCompositeData.grabExcessVerticalSpace = true;
 		buttonCompositeData.verticalAlignment = GridData.FILL;
 		buttonComposite.setLayoutData(buttonCompositeData);
 		GridLayout buttonCompositeLayout = new GridLayout();
 		buttonCompositeLayout.numColumns = 3;
+		buttonCompositeLayout.marginRight = 10;
 		buttonComposite.setLayout(buttonCompositeLayout);
 		
 		/*
@@ -124,9 +123,9 @@ public class ScheduleComposite {
 		nameLabel.setText(I18N.getMessage("ScheduleComposite.NameLabel"));
 		
 		Composite textComposite = new Composite(buttonComposite, SWT.NONE);
-		textComposite.setLayout(new RowLayout(SWT.VERTICAL));
+		textComposite.setLayout(new GridLayout());
 		nameField = new Text(textComposite, SWT.SINGLE|SWT.BORDER);
-		nameField.setLayoutData(new RowData(70, 15));
+		nameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		nameField.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
@@ -506,7 +505,6 @@ public class ScheduleComposite {
 		save = new Button(saveComposite, SWT.PUSH);
 		save.setText(I18N.getMessage("ScheduleComposite.Save"));
 		save.setEnabled(false);
-//		save.setImage(ImageHelper.getImage("loadButton"));
 		save.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -616,20 +614,20 @@ public class ScheduleComposite {
 		
 		Button cancel = new Button(saveComposite, SWT.PUSH);
 		cancel.setText(I18N.getMessage("ScheduleComposite.Cancel"));
-//		cancel.setImage(ImageHelper.getImage("cancelIcon"));
 		cancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
+	    		scheduleComposite.dispose();
 			}
 		});
 		
 		//the map on the right side of the screen
 		Canvas c = new Canvas(scheduleComposite, SWT.FILL);
 		GridData canvasData = new GridData();
-		canvasData.horizontalAlignment = GridData.END;
+		canvasData.horizontalAlignment = GridData.CENTER;
 		canvasData.grabExcessHorizontalSpace = true;
 		canvasData.grabExcessVerticalSpace = true;
 		canvasData.widthHint = 600;
