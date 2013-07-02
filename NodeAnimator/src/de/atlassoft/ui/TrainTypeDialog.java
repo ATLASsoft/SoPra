@@ -79,7 +79,7 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainType"));
 		final Text name = new Text(shell, SWT.BORDER);
 		name.setLayoutData(dataFill);
-		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelNameOfTrainTypeLength"));
 		
 		new Label(shell, SWT.NONE);
 		final Label errorField = new Label(shell, SWT.NONE);
@@ -126,6 +126,7 @@ public class TrainTypeDialog {
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage1"));
 		final Text textImage = new Text(shell, SWT.READ_ONLY | SWT.BORDER);
 		textImage.setLayoutData(dataFill);
+		textImage.setToolTipText(I18N.getMessage("TrainTypeDialog.toolTipImage"));
 		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
 		
 		// Search row for the optics
@@ -231,16 +232,33 @@ public class TrainTypeDialog {
 	        }
 	    });
 	    
+	    name.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				// check if the entered name have less than 25 signs
+				System.out.print(e.keyCode);
+				if (name.getText().length() >= 25) {
+					if (e.keyCode == 8) {
+						e.doit = true;
+					} else {
+						e.doit = false;
+						display.beep();
+					}
+				}
+			}
+	    });
+	    
 	    // Name On the Fly Exception
 		name.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
+				// check whether the field is empty
 				if (name.getText().trim().equals("")) {
 					errorField.setText(I18N.getMessage("TrainTypeDialog.ErrorField.NoName"));
 					errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    		save.setEnabled(false);
 		    		errorField.setVisible(true);
 		    		return;
-		    	}
+		    	}				
+				// check if the entered name is already allocate
 				Boolean twice = false;
 				final java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
 		    	for (TrainType type : trainTypes) {
@@ -255,7 +273,7 @@ public class TrainTypeDialog {
 		   		  	save.setEnabled(false);
 		    	} else {
 		    		errorField.setVisible(false);
-		    		if (errorField2.getText().equals(I18N.getMessage("TrainTypeDialog.label2Speed"))){
+		    		if (errorField2.getVisible() == false) {
 		    			save.setEnabled(true);
 		    		}
 		    	}
@@ -265,16 +283,25 @@ public class TrainTypeDialog {
 		// Speed On the Fly Exception
 		textSpeed.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
+				// check whether the field is empty
 				if (textSpeed.getText().trim().equals("")) {
 					errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.NoSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    		save.setEnabled(false);
 		    		errorField2.setVisible(true);
 		    		return;
+		    	// check if the entered number not start with a 0
 				} else if (textSpeed.getText().substring(0, 1).equals("0")){
         			errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.ZeroSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 					save.setEnabled(false);
+		    		errorField2.setVisible(true);
+		    	// if everything allrigth 
+        		} else {
+		    		errorField2.setVisible(false);
+		    		if (errorField.getVisible() == false) {
+        				save.setEnabled(true);
+        			}
         		}
 			}
 		});
