@@ -275,6 +275,9 @@ public class TrainTypeDialog {
         			errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.ZeroSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 					save.setEnabled(false);
+        		} else {
+		    		errorField2.setVisible(false);
+        			save.setEnabled(true);
         		}
 			}
 		});

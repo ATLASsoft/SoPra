@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.TrainType;
@@ -45,6 +46,7 @@ public class ScheduleAndTrainTypeComposite {
 	private List activeSchedules, passiveSchedules;
 	private java.util.List<ScheduleScheme> active, passive;
 	private ScheduleScheme activeSchedule;
+	private Composite trainTypeComposite;
 	
 	/**
 	 * Constructor for the class ScheduleAndTrainTypeComposite
@@ -75,8 +77,14 @@ public class ScheduleAndTrainTypeComposite {
 		applicationService.getModel().addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				// TODO: Schöner Lösen??? Alex fragen :D
-				initTrainTypeUI(scrolledTrainTypeComposite);
+				if (evt.getPropertyName().equals(ModelService.TRAIN_TYPES_PROPNAME)) {
+					Control[] children = trainTypeComposite.getChildren();
+					for (int i = 0; i<= children.length - 1; i++) {
+						children[i].dispose();
+					}
+					createContent();
+					scrolledTrainTypeComposite.setContent(trainTypeComposite);
+				}
 			}
 		});
 		
@@ -198,46 +206,15 @@ public class ScheduleAndTrainTypeComposite {
 	private void initTrainTypeUI(ScrolledComposite scrolledTrainTypeComposite) {
 		
 		// Here we fill this composite over the whole area
-		scrolledTrainTypeComposite.setLayout(new GridLayout (3, false));
-//		GridData dataComposite = new GridData (GridData.FILL_VERTICAL);
-		GridData dataComposite = new GridData (GridData.FILL_BOTH);
-		dataComposite.grabExcessHorizontalSpace = true;
-		dataComposite.grabExcessVerticalSpace = true;
-		scrolledTrainTypeComposite.setLayoutData(dataComposite);
+		scrolledTrainTypeComposite.setLayout(new GridLayout (1, true));
+		scrolledTrainTypeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// This is the composite where we generate the content of mainComposite (scrolledTrainTypeComposite)
-		Composite trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
-		trainTypeComposite.setLayout(new GridLayout (3, false));
+		trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
+		trainTypeComposite.setLayout(new GridLayout (1, true));
 		
-		// First we will get a List of all trainTypes
-		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
-		// Now we generate for each TrainTypes a Label with the picture of the TrainType,
-		// an other Label with the Information of this TrainType,
-		// an an Button where we can delete this TrainType
-		for (final TrainType type : trainTypes) {
-			//TODO: if-Bedinung rausnehmen, wenn fertig
-			if (type.getImg() == null) {
-				new Label (trainTypeComposite, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
-			} else {
-				new Label (trainTypeComposite, SWT.NULL).setImage(type.getImg());
-			}
-			new Label(trainTypeComposite, SWT.NULL).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
-															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + "\n" +
-															 I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
-			Button delete = new Button(trainTypeComposite, SWT.PUSH);
-			delete.setImage(ImageHelper.getImage("trashIcon"));			 
-			 	
-			delete.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-		    		MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
-		    	    messageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.deleteQuestion"));
-		    	    int rc = messageBox.open();
-		    	    if (rc == SWT.YES) {
-		    	      	applicationService.deleteTrainType(type);
-		            }
-		    	}
-			});
-		}
+		// create Content of the TrainTypeComposite
+		createContent();
 	 	
 		scrolledTrainTypeComposite.setExpandVertical(true);
 		scrolledTrainTypeComposite.setExpandHorizontal(true);
@@ -387,6 +364,47 @@ public class ScheduleAndTrainTypeComposite {
 		
 		passiveSchedules.add(activeSchedules.getItem(selection));
 		activeSchedules.remove(selection);
+	}
+	
+	/**
+	 * This method creates the Content
+	 * of the TrainTypeComposite
+	 * 
+	 */
+	private void createContent() {
+		// First we will get a List of all trainTypes
+		java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
+		// Now we generate for each TrainTypes a Label with the picture of the TrainType,
+		// an other Label with the Information of this TrainType,
+		// an an Button where we can delete this TrainType
+		for (final TrainType type : trainTypes) {
+			Composite trainType = new Composite (trainTypeComposite, SWT.BORDER);
+			trainType.setLayout(new GridLayout(3, false));
+			trainType.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
+			//TODO: if-Bedinung rausnehmen, wenn fertig
+			if (type.getImg() == null) {
+				new Label (trainType, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
+			} else {
+				new Label (trainType, SWT.NULL).setImage(type.getImg());
+			}
+			Label information = new Label(trainType, SWT.NULL);
+			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
+								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h\t\n" +
+								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
+			
+			Button delete = new Button(trainType, SWT.PUSH);
+			delete.setImage(ImageHelper.getImage("trashIcon"));			 
+			delete.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+		    		MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
+		    	    messageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.deleteQuestion"));
+		    	    int rc = messageBox.open();
+		    	    if (rc == SWT.YES) {
+		    	      	applicationService.deleteTrainType(type);
+		            }
+		    	}
+			});
+		}
 	}
 	
 	/**
