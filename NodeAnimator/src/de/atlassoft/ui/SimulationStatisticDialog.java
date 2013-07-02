@@ -28,6 +28,7 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class SimulationStatisticDialog {
+	// TODO: Listener einbauen
 	private Shell shell;
 	private ApplicationService applicationService;
 	
