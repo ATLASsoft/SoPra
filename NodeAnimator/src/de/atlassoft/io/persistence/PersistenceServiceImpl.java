@@ -67,14 +67,13 @@ public class PersistenceServiceImpl implements PersistenceService {
 
 	@Override
 	public void saveSchedule(ScheduleScheme schedule) throws IOException {
-		xmlParser.saveSchedule(schedule, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
+		//xmlParser.saveSchedule(schedule, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
 
 	}
 
 	@Override
 	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException {
-		xmlParser.loadSchedules("" +
-				"1", SCHEDULESCHEME_PATH);
+		xmlParser.loadSchedules("" + "1", SCHEDULESCHEME_PATH);
 		return null;
 	}
 
