@@ -168,7 +168,6 @@ class XMLParser {
 			Element fahrTage = new Element("DrivingDays");
 
 			
-
 			
 			// Schleife über alle Stationen
 			List<Node> stationList = schedule.getStations();
@@ -182,7 +181,7 @@ class XMLParser {
 			
 			for (int i = 0; i < stationList.size(); i++) {
 				abfahrten.addContent(new Element("Departure" + i).setText(schedule
-						.getStations().get(i).getName()));
+						.getStations().get(i).getName()+ ":" + Integer.toString(schedule.getArrivalTimes().get(i)) + ":" + Integer.toString(schedule.getIdleTimes().get(i))));
 			}
 			sced.addContent(abfahrten);
 			sced.addContent(new Element("Firstride").setText(
@@ -203,8 +202,6 @@ class XMLParser {
 				fahrTage.addContent(new Element("DrivingDay").setText(add));
 			}
 			sced.addContent(fahrTage);
-			// sced.addContent(new Element Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
-			// ("Fahrttage").setText(Integer.toString(schedule.getDays()));
 
 			doc.getRootElement().addContent(sced);
 
@@ -237,31 +234,31 @@ class XMLParser {
 			// Schedules Element
 			Element rootNode = document.getRootElement();
 
-			// all RailsysId Elemente
-			List<Element> railSysListe = rootNode.getChildren();
+			// all Schedule Elemente
+			List<Element> scheduleListe = rootNode.getChildren();
 
-			for (int i = 0; i < railSysListe.size(); i++) {
+			for (int i = 0; i < scheduleListe.size(); i++) {
 
 				// one RailsysId element
-				Element node = (Element) railSysListe.get(i);
-				if (Integer.toString(node.getAttribute("id").getIntValue()).equalsIgnoreCase(railSysID)) {
-					// System.out.println(node.getAttributeValue("id"));
-					// //abfragen ob id = sysid ist, ausgegeben wird aktuell
-					// railsysid
+				Element node = (Element) scheduleListe.get(i);
+				if (node.getChildText("RailSysID").equalsIgnoreCase(railSysID)) {
 
-					// all Schedules Elemente
-					List<Element> scheduleList = node.getChildren();
+					String railSysId = node.getChildText("RailSysID");
+					String trainType = node.getChildText("TrainType");
+					String scheduleType = node.getChildText("ScheduleType");
+					
+					//schleife über departures
+					List<Element> abfahrten = node.getChild("Departures").getChildren();
+					
+					for (int x = 0; x < abfahrten.size(); x++) {
+						Element singleAbfahrt = abfahrten.get(x);
 
-					for (int x = 0; x < scheduleList.size(); x++) {
-						// one Schedule Element
-						Element downnode = (Element) scheduleList.get(x);
-
-						// schleife über departures ..
-						String[] stringArray = downnode
-								.getChildText("Departure1").toString()
+						String[] stringArray = singleAbfahrt.getText()
 								.split(":");
 						System.out.println(stringArray[0].toString());
 						System.out.println(stringArray[1].toString());
+						System.out.println(stringArray[2].toString());
+					}
 
 						// System.out.println(downnode.getChildText("TrainType").toString());
 						// System.out.println(downnode.getChildText("ScheduleType")
@@ -270,7 +267,17 @@ class XMLParser {
 						// .toString());
 
 					}
-				}
+			}
+
+			return res;
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		}
+		return res;
+	}
+				
 				/*
 				 * //create Days List List<Element> listwah =
 				 * node.getChildren("DrivingDays"); List<Integer> intlist = new
@@ -306,16 +313,7 @@ class XMLParser {
 				 * System.out.println(io.getMessage()); } catch (JDOMException
 				 * jdomex) { System.out.println(jdomex.getMessage());
 				 */
-			}
 
-			return res;
-		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-		}
-		return res;
-	}
 	
 	
 	protected void deleteSchedules(String railSysID, Path path)
