@@ -1,7 +1,9 @@
 package de.atlassoft.application;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import de.atlassoft.io.persistence.PersistenceService;
 import de.atlassoft.io.persistence.PersistenceServiceImpl;
@@ -11,6 +13,7 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
+import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
@@ -58,6 +61,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model.getActiveRailwaySys().addPath(path);
 		path = new Path(node3, node2, 0);
 		model.getActiveRailwaySys().addPath(path);
+		
+		ScheduleType testScheduleType = ScheduleType.SINGLE_RIDE;
+		java.util.List<Integer> testDays = new ArrayList<Integer>();
+		testDays.add(2);
+		testDays.add(3);
+		Calendar firstRide = new GregorianCalendar();
+		firstRide.set(0, 0, 0, 15, 20);
+		ScheduleScheme testScheduleScheme = new ScheduleScheme (testScheduleType, testType, testDays, firstRide, "1", "Testfahrplan");
+		testScheduleScheme.addStop(node1, 0, 5);
+		testScheduleScheme.addStop(node4, 10, 5);
+		model.addActiveScheduleScheme(testScheduleScheme);
 	}
 	
 	@Override
