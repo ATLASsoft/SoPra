@@ -44,7 +44,7 @@ public interface PersistenceService {
 	 * @param schedule
 	 *            The ScheduleScheme that is to be saved
 	 */
-	public void saveSchedule(ScheduleScheme schedule, String railSysID) throws IOException;
+	public void saveSchedule(ScheduleScheme schedule) throws IOException;
 
 	/**
 	 * Returns a List of all ScheduleSchemes that have been saved
@@ -65,6 +65,8 @@ public interface PersistenceService {
 	 *            deleted
 	 */
 	public void deleteSchedules(String railSysID) throws IOException;
+	
+	public void deleteSingleSchedule(String name) throws IOException;
 
 	/**
 	 * Saves a RailwaySystem in the specific file for RailwaySystems

@@ -66,23 +66,50 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 
 	@Override
-	public void saveSchedule(ScheduleScheme schedule, String railSysID) throws IOException {
-		//xmlParser.saveSchedule(schedule, railSysID, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
+	public void saveSchedule(ScheduleScheme schedule) throws IOException {
+		xmlParser.saveSchedule(schedule, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
 
 	}
 
 	@Override
 	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException {
-		// TODO Auto-generated method stub
+		xmlParser.loadSchedules("" +
+				"1", SCHEDULESCHEME_PATH);
 		return null;
 	}
 
 	@Override
 	public void deleteSchedules(String railSysID) throws IOException {
-		// TODO Auto-generated method stub
+		SAXBuilder builder = new SAXBuilder();
+
+		Document doc;
+		try {
+			doc = (Document) builder.build(SCHEDULESCHEME_PATH.toFile());
+		
+		// Schedules Element
+		Element rootNode = doc.getRootElement();
+
+		List<Element> scheduleListe = rootNode.getChildren();
+		
+		for (int i = 0; i < scheduleListe.size(); i++){
+			Element schedule = (Element) scheduleListe.get(i);
+			
+			if (schedule.getChildText("RailSysID").equalsIgnoreCase(railSysID)){
+				xmlParser.deleteSchedules("1", SCHEDULESCHEME_PATH);
+			}}
+		
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
-
+	
+	@Override
+	public void deleteSingleSchedule(String name) throws IOException {
+		xmlParser.deleteSingleSchedule(name, SCHEDULESCHEME_PATH);
+		
+	}
 	@Override
 	public void saveRailwaySystem(RailwaySystem railSys) throws IOException {
 		// TODO Auto-generated method stub
@@ -106,5 +133,6 @@ public class PersistenceServiceImpl implements PersistenceService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
