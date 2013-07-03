@@ -144,7 +144,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void addScheduleScheme(ScheduleScheme scheduleScheme) {
 		String activeRailSysID = model.getActiveRailwaySys().getID();
 		try {
-			persistence.saveSchedule(scheduleScheme, activeRailSysID); //TODO: railsysid ist attribut von schedulescheme
+			persistence.saveSchedule(scheduleScheme); //TODO: railsysid ist attribut von schedulescheme
 			model.addActiveScheduleScheme(scheduleScheme);
 		} catch (IOException e) {
 			// TODO: Fehlerbehebung

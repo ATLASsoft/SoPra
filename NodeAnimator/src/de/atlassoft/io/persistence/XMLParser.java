@@ -165,44 +165,45 @@ class XMLParser {
 			//Element RailSysID = new Element("RailSysID");
 			Element sced = new Element("Schedule");
 			Element abfahrten = new Element("Departures");
-			
+			Element fahrTage = new Element("DrivingDays");
 
-				
+			
 
 			
 			// Schleife über alle Stationen
 			List<Node> stationList = schedule.getStations();
 
-//			RailSysID
-//				.setAttribute(new Attribute("id", schedule.getRailSysID()));
-//			RailSysID.addContent(sced);
 			sced.setAttribute(new Attribute("id", schedule.getID()));
 			sced.addContent(new Element("RailSysID").setText(schedule.getRailSysID()));
 			sced.addContent(new Element("TrainType").setText(schedule
 					.getTrainType().getName()));
 			sced.addContent(new Element("ScheduleType").setText(schedule
 					.getScheduleType().toString()));
+			
 			for (int i = 0; i < stationList.size(); i++) {
-				sced.addContent(new Element("Departure" + i).setText(schedule
-						.getStations().get(i).getName()
-						+ ":" + schedule.getArrivalTimes().get(i).toString()));
-				 abfahrten.setAttribute(new Attribute ("Departures" + i,
-				 schedule.getStations().get(i).getName()+ "  :  " +
-				 schedule.getArrivalTimes().get(i).toString()));
+				abfahrten.addContent(new Element("Departure" + i).setText(schedule
+						.getStations().get(i).getName()));
 			}
 			sced.addContent(abfahrten);
-			sced.addContent(new Element("Firstride").setText(Integer
-					.toString(schedule.getFirstRide().get(Calendar.HOUR_OF_DAY))));
-			sced.addContent(new Element("Lastride").setText(schedule
-					.getLastRide().toString()));
+			sced.addContent(new Element("Firstride").setText(
+					Integer.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK)) + " "
+				+   Integer.toString(schedule.getFirstRide().get(Calendar.HOUR_OF_DAY)) + " "
+				+	Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
+				));
+			sced.addContent(new Element("Lastride").setText(
+					Integer.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK)) + " "
+				+   Integer.toString(schedule.getFirstRide().get(Calendar.HOUR_OF_DAY)) + " "
+				+	Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
+				));
 			sced.addContent(new Element("Intervall").setText(Integer
 					.toString(schedule.getInterval())));
 			List<Integer> fahrtage = schedule.getDays();
 			for (int i = 0; i < fahrtage.size(); i++) {
 				String add = fahrtage.get(i).toString();
-				sced.addContent(new Element("DrivingDays").setText(add));
+				fahrTage.addContent(new Element("DrivingDay").setText(add));
 			}
-			// sced.addContent(new Element
+			sced.addContent(fahrTage);
+			// sced.addContent(new Element Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
 			// ("Fahrttage").setText(Integer.toString(schedule.getDays()));
 
 			doc.getRootElement().addContent(sced);
