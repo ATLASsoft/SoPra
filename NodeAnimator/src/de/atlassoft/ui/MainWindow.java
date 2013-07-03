@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -133,9 +134,17 @@ public class MainWindow {
 		createScheduleItem.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout, applicationService);
-				layout.topControl = scheduleComposite.getComposite();
-				mainComposite.layout();
+				if (applicationService.getModel().getTrainTypes().isEmpty()) {
+	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
+	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
+	    			errorMessageBox.setMessage(I18N.getMessage("MainWindow.Error.NoTrainTypes"));
+	    			errorMessageBox.open();
+				}
+				else {  
+					ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout, applicationService);
+					layout.topControl = scheduleComposite.getComposite();
+					mainComposite.layout();
+				}
 			}
 		});
 		

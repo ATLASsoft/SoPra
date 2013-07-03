@@ -150,7 +150,7 @@ public class ScheduleAndTrainTypeComposite {
 	    buttonLayout.justify = true;
 	    buttonComposite.setLayout(buttonLayout);
 	    
-	    	// <- Button
+	    	// /\ Button
 	    Button setScheduleActive = new Button(buttonComposite, SWT.PUSH);
 	    setScheduleActive.setText("/\\ Aktiv setzen");
 	    setScheduleActive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetActiveTooltip"));
@@ -160,16 +160,23 @@ public class ScheduleAndTrainTypeComposite {
 	    		if (passiveSchedules.getItemCount() == 0) {	    			
 	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
 	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
-	    			errorMessageBox.setMessage(I18N.getMessage("AllSchedulesComposite.NoPassiveError"));
+	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.AlreadyActive"));
 	    			errorMessageBox.open();	    			
-	    		} else {
+	    		}
+	    		else if(activeSchedules.getSelectionIndex() < 0 && passiveSchedules.getSelectionIndex() < 0) {
+	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
+	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
+	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.NoScheduleSelected"));
+	    			errorMessageBox.open();
+	    		}
+	    		else {
 	    			setActive();
 	    			activeSchedules.select(activeSchedules.getItemCount()-1);
 	    		}
 	    	}
 	    });
 	    
-	    	// -> Button
+	    	// \/ Button
 	    Button setSchedulePassive = new Button(buttonComposite, SWT.PUSH);
 	    setSchedulePassive.setText("\\/ Passiv setzen");
 	    setSchedulePassive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetPassiveTooltip"));
@@ -179,9 +186,16 @@ public class ScheduleAndTrainTypeComposite {
 	    		if (activeSchedules.getItemCount() == 0) {
 	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
 	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
-	    			errorMessageBox.setMessage(I18N.getMessage("AllSchedulesComposite.NoActiveError"));
+	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.AlreadyPassive"));
 	    			errorMessageBox.open();
-	    		} else {
+	    		}
+	    		else if(passiveSchedules.getSelectionIndex() < 0 && activeSchedules.getSelectionIndex() < 0) {
+	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
+	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
+	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.NoScheduleSelected"));
+	    			errorMessageBox.open();
+	    		}
+	    		else {
 		    		setPassive();
 		    		passiveSchedules.select(passiveSchedules.getItemCount()-1);
 	    		}    		
