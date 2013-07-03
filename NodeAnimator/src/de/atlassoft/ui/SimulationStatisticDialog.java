@@ -28,7 +28,6 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class SimulationStatisticDialog {
-	// TODO: Listener einbauen
 	private Shell shell;
 	private ApplicationService applicationService;
 	
@@ -82,7 +81,7 @@ public class SimulationStatisticDialog {
 		
 		// Third row with three labels for "MeanDelay (TrainType)"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayTrainType") + "\t");
-	 	java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
+	 	final java.util.List<TrainType> trainTypes = applicationService.getModel().getTrainTypes();
 		final String[] trainTypeSelection = new String [trainTypes.size()];
 		int index = 0;
 		for (TrainType type : trainTypes) {
@@ -96,20 +95,33 @@ public class SimulationStatisticDialog {
 		
 		// Fourth row with the result of "MeanDelay (TrainType)"
 		new Label(mainComposite, SWT.NONE);
-		TrainType selectedTrainType = null;
+		TrainType selectedTT = null;
 		for (TrainType type : trainTypes) {
-			if (type.getName().equals(comboTrainType.getSelection())) {
-				selectedTrainType = type;
+			if (type.getName().equals(comboTrainType.getText())) {
+				selectedTT = type;
 			}
 		}
-		Label meanDelayTrainType = new Label(mainComposite, SWT.NONE);
-		meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedTrainType)));
+		final Label meanDelayTrainType = new Label(mainComposite, SWT.NONE);
+		meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedTT)));
 		toTheEnd(meanDelayTrainType);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
+		// Listener for the combo TrainType
+		comboTrainType.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				TrainType selectedTrainType = null;
+				for (TrainType type : trainTypes) {
+					if (type.getName().equals(comboTrainType.getText())) {
+						selectedTrainType = type;
+					}
+				}
+				meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedTrainType)));
+			}
+		});
+		
 		// Fifth row with "MeanDelay (Node)"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayNode") + "\t");
-	 	java.util.List<Node> nodes = applicationService.getModel().getActiveRailwaySys().getNodes();
+	 	final java.util.List<Node> nodes = applicationService.getModel().getActiveRailwaySys().getNodes();
 		final String[] nodeSelection = new String [nodes.size()];
 		index = 0;
 		for (Node node : nodes) {
@@ -123,20 +135,33 @@ public class SimulationStatisticDialog {
 		
 		// Sixth row with the result of "MeanDelay (Node)"
 		new Label(mainComposite, SWT.NONE);
-		Node selectedNode = null;
+		Node selectedN = null;
 		for (Node node : nodes) {
-			if (node.getName().equals(comboNode.getSelection())) {
-				selectedNode = node;
+			if (node.getName().equals(comboNode.getText())) {
+				selectedN = node;
 			}
 		}
 		Label meanDelayNode = new Label(mainComposite, SWT.NONE);
-		meanDelayNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedNode)));
+		meanDelayNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedN)));
 		toTheEnd(meanDelayNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
+		// Listener for the combo Node
+		comboNode.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				Node selectedNode = null;
+				for (Node node : nodes) {
+					if (node.getName().equals(comboNode.getText())) {
+						selectedNode = node;
+					}
+				}
+				meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedNode)));
+			}
+		});
+		
 		// Seventh row with "MeanDelay (ScheduleScheme)"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleScheme") + "\t");
-	 	java.util.List<ScheduleScheme> scheduleSchemes = applicationService.getModel().getActiveScheduleSchemes();
+	 	final java.util.List<ScheduleScheme> scheduleSchemes = applicationService.getModel().getActiveScheduleSchemes();
 		final String[] scheduleSchemeSelection = new String [scheduleSchemes.size()];
 		index = 0;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
@@ -150,16 +175,29 @@ public class SimulationStatisticDialog {
 		
 		// Eighth row with the result of "MeanDelay (ScheduleScheme)"
 		new Label(mainComposite, SWT.NONE);
-		ScheduleScheme selectedScheduleScheme = null;
+		ScheduleScheme selectedSS = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
 			if (scheduleScheme.getID().equals(comboScheduleScheme.getSelection())) {
-				selectedScheduleScheme = scheduleScheme;
+				selectedSS = scheduleScheme;
 			}
 		}
 		Label meanDelayScheduleScheme = new Label(mainComposite, SWT.NONE);
-		meanDelayScheduleScheme.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme)));
+		meanDelayScheduleScheme.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedSS)));
 		toTheEnd(meanDelayScheduleScheme);
 		new Label(mainComposite, SWT.NONE).setText("s");
+		
+		// Listener for the combo ScheduleScheme
+		comboScheduleScheme.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ScheduleScheme selectedScheduleScheme = null;
+				for (ScheduleScheme scheduleScheme : scheduleSchemes) {
+					if (scheduleScheme.getID().equals(comboScheduleScheme.getText())) {
+						selectedScheduleScheme = scheduleScheme;
+					}
+				}
+				meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme)));
+			}
+		});
 		
 		// Ninth row with "MeanDelay (ScheduleScheme, Node)"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleSchemeAndNode") + "\t");
@@ -172,22 +210,59 @@ public class SimulationStatisticDialog {
 	    
 	    // Tenth row with the result of "MeanDelay (ScheduleScheme, Node)"
 		new Label(mainComposite, SWT.NONE);
-		ScheduleScheme selectedScheduleScheme2 = null;
+		ScheduleScheme selectedSS2 = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
 			if (scheduleScheme.getID().equals(comboScheduleScheme2.getSelection())) {
-				selectedScheduleScheme2 = scheduleScheme;
+				selectedSS2 = scheduleScheme;
 			}
 		}
-		Node selectedNode2 = null;
+		Node selectedN2 = null;
 		for (Node node : nodes) {
 			if (node.getName().equals(comboNode2.getSelection())) {
-				selectedNode2 = node;
+				selectedN2 = node;
 			}
 		}
 		Label meanDelayScheduleSchemeAndNode = new Label(mainComposite, SWT.NONE);
-		meanDelayScheduleSchemeAndNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+		meanDelayScheduleSchemeAndNode.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedSS2, selectedN2)));
 		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
+		
+		// Listener for the combo scheduleScheme and Node
+		comboScheduleScheme2.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ScheduleScheme selectedScheduleScheme2 = null;
+				for (ScheduleScheme scheduleScheme : scheduleSchemes) {
+					if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
+						selectedScheduleScheme2 = scheduleScheme;
+					}
+				}
+				Node selectedNode2 = null;
+				for (Node node : nodes) {
+					if (node.getName().equals(comboNode2.getText())) {
+						selectedNode2 = node;
+					}
+				}
+				meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+			}
+		});
+		
+		comboNode2.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ScheduleScheme selectedScheduleScheme2 = null;
+				for (ScheduleScheme scheduleScheme : scheduleSchemes) {
+					if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
+						selectedScheduleScheme2 = scheduleScheme;
+					}
+				}
+				Node selectedNode2 = null;
+				for (Node node : nodes) {
+					if (node.getName().equals(comboNode2.getText())) {
+						selectedNode2 = node;
+					}
+				}
+				meanDelayTrainType.setText(String.valueOf(applicationService.getModel().getStatistic().getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+			}
+		});
 		
 		// Eleventh row with "NumberOfRides"
 		new Label(mainComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.NumberOfRides") + "\t");
