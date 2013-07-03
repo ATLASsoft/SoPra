@@ -3,12 +3,12 @@ package de.atlassoft.ai;
 import de.atlassoft.model.Train;
 
 //TODO: implementiern
-class TrainAgent implements Runnable {
+public class TrainAgent implements Runnable {
 
 	private Train modelObject;
 	
-	protected TrainAgent(Train modelObject) {
-		
+	public TrainAgent(Train modelObject) {
+		this.modelObject = modelObject;
 	}
 	
 	@Override

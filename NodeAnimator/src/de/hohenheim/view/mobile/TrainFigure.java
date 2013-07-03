@@ -55,7 +55,8 @@ public class TrainFigure extends AnimationFigure {
 	public TrainFigure(NodeMap map, NodeFigure in_room, int id, Object modellObject) {
 		super(map,in_room, id, modellObject);
 		this.setFont(Constants.TRAIN_FONT);
-		image = ((de.atlassoft.model.Train) modellObject).getTrainType().getImg();
+		image = ((de.atlassoft.model.Train) modellObject).getSchedule()
+				.getScheme().getTrainType().getImg();
 		if (image == null) {
 			image = ImageHelper.getImage("standardTrainIcon");
 		}

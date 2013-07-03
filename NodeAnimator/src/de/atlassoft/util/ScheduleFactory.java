@@ -20,7 +20,8 @@ public abstract class ScheduleFactory {
 		List<Schedule> schedules = new ArrayList<>();
 		for (ScheduleScheme scheme : schemes) {
 			departureTime = (Calendar) scheme.getFirstRide().clone();
-			if (scheme.getScheduleType().equals(ScheduleType.INTERVALL)) {
+			if (scheme.getScheduleType().equals(ScheduleType.INTERVALL)
+					&& departureTime.get(Calendar.DAY_OF_WEEK) >= begin.get(Calendar.DAY_OF_WEEK)) {
 				interval = scheme.getInterval();
 				while (isBefore(departureTime, end)) {
 					if (isAfter(departureTime, begin)) {
