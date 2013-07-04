@@ -87,8 +87,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 		// TODO: unvollständig
 		
 		createDummy();
+
 		// load images
-		
 		ImageHelper.loadImage("greenCheck", "img/greencheck.png");
 		ImageHelper.loadImage("questionMark", "img/fragezeichen.jpg");
 		ImageHelper.loadImage("loadButton", "img/loadButton.png");
@@ -104,6 +104,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("standardTrainIcon", "img/train.gif");
 		ImageHelper.loadImage("questionMarkSmall", "img/questionMarkSmall.png");
 		ImageHelper.loadImage("crosshair", "img/crosshair.png");
+		
+		// load train types
+		try {
+			List<TrainType> trainTypes = persistence.loadTrainTypes();
+			for (TrainType type : trainTypes) {
+				model.addTrainType(type);
+			}
+		} catch (IOException e) {
+			// TODO: Fehlerbehandlung
+			e.printStackTrace();
+		}
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		
