@@ -177,7 +177,7 @@ public class SimulationStatisticDialog {
 		new Label(mainComposite, SWT.NONE);
 		ScheduleScheme selectedSS = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
-			if (scheduleScheme.getID().equals(comboScheduleScheme.getSelection())) {
+			if (scheduleScheme.getID().equals(comboScheduleScheme.getText())) {
 				selectedSS = scheduleScheme;
 			}
 		}
@@ -212,13 +212,13 @@ public class SimulationStatisticDialog {
 		new Label(mainComposite, SWT.NONE);
 		ScheduleScheme selectedSS2 = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
-			if (scheduleScheme.getID().equals(comboScheduleScheme2.getSelection())) {
+			if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
 				selectedSS2 = scheduleScheme;
 			}
 		}
 		Node selectedN2 = null;
 		for (Node node : nodes) {
-			if (node.getName().equals(comboNode2.getSelection())) {
+			if (node.getName().equals(comboNode2.getText())) {
 				selectedN2 = node;
 			}
 		}
