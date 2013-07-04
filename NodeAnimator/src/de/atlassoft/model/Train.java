@@ -5,7 +5,7 @@ import de.hohenheim.view.FigureFactory;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
 
-//TODO: kommentieren, Noch unklar ob State notwendig
+//TODO: braucht man die klasse?
 public class Train {
 
 	private TrainFigure trainFigure;
@@ -23,7 +23,7 @@ public class Train {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
 		state = new State(); // TODO: state
 		state.setState(State.UNBLOCKED);
-		this.agent = new TrainAgent(this);
+//		this.agent = new TrainAgent(this);
 	}
 
 	public TrainFigure getTrainFigure() {

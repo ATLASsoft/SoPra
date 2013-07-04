@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
@@ -15,6 +13,8 @@ import de.hohenheim.view.mobile.Utility;
 
 class Graph {
 
+	private RailwaySystem railSys;
+	
 	/**
 	 * Maps nodes to their affiliated vertexes.
 	 */
@@ -22,11 +22,12 @@ class Graph {
 	Vertex[] vertexes;
 	
 	Graph(RailwaySystem railSys) {
+		this.railSys = railSys;
 		vertexMap = new HashMap<>();
-		buildGraph(railSys);
+		buildGraph();
 	}
 	
-	private void buildGraph(RailwaySystem railSys) {
+	private void buildGraph() {
 		// create vertexes
 		Vertex v;
 		List<Node> modelNodes = railSys.getNodes();
@@ -151,4 +152,8 @@ class Graph {
 	}
 		
 		
+	protected RailwaySystem getRailwaySystem() {
+		return railSys;
+	}
+	
 }

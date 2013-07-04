@@ -107,8 +107,8 @@ public class TrainFigure extends AnimationFigure {
 		addAnimation(anim);		
 	}
 	
-	public Animator walkAlong(List<PathFigure> paths) { //TODO: vervollständigen
-		SimpleWalkToAnimator anim = new SimpleWalkToAnimator(this.map, this, null);
+	public Animator walkAlong(List<NodeFigure> path) {
+		SimpleWalkToAnimator anim = new SimpleWalkToAnimator(this.map, this, path);
 		AnimationFinishedQueueObserver handler = new AnimationFinishedQueueObserver();
 		anim.addObserver(handler);
 		addAnimation(anim);

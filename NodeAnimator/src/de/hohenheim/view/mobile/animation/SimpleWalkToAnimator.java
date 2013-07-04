@@ -2,24 +2,27 @@ package de.hohenheim.view.mobile.animation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
+
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
-import de.hohenheim.view.mobile.Utility;
 import de.hohenheim.view.mobile.animation.exceptions.PathNotFoundException;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
 import de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent;
-import de.hohenheim.view.path.PathFigure;
 import de.hohenheim.view.node.NodeFigure;
-//TODO: unvollständig
+import de.hohenheim.view.path.PathFigure;
+
 /**
- * This class animates a {@link AnimationFigure}. The figure moves form its current position along a path
- * to a specified room.
- * @author Marc Fernandes
- *
+ * This class animates a {@link AnimationFigure}. The figure moves form its
+ * current position along to specified nodes.
+ * 
+ * @author Alexander Balogh
+ * 
  */
 public class SimpleWalkToAnimator extends Observable implements Runnable, Animator {
 	/**
@@ -31,85 +34,119 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 */
 	AnimationFigure animationFigure;
 	
-	NodeFigure start_node;
-	
 	/**
 	 * Velocity in pixels per millisecond.
 	 */
 	private double velocity;
 	
+	/**
+	 * Milliseconds since the last execution of run.
+	 */
 	private int delta;
 	
+	/**
+	 * Auxiliary variable to compute delta. Time stamp of the last execution of run.
+	 */
 	private long last;
 	
-	private int deltaCarry;
+	/**
+	 * Number of segments to move in this execution of run in theory. May be no whole
+	 * number.
+	 */
+	double pixelToMoveT;
 	
-	private 
+	/**
+	 * Number of segments to really move in this execution of run.
+	 */
+	int pixelToMoveP;
+	
+	/**
+	 * Number of segments that should have been moved in the last execution of run.
+	 * (Margin between {@link WalkToAnimator#pixelToMoveT} and
+	 * {@link WalkToAnimator#pixelToMoveP}).
+	 */
+	private double pixelCarry;
+	
+	NodeFigure start_node; //TODO: scheint man nicht zu brauchen
+	
 	/**
 	 * The room where the figure should go. this is a temporal position at a moment during the animation
 	 * because along a path a figure can visit a lot of rooms.
-	 * 
 	 */
 	NodeFigure end_node;
-	/**
-	 * This is the room where we really want to go. So the last room in this animation.
-	 */
-	NodeFigure total_end;
+
 	/**
 	 * Indicates if animation started for the first time for one direct path.
 	 * This means: if the animation has more then one direct paths from one room to another
 	 * then for each inner animation init must be set to true.
 	 */
 	boolean init;
+	
 	/**
-	 * The parent of the animated figue. We need that to repaint the parent.
+	 * The parent of the animated figure. We need that to repaint the parent.
 	 */
-	IFigure parent       = null;
+	IFigure parent;
+	
 	/**
 	 * We use a {@link ManhattanConnectionRouter}. So there can be rectangular branches
 	 * along a path between two rooms. To animate the figure along this paths we separate
 	 * all horizontal and vertical lines as segments to change direction (e.g. left then up). 
 	 */
-	PointList segments = null;
-	/**
-	 * The run_count for each point inside a segment. So this can be from 0 to segment.size()
-	 */
-	int run_count        = 0;
+	PointList segments;
+
 	/**
 	 * The actual segment along the path which is animated in the moment.
 	 */
-	int segment_nr       = 0;	
+	int segment_nr = 0;	
 	
 	/**
 	 * Indicates if the animation is stopped.
 	 */
-	boolean stopped      = false;
+	boolean stopped;
 	
 	/**
 	 * Indicates that a stopaction has started. Problem is that we nust wait till it is really stopped!
 	 */
-	boolean stop=false;
+	boolean stop;
 	
 	/**
 	 * A list with all rooms where we want to go.
 	 */
-	Iterator<NodeFigure> walking_path=null;	
+	Iterator<NodeFigure> walking_path;	
 	/**
 	 * indicates if the animation is finished.
 	 */
-	boolean finished     = false;
+	boolean finished;
 	
 	/**
 	 * Constructor. creates the Animation.
-	 * @param {@link NodeMap} map - The NodeMap where the animation takes place. 
-	 * @param {@link AnimationFigure} figure - the figure we want to animate itself. 
+	 * 
+	 * @param {@link NodeMap} map - The NodeMap where the animation takes place.
+	 * @param {@link AnimationFigure} figure - the figure we want to animate
+	 *        itself.
 	 * @param {@link NodeFigure} end_node - The node where we want to go to.
 	 */
-	public SimpleWalkToAnimator(NodeMap map, AnimationFigure figure, NodeFigure end_node) {
-		this.animationFigure=figure;
-		this.init=true;
-		this.total_end=end_node;
-		this.map=map;	
+	public SimpleWalkToAnimator(NodeMap map, AnimationFigure figure,
+			List<NodeFigure> path) {
+		this.animationFigure = figure;
+		this.init = true;
+		this.walking_path = path.iterator();
+		this.map = map;
+
+		stop = false;
+		stopped = false;
+		finished = false;
+	}
+	
+	
+	
+	/**
+	 * Sets the velocity of this animation.
+	 * 
+	 * @param velocity in pixel per millisecond
+	 */
+	public void setVelocity(double velocity) {
+		this.velocity = velocity;
 	}
 	
 	/**
@@ -161,44 +198,22 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	}
 	
 	/**
-	 * Set the velocity.
-	 * 
-	 * @param v Velocity in pixels per millisecond.
-	 */
-	public void setVelocity(double v) {
-		this.velocity = v;
-	}
-	
-	/**
 	 * runs the animation and restarts itself as long as the animation is not finished.
 	 * After it is finished the observer listening for the finished event is notified.
 	 * Don't use this method to start the animation!
 	 */
 	public void run() {
-		// compute delta
-		delta = (int) (last - System.currentTimeMillis());
-		last = System.currentTimeMillis();
-		
-		//TODO: alg anpassen
-		// anzahl an segments entspricht länge des wegs also velocity * delta punkte
-		// laufen. "ungenutztes" delta kommt in übertrag
 		
 		
-		
-		
-		PathFigure path = null;
-		if(init){			
+		if (init) {			
+			PathFigure path;
 			start_node = animationFigure.getNodeFigure();			
-			if(walking_path==null) {
-			  //Problem: When room is not set for animationFigure...
-			  if(start_node==null) {
-			 	start_node = animationFigure.getDirection_to_node();
-			 	path=getPathTo(start_node);
-			  }
-			  walking_path = Utility.getOptimizedRoute(map, start_node, total_end);
+			
+			if (start_node == null) {
+				// TODO: wurde aufgerufen während sich die animationFigure auf einem Pfad aufgehalten hat (nur interessant beim ersten durchlauf)
 			}
 			
-			if(!walking_path.hasNext()) {
+			if (!walking_path.hasNext()) {
 				this.finished=true;
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
@@ -213,15 +228,13 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				return;
 			}
 			
-			if(path!=null) {
-			  end_node=start_node;	
-			} else {
-			  end_node = walking_path.next();			
-			  path = getPathTo(end_node);
-			}
+			end_node = walking_path.next();			
+			path = getPathTo(end_node);
 			
-			segments=Utils.getSegments(path, end_node, animationFigure);
-			if(segments.size()==0) {
+			segments = Utils.getSegments(path, end_node, animationFigure);
+			
+			//TODO: versteh ich noch nicht
+			if (segments.size() == 0) {
 				this.finished=true;
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
@@ -235,21 +248,36 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				notifyObservers(animationFigure);
 				return;
 			}
+			
 			animationFigure.setDirection_to_node(end_node);
 			animationFigure.setPath(path);
 			
-			parent=animationFigure.getParent();
-			init=false;		
+			parent = animationFigure.getParent();
+			init = false;		
 		}
 		
-		animationFigure.setLocation(segments.getPoint(run_count));
-		parent.repaint();
-		run_count++;
-		if(run_count>=segments.size()) {
-			init=true;
-			run_count=0;
+		// compute delta
+		delta = (int) (System.currentTimeMillis() - last);
+		last = System.currentTimeMillis();
+		
+		pixelToMoveT = (velocity * delta) + pixelCarry;
+		pixelToMoveP = (int) pixelToMoveT; // round down to next lower integer
+		pixelCarry = pixelToMoveT - pixelToMoveP;
+		segment_nr += pixelToMoveP;
+		
+		// end_node not reached yet
+		if (segment_nr < segments.size()) {
+			animationFigure.setLocation(segments.getPoint(segment_nr));
+		}
+		// end_node reached
+		else {
+			animationFigure.setLocation(segments.getPoint(segments.size() - 1));
 			animationFigure.setNode(end_node);
-		}	
+			segment_nr = 0;
+			init = true;
+		}
+		
+		parent.repaint();
 		
 		if(stop) { 
 			//Stop can cause problems when we restart it later again and the figur is not in a room and not 
@@ -265,6 +293,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 		}
 		map.getDisplay().timerExec(0, this);			
 	}
+	
 	/**
 	 * Starts the animation. Can also be used to restart the animation if it was stopped.
 	 * To start(run) the animation only use this method!

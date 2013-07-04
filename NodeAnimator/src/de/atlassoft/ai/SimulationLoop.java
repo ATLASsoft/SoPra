@@ -5,10 +5,13 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ScheduleFactory;
+import de.hohenheim.view.map.NodeMap;
 //TODO: unvollständig
 /**
  * 
@@ -24,6 +27,7 @@ public class SimulationLoop {
 	private Calendar simTime;
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
+	private Queue<TrainAgent> finishedTrains;
 	private Loop loop;
 	
 	/**
@@ -42,6 +46,7 @@ public class SimulationLoop {
 	protected SimulationLoop() {
 		timeLapse = 1;
 		readySchedules = new LinkedList<>();
+		finishedTrains = new ConcurrentLinkedQueue<>();
 		loop = new Loop();
 	}
 	
@@ -78,6 +83,8 @@ public class SimulationLoop {
 	
 	protected void stopRun() {
 		alive = false;
+		//TODO: züge stoppen
+		deleteFinishedTrains();
 	}
 	
 	protected boolean isAlive() {
@@ -140,7 +147,13 @@ public class SimulationLoop {
 	}
 	
 	private void deleteFinishedTrains() {
-		
+		NodeMap map = null;
+		TrainAgent agent;
+		while (!finishedTrains.isEmpty()) {
+			agent = finishedTrains.poll();
+			map.getAnimationLayer().remove(agent.getTrainFigure());
+			map.getMobileObjects().remove(agent.getID());
+		}
 	}
 	
 	//TODO: mainmethode entfernen

@@ -138,27 +138,19 @@ public class TrainType {
 
 	@Override
 	public boolean equals(Object obj) {
-		// Does not check for identical images
-		TrainType other;
+		// only compares name since name should be unique
 		if (obj instanceof TrainType) {
-			other = (TrainType) obj;
-		} else {
-			return false;
+			TrainType other = (TrainType) obj;
+			if (other.name.equals(this.name)) {
+				return true;
+			}
 		}
-		
-		if (!other.name.equals(this.name)) {
-			return false;
-		}
-		
-		if (other.topSpeed != this.topSpeed) {
-			return false;
-		}
-		
-		if (other.priority != this.priority) {
-			return false;
-		}
-		
-		return true;
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 	
 }
