@@ -27,7 +27,7 @@ public interface PersistenceService {
 	 * @return List<TrainType> The list which contains all TrainTypes saved so
 	 *         far
 	 */
-	public List<TrainType> getTrainTypes() throws IOException;
+	public List<TrainType> loadTrainTypes() throws IOException;
 
 	/**
 	 * Deletes a TrainType from the TrainTypes stored in the specific XML-File
