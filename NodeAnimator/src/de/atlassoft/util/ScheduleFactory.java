@@ -2,7 +2,9 @@ package de.atlassoft.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Schedule;
@@ -40,6 +42,76 @@ public abstract class ScheduleFactory {
 		return schedules;
 	}
 
+	
+	/**
+	 * Returns a {@link PriorityQueue} containing all {@link Schedule}s that
+	 * start after start at the same day.
+	 * 
+	 * @param schemes
+	 *            Schemes to create schedules from
+	 * @param start
+	 *            Only schedules that start after start will be created
+	 * @return Queue of schedules
+	 */
+	public static PriorityQueue<Schedule> createScheduleQueue(
+			List<ScheduleScheme> schemes, Calendar start) {
+		PriorityQueue<Schedule> queue = new PriorityQueue<>(1, new Comparator<Schedule>() {
+			
+			@Override
+			public int compare(Schedule o1, Schedule o2) {
+				boolean isBefore = isBefore(o1.getArrivalTimes()[0], o2.getArrivalTimes()[0]);
+				if (isBefore) {
+					return -1;
+				} else {
+					return +1;
+				}
+			}
+		});
+		
+		
+		Calendar begin = (Calendar) start.clone();
+		Calendar cal;
+		Calendar lastRide;
+		int day = begin.get(Calendar.DAY_OF_WEEK);
+		
+		for (ScheduleScheme scheme : schemes) {
+			if (scheme.getDays().contains(day)) {
+				if (scheme.getScheduleType().equals(ScheduleType.INTERVALL)) {
+					cal = setToFirstRide(scheme, begin);
+					lastRide = scheme.getLastRide();
+					while (isBefore(cal, lastRide)) {
+						queue.offer(createSchedule(scheme, cal));
+						cal.add(Calendar.MINUTE, scheme.getInterval());
+					}
+				} else {
+					cal = (Calendar) scheme.getFirstRide().clone();
+					cal.set(Calendar.DAY_OF_WEEK, day);
+					if (isAfter(cal, begin)) {
+						queue.offer(createSchedule(scheme, cal));
+					}
+				}
+			}
+		}
+		return queue;
+	}
+
+	/**
+	 * Returns the departure time of the first ride of scheme after begin.
+	 * @param scheme
+	 * @param begin
+	 * @return
+	 */
+	private static Calendar setToFirstRide(ScheduleScheme scheme, Calendar begin) {
+		Calendar cal = (Calendar) scheme.getFirstRide().clone();
+		cal.set(Calendar.DAY_OF_WEEK, begin.get(Calendar.DAY_OF_WEEK));
+		int interval = scheme.getInterval();
+		
+		while (isBefore(cal, begin)) {
+			cal.add(Calendar.MINUTE, interval);
+		}
+		return cal;
+	}
+	
 	private static Schedule createSchedule(ScheduleScheme scheme, Calendar departureTime) {
 		List<Node> stationList = scheme.getStations();
 		Node[] stations = stationList.toArray(new Node[0]);
@@ -74,7 +146,7 @@ public abstract class ScheduleFactory {
 	 * @return true if cal is before other, false if cal is after other or at
 	 *         the same time
 	 */
-	private static boolean isBefore(Calendar cal, Calendar other) {
+	public static boolean isBefore(Calendar cal, Calendar other) {
 		int calDay = cal.get(Calendar.DAY_OF_WEEK);
 		int otherDay = other.get(Calendar.DAY_OF_WEEK);
 		if (calDay < otherDay) {
@@ -111,7 +183,7 @@ public abstract class ScheduleFactory {
 	 *            The other {@link Calendar}
 	 * @return true if cal is after other or at the same time, false if cal is before
 	 */
-	private static boolean isAfter(Calendar cal, Calendar other) {
+	public static boolean isAfter(Calendar cal, Calendar other) {
 		return !isBefore(cal, other);
 	}
 

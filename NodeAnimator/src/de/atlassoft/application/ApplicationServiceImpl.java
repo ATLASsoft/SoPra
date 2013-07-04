@@ -217,7 +217,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		try {
 			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID);
 			model.setActiveRailwaySys(railSys);
-			List<ScheduleScheme> schemes = persistence.loadSchedules(railsSysID);
+			List<ScheduleScheme> schemes = persistence.loadSchedules(railSys);
 			for (ScheduleScheme s : schemes) {
 				model.addActiveScheduleScheme(s);
 			}

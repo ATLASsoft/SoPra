@@ -55,12 +55,17 @@ public class RailwaySystem {
 	 * @param node
 	 *            to be added, must not be null
 	 * @throws IllegalArgumentException
-	 *             if node is null
+	 *             if node is null or name of not is not unique
 	 */
 	public void addNode(Node node) {
 		// check constraints
 		if (node == null) {
-			throw new IllegalArgumentException("node must not be null");//TODO: name muss eindeutig sein
+			throw new IllegalArgumentException("node must not be null");
+		}
+		for (Node n : nodes) {
+			if (n.getName().equals(node.getName())) {
+				throw new IllegalArgumentException("name of node must be unique within the railway system");
+			}
 		}
 		
 		// add node to data structure

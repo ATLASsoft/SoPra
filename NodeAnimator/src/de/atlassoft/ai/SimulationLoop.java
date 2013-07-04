@@ -1,10 +1,12 @@
 package de.atlassoft.ai;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -12,11 +14,12 @@ import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ScheduleFactory;
 import de.hohenheim.view.map.NodeMap;
+
 //TODO: unvollständig
 /**
  * 
  * @author Alexander Balogh
- *
+ * 
  */
 public class SimulationLoop {
 
@@ -27,29 +30,31 @@ public class SimulationLoop {
 	private Calendar simTime;
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
+	private PriorityQueue<Schedule> schedules;
 	private Queue<TrainAgent> finishedTrains;
 	private Loop loop;
-	
+
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
 	 */
 	private long passedSimTime;
-	
+
 	/**
 	 * Time lapse. For example timeLapse = 1000 means one second in real time
 	 * equals 1000 seconds in simulated time.
 	 */
 	private int timeLapse;
-	
-	
-	
+
+	/**
+	 * Creates a new simulation loop.
+	 */
 	protected SimulationLoop() {
 		timeLapse = 1;
-		readySchedules = new LinkedList<>();
 		finishedTrains = new ConcurrentLinkedQueue<>();
+		readySchedules = new ArrayList<>();
 		loop = new Loop();
 	}
-	
+
 	/**
 	 * Starts a new run at specified time with passed schemes.
 	 * 
@@ -62,45 +67,55 @@ public class SimulationLoop {
 	protected void startRun(Calendar startTime, List<ScheduleScheme> schemes) {
 		readySchedules.clear();
 		activeSchemes = schemes;
+		schedules = ScheduleFactory
+				.createScheduleQueue(schemes, startTime); // create schedules
+															// for first day
+
+		// init time management
 		delta = 0;
 		passedSimTime = 0;
 		simTime = (Calendar) startTime.clone();
 		lastTime = (Calendar) startTime.clone();
-		alive = true;
 		last = System.currentTimeMillis();
+
+		alive = true;
 		new Thread(loop).start();
 	}
-	
+
 	/**
 	 * Continues the last run.
 	 */
 	protected void continueRun() {
+		// reset time management
 		delta = 0;
 		alive = true;
 		last = System.currentTimeMillis();
+
 		new Thread(loop).start();
 	}
-	
+
 	protected void stopRun() {
 		alive = false;
-		//TODO: züge stoppen
+		// TODO: züge stoppen
 		deleteFinishedTrains();
 	}
-	
+
+	/**
+	 * Indicates whether the simulation loop is running at the moment.
+	 * 
+	 * @return true if running
+	 */
 	protected boolean isAlive() {
 		return alive;
 	}
-	
-	
-	
-	
-	
-	private class Loop implements Runnable { //TODO: shutdown sicherstellen
-		
+
+	private class Loop implements Runnable { // TODO: shutdown sicherstellen
+
 		@Override
 		public void run() {
 			while (alive) {
-				computeDelta(); System.out.println(delta);
+				computeDelta();
+				System.out.println(delta);
 				updateSimTime();
 				createNewSchedules();
 				createNewTrains();
@@ -112,40 +127,51 @@ public class SimulationLoop {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
-		
+
 	}
-	
-	
-	
+
+	/**
+	 * Computes delta since last loop pass in milliseconds. Sets
+	 * {@link SimulationLoop#delta}.
+	 */
 	private void computeDelta() {
 		delta = (int) (System.currentTimeMillis() - last);
 		last = System.currentTimeMillis();
 	}
-	
+
+	/**
+	 * Updates the simulation time.
+	 */
 	private void updateSimTime() {
 		passedSimTime += delta * timeLapse;
 		lastTime.setTime(simTime.getTime());
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
 	}
-	
+
 	private void createNewSchedules() {
-		readySchedules.addAll(ScheduleFactory.createSchedules(
-				activeSchemes, lastTime, simTime));
+		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes,
+				lastTime, simTime));
 	}
-	
+
 	private void createNewTrains() {
-		Iterator<Schedule> it = readySchedules.iterator();
+		// add trains that have to start to ready schedules
+		while (ScheduleFactory.isAfter(schedules.peek().getArrivalTimes()[0], simTime)) {
+			readySchedules.add(schedules.poll());
+		}
+		
+		// create trains
 		Schedule s;
+		Iterator<Schedule> it = readySchedules.iterator();
 		while (it.hasNext()) {
 			s = it.next();
-//			if (man kann zug setzten) {
-//				it.remove();
-//			}
+			// if (man kann zug setzten) {
+			// it.remove();
+			// }
 		}
 	}
-	
+
 	private void deleteFinishedTrains() {
 		NodeMap map = null;
 		TrainAgent agent;
@@ -155,21 +181,5 @@ public class SimulationLoop {
 			map.getMobileObjects().remove(agent.getID());
 		}
 	}
-	
-	//TODO: mainmethode entfernen
-	public static void main(String[] args) throws InterruptedException {
-		Calendar cal = new GregorianCalendar();
-		SimulationLoop loop = new SimulationLoop();
-		loop.startRun(cal, null);
-		
-		Thread.sleep(4000);
-		
-		loop.stopRun();
-		Thread.sleep(4000);
-		loop.continueRun();
-		Thread.sleep(4000);
-		loop.stopRun();
-		
-		
-	}
+
 }

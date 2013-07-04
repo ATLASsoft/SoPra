@@ -21,6 +21,10 @@ class Graph {
 	private Map<Node, Vertex> vertexMap;
 	Vertex[] vertexes;
 	
+	/**
+	 * Creates a new instance from the specified {@link RailwaySystem}.
+	 * @param railSys
+	 */
 	Graph(RailwaySystem railSys) {
 		this.railSys = railSys;
 		vertexMap = new HashMap<>();
