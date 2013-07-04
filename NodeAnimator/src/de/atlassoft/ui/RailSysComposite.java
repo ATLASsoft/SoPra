@@ -535,7 +535,7 @@ public class RailSysComposite {
 	 * it is allowed it sets the button active otherwise passive.
 	 */
 	private void checkStationButton() {
-		if (yCoord.getText().equals("") | xCoord.getText().equals("") | stationNameText.equals("")) {
+		if (yCoord.getText().equals("") || xCoord.getText().equals("") || stationNameText.getText().equals("")) {
 			addStation.setEnabled(false);
 		}
 		else if (!yCoord.getText().equals("") && !xCoord.getText().equals("") && !stationNameText.getText().equals("")){
