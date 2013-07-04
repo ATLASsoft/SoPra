@@ -421,11 +421,12 @@ public class ScheduleAndTrainTypeComposite {
 			}
 			Label information = new Label(trainType, SWT.NULL);
 			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
-								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h\t\n" +
+								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h   \n" +
 								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
 			
 			Button delete = new Button(trainType, SWT.PUSH);
-			delete.setImage(ImageHelper.getImage("trashIcon"));			 
+			delete.setImage(ImageHelper.getImage("trashIcon"));
+			delete.setToolTipText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.deleteButton"));
 			delete.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 		    		MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
