@@ -48,7 +48,11 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public void setActiveRailwaySys(RailwaySystem railSys) {
 		activeRailSys = railSys;
+		activeSchemes.clear();
+		passiveSchemes.clear();
 		pcSupport.firePropertyChange(ACTIVE_RAILSYS_PROPNAME, null, activeRailSys);
+		pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, activeSchemes);
+		pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, passiveSchemes);
 	}
 
 	@Override
