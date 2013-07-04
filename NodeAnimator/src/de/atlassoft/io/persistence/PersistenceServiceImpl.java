@@ -27,7 +27,7 @@ import de.atlassoft.model.TrainType;
  */
 public class PersistenceServiceImpl implements PersistenceService {
 
-	private static final Path SAVE_DATA_PATH = Paths.get("E:\\savedata");//getJarPath().resolveSibling("savedata");
+	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");//getJarPath().resolveSibling("savedata");
 	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
 	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
 	private static Path getJarPath() {
@@ -39,6 +39,11 @@ public class PersistenceServiceImpl implements PersistenceService {
 		return Paths.get(classpath);
 	}
 	
+	protected static void createSaveDataDir() throws IOException{
+		if  (!Files.exists(SAVE_DATA_PATH)) {
+			Files.createDirectory(SAVE_DATA_PATH);
+		}
+	}
 	
 	private XMLParser xmlParser;
 	
@@ -49,32 +54,37 @@ public class PersistenceServiceImpl implements PersistenceService {
 	
 	@Override
 	public void saveTrainType(TrainType type) throws IOException {
-		//xmlParser.saveTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen, id als para hinzufügen
+		createSaveDataDir();
+		if (!Files.exists(TRAIN_TYPE_PATH)) {
+			xmlParser.createXML(TRAIN_TYPE_PATH, "Traintypes");
+		}
+		xmlParser.saveTrainType(type, TRAIN_TYPE_PATH);
 	}
 
 	@Override
 	public List<TrainType> getTrainTypes() throws IOException {
-		//Traintype t1 = new TrainType(name, topSpeed, priority)
-		return null;
-		 //return xmlParser.getTrainTypes(TRAIN_TYPE_PATH); //TODO: testmodus entfernen
+		 return xmlParser.getTrainTypes(TRAIN_TYPE_PATH); 
 	}
 
 	@Override
 	public void deleteTrainType(TrainType type) throws IOException {
-		//xmlParser.deleteTrainType(type, TRAIN_TYPE_PATH); //TODO: testmodus entfernen
-
+		xmlParser.deleteTrainType(type, TRAIN_TYPE_PATH);
 	}
 
 	@Override
 	public void saveSchedule(ScheduleScheme schedule) throws IOException {
-		//xmlParser.saveSchedule(schedule, SCHEDULESCHEME_PATH); //TODO: testmodus entfernen
+		createSaveDataDir();
+		if (!Files.exists(SCHEDULESCHEME_PATH)) {
+			xmlParser.createXML(SCHEDULESCHEME_PATH, "Schedules");
+		}
+		xmlParser.saveSchedule(schedule, SCHEDULESCHEME_PATH);
 
 	}
 
 	@Override
 	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException {
-		xmlParser.loadSchedules("" + "1", SCHEDULESCHEME_PATH);
-		return null;
+		// xmlParser.loadSchedules("" + "1", SCHEDULESCHEME_PATH);
+		return new ArrayList<ScheduleScheme>();
 	}
 
 	@Override
@@ -105,12 +115,13 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 	
 	@Override
-	public void deleteSingleSchedule(String name) throws IOException {
-		xmlParser.deleteSingleSchedule(name, SCHEDULESCHEME_PATH);
+	public void deleteSingleSchedule(ScheduleScheme schedule) throws IOException {
+		xmlParser.deleteSingleSchedule(schedule, SCHEDULESCHEME_PATH);
 		
 	}
 	@Override
 	public void saveRailwaySystem(RailwaySystem railSys) throws IOException {
+		createSaveDataDir();
 		// TODO Auto-generated method stub
 
 	}
@@ -118,7 +129,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 	@Override
 	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return new RailwaySystem(railSysID);
 	}
 
 	@Override
@@ -130,7 +141,14 @@ public class PersistenceServiceImpl implements PersistenceService {
 	@Override
 	public List<String> getRailwaySystemIDs() throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<String>();
+	}
+
+
+	@Override
+	public void deleteSchedules(TrainType train) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
 

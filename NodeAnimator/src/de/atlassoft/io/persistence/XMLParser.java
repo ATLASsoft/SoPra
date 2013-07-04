@@ -51,9 +51,7 @@ class XMLParser {
 	protected void saveTrainType(TrainType type, Path path) throws IOException {
 		// if file does not exist, create new
 		FileWriter out = null;
-		if (!Files.exists(path)) {
-			createXML(path, "Traintype");
-		}
+
 		// add content
 
 		try {
@@ -92,6 +90,9 @@ class XMLParser {
 
 	protected List<TrainType> getTrainTypes(Path path) {
 		List<TrainType> res = new ArrayList<TrainType>();
+		if(!Files.exists(path)){
+			return res;
+		}
 		SAXBuilder builder = new SAXBuilder();
 		File xmlFile = new File(path.toString());
 
@@ -122,6 +123,9 @@ class XMLParser {
 
 	protected void deleteTrainType(TrainType type, Path path)
 			throws IOException {
+		if(!Files.exists(path)){
+			return;
+		}
 		FileWriter out = null;
 		try {
 
@@ -224,6 +228,9 @@ class XMLParser {
 	protected List<ScheduleScheme> loadSchedules(String railSysID, Path path)
 			throws IOException {
 		List<ScheduleScheme> res = new ArrayList<ScheduleScheme>();
+		if(!Files.exists(path)){
+			return res;
+		}
 		SAXBuilder builder = new SAXBuilder();
 		File xmlFile = new File(path.toString());
 
@@ -303,7 +310,7 @@ class XMLParser {
 				 * System.out.print(str_date); DateFormat formatter ; Date date
 				 * ; formatter = new SimpleDateFormat("hh"); date =
 				 * (Date)formatter.parse(str_date); cal.setTime(date); } catch
-				 * (ParseException e) { // TODO Auto-generated catch block
+				 * (ParseException e) {
 				 * e.printStackTrace(); } ScheduleScheme add = new
 				 * ScheduleScheme
 				 * (ScheduleType.valueOf(node.getChildText("ScheduleType")),t,
@@ -318,6 +325,9 @@ class XMLParser {
 	
 	protected void deleteSchedules(String railSysID, Path path)
 			throws IOException {
+		if(!Files.exists(path)){
+			return;
+		}
 		FileWriter out = null;
 		try {
 			
@@ -369,8 +379,11 @@ class XMLParser {
 
 	}
 
-	protected void deleteSingleSchedule(String name, Path path)
+	protected void deleteSingleSchedule(ScheduleScheme shedule, Path path)
 			throws IOException {
+		if(!Files.exists(path)){
+			return;
+		}
 		FileWriter out = null;
 		try {
 
@@ -383,8 +396,8 @@ class XMLParser {
 			List<Element> scheduleListe = rootNode.getChildren();
 			for (int i = 0; i < scheduleListe.size(); i++) {
 				Element schedule = (Element) scheduleListe.get(i);
-				
-				if (schedule.getAttributeValue("id").equalsIgnoreCase(name)) {
+				// TODO RailSysID muss stimmen/überprüft werden, da Name nicht eindeutig
+				if (schedule.getAttributeValue("id").equalsIgnoreCase(schedule.getName())) {
 					rootNode.removeChild(schedule.getName());
 					System.out.println("Schedule deleted!");
 				}

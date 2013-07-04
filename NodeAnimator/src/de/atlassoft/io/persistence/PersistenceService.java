@@ -66,7 +66,16 @@ public interface PersistenceService {
 	 */
 	public void deleteSchedules(String railSysID) throws IOException;
 	
-	public void deleteSingleSchedule(String name) throws IOException;
+	/**
+	 * Deletes all Schedules belonging to a TrainType
+	 * 
+	 * @param railSysID
+	 *            The ID of the RailwaySystem, of which the Schedules are to be
+	 *            deleted
+	 */
+	public void deleteSchedules(TrainType train) throws IOException;
+	
+	public void deleteSingleSchedule(ScheduleScheme schedule) throws IOException;
 
 	/**
 	 * Saves a RailwaySystem in the specific file for RailwaySystems
