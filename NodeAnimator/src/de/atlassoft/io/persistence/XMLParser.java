@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.jdom2.Attribute;
@@ -18,6 +19,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import de.atlassoft.model.Node;
+import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.TrainType;
@@ -25,10 +27,15 @@ import de.atlassoft.model.TrainType;
 /**
  * Class which provides methods to create, delete, modify and read XML-Files
  * 
- * @author Linus and
+ * @author Linus and Andy
  */
 class XMLParser {
+	
+	private PersistenceServiceImpl impl;
 
+	/*
+	 * CREATE XML
+	 */
 	protected void createXML(Path path, String rootElement) throws IOException {
 		FileWriter out = null;
 		try {
@@ -48,6 +55,9 @@ class XMLParser {
 		}
 	}
 
+	/*
+	 * SAVE TrainType
+	 */
 	protected void saveTrainType(TrainType type, Path path) throws IOException {
 		// if file does not exist, create new
 		FileWriter out = null;
@@ -88,9 +98,12 @@ class XMLParser {
 
 	}
 
-	protected List<TrainType> getTrainTypes(Path path) {
+	/*
+	 * LOAD TrainTypes
+	 */
+	protected List<TrainType> loadTrainTypes(Path path) {
 		List<TrainType> res = new ArrayList<TrainType>();
-		if(!Files.exists(path)){
+		if (!Files.exists(path)) {
 			return res;
 		}
 		SAXBuilder builder = new SAXBuilder();
@@ -106,10 +119,10 @@ class XMLParser {
 
 				Element node = (Element) list.get(i);
 
-				TrainType add = new TrainType(node.getName(),
+				TrainType newTrainType = new TrainType(node.getName(),
 						Double.parseDouble(node.getChildText("topspeed")),
 						Integer.parseInt(node.getChildText("priority")));
-				res.add(add);
+				res.add(newTrainType);
 			}
 
 		} catch (IOException io) {
@@ -121,9 +134,12 @@ class XMLParser {
 		return res;
 	}
 
+	/*
+	 * DELETE TrainType
+	 */
 	protected void deleteTrainType(TrainType type, Path path)
 			throws IOException {
-		if(!Files.exists(path)){
+		if (!Files.exists(path)) {
 			return;
 		}
 		FileWriter out = null;
@@ -154,6 +170,9 @@ class XMLParser {
 
 	}
 
+	/*
+	 * SAVE Schedule
+	 */
 	protected void saveSchedule(ScheduleScheme schedule, Path path)
 			throws IOException {
 
@@ -166,38 +185,51 @@ class XMLParser {
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = (Document) builder.build(path.toFile());
 
-			//Element RailSysID = new Element("RailSysID");
+			// Element RailSysID = new Element("RailSysID");
 			Element sced = new Element("Schedule");
 			Element abfahrten = new Element("Departures");
 			Element fahrTage = new Element("DrivingDays");
 
-			
-			
 			// Schleife über alle Stationen
 			List<Node> stationList = schedule.getStations();
 
 			sced.setAttribute(new Attribute("id", schedule.getID()));
-			sced.addContent(new Element("RailSysID").setText(schedule.getRailSysID()));
-			sced.addContent(new Element("TrainType").setText(schedule
-					.getTrainType().getName()));
+			sced.addContent(new Element("RailSysID").setText(schedule
+					.getRailSysID()));
+			sced.addContent(new Element("TrainType").setText(
+					schedule.getTrainType().getName() 
+					+ ":" + schedule.getTrainType().getTopSpeed() 
+					+ ":" + schedule.getTrainType().getPriority()));
 			sced.addContent(new Element("ScheduleType").setText(schedule
 					.getScheduleType().toString()));
-			
+
 			for (int i = 0; i < stationList.size(); i++) {
-				abfahrten.addContent(new Element("Departure" + i).setText(schedule
-						.getStations().get(i).getName()+ ":" + Integer.toString(schedule.getArrivalTimes().get(i)) + ":" + Integer.toString(schedule.getIdleTimes().get(i))));
+				abfahrten.addContent(new Element("Departure" + i)
+						.setText(schedule.getStations().get(i).getName()
+								+ ":"
+								+ Integer.toString(schedule.getArrivalTimes()
+										.get(i))
+								+ ":"
+								+ Integer.toString(schedule.getIdleTimes().get(
+										i))));
 			}
 			sced.addContent(abfahrten);
-			sced.addContent(new Element("Firstride").setText(
-					Integer.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK)) + " "
-				+   Integer.toString(schedule.getFirstRide().get(Calendar.HOUR_OF_DAY)) + " "
-				+	Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
-				));
-			sced.addContent(new Element("Lastride").setText(
-					Integer.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK)) + " "
-				+   Integer.toString(schedule.getFirstRide().get(Calendar.HOUR_OF_DAY)) + " "
-				+	Integer.toString(schedule.getFirstRide().get(Calendar.MINUTE))
-				));
+			sced.addContent(new Element("Firstride").setText(Integer
+					.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK))
+					+ ":"
+					+ Integer.toString(schedule.getFirstRide().get(
+							Calendar.HOUR_OF_DAY))
+					+ ":"
+					+ Integer.toString(schedule.getFirstRide().get(
+							Calendar.MINUTE))));
+			sced.addContent(new Element("Lastride").setText(Integer
+					.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK))
+					+ ":"
+					+ Integer.toString(schedule.getFirstRide().get(
+							Calendar.HOUR_OF_DAY))
+					+ ":"
+					+ Integer.toString(schedule.getFirstRide().get(
+							Calendar.MINUTE))));
 			sced.addContent(new Element("Intervall").setText(Integer
 					.toString(schedule.getInterval())));
 			List<Integer> fahrtage = schedule.getDays();
@@ -224,11 +256,14 @@ class XMLParser {
 			}
 		}
 	}
-
-	protected List<ScheduleScheme> loadSchedules(String railSysID, Path path)
+	
+	/*
+	 * LOAD Schedules
+	 */
+	protected List<ScheduleScheme> loadSchedules(RailwaySystem railSys, Path path)
 			throws IOException {
 		List<ScheduleScheme> res = new ArrayList<ScheduleScheme>();
-		if(!Files.exists(path)){
+		if (!Files.exists(path)) {
 			return res;
 		}
 		SAXBuilder builder = new SAXBuilder();
@@ -246,34 +281,73 @@ class XMLParser {
 
 			for (int i = 0; i < scheduleListe.size(); i++) {
 
-				// one RailsysId element
+				// one Schedule Element
 				Element node = (Element) scheduleListe.get(i);
-				if (node.getChildText("RailSysID").equalsIgnoreCase(railSysID)) {
+				if (node.getChildText("RailSysID").equalsIgnoreCase(railSys.getID())) {
 
 					String railSysId = node.getChildText("RailSysID");
-					String trainType = node.getChildText("TrainType");
+					String[] trainType = node.getChildText("TrainType").split(":");
 					String scheduleType = node.getChildText("ScheduleType");
+					String newName = node.getAttributeValue("id");
+					List<Integer> newDrivingDays = new ArrayList<Integer>();
+					String[] departures = null;
 					
-					//schleife über departures
-					List<Element> abfahrten = node.getChild("Departures").getChildren();
+					// FirstRide && LastRide
+					String[] firstRide = node.getChildText("Firstride").split(":");
+					String[] lastRide = node.getChildText("Lastride").split(":");
 					
+					Calendar newCalFirst = new GregorianCalendar();
+					newCalFirst.set(Calendar.DAY_OF_WEEK,Integer.parseInt(firstRide[0]));
+					newCalFirst.set(Calendar.HOUR_OF_DAY, Integer.parseInt(firstRide[1]));
+					newCalFirst.set(Calendar.MINUTE, Integer.parseInt(firstRide[2]));
+					
+					Calendar newCalLast = new GregorianCalendar();
+					newCalLast.set(Calendar.DAY_OF_WEEK,Integer.parseInt(lastRide[0]));
+					newCalLast.set(Calendar.HOUR_OF_DAY, Integer.parseInt(lastRide[1]));
+					newCalLast.set(Calendar.MINUTE, Integer.parseInt(lastRide[2]));
+					
+					// schleife über drivingDays
+					List<Element> drivingDays = node.getChild("DrivingDays")
+							.getChildren();
+					for (int x = 0; x < drivingDays.size(); x++) {
+						newDrivingDays.add(Integer.parseInt(drivingDays.get(x).toString()));
+					}
+					// schleife über departures
+					List<Element> abfahrten = node.getChild("Departures")
+							.getChildren();
 					for (int x = 0; x < abfahrten.size(); x++) {
 						Element singleAbfahrt = abfahrten.get(x);
-
-						String[] stringArray = singleAbfahrt.getText()
-								.split(":");
-						System.out.println(stringArray[0].toString());
-						System.out.println(stringArray[1].toString());
-						System.out.println(stringArray[2].toString());
+						departures = singleAbfahrt.getText().split(":");
 					}
 
-						// System.out.println(downnode.getChildText("TrainType").toString());
-						// System.out.println(downnode.getChildText("ScheduleType")
-						// .toString());
-						// System.out.println(downnode.getChildText("Firstride")
-						// .toString());
-
+					// neuen TrainType erstellen
+					TrainType newTrainType = new TrainType(
+							trainType[0],
+							Double.parseDouble(trainType[1]),
+							Integer.parseInt(trainType[2]));
+					
+					// neues ScheduleScheme erstellen
+					ScheduleScheme newSchedule = new ScheduleScheme(
+							ScheduleType.valueOf(scheduleType),
+							newTrainType,
+							newDrivingDays,
+							newCalFirst,
+							railSysId,
+							newName);
+					
+					List<Node> nodeList = railSys.getNodes();
+					Node newNode = null;
+					for (Node nod : nodeList){
+						if (nod.getName().equalsIgnoreCase(departures[0])){
+							newNode = nod;
+						}
 					}
+					
+					newSchedule.addStop(newNode, Integer.parseInt(departures[1]), Integer.parseInt(departures[2]));
+					newSchedule.setLastRide(newCalLast);
+			
+					res.add(newSchedule);
+				}
 			}
 
 			return res;
@@ -284,53 +358,18 @@ class XMLParser {
 		}
 		return res;
 	}
-				
-				/*
-				 * //create Days List List<Element> listwah =
-				 * node.getChildren("DrivingDays"); List<Integer> intlist = new
-				 * ArrayList<Integer>(); for (int x = 0; x < listwah.size();
-				 * x++){ Integer a =
-				 * Integer.parseInt(listwah.get(x).toString()); intlist.add(a);
-				 * }
-				 * 
-				 * //CreateTraintype List<Element> traintype =
-				 * node.getChildren("TrainType"); TrainType t = null; for (int x
-				 * = 0; x < traintype.size(); x++){ String traintypestring =
-				 * traintype.get(x).toString(); t = new
-				 * TrainType(traintypestring,0,0); }
-				 */
 
-				// get Firstride
-				/*
-				 * Calendar cal=Calendar.getInstance(); try { String str_date =
-				 * null; List<Element> cale = node.getChildren("Schedule"); for
-				 * (int x = 0; x < cale.size(); x++){ Element hello = (Element)
-				 * list.get(x); str_date =
-				 * hello.getChildText("FirstRide").toString(); }
-				 * System.out.print(str_date); DateFormat formatter ; Date date
-				 * ; formatter = new SimpleDateFormat("hh"); date =
-				 * (Date)formatter.parse(str_date); cal.setTime(date); } catch
-				 * (ParseException e) {
-				 * e.printStackTrace(); } ScheduleScheme add = new
-				 * ScheduleScheme
-				 * (ScheduleType.valueOf(node.getChildText("ScheduleType")),t,
-				 * intlist, cal , "") ; res.add(add); }
-				 * 
-				 * } catch (IOException io) {
-				 * System.out.println(io.getMessage()); } catch (JDOMException
-				 * jdomex) { System.out.println(jdomex.getMessage());
-				 */
-
-	
-	
+	/*
+	 * DELETE SCHEDULES by RailSysID
+	 */
 	protected void deleteSchedules(String railSysID, Path path)
 			throws IOException {
-		if(!Files.exists(path)){
+		if (!Files.exists(path)) {
 			return;
 		}
 		FileWriter out = null;
 		try {
-			
+
 			SAXBuilder builder = new SAXBuilder();
 
 			Document doc = (Document) builder.build(path.toFile());
@@ -338,27 +377,14 @@ class XMLParser {
 			Element rootNode = doc.getRootElement();
 
 			List<Element> scheduleListe = rootNode.getChildren();
-			
-			for (int i = 0; i < scheduleListe.size(); i++){
+
+			for (int i = 0; i < scheduleListe.size(); i++) {
 				Element schedule = (Element) scheduleListe.get(i);
-				if (schedule.getChildText("RailSysID").equalsIgnoreCase(railSysID)){
+				if (schedule.getChildText("RailSysID").equalsIgnoreCase(
+						railSysID)) {
 					rootNode.removeContent(schedule);
+					i--;
 				}
-				// all RailsysId Elemente
-//			List<Element> railSysListe = rootNode.getChildren();
-//			System.out.println(railSysListe.size());
-//
-//			for (int i = 0; i < railSysListe.size(); i++) {
-//				System.out.println("Hallo ich bin in der Schleife");
-//				// one RailsysId element
-//				Element node = (Element) railSysListe.get(i);
-//
-//				if (Integer.toString(node.getAttribute("id").getIntValue()).equalsIgnoreCase(railSysID)) {
-//					
-//					//rootNode.removeChild(node.getName());
-//					
-//					System.out.println(Integer.toString(node.getAttribute("id").getIntValue()));
-//					System.out.println(railSysID);
 
 				XMLOutputter xmlOutput = new XMLOutputter();
 
@@ -367,7 +393,7 @@ class XMLParser {
 				xmlOutput.output(doc, out);
 				System.out.println("RailSysId deleted!");
 			}
-			
+
 		} catch (JDOMException exp) {
 			throw new IOException(exp);
 		} finally {
@@ -379,9 +405,12 @@ class XMLParser {
 
 	}
 
-	protected void deleteSingleSchedule(ScheduleScheme shedule, Path path)
-			throws IOException {
-		if(!Files.exists(path)){
+	/*
+	 * DELETE SINGLE SCHEDULE by name and RailSysID
+	 */
+	protected void deleteSingleSchedule(ScheduleScheme scheduleToDelete,
+			Path path) throws IOException {
+		if (!Files.exists(path)) {
 			return;
 		}
 		FileWriter out = null;
@@ -396,10 +425,58 @@ class XMLParser {
 			List<Element> scheduleListe = rootNode.getChildren();
 			for (int i = 0; i < scheduleListe.size(); i++) {
 				Element schedule = (Element) scheduleListe.get(i);
-				// TODO RailSysID muss stimmen/überprüft werden, da Name nicht eindeutig
-				if (schedule.getAttributeValue("id").equalsIgnoreCase(schedule.getName())) {
-					rootNode.removeChild(schedule.getName());
-					System.out.println("Schedule deleted!");
+				// Checks if the Schedule is belongig to the proper RailSys and
+				// checks the name of the Schedule
+				if (schedule.getAttributeValue("id").equalsIgnoreCase(
+						scheduleToDelete.getID())
+						&& schedule.getChildText("RailSysID").equalsIgnoreCase(
+								scheduleToDelete.getRailSysID())) {
+					rootNode.removeContent(schedule);
+					System.out.println("Single Schedule deleted!");
+				}
+				XMLOutputter xmlOutput = new XMLOutputter();
+
+				out = new FileWriter(path.toFile());
+				xmlOutput.setFormat(Format.getPrettyFormat());
+				xmlOutput.output(doc, out);
+			}
+		} catch (JDOMException exp) {
+			throw new IOException(exp);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+
+		}
+	}
+
+	/*
+	 * DELETE SCHEDULES by TrainType
+	 */
+	protected void deleteScheduleByTrainType(TrainType train, Path path)
+			throws IOException {
+		if (!Files.exists(path)) {
+			return;
+		}
+		FileWriter out = null;
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+
+			Document doc = (Document) builder.build(path.toFile());
+			// Schedules Element
+			Element rootNode = doc.getRootElement();
+
+			List<Element> scheduleListe = rootNode.getChildren();
+			for (int i = 0; i < scheduleListe.size(); i++) {
+				Element schedule = (Element) scheduleListe.get(i);
+				// Checks if the Schedule is belonging to the proper RailSys and
+				// checks the name of the Schedule
+				if (schedule.getChildText("TrainType").equalsIgnoreCase(
+						train.getName())) {
+					System.out.println("Schedule deleted by TrainType!");
+					rootNode.removeContent(schedule);
+					i--;
 				}
 				XMLOutputter xmlOutput = new XMLOutputter();
 

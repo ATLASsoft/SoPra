@@ -28,11 +28,10 @@ import de.atlassoft.model.TrainType;
 public class PersistenceServiceImpl implements PersistenceService {
 
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");// getJarPath().resolveSibling("savedata");
-	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH
-			.resolve("traintypes.xml");;
-	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH
-			.resolve("schedulescheme.xml");
-
+	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
+	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
+	private static final Path RAILWAYSYS_PATH = SAVE_DATA_PATH.resolve("railwaysys.xml");
+	
 	private static Path getJarPath() {
 		String classpath = System.getProperty("java.class.path");
 		if (classpath.contains(";")) {
@@ -65,7 +64,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 
 	@Override
 	public List<TrainType> loadTrainTypes() throws IOException {
-		return xmlParser.getTrainTypes(TRAIN_TYPE_PATH);
+		return xmlParser.loadTrainTypes(TRAIN_TYPE_PATH);
 	}
 
 	@Override
@@ -84,39 +83,15 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 
 	@Override
-	public List<ScheduleScheme> loadSchedules(String railSysID)
+	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys)
 			throws IOException {
-		// xmlParser.loadSchedules("" + "1", SCHEDULESCHEME_PATH);
+		xmlParser.loadSchedules(railSys, SCHEDULESCHEME_PATH);
 		return new ArrayList<ScheduleScheme>();
 	}
 
 	@Override
 	public void deleteSchedules(String railSysID) throws IOException {
-		SAXBuilder builder = new SAXBuilder();
-
-		Document doc;
-		try {
-			doc = (Document) builder.build(SCHEDULESCHEME_PATH.toFile());
-
-			// Schedules Element
-			Element rootNode = doc.getRootElement();
-
-			List<Element> scheduleListe = rootNode.getChildren();
-
-			for (int i = 0; i < scheduleListe.size(); i++) {
-				Element schedule = (Element) scheduleListe.get(i);
-
-				if (schedule.getChildText("RailSysID").equalsIgnoreCase(
-						railSysID)) {
-					xmlParser.deleteSchedules("1", SCHEDULESCHEME_PATH);
-				}
-			}
-
-		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		xmlParser.deleteSchedules(railSysID, SCHEDULESCHEME_PATH);
 	}
 
 	@Override
@@ -126,6 +101,12 @@ public class PersistenceServiceImpl implements PersistenceService {
 
 	}
 
+	@Override
+	public void deleteSchedules(TrainType train) throws IOException {
+		xmlParser.deleteScheduleByTrainType(train, SCHEDULESCHEME_PATH);
+
+	}
+	
 	@Override
 	public void saveRailwaySystem(RailwaySystem railSys) throws IOException {
 		createSaveDataDir();
@@ -150,11 +131,4 @@ public class PersistenceServiceImpl implements PersistenceService {
 		// TODO Auto-generated method stub
 		return new ArrayList<String>();
 	}
-
-	@Override
-	public void deleteSchedules(TrainType train) throws IOException {
-		// TODO Auto-generated method stub
-
-	}
-
 }

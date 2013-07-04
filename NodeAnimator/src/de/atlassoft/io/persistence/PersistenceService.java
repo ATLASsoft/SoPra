@@ -55,7 +55,7 @@ public interface PersistenceService {
 	 * @return List<ScheduleScheme> The List of all the ScheduleSchemes that
 	 *         belong to the RailwaySystem
 	 */
-	public List<ScheduleScheme> loadSchedules(String railSysID) throws IOException;
+	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys) throws IOException;
 
 	/**
 	 * Deletes all Schedules belonging to a specific RailwaySystem
@@ -75,6 +75,13 @@ public interface PersistenceService {
 	 */
 	public void deleteSchedules(TrainType train) throws IOException;
 	
+	/**
+	 * Deletes a Schedule belonging to a RailwaySystem
+	 * 
+	 * @param railSysID
+	 *            The ID of the RailwaySystem, of which the Schedules are to be
+	 *            deleted
+	 */
 	public void deleteSingleSchedule(ScheduleScheme schedule) throws IOException;
 
 	/**
