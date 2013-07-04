@@ -1,9 +1,11 @@
 package de.atlassoft.ai;
 
 import java.util.Calendar;
+import java.util.List;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
+import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 //TODO: unvollständig
 /**
@@ -25,7 +27,7 @@ public interface AIService {
 	 * @param start
 	 *            Simulation time the simulation should start at
 	 */
-	void startSimulation(Calendar start);
+	void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes);
 	
 	/**
 	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no
@@ -51,5 +53,7 @@ public interface AIService {
 	 * @return
 	 */
 	long fastestArrival(RailwaySystem railSys, Node start, Node goal, double topSpeed);
+	
+	boolean isRunning();
 	
 }

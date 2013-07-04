@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
+import de.atlassoft.ai.AIService;
+import de.atlassoft.ai.AIServiceImpl;
 import de.atlassoft.io.persistence.PersistenceService;
 import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.ModelService;
@@ -24,6 +27,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private ModelService model;
 	private MainWindow window;
 	private PersistenceService persistence;
+	private AIService ai;
 	
 	
 	protected ApplicationServiceImpl() {
@@ -76,8 +80,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void initialize() {
+		// initialize service intances
 		model = new ModelServiceImpl();
 		persistence = new PersistenceServiceImpl();
+		ai = new AIServiceImpl();
 		// TODO: unvollständig
 		
 		createDummy();
@@ -118,7 +124,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void startSimulation(Calendar time) {
-		// TODO Auto-generated method stub
+		RailwaySystem railSys = model.getActiveRailwaySys();
+		List<ScheduleScheme> schemes = model.getActiveScheduleSchemes();
+		if (!ai.isRunning() && railSys != null) {
+			ai.startSimulation(time, railSys, schemes);
+		}
 		
 	}
 
@@ -142,12 +152,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void addScheduleScheme(ScheduleScheme scheduleScheme) {
-		String activeRailSysID = model.getActiveRailwaySys().getID();
 		try {
-			persistence.saveSchedule(scheduleScheme); //TODO: railsysid ist attribut von schedulescheme
+			persistence.saveSchedule(scheduleScheme);
 			model.addActiveScheduleScheme(scheduleScheme);
 		} catch (IOException e) {
-			// TODO: Fehlerbehebung
+//			showErrorMessage("Speichern fehlgeschlagen!"); //TODO: Fehlerbehandlung
 			e.printStackTrace();
 		}
 		
@@ -155,9 +164,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void deleteScheduleScheme(ScheduleScheme scheduleScheme) {
-		String activeRailSysID = model.getActiveRailwaySys().getID();
-//		try { // TODO: Methode deleteSchedules anpassen
-//			persistence.deleteSchedule(scheduleScheme, activeRailSysID);
+//		try {
+//			persistence.deleteSingleSchedule(scheduleScheme);
 //			model.removeActiveScheduleScheme(scheduleScheme);
 //			model.removePassiveScheduleScheme(scheduleScheme);
 //		} catch (IOException e) {
@@ -170,7 +178,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void saveRailwaySystem(RailwaySystem railSys) {
 		try {
 			persistence.saveRailwaySystem(railSys);
-			model.setActiveRailwaySys(railSys); //TODO: railway id adden
+			model.addRailwaySystemID(railSys.getID());
+			setActiveRailwaySystem(railSys.getID());
 		} catch (IOException e) {
 			// TODO: Fehlerbehebung
 			e.printStackTrace();
@@ -181,7 +190,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deleteRailwaySystem(String railSysID) {
 		String activeRailSysID = model.getActiveRailwaySys().getID();
 		try {
-			persistence.deleteRailwaySystem(activeRailSysID);
+			persistence.deleteRailwaySystem(railSysID);
+			persistence.deleteSchedules(railSysID);
 			if (activeRailSysID.equals(railSysID)) {
 				model.setActiveRailwaySys(null);
 			}
@@ -196,6 +206,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 		try {
 			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID);
 			model.setActiveRailwaySys(railSys);
+			List<ScheduleScheme> schemes = persistence.loadSchedules(railsSysID);
+			for (ScheduleScheme s : schemes) {
+				model.addActiveScheduleScheme(s);
+			}
 		} catch (IOException e) {
 			// TODO: Fehlerbehandlung
 			e.printStackTrace();
@@ -217,7 +231,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deleteTrainType(TrainType trainType) {
 		try {
 			persistence.deleteTrainType(trainType);
-			model.deleteTrainType(trainType);
+			model.deleteTrainType(trainType); //TODO: Fahrpläne löschen
 		} catch (IOException e) {
 			// TODO Fehlerbehandlung
 			e.printStackTrace();
