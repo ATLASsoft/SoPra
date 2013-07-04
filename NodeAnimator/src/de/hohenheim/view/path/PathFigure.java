@@ -1,9 +1,13 @@
 package de.hohenheim.view.path;
 
+import java.text.DecimalFormat;
+
 import org.eclipse.draw2d.BendpointConnectionRouter;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.swt.graphics.LineAttributes;
 
+import de.atlassoft.model.Path;
 import de.hohenheim.view.mobile.Utility;
 
 /**
@@ -33,6 +37,8 @@ public class PathFigure extends PolylineConnection {
 	    this.setLineAttributes(attr);
 	    this.modellObject=modellObject;
 	    
+	    double topSpeed = ((Path) modellObject).getTopSpeed();
+	    setToolTip(new Label(Math.round(topSpeed) + " km/h"));
 	  }
 	  
 	  /**
