@@ -135,7 +135,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void shutDown() {
 		// TODO: unvollständig
-		window.close();
 		ImageHelper.disposeImages();
 	}
 

@@ -106,6 +106,7 @@ public class ScheduleComposite {
 		
 		//The composite for the controls
 		buttonComposite = new Composite(scheduleComposite, SWT.BORDER);
+		buttonComposite.setBackground(ColorConstants.white);
 		GridData buttonCompositeData = new GridData();
 		buttonCompositeData.grabExcessVerticalSpace = true;
 		buttonCompositeData.verticalAlignment = GridData.FILL;
@@ -121,9 +122,11 @@ public class ScheduleComposite {
 		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Name"));
 		
 		Label nameLabel = new Label(buttonComposite, SWT.NONE);
+		nameLabel.setBackground(ColorConstants.white);
 		nameLabel.setText(I18N.getMessage("ScheduleComposite.NameLabel"));
 		
 		Composite textComposite = new Composite(buttonComposite, SWT.NONE);
+		textComposite.setBackground(ColorConstants.white);
 		textComposite.setLayout(new GridLayout());
 		nameField = new Text(textComposite, SWT.SINGLE|SWT.BORDER);
 		nameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -155,6 +158,7 @@ public class ScheduleComposite {
 		
 		
 		errorField = new Label(textComposite, SWT.SINGLE);
+		errorField.setBackground(ColorConstants.white);
 		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		
@@ -164,6 +168,7 @@ public class ScheduleComposite {
 		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.TrainType"));
 		
 		Label trainTypeLabel = new Label(buttonComposite, SWT.NONE);
+		trainTypeLabel.setBackground(ColorConstants.white);
 		trainTypeLabel.setText(I18N.getMessage("ScheduleComposite.TrainTypeLabel"));
 		
 		trainTypeCombo = new Combo(buttonComposite, SWT.READ_ONLY);
@@ -178,6 +183,7 @@ public class ScheduleComposite {
 		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Repetition"));
 		
 		Label repeatLabel = new Label (buttonComposite, SWT.NONE);
+		repeatLabel.setBackground(ColorConstants.white);
 		repeatLabel.setText(I18N.getMessage("ScheduleComposite.RepeatLabel"));
 		
 		repeatCombo = new Combo(buttonComposite, SWT.READ_ONLY);
@@ -205,6 +211,7 @@ public class ScheduleComposite {
 		 * 4th row (the selection of departure times)
 		 */
 		departureComposite = new Composite(buttonComposite, SWT.BORDER);
+		departureComposite.setBackground(ColorConstants.white);
 		GridLayout departureCompositeLayout = new GridLayout(2, false);
 		departureComposite.setLayout(departureCompositeLayout);
 		GridData departureCompositeData = new GridData();
@@ -213,9 +220,11 @@ public class ScheduleComposite {
 		departureComposite.setLayoutData(departureCompositeData);
 		
 		Label departureLabel = new Label(departureComposite, SWT.NONE);
+		departureLabel.setBackground(ColorConstants.white);
 		departureLabel.setText(I18N.getMessage("ScheduleComposite.Departure"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
+		timeComposite.setBackground(ColorConstants.white);
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
@@ -235,6 +244,7 @@ public class ScheduleComposite {
 		hourCombo.select(0);
 		
 		Label pointLabel = new Label(timeComposite, SWT.NONE);
+		pointLabel.setBackground(ColorConstants.white);
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
@@ -259,30 +269,39 @@ public class ScheduleComposite {
 		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Days"));
 		
 		Label daysLabel = new Label(buttonComposite, SWT.NONE);
+		daysLabel.setBackground(ColorConstants.white);
 		daysLabel.setText(I18N.getMessage("ScheduleComposite.DaysLabel"));
 		
 		Composite dayComposite = new Composite(buttonComposite, SWT.NONE);
+		dayComposite.setBackground(ColorConstants.white);
 		GridLayout dayCompositeLayout = new GridLayout(3, false);
 		dayComposite.setLayout(dayCompositeLayout);
 		
 		monday = new Button(dayComposite, SWT.CHECK);
+		monday.setBackground(ColorConstants.white);
 		monday.setText(I18N.getMessage("ScheduleComposite.Monday"));
 		monday.setSelection(true);
 		tuesday = new Button(dayComposite, SWT.CHECK);
+		tuesday.setBackground(ColorConstants.white);
 		tuesday.setText(I18N.getMessage("ScheduleComposite.Tuesday"));
 		tuesday.setSelection(true);
 		wednesday = new Button(dayComposite, SWT.CHECK);
+		wednesday.setBackground(ColorConstants.white);
 		wednesday.setText(I18N.getMessage("ScheduleComposite.Wednesday"));
 		wednesday.setSelection(true);
 		thursday = new Button(dayComposite, SWT.CHECK);
+		thursday.setBackground(ColorConstants.white);
 		thursday.setText(I18N.getMessage("ScheduleComposite.Thursday"));
 		thursday.setSelection(true);
 		friday = new Button(dayComposite, SWT.CHECK);
+		friday.setBackground(ColorConstants.white);
 		friday.setText(I18N.getMessage("ScheduleComposite.Friday"));
 		friday.setSelection(true);
 		saturday = new Button(dayComposite, SWT.CHECK);
+		saturday.setBackground(ColorConstants.white);
 		saturday.setText(I18N.getMessage("ScheduleComposite.Saturday"));
 		sunday = new Button(dayComposite, SWT.CHECK);
+		sunday.setBackground(ColorConstants.white);
 		sunday.setText(I18N.getMessage("ScheduleComposite.Holiday"));
 		
 		/*
@@ -291,16 +310,20 @@ public class ScheduleComposite {
 		createQuestionMark(buttonComposite, I18N.getMessage("ScheduleComposite.Help.Stations"));
 		
 		Composite stationComposite = new Composite(buttonComposite, SWT.BORDER|SWT.FULL_SELECTION);
+		stationComposite.setBackground(ColorConstants.white);
+		stationComposite.setBackground(ColorConstants.white);
 		GridData stationCompositeData = new GridData();
 		stationCompositeData.horizontalSpan = 2;
 		stationComposite.setLayoutData(stationCompositeData);
 		stationComposite.setLayout(new RowLayout());
 		
 		Composite stationListComposite = new Composite(stationComposite, SWT.NONE);
+		stationListComposite.setBackground(ColorConstants.white);
 		RowLayout stationListCompositeLayout = new RowLayout(SWT.VERTICAL);
 		stationListComposite.setLayout(stationListCompositeLayout);
 
 		Label firstStation = new Label(stationListComposite, SWT.NONE);
+		firstStation.setBackground(ColorConstants.white);
 		firstStation.setText(I18N.getMessage("ScheduleComposite.FirstStation"));
 		firstStationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		RowData firstStationListData = new RowData();
@@ -318,6 +341,7 @@ public class ScheduleComposite {
 		});
 		
 		Label stopoverStation = new Label(stationListComposite, SWT.NONE);
+		stopoverStation.setBackground(ColorConstants.white);
 		stopoverStation.setText(I18N.getMessage("ScheduleComposite.StopoverStation"));
 		stationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		stationList.addSelectionListener(new SelectionAdapter() {
@@ -332,6 +356,7 @@ public class ScheduleComposite {
 		});
 		
 		Label lastStation = new Label(stationListComposite, SWT.NONE);
+		lastStation.setBackground(ColorConstants.white);
 		lastStation.setText(I18N.getMessage("ScheduleComposite.LastStation"));
 		lastStationList = new List(stationListComposite, SWT.BORDER|SWT.V_SCROLL);
 		RowData lastStationListData = new RowData();
@@ -352,6 +377,7 @@ public class ScheduleComposite {
 			 * delayComp
 			 */
 		Composite delayComposite = new Composite(stationComposite, SWT.NONE);
+		delayComposite.setBackground(ColorConstants.white);
 		RowData delayCompositeData = new RowData();
 		delayCompositeData.width = 120;
 		delayComposite.setLayoutData(delayCompositeData);
@@ -360,6 +386,7 @@ public class ScheduleComposite {
 		delayComposite.setLayout(delayCompositeLayout);
 		
 		Button addStation = new Button(delayComposite, SWT.TOGGLE);
+		addStation.setBackground(ColorConstants.white);
 		addStation.setText(I18N.getMessage("ScheduleComposite.AddStation"));
 		GridData stationButtonData = new GridData();
 		stationButtonData.horizontalSpan = 2;
@@ -376,6 +403,7 @@ public class ScheduleComposite {
 		});
 		
 		deleteStation = new Button(delayComposite, SWT.PUSH);
+		deleteStation.setBackground(ColorConstants.white);
 		deleteStation.setText(I18N.getMessage("ScheduleComposite.RemoveStation"));
 		deleteStation.setEnabled(false);
 		deleteStation.setLayoutData(stationButtonData);
@@ -437,6 +465,7 @@ public class ScheduleComposite {
 		});
 		
 		Label delayLabel = new Label(delayComposite, SWT.NONE);
+		delayLabel.setBackground(ColorConstants.white);
 		delayLabel.setText(I18N.getMessage("ScheduleComposite.WaitingTime"));
 		GridData delayData = new GridData();
 		delayData.horizontalSpan = 2;
@@ -459,15 +488,18 @@ public class ScheduleComposite {
 		});
 		
 		Label min = new Label(delayComposite, SWT.NONE);
+		min.setBackground(ColorConstants.white);
 		min.setText("min");
 		
 		Label timeElapsed = new Label(delayComposite, SWT.NONE);
+		timeElapsed.setBackground(ColorConstants.white);
 		timeElapsed.setText(I18N.getMessage("ScheduleComposite.TimeFromStart"));
 		GridData timeElapsedData = new GridData();
 		timeElapsedData.horizontalSpan = 2;
 		timeElapsed.setLayoutData(timeElapsedData);
 		
 		timeSpinner = new Spinner(delayComposite, SWT.BORDER);
+		timeSpinner.setBackground(ColorConstants.white);
 		timeSpinner.setMinimum(0);
 		timeSpinner.setMaximum(1000);
 		timeSpinner.setIncrement(1);
@@ -486,12 +518,14 @@ public class ScheduleComposite {
 		});
 		
 		min = new Label(delayComposite, SWT.NONE);
+		min.setBackground(ColorConstants.white);
 		min.setText("min");
 
 		/*
 		 * 8th row (save and cancel Buttons)
 		 */
 		Composite saveComposite = new Composite(buttonComposite, SWT.NONE);
+		saveComposite.setBackground(ColorConstants.white);
 		RowLayout saveCompositeLayout = new RowLayout();
 		saveCompositeLayout.justify = true;
 		saveComposite.setLayout(saveCompositeLayout);
@@ -711,12 +745,15 @@ public class ScheduleComposite {
 	 */
 	private void createSingularRide() {
 		Label departureLabel = new Label(departureComposite, SWT.NONE);
+		departureLabel.setBackground(ColorConstants.white);
 		departureLabel.setText(I18N.getMessage("ScheduleComposite.Departure"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
+		timeComposite.setBackground(ColorConstants.white);
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		hourCombo.setBackground(ColorConstants.white);
 		hourCombo.add("00");
 		hourCombo.add("01");
 		hourCombo.add("02");
@@ -733,9 +770,11 @@ public class ScheduleComposite {
 		hourCombo.select(0);
 		
 		Label pointLabel = new Label(timeComposite, SWT.NONE);
+		pointLabel.setBackground(ColorConstants.white);
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		minuteCombo.setBackground(ColorConstants.white);
 		minuteCombo.add("00");
 		minuteCombo.add("01");
 		minuteCombo.add("02");
@@ -763,9 +802,11 @@ public class ScheduleComposite {
 		 * 1st row (first ride)
 		 */
 		Label firstRideLabel = new Label(departureComposite, SWT.NONE);
+		firstRideLabel.setBackground(ColorConstants.white);
 		firstRideLabel.setText(I18N.getMessage("ScheduleComposite.FirstRide"));
 		
 		Composite timeComposite = new Composite(departureComposite, SWT.NONE);
+		timeComposite.setBackground(ColorConstants.white);
 		timeComposite.setLayout(new RowLayout());
 		
 		hourCombo = new Combo(timeComposite, SWT.READ_ONLY);
@@ -785,9 +826,11 @@ public class ScheduleComposite {
 		hourCombo.select(00);
 		
 		Label pointLabel = new Label(timeComposite, SWT.NONE);
+		pointLabel.setBackground(ColorConstants.white);
 		pointLabel.setText(":");
 		
 		minuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		minuteCombo.setBackground(ColorConstants.white);
 		minuteCombo.add("00");
 		minuteCombo.add("01");
 		minuteCombo.add("02");
@@ -807,12 +850,15 @@ public class ScheduleComposite {
 		 * 2nd row (last ride) 
 		 */
 		Label lastRideLabel = new Label(departureComposite, SWT.NONE);
+		lastRideLabel.setBackground(ColorConstants.white);
 		lastRideLabel.setText(I18N.getMessage("ScheduleComposite.LastRide"));
 		
 		Composite timeComposite2 = new Composite(departureComposite, SWT.NONE);
+		timeComposite2.setBackground(ColorConstants.white);
 		timeComposite2.setLayout(new RowLayout());
 		
 		hourComboILR = new Combo(timeComposite2, SWT.READ_ONLY);
+		hourComboILR.setBackground(ColorConstants.white);
 		hourComboILR.add("00");
 		hourComboILR.add("01");
 		hourComboILR.add("02");
@@ -829,9 +875,11 @@ public class ScheduleComposite {
 		hourComboILR.select(1);
 		
 		Label pointLabel2 = new Label(timeComposite2, SWT.NONE);
+		pointLabel2.setBackground(ColorConstants.white);
 		pointLabel2.setText(":");
 		
 		minuteComboILR = new Combo(timeComposite2, SWT.READ_ONLY);
+		minuteComboILR.setBackground(ColorConstants.white);
 		minuteComboILR.add("00");
 		minuteComboILR.add("01");
 		minuteComboILR.add("02");
@@ -851,12 +899,15 @@ public class ScheduleComposite {
 		 * 3rd row (interval)
 		 */
 		Label intervallLabel = new Label(departureComposite, SWT.NONE);
+		intervallLabel.setBackground(ColorConstants.white);
 		intervallLabel.setText(I18N.getMessage("ScheduleComposite.Intervall"));
 		
 		Composite timeComposite3 = new Composite(departureComposite, SWT.NONE);
+		timeComposite3.setBackground(ColorConstants.white);
 		timeComposite3.setLayout(new RowLayout());
 		
 		hourComboI = new Combo(timeComposite3, SWT.READ_ONLY);
+		hourComboI.setBackground(ColorConstants.white);
 		hourComboI.add("00");
 		hourComboI.add("01");
 		hourComboI.add("02");
@@ -873,9 +924,11 @@ public class ScheduleComposite {
 		hourComboI.select(0);
 		
 		Label pointLabel3 = new Label(timeComposite3, SWT.NONE);
+		pointLabel3.setBackground(ColorConstants.white);
 		pointLabel3.setText("h");
 		
 		minuteComboI = new Combo(timeComposite3, SWT.READ_ONLY);
+		minuteComboI.setBackground(ColorConstants.white);
 		minuteComboI.add("00");
 		minuteComboI.add("01");
 		minuteComboI.add("02");
@@ -892,6 +945,7 @@ public class ScheduleComposite {
 		minuteComboI.select(1);
 		
 		Label minLabel = new Label(timeComposite3, SWT.NONE);
+		minLabel.setBackground(ColorConstants.white);
 		minLabel.setText("min");
 		
 		departureComposite.layout();
@@ -945,6 +999,7 @@ public class ScheduleComposite {
 		tipShell.setSize(information.getSize().x + 10, information.getSize().y + 10);
 		
 		final Label questionLabel = new Label(composite, SWT.NONE);
+		questionLabel.setBackground(ColorConstants.white);
 		questionLabel.setImage(ImageHelper.getImage("questionMarkSmall"));
 		questionLabel.addMouseTrackListener(new MouseTrackAdapter() {
 			public void mouseEnter(MouseEvent e) {

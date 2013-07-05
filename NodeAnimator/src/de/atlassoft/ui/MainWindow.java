@@ -1,7 +1,10 @@
 package de.atlassoft.ui;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -51,6 +54,13 @@ public class MainWindow {
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(1050, 670);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
+		//The default close operation
+		shell.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent arg0) {
+				MainWindow.this.applicationService.shutDown();
+			}
+		});
 		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);
 		GridData shellGridData = new GridData();
@@ -74,6 +84,7 @@ public class MainWindow {
 		
 		//Creates the main screen with the different tabs
 		mainComposite = new Composite(borderComposite, SWT.NONE);
+		mainComposite.setBackground(ColorConstants.white);
 		GridData mainCompositeGridData = new GridData();
 		mainCompositeGridData.horizontalAlignment = SWT.FILL;
 		mainCompositeGridData.grabExcessHorizontalSpace = true;

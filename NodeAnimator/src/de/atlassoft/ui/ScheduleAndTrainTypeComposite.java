@@ -8,6 +8,15 @@ import java.util.Calendar;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -136,7 +145,7 @@ public class ScheduleAndTrainTypeComposite {
 		GridData activeSchedulesData = new GridData();
 		activeSchedulesData.grabExcessHorizontalSpace = true;
 		activeSchedulesData.horizontalAlignment = SWT.FILL;
-//		activeSchedulesData.verticalIndent = 200;
+		activeSchedulesData.heightHint = 180;
 		activeSchedules.setLayoutData(activeSchedulesData);
 		for (ScheduleScheme temp: applicationService.getModel().getActiveScheduleSchemes()) {
 			activeSchedules.add(temp.getID());
@@ -186,7 +195,6 @@ public class ScheduleAndTrainTypeComposite {
 	    		}
 	    		else {
 	    			setActive();
-	    			activeSchedules.select(activeSchedules.getItemCount()-1);
 	    		}
 	    	}
 	    });
@@ -216,7 +224,6 @@ public class ScheduleAndTrainTypeComposite {
 	    		}
 	    		else {
 		    		setPassive();
-		    		passiveSchedules.select(passiveSchedules.getItemCount()-1);
 	    		}    		
 	    	}
 	    });
@@ -227,7 +234,12 @@ public class ScheduleAndTrainTypeComposite {
 	    passiveSchedulesLabel.setText("Passive Fahrpläne:");
 	    
 		passiveSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
-		passiveSchedules.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridData passiveSchedulesData = new GridData();
+		passiveSchedulesData.horizontalAlignment = SWT.FILL;
+		passiveSchedulesData.grabExcessHorizontalSpace = true;
+		passiveSchedulesData.verticalAlignment = SWT.FILL;
+		passiveSchedulesData.grabExcessVerticalSpace = true;
+		passiveSchedules.setLayoutData(passiveSchedulesData);
 		for (ScheduleScheme temp: applicationService.getModel().getPassiveScheduleSchemes()) {
 			passiveSchedules.add(temp.getID());
 		}
@@ -247,6 +259,9 @@ public class ScheduleAndTrainTypeComposite {
 				}
 			}
 		});
+		
+		setDragDrop(activeSchedules);
+		setDragDrop(passiveSchedules);
 	}
 	
 	/**
@@ -333,10 +348,9 @@ public class ScheduleAndTrainTypeComposite {
 		days.setText("Tage:");
 		
 		Composite allDays = new Composite(informationComposite, SWT.NONE);
-		RowLayout rowL = new RowLayout(SWT.VERTICAL);
-		rowL.marginLeft = 0;
-		allDays.setLayout(rowL);
-//		allDays.setLayout(new RowLayout(SWT.VERTICAL));
+		RowLayout allDaysComposite = new RowLayout(SWT.VERTICAL);
+		allDaysComposite.marginLeft = 0;
+		allDays.setLayout(allDaysComposite);
 		for (Integer temp : activeSchedule.getDays()) {
 			if (temp == Calendar.MONDAY) {
 				Label monday = new Label(allDays, SWT.NONE);
@@ -424,6 +438,8 @@ public class ScheduleAndTrainTypeComposite {
 		
 		activeSchedules.add(passiveSchedules.getItem(selection));
 		passiveSchedules.remove(selection);
+		
+		activeSchedules.select(activeSchedules.getItemCount()-1);
 	}
 	
 	/**
@@ -443,6 +459,54 @@ public class ScheduleAndTrainTypeComposite {
 		
 		passiveSchedules.add(activeSchedules.getItem(selection));
 		activeSchedules.remove(selection);
+		
+		passiveSchedules.select(passiveSchedules.getItemCount()-1);
+	}
+	
+	/**
+	 * Adds a drag and drop listener to the given list.
+	 * 
+	 * @param list
+	 * 		The list that should receive the listener
+	 */
+	private void setDragDrop (final List list) {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		
+		DragSource source = new DragSource(list, DND.DROP_MOVE);
+		source.setTransfer(types);
+		source.addDragListener(new DragSourceListener() {
+			@Override
+			public void dragFinished(DragSourceEvent event) {
+				if (event.detail == DND.DROP_MOVE){
+					if (activeSchedules.getSelectionIndex() < 0) {
+						setActive();
+					}
+					else {
+						setPassive();
+					}
+				}
+			}
+
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				event.data = list.getItem(list.getSelectionIndex());
+			}
+
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				if (list.getItemCount() == 0) {
+					event.doit = false;
+				}
+			}			
+		});
+		
+		DropTarget target = new DropTarget(list, DND.DROP_MOVE);
+		target.setTransfer(types);
+		target.addDropListener(new DropTargetAdapter() {
+			@Override
+			public void drop(DropTargetEvent event){
+			}
+		});
 	}
 	
 	/**

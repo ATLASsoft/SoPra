@@ -455,6 +455,7 @@ public class RailSysComposite {
 		save.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				railSys.setID(railSysNameText.getText());
 				applicationService.saveRailwaySystem(railSys);
 				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();

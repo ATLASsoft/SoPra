@@ -1,7 +1,10 @@
 package de.atlassoft.ui;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
@@ -15,6 +18,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,7 +33,7 @@ import de.hohenheim.view.map.NodeMap;
  * 
  * @author Silvan Haeussermann
  */
-public class SimulationComposite {
+public class SimulationComposite implements Observer {
 	
 	private Shell shell;
 	private StackLayout layout;
@@ -39,6 +43,8 @@ public class SimulationComposite {
 	private ApplicationService applicationService;
 	private boolean simulationPaused;
 	private Combo startDayCombo, startHourCombo, startMinuteCombo;
+	private Label time;
+	private SimpleDateFormat dateFormat;
 	
 	/**
 	 * Constructor for the SimulationComposite class.
@@ -59,6 +65,7 @@ public class SimulationComposite {
 		this.mainComposite = mainComposite;
 		I18N = I18NSingleton.getInstance();
 		simulationPaused = false;
+		dateFormat = new SimpleDateFormat("hh:mm");
 		initUI();
 	}
 	
@@ -144,8 +151,9 @@ public class SimulationComposite {
 					int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
 					startTime.clear();
 					startTime.set(0, 0, getDay(), startHour, startMinute);
-					applicationService.startSimulation(startTime);
+					applicationService.startSimulation(startTime, SimulationComposite.this);
 					disposeComposite(timeComposite);
+					createTimeDisplay();
 				}
 				else {
 					applicationService.continueSimulation();
@@ -184,6 +192,7 @@ public class SimulationComposite {
 	 * time of the simulation
 	 */
 	private void createTimeDisplay() {
+		time = new Label(timeComposite, SWT.NONE);
 		
 	}
 	
@@ -225,5 +234,17 @@ public class SimulationComposite {
 	 */
 	public Composite getComposite() {
 		return simulationComposite;
+	}
+
+	@Override
+	public void update(Observable arg0, final Object arg1) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				Calendar cal = (Calendar) arg1;
+				time.setText(dateFormat.format(cal.getTime()));	
+				timeComposite.layout();
+			}
+		}); 
 	}
 }
