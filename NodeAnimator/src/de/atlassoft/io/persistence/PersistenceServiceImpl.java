@@ -85,8 +85,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 	@Override
 	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys)
 			throws IOException {
-		xmlParser.loadSchedules(railSys, SCHEDULESCHEME_PATH);
-		return new ArrayList<ScheduleScheme>();
+		return xmlParser.loadSchedules(railSys, SCHEDULESCHEME_PATH);
 	}
 
 	@Override
