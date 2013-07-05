@@ -226,7 +226,7 @@ public class ScheduleScheme {
 	 * number or zero an <code>IllegalArgumentExcetion</code> is thrown.
 	 * 
 	 * @param interval
-	 *            interval to be set
+	 *            interval to be set in minutes
 	 * @throws IllegalArgumentException
 	 *             if interval is negative or zero
 	 */

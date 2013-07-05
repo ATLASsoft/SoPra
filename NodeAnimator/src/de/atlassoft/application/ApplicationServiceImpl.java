@@ -20,6 +20,9 @@ import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
+import de.atlassoft.util.ErrorHelper;
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 
 public class ApplicationServiceImpl implements ApplicationService {
@@ -28,6 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private MainWindow window;
 	private PersistenceService persistence;
 	private AIService ai;
+	private I18NService I18N;
 	
 	
 	protected ApplicationServiceImpl() {
@@ -86,6 +90,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model = new ModelServiceImpl();
 		persistence = new PersistenceServiceImpl();
 		ai = new AIServiceImpl();
+		I18N = I18NSingleton.getInstance();
 		// TODO: unvollständig
 		
 		createDummy();
@@ -115,8 +120,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 				model.addTrainType(type);
 			}
 		} catch (IOException e) {
-			// TODO: Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.LoadErrorTitle"),
+					I18N.getMessage("ApplicationService.TrainTypeErrorMsg"));
 		}
 		
 		//TODO: Wieder aktivieren
@@ -170,22 +177,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 			persistence.saveSchedule(scheduleScheme);
 			model.addActiveScheduleScheme(scheduleScheme);
 		} catch (IOException e) {
-//			showErrorMessage("Speichern fehlgeschlagen!"); //TODO: Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.SaveErrorTitle"),
+					I18N.getMessage("ApplicationService.SaveSchemeErrorMsg"));
 		}
 		
 	}
 
 	@Override
 	public void deleteScheduleScheme(ScheduleScheme scheduleScheme) {
-//		try {
-//			persistence.deleteSingleSchedule(scheduleScheme);
-//			model.removeActiveScheduleScheme(scheduleScheme);
-//			model.removePassiveScheduleScheme(scheduleScheme);
-//		} catch (IOException e) {
-//			// TODO: Fehlerbehebung
-//			e.printStackTrace();
-//		}
+		try {
+			persistence.deleteSingleSchedule(scheduleScheme);
+			model.removeActiveScheduleScheme(scheduleScheme);
+			model.removePassiveScheduleScheme(scheduleScheme);
+		} catch (IOException e) {
+			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.DeleteErrorTitle"),
+					I18N.getMessage("ApplicationService.DeleteSchemeErrorMsg"));
+		}
 	}
 
 	@Override
@@ -195,8 +206,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 			model.addRailwaySystemID(railSys.getID());
 			setActiveRailwaySystem(railSys.getID());
 		} catch (IOException e) {
-			// TODO: Fehlerbehebung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.SaveErrorTitle"),
+					I18N.getMessage("ApplicationService.SaveRailSysErrorMsg"));
 		}
 	}
 
@@ -210,8 +223,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 				model.setActiveRailwaySys(null);
 			}
 		} catch (IOException e) {
-			// TODO: Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.DeleteErrorTitle"),
+					I18N.getMessage("ApplicationService.DeleteRailSysErrorMsg"));
 		}
 	}
 
@@ -225,8 +240,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 				model.addActiveScheduleScheme(s);
 			}
 		} catch (IOException e) {
-			// TODO: Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.LoadErrorTitle"),
+					I18N.getMessage("ApplicationService.LoadRailSysErrorMsg"));
 		}
 	}
 
@@ -236,8 +253,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 			persistence.saveTrainType(trainType);
 			model.addTrainType(trainType);
 		} catch (IOException e) {
-			// TODO: Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.SaveErrorTitle"),
+					I18N.getMessage("ApplicationService.SaveTrainTypeErrorMsg"));
 		}
 	}
 
@@ -247,8 +266,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 			persistence.deleteTrainType(trainType);
 			model.deleteTrainType(trainType); //TODO: Fahrpläne löschen
 		} catch (IOException e) {
-			// TODO Fehlerbehandlung
 			e.printStackTrace();
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.DeleteErrorTitle"),
+					I18N.getMessage("ApplicationService.DeleteTrainTypeErrorMsg"));
 		}
 	}
 
