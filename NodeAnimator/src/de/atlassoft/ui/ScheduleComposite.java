@@ -655,9 +655,16 @@ public class ScheduleComposite {
 				
 				applicationService.addScheduleScheme(schedule);
 				
+				//return to the homeScreenComposite
 				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
+	    		
+				//Open a message box which shows that the schedule has successfully been added
+		 		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
+	       		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
+        	    messageBox.setMessage(I18N.getMessage("ScheduleComposite.Succes"));
+				messageBox.open();
 			}
 		});
 		

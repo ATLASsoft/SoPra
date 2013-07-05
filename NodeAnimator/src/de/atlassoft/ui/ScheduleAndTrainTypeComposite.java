@@ -141,7 +141,6 @@ public class ScheduleAndTrainTypeComposite {
 		activeSchedulesLabel.setText("Aktive Fahrpläne:");
 		
 		activeSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
-		//TODO: fertig machen
 		GridData activeSchedulesData = new GridData();
 		activeSchedulesData.grabExcessHorizontalSpace = true;
 		activeSchedulesData.horizontalAlignment = SWT.FILL;
@@ -223,6 +222,9 @@ public class ScheduleAndTrainTypeComposite {
 	    			}
 		    		applicationService.deleteScheduleScheme(schedule);
 		    		passiveSchedules.remove(passiveSchedules.getSelectionIndex());
+		    		if (passiveSchedules.getItemCount() > 0) {
+		    			passiveSchedules.select(0);
+		    		}
 	    		}
 	    		//Check if an active schedule is selected
 	    		else if (passiveSchedules.getSelectionIndex() < 0) {
@@ -236,6 +238,9 @@ public class ScheduleAndTrainTypeComposite {
 	    			}
 	    			applicationService.deleteScheduleScheme(schedule);
 		    		activeSchedules.remove(activeSchedules.getSelectionIndex());
+		    		if (activeSchedules.getItemCount() > 0) {
+		    			activeSchedules.select(0);
+		    		}
 	    		}
 	    		
 	    		
@@ -517,12 +522,30 @@ public class ScheduleAndTrainTypeComposite {
 		source.addDragListener(new DragSourceListener() {
 			@Override
 			public void dragFinished(DragSourceEvent event) {
-				if (event.detail == DND.DROP_MOVE){
+				if (event.detail == DND.DROP_MOVE) {
 					if (activeSchedules.getSelectionIndex() < 0) {
 						setActive();
+						String name = activeSchedules.getItem(activeSchedules.getSelectionIndex());
+						for (ScheduleScheme temp : active) {
+							if (temp.getID().equals(name)) {
+								activeSchedule = temp;
+								disposeCompsite();
+								createInformation();
+								passiveSchedules.deselectAll();
+							}
+						}
 					}
 					else {
 						setPassive();
+						String name = passiveSchedules.getItem(passiveSchedules.getSelectionIndex());
+						for (ScheduleScheme temp : passive) {
+							if (temp.getID().equals(name)) {
+								activeSchedule = temp;
+								disposeCompsite();
+								createInformation();
+								activeSchedules.deselectAll();
+							}
+						}
 					}
 				}
 			}

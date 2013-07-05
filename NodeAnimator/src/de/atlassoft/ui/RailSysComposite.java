@@ -1,5 +1,4 @@
 package de.atlassoft.ui;
-//TODO: on the fly korrektur überarbeiten
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.util.ArrayList;
@@ -84,15 +83,17 @@ public class RailSysComposite {
 		manualCoordActive = false;
 		nodeList = new ArrayList<Node>();
 		
-		railSysComposite.setLayout(new RowLayout());
+		railSysComposite.setLayout(new GridLayout(2, false));
 		initUI();
 	}
 	
 	private void initUI() {
 		//Controls
 		Composite buttonComposite = new Composite(railSysComposite, SWT.NONE);
+		buttonComposite.setLayoutData(new GridData(SWT.NULL, SWT.TOP, false, true));
 		GridLayout buttonCompositeLayout = new GridLayout();
 		buttonCompositeLayout.marginRight = 15;
+		buttonCompositeLayout.marginTop = 9;
 		buttonCompositeLayout.numColumns = 2;
 		buttonComposite.setLayout(buttonCompositeLayout);
 		
@@ -481,7 +482,8 @@ public class RailSysComposite {
 		Canvas c = new Canvas(railSysComposite, SWT.FILL);
 	    c.setBackground(ColorConstants.white);
 	    c.setBounds(0, 0, 600, 500);
-	    RowData canvasData = new RowData(600, 500);
+	    GridData canvasData = new GridData(600, 500);
+	    canvasData.horizontalIndent = 30;
 	    c.setLayoutData(canvasData);
 	    c.addMouseMoveListener(new MouseMoveListener() {
 			
