@@ -106,7 +106,7 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public void addActiveScheduleScheme(ScheduleScheme schedule) {
 		if (schedule != null && !activeSchemes.contains(schedule)) {
-			activeSchemes.add(schedule);
+			activeSchemes.add(schedule);System.out.println(schedule.getFirstRide().getTime());
 			pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
 		}
 	}
