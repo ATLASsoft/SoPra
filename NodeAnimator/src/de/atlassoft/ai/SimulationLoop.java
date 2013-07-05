@@ -219,12 +219,14 @@ public class SimulationLoop extends Observable {
 	}
 
 	private void deleteFinishedTrains() {
-		NodeMap map = null;
-		TrainAgent agent;
-		while (!finishedTrains.isEmpty()) {
-			agent = finishedTrains.poll();
-			map.getAnimationLayer().remove(agent.getTrainFigure());
-			map.getMobileObjects().remove(agent.getID());
+		if (!finishedTrains.isEmpty()) {
+			NodeMap map = graph.getRailwaySystem().getNodeMap();
+			TrainAgent agent;
+			while (!finishedTrains.isEmpty()) {
+				agent = finishedTrains.poll();
+				map.getAnimationLayer().remove(agent.getTrainFigure());
+				map.getMobileObjects().remove(agent.getID());
+			}
 		}
 	}
 

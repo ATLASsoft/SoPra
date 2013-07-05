@@ -78,7 +78,8 @@ public abstract class ScheduleFactory {
 			if (scheme.getDays().contains(day)) {
 				if (scheme.getScheduleType().equals(ScheduleType.INTERVALL)) {
 					cal = setToFirstRide(scheme, begin);
-					lastRide = scheme.getLastRide();
+					lastRide = (Calendar) scheme.getLastRide().clone();
+					lastRide.set(Calendar.DAY_OF_WEEK, day);
 					while (isBefore(cal, lastRide)) {
 						queue.offer(createSchedule(scheme, cal));
 						cal.add(Calendar.MINUTE, scheme.getInterval());
