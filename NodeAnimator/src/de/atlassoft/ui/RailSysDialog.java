@@ -116,9 +116,9 @@ public class RailSysDialog {
 		loadButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String[] selection = trainSysList.getSelection();
-				applicationService.setActiveRailwaySystem(selection[0]);
+				applicationService.setActiveRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
 				shell.close();
+				shell.dispose();
 			}
 		});
 
@@ -130,8 +130,9 @@ public class RailSysDialog {
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String[] selection = trainSysList.getSelection();
-				applicationService.deleteRailwaySystem(selection[0]);
+				applicationService.deleteRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
+				shell.close();
+				shell.dispose();
 			}
 		});
 		
@@ -144,6 +145,7 @@ public class RailSysDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				shell.close();
+				shell.dispose();
 			}
 		});		
 	}
