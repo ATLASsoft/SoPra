@@ -125,12 +125,13 @@ public class CurrentRailSysComposite {
 //		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// GridDate which center
+		new Label (informationComposite, SWT.NULL);
 		GridData dataCenter = new GridData(GridData.FILL);
 		dataCenter.horizontalAlignment = GridData.CENTER;
 		Label title = new Label (informationComposite, SWT.NULL);
 		title.setText(I18N.getMessage("CurrentRailSysComposite.Title"));
 		title.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
-		title.setLayoutData(dataCenter);
+//		title.setLayoutData(dataCenter);
 		new Label (informationComposite, SWT.NULL);
 		
 		// the composite with the Information
@@ -158,8 +159,13 @@ public class CurrentRailSysComposite {
 		informationComposite3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		//Label with Table Title
+		new Label (informationComposite3, SWT.NULL);
+		new Label (informationComposite3, SWT.NULL);
+		new Label (informationComposite3, SWT.NULL);
+		new Label (informationComposite3, SWT.NULL);
+		new Label (informationComposite3, SWT.NULL);
 		Label tableTitle = new Label (informationComposite3, SWT.NULL);
-		tableTitle.setText("Verbindungen");
+		tableTitle.setText(I18N.getMessage("CurrentRailSysComposite.tableCompositeTitel"));
 		tableTitle.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
 		tableTitle.setLayoutData(dataCenter);
 		new Label (informationComposite3, SWT.NULL);
