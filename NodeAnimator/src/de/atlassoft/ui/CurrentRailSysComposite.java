@@ -5,18 +5,18 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
@@ -33,15 +33,15 @@ import de.hohenheim.view.map.NodeMap;
  */
 public class CurrentRailSysComposite {
 	
-	//TODO: internationalisieren
 	private Composite currentRailSysComposite;
 	private ApplicationService applicationService;
 	private I18NService I18N;
-	private Text xCoord, yCoord;
 	private NodeMap map;
 	private Canvas c;
-	private List nodeInformation;
-	private Combo combo1, combo2;
+	private Label name;
+	private Label coordinate1;
+	private Label coordinate2;
+	private Table informationTable;
 	
 	/**
 	 * Constructor for the class CurrentRailSysComposite
@@ -60,9 +60,7 @@ public class CurrentRailSysComposite {
 	 * Builds the elements of the UI of the simulation.
 	 */
 	private void initUI() {
-		GridLayout railSysLayout = new GridLayout();
-		railSysLayout.numColumns = 2;
-		currentRailSysComposite.setLayout(railSysLayout);
+		currentRailSysComposite.setLayout(new GridLayout(2, false));
 		
 	    c = new Canvas(currentRailSysComposite, SWT.FILL);
 	    c.setBackground(ColorConstants.white);
@@ -73,106 +71,111 @@ public class CurrentRailSysComposite {
 	    gridData.heightHint = 500;
 	    c.setLayoutData(gridData);
 	    c.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseDoubleClick(MouseEvent arg0) {
-				
-			}
-
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-
-			}
-
 			@Override
 			public void mouseUp(MouseEvent e) {
 //				Node node = new Node("Node", e.x - 7, e.y - 7, 15, 15);
 //				applicationService.getModel().getActiveRailwaySys().addNode(node);
 				for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
 					if (temp.getNodeFigure().getBounds().contains(new Point(e.x, e.y))) {
-						nodeInformation.removeAll();
-						nodeInformation.add(temp.getName());
-						nodeInformation.add(temp.getNodeFigure().getBounds().toString());
+						name.setText(temp.getName());
+						int x = temp.getNodeFigure().getBounds().x;
+						int y = temp.getNodeFigure().getBounds().y;
+						Integer converter = new Integer(x);
+				        String coordinate = converter.toString();
+						coordinate1.setText("X:   " + coordinate);
+						converter = new Integer(y);
+				        coordinate = converter.toString();
+						coordinate2.setText("Y:   " + coordinate);
+						informationTable.removeAll();
+						final java.util.List<Path> paths = applicationService.getModel().getActiveRailwaySys().getPaths();
+						for (Path path : paths) {
+							if (path.getStart().equals(temp)) {
+						       TableItem item = new TableItem(informationTable, SWT.NONE);
+						       item.setText(0, path.getEnd().toString());
+						       item.setText(1, String.valueOf(path.getTopSpeed()) + " km/h");
+							} else if (path.getEnd().equals(temp)) {
+							   TableItem item = new TableItem(informationTable, SWT.NONE);
+							   item.setText(0, path.getStart().toString());
+							   item.setText(1, String.valueOf(path.getTopSpeed()) + " km/h");
+							}
+						}
+						for (int i=0; i<1; i++) {
+					    	informationTable.getColumn (i).pack ();
+					    	informationTable.getColumn (i).setWidth(168);
+					    } 
+					    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					    informationTable.setVisible(true);
 					}
 				}
-			}	    	
+			}
 	    });
 
 		map = applicationService.getModel().getActiveRailwaySys().getNodeMap();
 		map.paintNodeMap(c);
 		currentRailSysComposite.layout();
 		
-		// the composite with the controls
-		Composite buttonComposite = new Composite(currentRailSysComposite, SWT.BORDER);
-		GridLayout buttonLayout = new GridLayout();
-		buttonLayout.numColumns = 3;
-		buttonComposite.setLayout(buttonLayout);
-		GridData buttonGridData = new GridData();
-		buttonGridData.grabExcessHorizontalSpace = true;
-		buttonGridData.grabExcessVerticalSpace = true;
-		buttonGridData.horizontalAlignment = SWT.FILL;
-		buttonGridData.verticalAlignment = SWT.FILL;
-		buttonComposite.setLayoutData(buttonGridData);
+		// the composite with the title of Information
+		Composite informationComposite = new Composite(currentRailSysComposite, SWT.BORDER);
+		informationComposite.setLayout(new GridLayout(1, true));
+		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		// create node row
-		xCoord = new Text(buttonComposite, SWT.BORDER);
-		xCoord.setText("X Koordinate");
-		xCoord.selectAll();
+		// GridDate which center
+		GridData dataCenter = new GridData(GridData.FILL);
+		dataCenter.horizontalAlignment = GridData.CENTER;
+		Label title = new Label (informationComposite, SWT.NULL);
+		title.setText(I18N.getMessage("CurrentRailSysComposite.Title"));
+		title.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
+		title.setLayoutData(dataCenter);
+		new Label (informationComposite, SWT.NULL);
 		
-		yCoord = new Text(buttonComposite, SWT.BORDER);
-		yCoord.setText("Y Koordinate");
-		yCoord.selectAll();
+		// the composite with the Information
+		Composite informationComposite2 = new Composite(informationComposite, SWT.NULL);
+		informationComposite2.setLayout(new GridLayout(2, true));
+//		informationComposite2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		Button createNode = new Button(buttonComposite, SWT.PUSH);
-		createNode.setText("Punkt hinzufügen");
-		createNode.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Node node = new Node("Node 1", Integer.parseInt(xCoord.getText()), Integer.parseInt(yCoord.getText()), 30, 30);
-				applicationService.getModel().getActiveRailwaySys().addNode(node);
-			}
-		});
+		// Label with Name
+		new Label (informationComposite2, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelName"));
+		name = new Label (informationComposite2, SWT.NULL);
+		name.setText(I18N.getMessage("CurrentRailSysComposite.labelFirstName"));
 		
-		// add path row
-		combo1 = new Combo(buttonComposite, SWT.NULL);
-		combo2 = new Combo(buttonComposite, SWT.NULL);
-		for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
-			combo1.add(temp.getName());
-			combo2.add(temp.getName());
-		}
-		combo1.select(0);
-		combo2.select(1);
+		//Label with coordinates
+		new Label (informationComposite2, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelCoordinates"));
+		coordinate1 = new Label (informationComposite2, SWT.NULL);
+		coordinate1.setText("X:   " + I18N.getMessage("CurrentRailSysComposite.noValue"));
 		
-		Button createPath = new Button(buttonComposite, SWT.PUSH);
-		createPath.setText("Create Path");
-		createPath.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Node node1 = null, node2;
-				for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
-					if (temp.getName().equals(combo1.getItem(combo1.getSelectionIndex()))) {
-						node1 = temp;
-					}
-					if (temp.getName().equals(combo2.getItem(combo2.getSelectionIndex()))) {
-						node2 = temp;
-						applicationService.getModel().getActiveRailwaySys().addPath(new Path(node1, node2, 0));
-					}
-				}
-			}
-		});
+		new Label (informationComposite2, SWT.NULL);
+		coordinate2 = new Label (informationComposite2, SWT.NULL);
+		coordinate2.setText("Y:   " + I18N.getMessage("CurrentRailSysComposite.noValue"));
+				
+		//Composite for the Table
+		Composite informationComposite3 = new Composite(informationComposite, SWT.NULL);
+		informationComposite3.setLayout(new GridLayout(1, true));
+		informationComposite3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		//node information list
-		nodeInformation = new List(buttonComposite, SWT.BORDER);
-		nodeInformation.setEnabled(false);
-		nodeInformation.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-		GridData nodeInformationData = new GridData();
-		nodeInformationData.horizontalSpan = 3;
-		nodeInformationData.verticalAlignment = SWT.FILL;
-		nodeInformationData.horizontalAlignment = SWT.FILL;
-		nodeInformationData.grabExcessHorizontalSpace = true;
-		nodeInformationData.grabExcessVerticalSpace = true;
-		nodeInformation.setLayoutData(nodeInformationData);
-		nodeInformation.add("Auf einen Knoten klicken");
+		//Label with Table Title
+		Label tableTitle = new Label (informationComposite3, SWT.NULL);
+		tableTitle.setText("Verbindungen");
+		tableTitle.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
+		tableTitle.setLayoutData(dataCenter);
+		
+		//Table of Connections
+		informationTable = new Table(informationComposite3, SWT.BORDER);
+		informationTable.setLinesVisible(true);
+		informationTable.setHeaderVisible(true);
+		informationTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		
+		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
+		for (int i = 0; i < titles.length; i++) {
+	    	TableColumn column = new TableColumn(informationTable, SWT.NONE);
+	    	column.setText(titles[i]);
+	    }
+	    
+	    for (int i=0; i<titles.length; i++) {
+	    	informationTable.getColumn (i).pack ();
+	    	informationTable.getColumn (i).setWidth(168);
+	    } 
+	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		informationTable.setVisible(false);
 	}
 	
 	/**

@@ -61,27 +61,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 		Node node5 = new Node("Node 5", 100, 53, 15, 15);
 		model.getActiveRailwaySys().addNode(node5);
 		
-		Path path = new Path(node1, node5, 0);
+		Path path = new Path(node1, node5, 120);
 		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node5, node3, 0);
+		path = new Path(node5, node3, 200);
 		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node4, node3, 0);
+		path = new Path(node4, node3, 70);
 		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node3, node2, 0);
+		path = new Path(node3, node2, 300);
 		model.getActiveRailwaySys().addPath(path);
 		
-		for (int i=1; i<=20; i++) {
-			ScheduleType testScheduleType = ScheduleType.SINGLE_RIDE;
-			java.util.List<Integer> testDays = new ArrayList<Integer>();
-			testDays.add(2);
-			testDays.add(3);
-			Calendar firstRide = new GregorianCalendar();
-			firstRide.set(0, 0, 0, 15, 20);
-			ScheduleScheme testScheduleScheme = new ScheduleScheme (testScheduleType, testType, testDays, firstRide, "1", "Testfahrplan"+i);
-			testScheduleScheme.addStop(node1, 0, 5);
-			testScheduleScheme.addStop(node4, 10, 5);
-			model.addActiveScheduleScheme(testScheduleScheme);
-		}
+		ScheduleType testScheduleType = ScheduleType.SINGLE_RIDE;
+		java.util.List<Integer> testDays = new ArrayList<Integer>();
+		testDays.add(2);
+		testDays.add(3);
+		Calendar firstRide = new GregorianCalendar();
+		firstRide.set(0, 0, 0, 15, 20);
+		ScheduleScheme testScheduleScheme = new ScheduleScheme (testScheduleType, testType, testDays, firstRide, "1", "Testfahrplan");
+		testScheduleScheme.addStop(node1, 0, 5);
+		testScheduleScheme.addStop(node4, 10, 5);
+		model.addActiveScheduleScheme(testScheduleScheme);
 	}
 	
 	@Override
@@ -111,7 +109,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("standardTrainIcon", "img/train.gif");
 		ImageHelper.loadImage("questionMarkSmall", "img/questionMarkSmall.png");
 		ImageHelper.loadImage("crosshair", "img/crosshair.png");
-		ImageHelper.loadImage("trashIconSmall", "img/trashIconSmall.png");
 		
 		// load train types
 		try {
