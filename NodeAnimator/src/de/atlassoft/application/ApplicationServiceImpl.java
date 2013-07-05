@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Observer;
 
 import de.atlassoft.ai.AIService;
 import de.atlassoft.ai.AIServiceImpl;
@@ -89,7 +90,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		// initialize service intances
 		model = new ModelServiceImpl();
 		persistence = new PersistenceServiceImpl();
-		ai = new AIServiceImpl();
+		ai = new AIServiceImpl(this);
 		I18N = I18NSingleton.getInstance();
 		// TODO: unvollständig
 		
@@ -144,11 +145,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public void startSimulation(Calendar time) {
+	public void startSimulation(Calendar time, Observer o) {
 		RailwaySystem railSys = model.getActiveRailwaySys();
 		List<ScheduleScheme> schemes = model.getActiveScheduleSchemes();
 		if (!ai.isRunning() && railSys != null) {
-			ai.startSimulation(time, railSys, schemes);
+			ai.startSimulation(time, railSys, schemes, o);
 		}
 		
 	}

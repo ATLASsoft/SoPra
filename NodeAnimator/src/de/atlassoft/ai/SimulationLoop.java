@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.swt.widgets.Display;
-
+import de.atlassoft.model.ModelService;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ScheduleFactory;
@@ -27,7 +25,7 @@ import de.hohenheim.view.map.NodeMap;
  * @author Alexander Balogh
  * 
  */
-public class SimulationLoop {
+public class SimulationLoop extends Observable {
 
 	private int delta;
 	private long last;
@@ -54,7 +52,7 @@ public class SimulationLoop {
 	 * equals 1000 seconds in simulated time.
 	 */
 	private int timeLapse;
-
+	
 	/**
 	 * Creates a new simulation loop.
 	 */
@@ -175,6 +173,8 @@ public class SimulationLoop {
 		passedSimTime += delta * timeLapse;
 		lastTime.setTime(simTime.getTime());
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
+		setChanged();
+		notifyObservers(simTime);
 		
 		// create new schedules when day of sim time has changed
 		if (simTime.get(Calendar.DAY_OF_WEEK) != lastTime.get(Calendar.DAY_OF_WEEK)) {

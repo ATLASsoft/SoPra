@@ -1,6 +1,8 @@
 package de.atlassoft.application;
 
 import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.Node;
@@ -47,7 +49,7 @@ public interface ApplicationService {
 	 * @param time
 	 *            Simulation time the simulation should start at
 	 */
-	void startSimulation(Calendar time);
+	void startSimulation(Calendar time, Observer o);
 	
 	/**
 	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no

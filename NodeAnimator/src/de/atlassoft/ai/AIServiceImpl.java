@@ -2,6 +2,7 @@ package de.atlassoft.ai;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Observer;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
@@ -24,12 +25,19 @@ public class AIServiceImpl implements AIService {
 	 * Indicates if there is an ongoing simulation.
 	 */
 	private boolean running = false;
+	private ApplicationService application;
+	
+	public AIServiceImpl(ApplicationService app) {
+		application = app;
+	}
+	
 	
 	@Override
-	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes) {
+	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {
 			//simulation starten
 			loop = new SimulationLoop(new Graph(railSys));
+			loop.addObserver(o);
 			loop.startRun(start, schemes);
 			running = true;
 		}

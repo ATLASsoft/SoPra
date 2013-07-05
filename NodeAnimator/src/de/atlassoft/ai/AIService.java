@@ -2,6 +2,7 @@ package de.atlassoft.ai;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Observer;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
@@ -27,7 +28,7 @@ public interface AIService {
 	 * @param start
 	 *            Simulation time the simulation should start at
 	 */
-	void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes);
+	void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o);
 	
 	/**
 	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no
