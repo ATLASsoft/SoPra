@@ -181,7 +181,7 @@ public class ScheduleAndTrainTypeComposite {
 	    setScheduleActive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		if (passiveSchedules.getItemCount() == 0) {	    			
+	    		if (activeSchedules.getSelectionIndex() >= 0 || passiveSchedules.getItemCount() == 0) {	    			
 	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
 	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
 	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.AlreadyActive"));
@@ -201,7 +201,46 @@ public class ScheduleAndTrainTypeComposite {
 	    
 	    Button deleteSchedule = new Button(buttonComposite, SWT.PUSH);
 	    deleteSchedule.setImage(ImageHelper.getImage("trashIconSmall"));
-	    //TODO: Listener implementieren
+	    deleteSchedule.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+	    		ScheduleScheme schedule = null;
+	    		//Check if nothing is selected
+	    		if (activeSchedules.getSelectionIndex() < 0 && passiveSchedules.getSelectionIndex() < 0) {
+	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
+	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
+	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.NoScheduleSelected"));
+	    			errorMessageBox.open();
+	    		}
+	    		//Check if a passive schedule is selected
+	    		else if (activeSchedules.getSelectionIndex() < 0) {
+	    			if (passiveSchedules.getSelectionIndex() >= 0) {
+	    				String name = passiveSchedules.getItem(passiveSchedules.getSelectionIndex());
+	    				for (ScheduleScheme temp : applicationService.getModel().getPassiveScheduleSchemes()) {
+	    					if (temp.getID().equals(name)) {
+	    						schedule = temp;
+	    					}
+	    				}
+	    			}
+		    		applicationService.deleteScheduleScheme(schedule);
+		    		passiveSchedules.remove(passiveSchedules.getSelectionIndex());
+	    		}
+	    		//Check if an active schedule is selected
+	    		else if (passiveSchedules.getSelectionIndex() < 0) {
+	    			if (activeSchedules.getSelectionIndex() >= 0) {
+	    				String name = activeSchedules.getItem(activeSchedules.getSelectionIndex());
+	    				for (ScheduleScheme temp : applicationService.getModel().getActiveScheduleSchemes()) {
+	    					if (temp.getID().equals(name)) {
+	    						schedule = temp;
+	    					}
+	    				}
+	    			}
+	    			applicationService.deleteScheduleScheme(schedule);
+		    		activeSchedules.remove(activeSchedules.getSelectionIndex());
+	    		}
+	    		
+	    		
+	    	}
+		});
 	    
 	    	// \/ Button
 	    Button setSchedulePassive = new Button(buttonComposite, SWT.PUSH);
@@ -210,7 +249,7 @@ public class ScheduleAndTrainTypeComposite {
 	    setSchedulePassive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent e) {
-	    		if (activeSchedules.getItemCount() == 0) {
+	    		if (passiveSchedules.getSelectionIndex() >= 0 || activeSchedules.getItemCount() == 0) {
 	    			MessageBox errorMessageBox = new MessageBox(new Shell(), SWT.ICON_ERROR);
 	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
 	    			errorMessageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.AlreadyPassive"));
@@ -463,6 +502,7 @@ public class ScheduleAndTrainTypeComposite {
 		passiveSchedules.select(passiveSchedules.getItemCount()-1);
 	}
 	
+	//TODO: Fehler abfangen, dass die Tabelle auf sich selbst droppen kann
 	/**
 	 * Adds a drag and drop listener to the given list.
 	 * 
