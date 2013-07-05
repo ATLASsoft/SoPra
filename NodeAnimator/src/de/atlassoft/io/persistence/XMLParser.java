@@ -22,6 +22,7 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
+import de.atlassoft.model.State;
 import de.atlassoft.model.TrainType;
 
 /**
@@ -495,4 +496,150 @@ class XMLParser {
 
 		}
 	}
+
+	protected void saveRailWaySystem(RailwaySystem railSys, Path path)
+			throws IOException {
+		FileWriter out = null;
+		if (!Files.exists(path)) {
+			createXML(path, "Railwaysystems");
+		}
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+			Document doc = (Document) builder.build(path.toFile());
+			XMLOutputter xmlOutput = new XMLOutputter();
+			
+			List<Node> nodelist= railSys.getNodes();
+			List<de.atlassoft.model.Path> pathlist = railSys.getPaths();
+			//Erstellen
+			Element railsys = new Element("Railwaysystem");
+			Element nodes = new Element("Nodes");
+			Element paths = new Element("Paths");
+			railsys.setAttribute(new Attribute("id", railSys.getID()));
+			//Schleife für alle Knoten
+			for (int i = 0; i < nodelist.size(); i++) {
+
+				Element node = new Element ("Node" + i);
+				Element name = new Element ("Name").setText(nodelist.get(i).getName());
+				Element x = new Element ("X-Koordinate").setText(Integer.toString(nodelist.get(i).getNodeFigure().getBounds().x()));
+				Element y = new Element ("Y-Koordinate").setText(Integer.toString(nodelist.get(i).getNodeFigure().getBounds().y()));
+				node.addContent(name);
+				node.addContent(x);
+				node.addContent(y);
+				nodes.addContent(node);
+			}
+			railsys.addContent(nodes);
+			// Schleife für alle Paths
+			for (int i = 0; i < pathlist.size(); i++) {
+
+				Element singlePath = new Element("Path" + i);
+				Element topspeed = new Element("Topspeed").setText(Double
+						.toString(pathlist.get(i).getTopSpeed()));
+				Element start = new Element("Start").setText(pathlist.get(i)
+						.getStart().getName());
+				Element end = new Element("End").setText(pathlist.get(i)
+						.getEnd().getName());
+
+				singlePath.addContent(topspeed);
+				singlePath.addContent(start);
+				singlePath.addContent(end);
+
+				paths.addContent(singlePath);
+			}
+			railsys.addContent(paths);
+			
+			doc.getRootElement().addContent(railsys);		
+			out = new FileWriter(path.toFile());
+			xmlOutput.setFormat(Format.getPrettyFormat());
+			xmlOutput.output(doc, out);
+
+			System.out.println("File updated!");
+
+		} catch (JDOMException exp) {
+			throw new IOException(exp);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+		}
+	}
+
+	protected void deleteRailwaySystem(String railSysID, Path path) throws IOException {
+		if (!Files.exists(path)) {
+			return;
+		}
+		FileWriter out = null;
+		try {
+
+			SAXBuilder builder = new SAXBuilder();
+
+			Document doc = (Document) builder.build(path.toFile());
+			// RailwaySystems Element
+			Element rootNode = doc.getRootElement();
+			
+			// RailwaySystem Elemente
+			List<Element> railSysliste = rootNode.getChildren();
+			for (int i = 0; i < railSysliste.size(); i++) {
+				//RailwaySystem Element
+				Element railwaySys = (Element) railSysliste.get(i);
+
+				if (railwaySys.getAttributeValue("id").equalsIgnoreCase(
+						railSysID)) {
+					rootNode.removeContent(railwaySys);
+					System.out.println("Railwaysystem deleted!");
+				}
+				XMLOutputter xmlOutput = new XMLOutputter();
+
+				out = new FileWriter(path.toFile());
+				xmlOutput.setFormat(Format.getPrettyFormat());
+				xmlOutput.output(doc, out);
+			}
+		} catch (JDOMException exp) {
+			throw new IOException(exp);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+
+		}
+
+	}
+	
+	protected RailwaySystem loadRailwaySystem(String railSysID, Path path) throws IOException {
+		// TODO Auto-generated method stub
+		return new RailwaySystem(railSysID);
+	}
+	
+	protected List<String> getRailwaySystemIDs(Path path) throws IOException {
+
+		List<String> res = new ArrayList<String>();
+
+		if (!Files.exists(path)) {
+			return res;
+		}
+		SAXBuilder builder = new SAXBuilder();
+		File xmlFile = new File(path.toString());
+
+		try {
+
+			Document document = (Document) builder.build(xmlFile);
+
+			// RailwaySystems Element
+			Element rootNode = document.getRootElement();
+
+			// all RailwaySystem Elemente
+			List<Element> railSysliste = rootNode.getChildren();
+
+			for (int i = 0; i < railSysliste.size(); i++) {
+				res.add(railSysliste.get(i).getAttributeValue("id"));
+			}
+
+			return res;
+		} catch (JDOMException exp) {
+			{
+				throw new IOException(exp);
+			}
+		}
+	}
 }
+	

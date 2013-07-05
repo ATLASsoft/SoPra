@@ -109,25 +109,24 @@ public class PersistenceServiceImpl implements PersistenceService {
 	@Override
 	public void saveRailwaySystem(RailwaySystem railSys) throws IOException {
 		createSaveDataDir();
-		// TODO Auto-generated method stub
-
+		if (!Files.exists(RAILWAYSYS_PATH)) {
+			xmlParser.createXML(RAILWAYSYS_PATH, "Railwaysystems");
+		}
+		xmlParser.saveRailWaySystem(railSys, RAILWAYSYS_PATH);
 	}
 
 	@Override
 	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException {
-		// TODO Auto-generated method stub
-		return new RailwaySystem(railSysID);
+		return xmlParser.loadRailwaySystem(railSysID, RAILWAYSYS_PATH);
 	}
 
 	@Override
 	public void deleteRailwaySystem(String railSysID) throws IOException {
-		// TODO Auto-generated method stub
-
+		xmlParser.deleteRailwaySystem(railSysID, RAILWAYSYS_PATH);
 	}
 
 	@Override
 	public List<String> getRailwaySystemIDs() throws IOException {
-		// TODO Auto-generated method stub
-		return new ArrayList<String>();
+		return xmlParser.getRailwaySystemIDs(RAILWAYSYS_PATH);
 	}
 }
