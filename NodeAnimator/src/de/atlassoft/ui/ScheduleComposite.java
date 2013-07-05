@@ -62,7 +62,8 @@ public class ScheduleComposite {
 	private Boolean addStationState = false;
 	private Spinner delaySpinner, timeSpinner;
 	private List stationList, firstStationList, lastStationList;
-	private Combo trainTypeCombo, hourCombo, minuteCombo;
+	private Combo repeatCombo, trainTypeCombo, hourCombo, minuteCombo, hourComboIFR,
+				  minuteComboIFR, hourComboILR, minuteComboILR, hourComboI, minuteComboI;
 	private Label errorField;
 	private Text nameField;
 	private java.util.List<Integer> idleTime, arrivalTime;
@@ -179,7 +180,7 @@ public class ScheduleComposite {
 		Label repeatLabel = new Label (buttonComposite, SWT.NONE);
 		repeatLabel.setText(I18N.getMessage("ScheduleComposite.RepeatLabel"));
 		
-		final Combo repeatCombo = new Combo(buttonComposite, SWT.READ_ONLY);
+		repeatCombo = new Combo(buttonComposite, SWT.READ_ONLY);
 		
 		repeatCombo.add(I18N.getMessage("ScheduleComposite.RepeatComboSingular"));
 		repeatCombo.add(I18N.getMessage("ScheduleComposite.RepeatComboIntervall"));
@@ -187,10 +188,10 @@ public class ScheduleComposite {
 		repeatCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//intervall ride
+				//interval ride
 				if (repeatCombo.getSelectionIndex() == 1) {
 					disposeComposite();
-					createIntervallRide();
+					createIntervalRide();
 				} 
 				//singular ride
 				else {
@@ -580,10 +581,10 @@ public class ScheduleComposite {
 				
 				//Get first ride
 				Calendar firstRide = new GregorianCalendar();
-				int hour = Integer.parseInt(hourCombo.getItem(hourCombo.getSelectionIndex()));
-				int minute = Integer.parseInt(minuteCombo.getItem(minuteCombo.getSelectionIndex()));
+				int hourFR = Integer.parseInt(hourCombo.getItem(hourCombo.getSelectionIndex()));
+				int minuteFR = Integer.parseInt(minuteCombo.getItem(minuteCombo.getSelectionIndex()));
 				firstRide.clear();
-				firstRide.set(0, 0, 0, hour, minute);
+				firstRide.set(0, 0, 0, hourFR, minuteFR);
 				
 				//Get the rail sys id
 				String railSysID = applicationService.getModel().getActiveRailwaySys().getID();
@@ -598,6 +599,22 @@ public class ScheduleComposite {
 				
 				ScheduleScheme schedule = new ScheduleScheme(scheduleType, trainType, days, firstRide, railSysID, nameField.getText());
 				
+				//Check whether it's a singular or repeated ride
+				if (repeatCombo.getText().equals(I18N.getMessage("ScheduleComposite.RepeatComboIntervall"))) {
+					Calendar lastRide = new GregorianCalendar();
+					int hourLR = Integer.parseInt(hourComboILR.getItem(hourComboILR.getSelectionIndex()));
+					int minuteLR = Integer.parseInt(minuteComboILR.getItem(minuteComboILR.getSelectionIndex()));
+					lastRide.clear();
+					lastRide.set(0, 0, 0, hourLR, minuteLR);
+					schedule.setLastRide(lastRide);
+					
+					int intervalHours = Integer.parseInt(hourComboI.getItem(hourComboI.getSelectionIndex()));
+					int intervalMinutes = Integer.parseInt(minuteComboI.getItem(minuteComboI.getSelectionIndex()));
+					int interval = (intervalHours * 60) + intervalMinutes;
+					schedule.setInterval(interval);
+				}
+				
+				//Adds all the stops
 				for (int i=0; i<arrivalTime.size(); i++) {
 					schedule.addStop(nodeList.get(i), arrivalTime.get(i), idleTime.get(i));
 				}
@@ -739,9 +756,9 @@ public class ScheduleComposite {
 	}
 	
 	/**
-	 * Creates the elements for the intervall ride
+	 * Creates the elements for the interval ride
 	 */
-	private void createIntervallRide() {
+	private void createIntervalRide() {
 		/*
 		 * 1st row (first ride)
 		 */
@@ -795,40 +812,40 @@ public class ScheduleComposite {
 		Composite timeComposite2 = new Composite(departureComposite, SWT.NONE);
 		timeComposite2.setLayout(new RowLayout());
 		
-		hourCombo = new Combo(timeComposite2, SWT.READ_ONLY);
-		hourCombo.add("00");
-		hourCombo.add("01");
-		hourCombo.add("02");
-		hourCombo.add("03");
-		hourCombo.add("04");
-		hourCombo.add("05");
-		hourCombo.add("06");
-		hourCombo.add("07");
-		hourCombo.add("08");
-		hourCombo.add("09");
+		hourComboILR = new Combo(timeComposite2, SWT.READ_ONLY);
+		hourComboILR.add("00");
+		hourComboILR.add("01");
+		hourComboILR.add("02");
+		hourComboILR.add("03");
+		hourComboILR.add("04");
+		hourComboILR.add("05");
+		hourComboILR.add("06");
+		hourComboILR.add("07");
+		hourComboILR.add("08");
+		hourComboILR.add("09");
 		for (int i=10; i<24; i++) {
-			hourCombo.add(Integer.toString(i));
+			hourComboILR.add(Integer.toString(i));
 		}
-		hourCombo.select(1);
+		hourComboILR.select(1);
 		
 		Label pointLabel2 = new Label(timeComposite2, SWT.NONE);
 		pointLabel2.setText(":");
 		
-		minuteCombo = new Combo(timeComposite2, SWT.READ_ONLY);
-		minuteCombo.add("00");
-		minuteCombo.add("01");
-		minuteCombo.add("02");
-		minuteCombo.add("03");
-		minuteCombo.add("04");
-		minuteCombo.add("05");
-		minuteCombo.add("06");
-		minuteCombo.add("07");
-		minuteCombo.add("08");
-		minuteCombo.add("09");
+		minuteComboILR = new Combo(timeComposite2, SWT.READ_ONLY);
+		minuteComboILR.add("00");
+		minuteComboILR.add("01");
+		minuteComboILR.add("02");
+		minuteComboILR.add("03");
+		minuteComboILR.add("04");
+		minuteComboILR.add("05");
+		minuteComboILR.add("06");
+		minuteComboILR.add("07");
+		minuteComboILR.add("08");
+		minuteComboILR.add("09");
 		for (int i=10; i<=59; i=i+1) {
-			minuteCombo.add(Integer.toString(i));
+			minuteComboILR.add(Integer.toString(i));
 		}
-		minuteCombo.select(0);
+		minuteComboILR.select(0);
 		
 		/*
 		 * 3rd row (interval)
@@ -839,40 +856,40 @@ public class ScheduleComposite {
 		Composite timeComposite3 = new Composite(departureComposite, SWT.NONE);
 		timeComposite3.setLayout(new RowLayout());
 		
-		hourCombo = new Combo(timeComposite3, SWT.READ_ONLY);
-		hourCombo.add("00");
-		hourCombo.add("01");
-		hourCombo.add("02");
-		hourCombo.add("03");
-		hourCombo.add("04");
-		hourCombo.add("05");
-		hourCombo.add("06");
-		hourCombo.add("07");
-		hourCombo.add("08");
-		hourCombo.add("09");
+		hourComboI = new Combo(timeComposite3, SWT.READ_ONLY);
+		hourComboI.add("00");
+		hourComboI.add("01");
+		hourComboI.add("02");
+		hourComboI.add("03");
+		hourComboI.add("04");
+		hourComboI.add("05");
+		hourComboI.add("06");
+		hourComboI.add("07");
+		hourComboI.add("08");
+		hourComboI.add("09");
 		for (int i=10; i<24; i++) {
-			hourCombo.add(Integer.toString(i));
+			hourComboI.add(Integer.toString(i));
 		}
-		hourCombo.select(0);
+		hourComboI.select(0);
 		
 		Label pointLabel3 = new Label(timeComposite3, SWT.NONE);
 		pointLabel3.setText("h");
 		
-		minuteCombo = new Combo(timeComposite3, SWT.READ_ONLY);
-		minuteCombo.add("00");
-		minuteCombo.add("01");
-		minuteCombo.add("02");
-		minuteCombo.add("03");
-		minuteCombo.add("04");
-		minuteCombo.add("05");
-		minuteCombo.add("06");
-		minuteCombo.add("07");
-		minuteCombo.add("08");
-		minuteCombo.add("09");
+		minuteComboI = new Combo(timeComposite3, SWT.READ_ONLY);
+		minuteComboI.add("00");
+		minuteComboI.add("01");
+		minuteComboI.add("02");
+		minuteComboI.add("03");
+		minuteComboI.add("04");
+		minuteComboI.add("05");
+		minuteComboI.add("06");
+		minuteComboI.add("07");
+		minuteComboI.add("08");
+		minuteComboI.add("09");
 		for (int i=10; i<=59; i=i+5) {
-			minuteCombo.add(Integer.toString(i));
+			minuteComboI.add(Integer.toString(i));
 		}
-		minuteCombo.select(1);
+		minuteComboI.select(1);
 		
 		Label minLabel = new Label(timeComposite3, SWT.NONE);
 		minLabel.setText("min");

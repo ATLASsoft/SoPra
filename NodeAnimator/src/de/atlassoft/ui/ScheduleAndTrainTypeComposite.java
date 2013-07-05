@@ -2,19 +2,23 @@ package de.atlassoft.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
@@ -101,6 +105,11 @@ public class ScheduleAndTrainTypeComposite {
 	 */
 	private void initScheduleUI() {
 		
+		//Font for the titles of the schedules lists
+		FontData fontData = new FontData();
+		fontData.setStyle(SWT.BOLD);
+		fontData.setHeight(9);
+		
 		scheduleComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		scheduleComposite.setLayout(new GridLayout(4, false));
 		
@@ -113,16 +122,22 @@ public class ScheduleAndTrainTypeComposite {
 		noSelection.setText("Kein Fahrplan ausgewählt");
 		
 		//Shows the two lists and the buttons to switch
-		Composite listComposite = new Composite(scheduleComposite, SWT.BORDER);
+		Composite listComposite = new Composite(scheduleComposite, SWT.NONE);
 		listComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		listComposite.setLayout(new GridLayout());
 		
 		//Active schedules list
 		Label activeSchedulesLabel = new Label(listComposite, SWT.NONE);
+		activeSchedulesLabel.setFont(new Font(Display.getCurrent(), fontData));
 		activeSchedulesLabel.setText("Aktive Fahrpläne:");
 		
 		activeSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
-		activeSchedules.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		//TODO: fertig machen
+		GridData activeSchedulesData = new GridData();
+		activeSchedulesData.grabExcessHorizontalSpace = true;
+		activeSchedulesData.horizontalAlignment = SWT.FILL;
+//		activeSchedulesData.verticalIndent = 200;
+		activeSchedules.setLayoutData(activeSchedulesData);
 		for (ScheduleScheme temp: applicationService.getModel().getActiveScheduleSchemes()) {
 			activeSchedules.add(temp.getID());
 		}
@@ -176,6 +191,10 @@ public class ScheduleAndTrainTypeComposite {
 	    	}
 	    });
 	    
+	    Button deleteSchedule = new Button(buttonComposite, SWT.PUSH);
+	    deleteSchedule.setImage(ImageHelper.getImage("trashIconSmall"));
+	    //TODO: Listener implementieren
+	    
 	    	// \/ Button
 	    Button setSchedulePassive = new Button(buttonComposite, SWT.PUSH);
 	    setSchedulePassive.setText("\\/ Passiv setzen");
@@ -204,6 +223,7 @@ public class ScheduleAndTrainTypeComposite {
 		
 		//Passive schedules list
 	    Label passiveSchedulesLabel = new Label(listComposite, SWT.NONE);
+	    passiveSchedulesLabel.setFont(new Font(Display.getCurrent(), fontData));
 	    passiveSchedulesLabel.setText("Passive Fahrpläne:");
 	    
 		passiveSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
@@ -258,6 +278,8 @@ public class ScheduleAndTrainTypeComposite {
 	 * Builds the composite which shows the information about the schedule.
 	 */
 	private void createInformation() {
+		DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+		
 		Label name = new Label(informationComposite, SWT.NONE);
 		name.setText("Name:");
 		
@@ -281,7 +303,29 @@ public class ScheduleAndTrainTypeComposite {
 			departure.setText("Abfahrt:");
 			
 			Label departureInformation = new Label(informationComposite, SWT.NONE);
-			departureInformation.setText(activeSchedule.getFirstRide().getTime().toString());
+			departureInformation.setText(dateFormat.format(activeSchedule.getFirstRide().getTime()));
+		}
+		else {
+			Label repetitionInformation = new Label(informationComposite, SWT.NONE);
+			repetitionInformation.setText("Intervall");
+			
+			Label firstRide = new Label(informationComposite, SWT.NONE);
+			firstRide.setText("Erste Fahrt:");
+			
+			Label firstRideInformation = new Label(informationComposite, SWT.NONE);
+			firstRideInformation.setText(dateFormat.format(activeSchedule.getFirstRide().getTime()));
+			
+			Label lastRide = new Label(informationComposite, SWT.NONE);
+			lastRide.setText("Letzte Fahrt:");
+			
+			Label lastRideInformation = new Label(informationComposite, SWT.NONE);
+			lastRideInformation.setText(dateFormat.format(activeSchedule.getLastRide().getTime()));
+			
+			Label interval = new Label(informationComposite, SWT.NONE);
+			interval.setText("Intervall:");
+			
+			Label intervalInformation = new Label(informationComposite, SWT.NONE);
+			intervalInformation.setText(String.valueOf(activeSchedule.getInterval()) + " minütig");
 		}
 		
 		Label days = new Label(informationComposite, SWT.NONE);
@@ -289,7 +333,10 @@ public class ScheduleAndTrainTypeComposite {
 		days.setText("Tage:");
 		
 		Composite allDays = new Composite(informationComposite, SWT.NONE);
-		allDays.setLayout(new RowLayout(SWT.VERTICAL));
+		RowLayout rowL = new RowLayout(SWT.VERTICAL);
+		rowL.marginLeft = 0;
+		allDays.setLayout(rowL);
+//		allDays.setLayout(new RowLayout(SWT.VERTICAL));
 		for (Integer temp : activeSchedule.getDays()) {
 			if (temp == Calendar.MONDAY) {
 				Label monday = new Label(allDays, SWT.NONE);
