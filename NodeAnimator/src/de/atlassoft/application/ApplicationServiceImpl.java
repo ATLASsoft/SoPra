@@ -264,7 +264,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deleteTrainType(TrainType trainType) {
 		try {
 			persistence.deleteTrainType(trainType);
-			model.deleteTrainType(trainType); //TODO: Fahrpläne löschen
+			persistence.deleteSchedules(trainType);
+			model.deleteTrainType(trainType);
 		} catch (IOException e) {
 			e.printStackTrace();
 			ErrorHelper.createErrorMessage(
