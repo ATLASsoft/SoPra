@@ -32,7 +32,6 @@ public class SimulationLoop {
 	private int delta;
 	private long last;
 	private boolean alive;
-	private boolean dayChange;
 	private Calendar lastTime;
 	private Calendar simTime;
 	private List<ScheduleScheme> activeSchemes;
@@ -85,7 +84,6 @@ public class SimulationLoop {
 				.createScheduleQueue(schemes, startTime); // create schedules
 															// for first day
 		
-		dayChange = false;
 		agentCounter = 1;
 		
 		// init time management
@@ -146,7 +144,6 @@ public class SimulationLoop {
 			while (alive) {
 				computeDelta(); System.out.println("delta: " + delta);
 				updateSimTime();
-				createNewSchedules();
 				createNewTrains();
 				deleteFinishedTrains();
 
@@ -201,7 +198,7 @@ public class SimulationLoop {
 	private void createNewTrains() {
 		// add trains that have to start to ready schedules
 		while (!schedules.isEmpty()
-				&& ScheduleFactory.isAfter(schedules.peek().getArrivalTimes()[0], simTime)) {
+				&& ScheduleFactory.isAfter(simTime, schedules.peek().getArrivalTimes()[0])) {
 			readySchedules.add(schedules.poll());
 		}
 		
