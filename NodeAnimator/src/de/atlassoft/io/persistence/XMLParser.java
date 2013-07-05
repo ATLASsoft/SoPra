@@ -289,6 +289,7 @@ class XMLParser {
 					String[] trainType = node.getChildText("TrainType").split(":");
 					String scheduleType = node.getChildText("ScheduleType");
 					String newName = node.getAttributeValue("id");
+					String newInterval = node.getChildText("Intervall");
 					List<Integer> newDrivingDays = new ArrayList<Integer>();
 					String[] departures = null;
 					
@@ -310,15 +311,9 @@ class XMLParser {
 					List<Element> drivingDays = node.getChild("DrivingDays")
 							.getChildren();
 					for (int x = 0; x < drivingDays.size(); x++) {
-						newDrivingDays.add(Integer.parseInt(drivingDays.get(x).toString()));
+						newDrivingDays.add(Integer.parseInt(drivingDays.get(x).getText()));
 					}
-					// schleife über departures
-					List<Element> abfahrten = node.getChild("Departures")
-							.getChildren();
-					for (int x = 0; x < abfahrten.size(); x++) {
-						Element singleAbfahrt = abfahrten.get(x);
-						departures = singleAbfahrt.getText().split(":");
-					}
+
 
 					// neuen TrainType erstellen
 					TrainType newTrainType = new TrainType(
@@ -335,28 +330,35 @@ class XMLParser {
 							railSysId,
 							newName);
 					
-					List<Node> nodeList = railSys.getNodes();
-					Node newNode = null;
-					for (Node nod : nodeList){
-						if (nod.getName().equalsIgnoreCase(departures[0])){
-							newNode = nod;
+					// schleife über departures
+					List<Element> abfahrten = node.getChild("Departures")
+							.getChildren();
+					for (int x = 0; x < abfahrten.size(); x++) {
+						Element singleAbfahrt = abfahrten.get(x);
+						departures = singleAbfahrt.getText().split(":");
+						List<Node> nodeList = railSys.getNodes();
+						Node newNode = null;
+						for (Node nod : nodeList){
+							if (nod.getName().equalsIgnoreCase(departures[0])){
+								newNode = nod;
+							}
 						}
+						newSchedule.addStop(newNode, Integer.parseInt(departures[1]), Integer.parseInt(departures[2]));
 					}
-					
-					newSchedule.addStop(newNode, Integer.parseInt(departures[1]), Integer.parseInt(departures[2]));
+
 					newSchedule.setLastRide(newCalLast);
+					newSchedule.setInterval(Integer.parseInt(newInterval));
 			
 					res.add(newSchedule);
+					System.out.println(res.size());
 				}
 			}
 
 			return res;
-		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-		}
-		return res;
+		} catch (JDOMException exp) {
+			{throw new IOException(exp);
+		} 
+		} 
 	}
 
 	/*

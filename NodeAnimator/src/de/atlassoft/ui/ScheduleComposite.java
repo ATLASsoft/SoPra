@@ -62,8 +62,8 @@ public class ScheduleComposite {
 	private Boolean addStationState = false;
 	private Spinner delaySpinner, timeSpinner;
 	private List stationList, firstStationList, lastStationList;
-	private Combo repeatCombo, trainTypeCombo, hourCombo, minuteCombo, hourComboIFR,
-				  minuteComboIFR, hourComboILR, minuteComboILR, hourComboI, minuteComboI;
+	private Combo repeatCombo, trainTypeCombo, hourCombo, minuteCombo,
+				  hourComboILR, minuteComboILR, hourComboI, minuteComboI;
 	private Label errorField;
 	private Text nameField;
 	private java.util.List<Integer> idleTime, arrivalTime;
