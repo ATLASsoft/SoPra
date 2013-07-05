@@ -1,5 +1,7 @@
 package de.atlassoft.ai;
 
+import org.eclipse.swt.widgets.Display;
+
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.TrainRideStatistic;
 import de.hohenheim.view.FigureFactory;
@@ -15,20 +17,28 @@ public class TrainAgent implements Runnable {
 	private TrainRideStatistic statistic;
 	private Graph graph;
 	
-	public TrainAgent(Graph graph, int id, Schedule schedule) {
-		this.figure = FigureFactory.createTrainFigure(
-				graph.getRailwaySystem().getNodeMap(), schedule.getStations()[0].getNodeFigure(),
-				id,
-				this);
-		
+	protected TrainAgent(Graph graph, int id, Schedule schedule) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
 		this.schedule = schedule;
 		this.id = id;
+		this.graph = graph;
+		
+		//TODO: besser lösen
+		Display.getDefault().syncExec(new Runnable() {
+			int foo;
+			@Override
+			public void run() {
+				figure = FigureFactory.createTrainFigure(
+						TrainAgent.this.graph.getRailwaySystem().getNodeMap(), TrainAgent.this.schedule.getStations()[0].getNodeFigure(),
+						TrainAgent.this.id,
+						TrainAgent.this);
+			}
+		});
 	}
 	
 	
 	
-	public TrainFigure getTrainFigure() {
+	protected TrainFigure getTrainFigure() {
 		return figure;
 	}
 
@@ -36,11 +46,11 @@ public class TrainAgent implements Runnable {
 		return schedule;
 	}
 
-	public TrainRideStatistic getTrainRideStatistic() {
+	protected TrainRideStatistic getTrainRideStatistic() {
 		return statistic;
 	}
 
-	public int getID() {
+	protected int getID() {
 		return id;
 	}
 	
@@ -50,6 +60,28 @@ public class TrainAgent implements Runnable {
 	public void run() {
 		
 		
+	}
+	
+	protected void terminate() {
+		
+	}
+	
+	
+	
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TrainAgent)) {
+			return false;
+		} else {
+			return this.id == ((TrainAgent) obj).id;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 
 }

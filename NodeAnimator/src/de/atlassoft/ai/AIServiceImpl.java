@@ -29,8 +29,7 @@ public class AIServiceImpl implements AIService {
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes) {
 		if (!running) {
 			//simulation starten
-			Graph g = new Graph(railSys);
-			loop = new SimulationLoop();
+			loop = new SimulationLoop(new Graph(railSys));
 			loop.startRun(start, schemes);
 			running = true;
 		}

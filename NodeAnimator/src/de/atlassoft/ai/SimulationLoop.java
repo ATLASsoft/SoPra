@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import org.eclipse.swt.widgets.Display;
 
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
@@ -26,13 +32,18 @@ public class SimulationLoop {
 	private int delta;
 	private long last;
 	private boolean alive;
+	private boolean dayChange;
 	private Calendar lastTime;
 	private Calendar simTime;
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
 	private PriorityQueue<Schedule> schedules;
+	private Queue<TrainAgent> activeAgents;
 	private Queue<TrainAgent> finishedTrains;
 	private Loop loop;
+	private Graph graph;
+	private int agentCounter;
+	private ExecutorService executor;
 
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
@@ -48,10 +59,13 @@ public class SimulationLoop {
 	/**
 	 * Creates a new simulation loop.
 	 */
-	protected SimulationLoop() {
+	protected SimulationLoop(Graph graph) {
+		this.graph = graph;
 		timeLapse = 1;
 		finishedTrains = new ConcurrentLinkedQueue<>();
+		activeAgents = new ConcurrentLinkedQueue<>();
 		readySchedules = new ArrayList<>();
+		executor = Executors.newCachedThreadPool();
 		loop = new Loop();
 	}
 
@@ -70,7 +84,10 @@ public class SimulationLoop {
 		schedules = ScheduleFactory
 				.createScheduleQueue(schemes, startTime); // create schedules
 															// for first day
-
+		
+		dayChange = false;
+		agentCounter = 1;
+		
 		// init time management
 		delta = 0;
 		passedSimTime = 0;
@@ -99,6 +116,19 @@ public class SimulationLoop {
 		// TODO: züge stoppen
 		deleteFinishedTrains();
 	}
+	
+	protected void shutDown() {
+		executor.shutdown();
+		try {
+			if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+				executor.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * Indicates whether the simulation loop is running at the moment.
@@ -114,8 +144,7 @@ public class SimulationLoop {
 		@Override
 		public void run() {
 			while (alive) {
-				computeDelta();
-				System.out.println(delta);
+				computeDelta(); System.out.println("delta: " + delta);
 				updateSimTime();
 				createNewSchedules();
 				createNewTrains();
@@ -142,33 +171,53 @@ public class SimulationLoop {
 	}
 
 	/**
-	 * Updates the simulation time.
+	 * Updates the simulation time and creates new schedules at every day
+	 * change.
 	 */
 	private void updateSimTime() {
 		passedSimTime += delta * timeLapse;
 		lastTime.setTime(simTime.getTime());
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
+		
+		// create new schedules when day of sim time has changed
+		if (simTime.get(Calendar.DAY_OF_WEEK) != lastTime.get(Calendar.DAY_OF_WEEK)) {
+			createNewSchedules();
+		}
 	}
 
+	/**
+	 * Creates all schedules for the day that is set for simTime has at the
+	 * moment.
+	 */
 	private void createNewSchedules() {
-		readySchedules.addAll(ScheduleFactory.createSchedules(activeSchemes,
-				lastTime, simTime));
+		Calendar cal = new GregorianCalendar();
+		cal.clear();
+		cal.set(Calendar.DAY_OF_WEEK, simTime.get(Calendar.DAY_OF_WEEK));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		schedules.addAll(ScheduleFactory.createScheduleQueue(activeSchemes, cal));
 	}
 
 	private void createNewTrains() {
 		// add trains that have to start to ready schedules
-		while (ScheduleFactory.isAfter(schedules.peek().getArrivalTimes()[0], simTime)) {
+		while (!schedules.isEmpty()
+				&& ScheduleFactory.isAfter(schedules.peek().getArrivalTimes()[0], simTime)) {
 			readySchedules.add(schedules.poll());
 		}
 		
 		// create trains
 		Schedule s;
+		TrainAgent agent;
 		Iterator<Schedule> it = readySchedules.iterator();
 		while (it.hasNext()) {
 			s = it.next();
-			// if (man kann zug setzten) {
-			// it.remove();
-			// }
+			if (true) { // TODO: nur wenn startknoten unblockiert
+				it.remove();
+				agent = new TrainAgent(graph, agentCounter, s);
+				agentCounter++;
+				activeAgents.offer(agent);
+				executor.execute(agent);
+			}
 		}
 	}
 

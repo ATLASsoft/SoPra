@@ -13,6 +13,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
+import de.atlassoft.ai.TrainAgent;
 import de.atlassoft.util.ImageHelper;
 import de.hohenheim.modell.State;
 import de.hohenheim.view.constants.Constants;
@@ -55,7 +56,7 @@ public class TrainFigure extends AnimationFigure {
 	public TrainFigure(NodeMap map, NodeFigure in_room, int id, Object modellObject) {
 		super(map,in_room, id, modellObject);
 		this.setFont(Constants.TRAIN_FONT);
-		image = ((de.atlassoft.model.Train) modellObject).getSchedule()
+		image = ((TrainAgent) modellObject).getSchedule()
 				.getScheme().getTrainType().getImg();
 		if (image == null) {
 			image = ImageHelper.getImage("standardTrainIcon");
