@@ -114,10 +114,15 @@ public class CurrentRailSysComposite {
 		map.paintNodeMap(c);
 		currentRailSysComposite.layout();
 		
-		// the composite with the title of Information
-		Composite informationComposite = new Composite(currentRailSysComposite, SWT.BORDER);
+		// the composite of the rigth side
+		Composite currenRailSysInfoComposite = new Composite(currentRailSysComposite, SWT.BORDER);
+		currenRailSysInfoComposite.setLayout(new GridLayout(1, true));
+		currenRailSysInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		// the composite with the Information
+		Composite informationComposite = new Composite(currenRailSysInfoComposite, SWT.NULL);
 		informationComposite.setLayout(new GridLayout(1, true));
-		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// GridDate which center
 		GridData dataCenter = new GridData(GridData.FILL);
@@ -129,9 +134,9 @@ public class CurrentRailSysComposite {
 		new Label (informationComposite, SWT.NULL);
 		
 		// the composite with the Information
-		Composite informationComposite2 = new Composite(informationComposite, SWT.NULL);
+		Composite informationComposite2 = new Composite(informationComposite, SWT.BORDER);
 		informationComposite2.setLayout(new GridLayout(2, true));
-//		informationComposite2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		informationComposite2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// Label with Name
 		new Label (informationComposite2, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelName"));
@@ -148,7 +153,7 @@ public class CurrentRailSysComposite {
 		coordinate2.setText("Y:   " + I18N.getMessage("CurrentRailSysComposite.noValue"));
 				
 		//Composite for the Table
-		Composite informationComposite3 = new Composite(informationComposite, SWT.NULL);
+		Composite informationComposite3 = new Composite(currenRailSysInfoComposite, SWT.NULL);
 		informationComposite3.setLayout(new GridLayout(1, true));
 		informationComposite3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
@@ -157,6 +162,7 @@ public class CurrentRailSysComposite {
 		tableTitle.setText("Verbindungen");
 		tableTitle.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
 		tableTitle.setLayoutData(dataCenter);
+		new Label (informationComposite3, SWT.NULL);
 		
 		//Table of Connections
 		informationTable = new Table(informationComposite3, SWT.BORDER);
