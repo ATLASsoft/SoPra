@@ -92,16 +92,34 @@ public class CurrentRailSysComposite {
 							if (path.getStart().equals(temp)) {
 						       TableItem item = new TableItem(informationTable, SWT.NONE);
 						       item.setText(0, path.getEnd().toString());
-						       item.setText(1, String.valueOf(path.getTopSpeed()) + " km/h");
+						       x = path.getEnd().getNodeFigure().getBounds().x;
+						       converter = new Integer(x);
+						       coordinate = converter.toString();
+						       item.setText(1, coordinate);
+						       y = path.getEnd().getNodeFigure().getBounds().y;
+						       converter = new Integer(y);
+						       coordinate = converter.toString();
+						       item.setText(2, coordinate);
+						       item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
 							} else if (path.getEnd().equals(temp)) {
 							   TableItem item = new TableItem(informationTable, SWT.NONE);
 							   item.setText(0, path.getStart().toString());
-							   item.setText(1, String.valueOf(path.getTopSpeed()) + " km/h");
+						       x = path.getStart().getNodeFigure().getBounds().x;
+						       converter = new Integer(x);
+						       coordinate = converter.toString();
+						       item.setText(1, coordinate);
+						       y = path.getStart().getNodeFigure().getBounds().y;
+						       converter = new Integer(y);
+						       coordinate = converter.toString();
+						       item.setText(2, coordinate);
+							   item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
 							}
 						}
-						for (int i=0; i<1; i++) {
+						for (int i=0; i<3; i++) {
 					    	informationTable.getColumn (i).pack ();
-					    	informationTable.getColumn (i).setWidth(168);
+					    	if (i == 0) {
+					    		informationTable.getColumn(i).setWidth(120);
+					    	}
 					    } 
 					    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					    informationTable.setVisible(true);
@@ -171,12 +189,12 @@ public class CurrentRailSysComposite {
 		new Label (informationComposite3, SWT.NULL);
 		
 		//Table of Connections
-		informationTable = new Table(informationComposite3, SWT.BORDER);
+		informationTable = new Table(informationComposite3, SWT.BORDER | SWT.Resize);
 		informationTable.setLinesVisible(true);
 		informationTable.setHeaderVisible(true);
 		informationTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
-		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
+		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), "X", "Y", I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
 		for (int i = 0; i < titles.length; i++) {
 	    	TableColumn column = new TableColumn(informationTable, SWT.NONE);
 	    	column.setText(titles[i]);
@@ -184,7 +202,6 @@ public class CurrentRailSysComposite {
 	    
 	    for (int i=0; i<titles.length; i++) {
 	    	informationTable.getColumn (i).pack ();
-	    	informationTable.getColumn (i).setWidth(168);
 	    } 
 	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		informationTable.setVisible(false);
