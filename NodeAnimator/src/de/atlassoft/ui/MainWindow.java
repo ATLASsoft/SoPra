@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
@@ -200,10 +201,15 @@ public class MainWindow {
 		simulationItem.setText(I18N.getMessage("MainWindow.StartSimulation"));
 		simulationItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {				
-				SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
-				layout.topControl = simComp.getComposite();
-				mainComposite.layout();
+			public void widgetSelected(SelectionEvent e) {
+				if (applicationService.getModel().getActiveRailwaySys() == null) {
+					ErrorHelper.createErrorMessage("Fehler", "Es ist kein aktives Streckennetz vorhanden");
+				}
+				else {
+					SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
+					layout.topControl = simComp.getComposite();
+					mainComposite.layout();
+				}
             }
         });
 		

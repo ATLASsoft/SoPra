@@ -95,7 +95,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		I18N = I18NSingleton.getInstance();
 		// TODO: unvollständig
 		
-		createDummy();
+//		createDummy();
 
 		// load images
 		ImageHelper.loadImage("greenCheck", "img/greencheck.png");

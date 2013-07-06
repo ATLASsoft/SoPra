@@ -127,8 +127,14 @@ public class CurrentRailSysComposite {
 				}
 			}
 	    });
-
-		map = applicationService.getModel().getActiveRailwaySys().getNodeMap();
+	    
+	    //TODO: Hab ich nur eingefügt dass des Programm lauffähig ist
+	    if (applicationService.getModel().getActiveRailwaySys() != null) {
+	    	map = applicationService.getModel().getActiveRailwaySys().getNodeMap();
+	    }
+	    else {
+	    	map = new NodeMap();
+	    }
 		map.paintNodeMap(c);
 		currentRailSysComposite.layout();
 		
