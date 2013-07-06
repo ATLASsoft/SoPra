@@ -391,37 +391,37 @@ public class ScheduleAndTrainTypeComposite {
 		days.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
 		days.setText("Tage:");
 		
-		Composite allDays = new Composite(informationComposite, SWT.NONE);
-		RowLayout allDaysComposite = new RowLayout(SWT.VERTICAL);
-		allDaysComposite.marginLeft = 0;
-		allDays.setLayout(allDaysComposite);
+		Composite allDaysComposite = new Composite(informationComposite, SWT.NONE);
+		RowLayout allDaysCompositeLayout = new RowLayout(SWT.VERTICAL);
+		allDaysCompositeLayout.marginLeft = 0;
+		allDaysComposite.setLayout(allDaysCompositeLayout);
 		for (Integer temp : activeSchedule.getDays()) {
 			if (temp == Calendar.MONDAY) {
-				Label monday = new Label(allDays, SWT.NONE);
+				Label monday = new Label(allDaysComposite, SWT.NONE);
 				monday.setText("Montag");
 			}
 			else if (temp == Calendar.TUESDAY) {
-				Label tuesday = new Label(allDays, SWT.NONE);
+				Label tuesday = new Label(allDaysComposite, SWT.NONE);
 				tuesday.setText("Dienstag");
 			}
 			else if (temp == Calendar.WEDNESDAY) {
-				Label wednesday = new Label(allDays, SWT.NONE);
+				Label wednesday = new Label(allDaysComposite, SWT.NONE);
 				wednesday.setText("Mittwoch");
 			}
 			else if (temp == Calendar.THURSDAY) {
-				Label thursday = new Label(allDays, SWT.NONE);
+				Label thursday = new Label(allDaysComposite, SWT.NONE);
 				thursday.setText("Donnerstag");
 			}
 			else if (temp == Calendar.FRIDAY) {
-				Label friday = new Label(allDays, SWT.NONE);
+				Label friday = new Label(allDaysComposite, SWT.NONE);
 				friday.setText("Freitag");
 			}
 			else if (temp == Calendar.SATURDAY) {
-				Label saturday = new Label(allDays, SWT.NONE);
+				Label saturday = new Label(allDaysComposite, SWT.NONE);
 				saturday.setText("Samstag");
 			}
 			else {
-				Label sunday = new Label(allDays, SWT.NONE);
+				Label sunday = new Label(allDaysComposite, SWT.NONE);
 				sunday.setText("Sonntag");
 			}
 		}
@@ -438,20 +438,34 @@ public class ScheduleAndTrainTypeComposite {
 			stopOverStations.setText("Zwischenstationen:");
 			
 			Composite stopOverComposite = new Composite(informationComposite, SWT.NONE);
-			stopOverComposite.setLayout(new RowLayout(SWT.VERTICAL));
+			GridLayout stopOverCompositeLayout = new GridLayout();
+			stopOverCompositeLayout.numColumns = 2;
+			stopOverCompositeLayout.marginWidth = 0;
+			stopOverComposite.setLayout(stopOverCompositeLayout);
 			
 			for (int i=1; i<activeSchedule.getStations().size()-1; i++) {
 				Label station = new Label(stopOverComposite, SWT.NONE);
+				station.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 				station.setText(activeSchedule.getStations().get(i).getName());
+				Label delay = new Label(stopOverComposite, SWT.NONE);
+				delay.setText("nach " + activeSchedule.getArrivalTimes().get(i)/60 + " mins");
 			}
 		}
 		
 		Label lastStation = new Label(informationComposite, SWT.NONE);
 		lastStation.setText("Letzte Station:");
 		
-		Label lastStationInformation = new Label(informationComposite, SWT.NONE);
+		Composite lastStationComposite = new Composite(informationComposite, SWT.NONE);
+		GridLayout lastStationCompositeLayout = new GridLayout(2, false);
+		lastStationCompositeLayout.marginWidth = 0;
+		lastStationComposite.setLayout(lastStationCompositeLayout);
+		
+		Label lastStationInformation = new Label(lastStationComposite, SWT.NONE);
 		int last = activeSchedule.getStations().size();
 		lastStationInformation.setText(activeSchedule.getStations().get(last-1).getName());
+		
+		Label lastStationDelay = new Label(lastStationComposite, SWT.NONE);
+		lastStationDelay.setText("nach " + activeSchedule.getArrivalTimes().get(last-1)/60 + " mins");
 		
 		informationComposite.layout();
 	}
