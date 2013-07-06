@@ -56,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model.getActiveRailwaySys().addNode(node2);
 		Node node3 = new Node("Node 3", 400, 300, 15, 15);
 		model.getActiveRailwaySys().addNode(node3);
-		Node node4 = new Node("Node 4", 356, 400, 15, 15);
+		Node node4 = new Node("Node 4", 555, 400, 15, 15);
 		model.getActiveRailwaySys().addNode(node4);
 		Node node5 = new Node("Node 5", 100, 53, 15, 15);
 		model.getActiveRailwaySys().addNode(node5);
@@ -65,9 +65,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model.getActiveRailwaySys().addPath(path);
 		path = new Path(node5, node3, 200);
 		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node4, node3, 70);
+		path = new Path(node4, node3, 5);
 		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node3, node2, 300);
+		path = new Path(node3, node2, 500);
+		model.getActiveRailwaySys().addPath(path);
+		path = new Path(node2, node4, 500);
 		model.getActiveRailwaySys().addPath(path);
 		
 		for(int i=1; i<=20; i++) {
@@ -137,6 +139,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void shutDown() {
 		// TODO: unvollständig
+		if (ai != null && ai.isRunning()) {
+			ai.finishSimulation();
+		}
 		ImageHelper.disposeImages();
 	}
 
@@ -157,20 +162,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void pauseSimulation() {
-		// TODO Auto-generated method stub
-		
+		ai.pauseSimulation();
 	}
 
 	@Override
 	public void continueSimulation() {
-		// TODO Auto-generated method stub
-		
+		ai.continueSimulation();
 	}
 
 	@Override
 	public void quitSimulation() {
-		// TODO Auto-generated method stub
-		
+		ai.finishSimulation(); //TODO: statistik
 	}
 
 	@Override

@@ -3,8 +3,6 @@ package de.atlassoft.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.widgets.Display;
-
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.State;
 import de.atlassoft.model.TrainRideStatistic;
@@ -27,20 +25,18 @@ public class TrainAgent implements Runnable {
 		this.id = id;
 		this.graph = graph;
 		this.blockedState = new ArrayList<>();
-		
-		//TODO: besser lösen
-		Display.getDefault().syncExec(new Runnable() {
-			int foo;
-			@Override
-			public void run() {
-				figure = FigureFactory.createTrainFigure(
-						TrainAgent.this.graph.getRailwaySystem().getNodeMap(), TrainAgent.this.schedule.getStations()[0].getNodeFigure(),
-						TrainAgent.this.id,
-						TrainAgent.this);
-			}
-		});
+		figure = FigureFactory.createTrainFigure(
+				graph.getRailwaySystem().getNodeMap(),
+				schedule.getStations()[0].getNodeFigure(),
+				id,
+				this);
 	}
 	
+	
+	
+	protected void setTimeLapse(int timeLapse) {
+		
+	}
 	
 	
 	protected TrainFigure getTrainFigure() {
@@ -64,6 +60,15 @@ public class TrainAgent implements Runnable {
 	@Override
 	public void run() {
 		
+		Vertex[] preList = graph.SSSP_Dijkstra(schedule.getStations()[0],
+				schedule.getStations()[schedule.getStations().length - 1],
+				schedule.getScheme().getTrainType().getTopSpeed());
+		
+//		Vertex target = graph.getVertex(schedule.getStations()[1]);
+//		List<NodeFigure> path = new ArrayList<>();
+//		path.add(schedule.getStations()[1].getNodeFigure());
+//		path.add(preList[target.getID()].getModelObject().getNodeFigure());
+			
 		
 	}
 	
@@ -73,7 +78,10 @@ public class TrainAgent implements Runnable {
 	
 	
 	
-	
+	@Override
+	public String toString() {
+		return "id: " + id;
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

@@ -44,6 +44,6 @@ class Vertex {
 	
 	@Override
 	public String toString() {
-		return "ID: " + modelObject.getName();
+		return "id: " + id + " Name: " + modelObject.getName();
 	}
 }

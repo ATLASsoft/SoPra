@@ -119,7 +119,9 @@ class Graph {
 	 * @param trainTopSpeed
 	 * @return Predecessor array
 	 */
-	Vertex[] SSSP_Dijkstra(Vertex start, double trainTopSpeed) {
+	Vertex[] SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
+		Vertex start = vertexMap.get(source);
+		
 		// init dist array
 		Double[] dist = new Double[vertexes.length];
 		for (int i = 0; i < dist.length; i++) {
@@ -141,7 +143,7 @@ class Graph {
 			for (Edge e : v.getOutgoingEdges()) {
 				if (!e.isBlocked()) {
 					u = e.getEnd();
-					d = e.getDistance() / Math.min(e.getTopSpeed(), trainTopSpeed);
+					d = (e.getDistance() / Math.min(e.getTopSpeed(), trainTopSpeed)) + dist[v.getID()];
 					if (d < dist[u.getID()]) {
 						R.remove(u);
 						dist[u.getID()] = d;
@@ -152,9 +154,23 @@ class Graph {
 			}
 			
 		}
+		
+		// construct list from predecessor array
+
+		//output zu testzewcken TODO entfernen
+		int c = 0;
+		for (Vertex ver : predecessor) {
+			System.out.println("Knoten: " + vertexes[c++] + "Vorgänger: " + ver);
+		}
+		
 		return predecessor;
 	}
 		
+	protected Vertex getVertex(Node n) {
+		return vertexMap.get(n);
+	}
+	
+	
 		
 	protected RailwaySystem getRailwaySystem() {
 		return railSys;

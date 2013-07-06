@@ -61,13 +61,22 @@ public class FigureFactory {
 	 * @param a unique id for the fork truck! Developer must ensure this...
 	 * @return ForkTruckFigure The fork truck after creation.
 	 */
-	public static TrainFigure createTrainFigure(NodeMap map, NodeFigure in_node, int train_id, Object modellObject) {
-		  TrainFigure mobile = new TrainFigure(map,in_node, train_id, modellObject);
-		  Rectangle b = in_node.getBounds();
-		  mobile.setBounds(new Rectangle(b.x+b.width/2-16, b.y+b.height/2-12, 37, 24));		  
-		  map.getAnimationLayer().add(mobile);	
-		  map.getMobileObjects().put(""+train_id, mobile);
-		  return mobile;
+	public static TrainFigure createTrainFigure(final NodeMap map, final NodeFigure in_node, final int train_id, final Object modellObject) {
+		final TrainFigure mobile = new TrainFigure(map, in_node, train_id,
+				modellObject);
+		Rectangle b = in_node.getBounds();
+		mobile.setBounds(new Rectangle(b.x + b.width / 2 - 16, b.y + b.height
+				/ 2 - 12, 37, 24));
+		
+		map.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				map.getAnimationLayer().add(mobile);
+				map.getMobileObjects().put("" + train_id, mobile);
+			}
+		});
+		
+		return mobile;
 	}
 	
 	/**

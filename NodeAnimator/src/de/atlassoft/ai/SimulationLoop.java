@@ -230,7 +230,7 @@ public class SimulationLoop extends Observable {
 			while (!finishedTrains.isEmpty()) {
 				agent = finishedTrains.poll();
 				map.getAnimationLayer().remove(agent.getTrainFigure());
-				map.getMobileObjects().remove(agent.getID());
+				map.getMobileObjects().remove("" + agent.getID());
 			}
 		}
 	}

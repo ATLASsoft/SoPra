@@ -35,7 +35,6 @@ public class AIServiceImpl implements AIService {
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {
-			//simulation starten
 			loop = new SimulationLoop(new Graph(railSys));
 			loop.addObserver(o);
 			loop.startRun(start, schemes);
@@ -60,7 +59,8 @@ public class AIServiceImpl implements AIService {
 	@Override
 	public SimulationStatistic finishSimulation() {
 		if (running) {
-			loop.stopRun(); //TODO: vervollständigen
+			loop.stopRun();
+			loop.shutDown(); //TODO: statistik
 			running = false;
 		}
 		return null;
