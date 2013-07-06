@@ -18,6 +18,9 @@ public class DocExportServicePDFImpl implements DocExportService {
 	PDFCreator pdfCreator = new PDFCreator();
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");
 	private static final Path SCHEDULE_DOC_PATH = SAVE_DATA_PATH.resolve("schedule.pdf");
+	private static final Path STATISTIC_DOC_PATH = SAVE_DATA_PATH.resolve("statistic.pdf");
+	private static final Path DEPARTURE_DOC_PATH = SAVE_DATA_PATH.resolve("departure.pdf");
+	
 	@Override
 	public void createStatisticDoc(SimulationStatistic stat) {
 		// TODO Auto-generated method stub
