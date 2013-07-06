@@ -28,7 +28,7 @@ import de.atlassoft.util.ImageHelper;
 
 public class ApplicationServiceImpl implements ApplicationService {
 
-	private ModelService model;
+	private ModelServiceImpl model;
 	private MainWindow window;
 	private PersistenceService persistence;
 	private AIService ai;
@@ -233,7 +233,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void setActiveRailwaySystem(String railsSysID) {
 		try {
-			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID);
+			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID, model);
 			model.setActiveRailwaySys(railSys);
 			List<ScheduleScheme> schemes = persistence.loadSchedules(railSys);
 			for (ScheduleScheme s : schemes) {
