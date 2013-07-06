@@ -3,7 +3,7 @@ package de.atlassoft.model;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import de.hohenheim.view.node.NodeFigure;
-//TODO: Noch unklar ob State notwendig
+
 /**
  * This class provides a node for the railway system
  * of the application.
@@ -67,8 +67,7 @@ public class Node {
 		
 		// set properties
 		this.name = name;
-		state = new State();
-		state.setState(State.UNBLOCKED);
+		state = new State(this);
 		NodeFigure nodeFigure = new NodeFigure(this);
 		nodeFigure.setName(name);    
 		nodeFigure.setBounds(new Rectangle(x, y, width, height));	

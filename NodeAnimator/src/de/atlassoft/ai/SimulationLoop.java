@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
+import de.atlassoft.model.State;
 import de.atlassoft.util.ScheduleFactory;
 import de.hohenheim.view.map.NodeMap;
 
@@ -208,7 +209,7 @@ public class SimulationLoop extends Observable {
 		Iterator<Schedule> it = readySchedules.iterator();
 		while (it.hasNext()) {
 			s = it.next();
-			if (true) { // TODO: nur wenn startknoten unblockiert
+			if (s.getStations()[0].getState().getState() != State.BLOCKED) {
 				it.remove();
 				agent = new TrainAgent(graph, agentCounter, s);
 				agentCounter++;

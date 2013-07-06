@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -14,6 +15,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 import de.atlassoft.ai.TrainAgent;
+import de.atlassoft.model.Node;
+import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.util.ImageHelper;
 import de.hohenheim.modell.State;
 import de.hohenheim.view.constants.Constants;
@@ -56,8 +59,23 @@ public class TrainFigure extends AnimationFigure {
 	public TrainFigure(NodeMap map, NodeFigure in_room, int id, Object modellObject) {
 		super(map,in_room, id, modellObject);
 		this.setFont(Constants.TRAIN_FONT);
-		image = ((TrainAgent) modellObject).getSchedule()
-				.getScheme().getTrainType().getImg();
+		
+		// set tool tip
+		ScheduleScheme scheme = ((TrainAgent) modellObject).getSchedule().getScheme();
+		StringBuilder toolTip = new StringBuilder();
+		toolTip.append("Linie: ");
+		toolTip.append(scheme.getID() + "\n");
+		toolTip.append("Ziel: ");
+		List<Node> stations = scheme.getStations();
+		toolTip.append((stations.get(stations.size() - 1)).getName() + "\n");
+		toolTip.append("Zugtyp: ");
+		toolTip.append(scheme.getTrainType().getName() + "\n");
+		toolTip.append("Priorität: ");
+		toolTip.append(scheme.getTrainType().getPriority());
+		this.setToolTip(new Label(toolTip.toString()));
+
+		// set image
+		image = scheme.getTrainType().getImg();
 		if (image == null) {
 			image = ImageHelper.getImage("standardTrainIcon");
 		}

@@ -66,6 +66,8 @@ public interface ApplicationService {
 	
 	void quitSimulation();
 	
+	void setTimeLapse(int timeLapse);
+	
 	void addScheduleScheme(ScheduleScheme scheduleScheme);
 	
 	void deleteScheduleScheme(ScheduleScheme scheduleScheme);

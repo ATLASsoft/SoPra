@@ -1,43 +1,64 @@
 package de.atlassoft.model;
 
 /**
- * This class defines the state of a path. It could be
- * either 0 when it's unblocked or 1 when it's blocked
+ * Specifes the state of a train, node or path.
  * 
- * @author Silvan Haeussermann
+ * @author Alexander Balogh
  */
 public class State {
 
 	public static final int UNBLOCKED = 0;
 	public static final int BLOCKED = 1;
+	
+	/**
+	 * The state of this instance. 
+	 */
 	private int state;
 	
-	
-	
+	/**
+	 * The object this {@link State} instance belongs to.
+	 */
+	private Object obj;
+
+
+
+	/**
+	 * Creates a new instance of this class for the specified object.
+	 * 
+	 * @param obj Object this {@link State} belongs to
+	 */
+	public State(Object obj) {
+		this.obj = obj;
+		this.state = UNBLOCKED;
+	}
+
+
+
 	/**
 	 * Returns the current state
 	 * 
-	 * @return
-	 * 		The state
+	 * @return The state
 	 */
-	public int getState() {
+	public synchronized int getState() {
 		return state;
 	}
 	
 	/**
-	 * Sets the state.
+	 * Sets the state. Legal values are only the constants defined int this class.
+	 * Nevertheless other values can be set.
 	 * 
-	 * @param state
-	 * 			only 1 or 0 are allowed
-	 * @throws IllegalArgumentException
-	 * 			if the given value is not 1 or 0
+	 * @param state to be set
 	 */
-	public void setState(int state) {
-		if (state == 0 | state == 1){
+	public synchronized void setState(int state) {
 			this.state = state;
-		} else {
-			throw new IllegalArgumentException(
-						"The given value must be 0 or 1");
-		}		
+	}
+	
+	/**
+	 * Returns the object this state belongs to.
+	 * 
+	 * @return the object
+	 */
+	public Object getObject() {
+		return obj;
 	}
 }

@@ -2,7 +2,7 @@ package de.atlassoft.model;
 
 import de.hohenheim.view.path.CenterAnchor;
 import de.hohenheim.view.path.PathFigure;
-//TODO: Noch unklar ob State notwendig
+
 /**
  * This class defines a path from one node to another.
  * 
@@ -43,8 +43,7 @@ public class Path {
 
 		// set properties
 		this.topSpeed = topSpeed;
-		state = new State();
-		state.setState(State.UNBLOCKED);
+		state = new State(this);
 		this.start = start;
 		this.end = end;
 		PathFigure path = new PathFigure(this);

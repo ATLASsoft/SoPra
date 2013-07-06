@@ -1,11 +1,14 @@
 package de.atlassoft.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.widgets.Display;
 
 import de.atlassoft.model.Schedule;
+import de.atlassoft.model.State;
 import de.atlassoft.model.TrainRideStatistic;
 import de.hohenheim.view.FigureFactory;
-import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
 
 //TODO: implementiern
@@ -16,12 +19,14 @@ public class TrainAgent implements Runnable {
 	private Schedule schedule;
 	private TrainRideStatistic statistic;
 	private Graph graph;
+	private List<State> blockedState;
 	
 	protected TrainAgent(Graph graph, int id, Schedule schedule) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
 		this.schedule = schedule;
 		this.id = id;
 		this.graph = graph;
+		this.blockedState = new ArrayList<>();
 		
 		//TODO: besser lösen
 		Display.getDefault().syncExec(new Runnable() {

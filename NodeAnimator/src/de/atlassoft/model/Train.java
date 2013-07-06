@@ -21,9 +21,7 @@ public class Train {
 		this.id = id;
 		this.schedule = schedule;
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
-		state = new State(); // TODO: state
-		state.setState(State.UNBLOCKED);
-//		this.agent = new TrainAgent(this);
+		state = new State(this);
 	}
 
 	public TrainFigure getTrainFigure() {

@@ -172,6 +172,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
+	public void setTimeLapse(int timeLapse) {
+		//TODO: impl
+	}
+	
+	@Override
 	public void addScheduleScheme(ScheduleScheme scheduleScheme) {
 		try {
 			persistence.saveSchedule(scheduleScheme);
@@ -233,9 +238,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void setActiveRailwaySystem(String railsSysID) {
 		try {
-			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID, model);
+			RailwaySystem railSys = persistence.loadRailwaySystem(railsSysID);
 			model.setActiveRailwaySys(railSys);
-			List<ScheduleScheme> schemes = persistence.loadSchedules(railSys);
+			List<ScheduleScheme> schemes = persistence.loadSchedules(railSys, model.getTrainTypes());
 			for (ScheduleScheme s : schemes) {
 				model.addActiveScheduleScheme(s);
 			}
