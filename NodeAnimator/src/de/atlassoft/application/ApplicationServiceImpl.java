@@ -29,7 +29,6 @@ import de.atlassoft.util.ImageHelper;
 public class ApplicationServiceImpl implements ApplicationService {
 
 	private ModelServiceImpl model;
-	private MainWindow window;
 	private PersistenceService persistence;
 	private AIService ai;
 	private I18NService I18N;
@@ -129,7 +128,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		//TODO: Wieder aktivieren
 //		SplashScreen.showSplashScreen(3);		
-		window = new MainWindow(this);
+		new MainWindow(this);
 	}
 
 	@Override
