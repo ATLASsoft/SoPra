@@ -57,4 +57,6 @@ public interface AIService {
 	
 	boolean isRunning();
 	
+	void setTimeLapse(int timeLapse);
+	
 }

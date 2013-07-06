@@ -114,6 +114,10 @@ public class SimulationLoop extends Observable {
 		deleteFinishedTrains();
 	}
 	
+	protected void setTimeLapse(int timeLapse) {
+		this.timeLapse = timeLapse;
+	}
+	
 	protected void shutDown() {
 		executor.shutdown();
 		try {

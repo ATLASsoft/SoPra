@@ -84,5 +84,10 @@ public class AIServiceImpl implements AIService {
 		return running;
 	}
 	
+	public void setTimeLapse(int timeLapse) {
+		if (running) {
+			loop.setTimeLapse(timeLapse);
+		}
+	}
 	
 }

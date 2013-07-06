@@ -175,7 +175,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void setTimeLapse(int timeLapse) {
-		//TODO: impl
+		if (timeLapse < 1 || timeLapse > 3000) {
+			throw new IllegalArgumentException("timeLapse must be between 1 and 3000, is: " + timeLapse);
+		}
+		ai.setTimeLapse(timeLapse);
 	}
 	
 	@Override
