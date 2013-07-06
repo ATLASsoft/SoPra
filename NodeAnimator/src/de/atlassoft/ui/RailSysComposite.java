@@ -95,6 +95,7 @@ public class RailSysComposite {
 		buttonCompositeLayout.marginRight = 15;
 		buttonCompositeLayout.marginTop = 9;
 		buttonCompositeLayout.numColumns = 2;
+		buttonCompositeLayout.verticalSpacing = 8;
 		buttonComposite.setLayout(buttonCompositeLayout);
 		
 		//RailSys Name

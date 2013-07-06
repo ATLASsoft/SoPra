@@ -112,6 +112,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("questionMarkSmall", "img/questionMarkSmall.png");
 		ImageHelper.loadImage("crosshair", "img/crosshair.png");
 		ImageHelper.loadImage("trashIconSmall", "img/trashIconSmall.png");
+		ImageHelper.loadImage("playIconSmall", "img/playIconSmall.png");
+		ImageHelper.loadImage("pauseIconSmall", "img/pauseIconSmall.png");
+		ImageHelper.loadImage("stopIconSmall", "img/stopIconSmall.png");
 		
 		// load train types
 		try {

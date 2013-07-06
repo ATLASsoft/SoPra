@@ -1,5 +1,7 @@
 package de.atlassoft.ui;
 
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,11 +11,16 @@ import java.util.Observer;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
@@ -23,12 +30,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 import de.hohenheim.view.map.NodeMap;
 
+//TODO: internationalisieren
 /**
  * This class creates the Composite for viewing a simulation.
  * 
@@ -38,16 +48,16 @@ public class SimulationComposite implements Observer {
 	
 	private Shell shell;
 	private StackLayout layout;
-	private Composite mainComposite, buttonComposite,
-					  simulationComposite, timeComposite;
+	private Composite mainComposite, simulationComposite, timeComposite;
 	private I18NService I18N;
 	private ApplicationService applicationService;
 	private boolean simulationActive, simulationPaused;
 	private Combo startDayCombo, startHourCombo, startMinuteCombo;
 	private Label time;
 	private SimpleDateFormat dateFormat;
-	private Button playButton, stopButton;
+	private Button playButton, pauseButton, stopButton;
 	private Scale speedScale;
+	private Text speedText;
 	
 	/**
 	 * Constructor for the SimulationComposite class.
@@ -82,23 +92,32 @@ public class SimulationComposite implements Observer {
 		simulationComposite = new Composite(mainComposite, SWT.BORDER);		
 	    GridLayout simulationCompositeLayout = new GridLayout();
 	    simulationCompositeLayout.numColumns = 2;
-	    simulationCompositeLayout.horizontalSpacing = 100;
+	    simulationCompositeLayout.horizontalSpacing = 50;
 	    simulationComposite.setLayout(simulationCompositeLayout);
 	    
 	    //Composite for the control elements
-	    Composite controllerComposite = new Composite(simulationComposite, SWT.BORDER);
+	    Composite controllerComposite = new Composite(simulationComposite, SWT.NONE);
 	    controllerComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
-	    controllerComposite.setLayout(new GridLayout());
+	    GridLayout controllerCompositeLayout = new GridLayout();
+	    controllerCompositeLayout.verticalSpacing = 10;
+	    controllerCompositeLayout.marginTop = 10;
+	    controllerCompositeLayout.numColumns = 2;
+	    controllerComposite.setLayout(controllerCompositeLayout);
 	    
 	    /*
 	     * Composite for the selection of the starting time
 	     */
+	    createQuestionMark(controllerComposite, "hallo");
+	    
 	    timeComposite = new Composite(controllerComposite, SWT.BORDER);
-	    timeComposite.setLayout(new GridLayout(3, false));
+	    timeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	    GridLayout timeCompositeLayout = new GridLayout(3, false);
+	    timeCompositeLayout.verticalSpacing = 20;
+	    timeComposite.setLayout(timeCompositeLayout);
 	    
 	    Label departureLabel = new Label(timeComposite, SWT.NONE);
 	    departureLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-	    departureLabel.setText("Beginn der Simulation");
+	    departureLabel.setText("Beginn der Simulation:");
 	    
 	    startDayCombo = new Combo(timeComposite, SWT.READ_ONLY);
 	    startDayCombo.add("Montag");
@@ -143,78 +162,42 @@ public class SimulationComposite implements Observer {
 		startMinuteCombo.select(0);
 		
 		/*
-		 * Composite for the controller buttons
+		 * The speed scale
 		 */
-		buttonComposite = new Composite(controllerComposite, SWT.BORDER);
-		buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		buttonComposite.setLayout(new GridLayout(1, false));
+		createQuestionMark(controllerComposite, "hallo");
 		
-		//The play button
-		playButton = new Button(buttonComposite, SWT.PUSH);
-		playButton.setText("Simulation starten");
-		playButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				//checks if the simulation is active
-				if (simulationActive) {
-					//checks if the simulation is paused
-					if (!simulationPaused) {
-						simulationPaused = true;
-						applicationService.pauseSimulation();
-						switchButton();
-					}
-					else {
-						simulationPaused = false;
-						switchButton();
-					}
-				}
-				else {
-					Calendar startTime = new GregorianCalendar();
-					int startHour = Integer.parseInt(startHourCombo.getItem(startHourCombo.getSelectionIndex()));
-					int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
-					startTime.clear();
-					startTime.set(0, 0, getDay(), startHour, startMinute);
-					applicationService.startSimulation(startTime, SimulationComposite.this);
-					disposeComposite(timeComposite);
-					createTimeDisplay();
-					switchButton();
-					simulationActive = true;
-					stopButton.setEnabled(true);
-				}
-			}
-		});
-		
-		//The stop simulation button
-		stopButton = new Button(buttonComposite, SWT.PUSH);
-		stopButton.setText("Simulation stoppen");
-		stopButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				applicationService.quitSimulation();
-				simulationActive = false;
-				playButton.setText("Simulation starten");
-				buttonComposite.layout();
-				stopButton.setEnabled(false);
-			}
-		});
-		stopButton.setEnabled(false);
-	    
-		//The speed scale
 		Composite speedScaleComposite = new Composite(controllerComposite, SWT.BORDER);
-		speedScaleComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		speedScaleComposite.setLayout(new GridLayout());
+		GridData speedScaleCompositeData = new GridData();
+		speedScaleCompositeData.widthHint = 230;
+		speedScaleComposite.setLayoutData(speedScaleCompositeData);
+		speedScaleComposite.setLayout(new GridLayout(2, false));
 		
 		Label speedLabel = new Label(speedScaleComposite, SWT.NONE);
-		speedLabel.setText("Geschwindigkeit:");
+		speedLabel.setText("Simulationsgeschwindigkeit:");
+		
+		speedText = new Text(speedScaleComposite, SWT.BORDER);
+		speedText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+		speedText.setEditable(false);
+		speedText.setText("Echtzeit");
 		
 		speedScale = new Scale(speedScaleComposite, SWT.HORIZONTAL);
+		GridData speedScaleData = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		speedScaleData.horizontalIndent = 5;
+		speedScale.setLayoutData(speedScaleData);
 		speedScale.setMinimum(1);
-		speedScale.setMaximum(10);
+		speedScale.setMaximum(3000);
 		speedScale.setIncrement(1);
+		speedScale.setPageIncrement(2999);
 		speedScale.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println(speedScale.getSelection());
+				if (speedScale.getSelection() > 1) {
+					speedText.setText(String.valueOf(speedScale.getSelection()) + "x");
+				}
+				else {
+					speedText.setText("Echtzeit");
+				}
+				applicationService.setTimeLapse(speedScale.getSelection());
 			}
 			
 			@Override
@@ -222,8 +205,109 @@ public class SimulationComposite implements Observer {
 			}
 		});
 		
-		//The cancel button
+		Label trueSpeed = new Label(speedScaleComposite, SWT.NONE);
+		trueSpeed.setText("Echtzeit");
+		
+		Label threeThousand = new Label(speedScaleComposite, SWT.NONE);
+		threeThousand.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		threeThousand.setText("3000x");
+		
+		/*
+		 * Composite for the controller buttons
+		 */
+		createQuestionMark(controllerComposite, "hallo");
+		
+		Composite buttonComposite = new Composite(controllerComposite, SWT.BORDER);
+		buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		RowLayout buttonCompositeLayout = new RowLayout();
+		buttonCompositeLayout.justify = true;
+		buttonComposite.setLayout(buttonCompositeLayout);
+		
+			//The play button
+		playButton = new Button(buttonComposite, SWT.PUSH);
+		playButton.setImage(ImageHelper.getImage("playIconSmall"));
+		playButton.setToolTipText("Simulation starten");
+		playButton.setLayoutData(new RowData(43, 40));
+		playButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				//If there is no ongoing active simulation
+				if(!simulationActive) {
+					//start simulation
+					startSimulation();
+					
+					pauseButton.setEnabled(true);
+					stopButton.setEnabled(true);
+					playButton.setEnabled(false);
+					simulationActive = true;
+				}
+				else {
+					//If the simulation is paused
+					if(simulationPaused) {
+						//continue simulation
+						applicationService.continueSimulation();
+						
+						pauseButton.setSelection(false);
+						playButton.setEnabled(false);
+						simulationPaused = false;
+					}
+				}
+			}
+		});
+		
+			//The pause button
+		pauseButton = new Button(buttonComposite, SWT.TOGGLE);
+		pauseButton.setImage(ImageHelper.getImage("pauseIconSmall"));
+		pauseButton.setToolTipText("Simulation pausieren");
+		pauseButton.setLayoutData(new RowData(43, 40));
+		pauseButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				//If the simulation is not paused
+				if(!simulationPaused) {
+					//pause simulation
+					applicationService.pauseSimulation();
+					
+					playButton.setEnabled(true);
+					simulationPaused = true;
+				}
+				//If the simulation is paused
+				else {
+					//continue simulation
+					applicationService.continueSimulation();
+					
+					playButton.setEnabled(false);
+					simulationPaused = false;
+				}
+			}
+		});
+		pauseButton.setEnabled(false);
+		
+			//The stop button
+		stopButton = new Button(buttonComposite, SWT.PUSH);
+		stopButton.setImage(ImageHelper.getImage("stopIconSmall"));
+		stopButton.setToolTipText("Simulation stoppen");
+		stopButton.setLayoutData(new RowData(43, 40));
+		stopButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if(simulationActive) {
+					//stop simulation
+					applicationService.quitSimulation();
+					createTimeDisplay();
+					
+					pauseButton.setSelection(false);
+					pauseButton.setEnabled(false);
+					playButton.setEnabled(true);
+					stopButton.setEnabled(false);
+					simulationActive = false;
+				}
+			}
+		});
+		stopButton.setEnabled(false);
+		
+		/*
+		 * The cancel button
+		 */
 		Button cancelButton = new Button(controllerComposite, SWT.PUSH);
+		cancelButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 		cancelButton.setText("Abbrechen");
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -257,23 +341,16 @@ public class SimulationComposite implements Observer {
 	}
 	
 	/**
-	 * Switches between the play and the pause button.
+	 * Starts the simulation.
 	 */
-	private void switchButton() {
-		if (simulationActive) {
-			if (!simulationPaused) {
-				playButton.setText("Simulation pausieren");
-				buttonComposite.layout();
-			}
-			else {
-				playButton.setText("Simulation fortsetzen");
-				buttonComposite.layout();
-			}
-		}
-		else {
-			playButton.setText("Simulation pausieren");
-			buttonComposite.layout();
-		}
+	private void startSimulation() {
+		Calendar startTime = new GregorianCalendar();
+		int startHour = Integer.parseInt(startHourCombo.getItem(startHourCombo.getSelectionIndex()));
+		int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
+		startTime.clear();
+		startTime.set(0, 0, getDay(), startHour, startMinute);
+		applicationService.startSimulation(startTime, SimulationComposite.this);
+		createTimeDisplay();
 	}
 	
 	/**
@@ -281,11 +358,66 @@ public class SimulationComposite implements Observer {
 	 * time of the simulation
 	 */
 	private void createTimeDisplay() {
-		Label timeDescription = new Label(timeComposite, SWT.NONE);
-		timeDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		timeDescription.setText("Uhrzeit:");
-		
-		time = new Label(timeComposite, SWT.NONE);
+		if(!simulationActive) {
+			disposeComposite(timeComposite);
+			
+			Label timeDescription = new Label(timeComposite, SWT.NONE);
+			timeDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+			timeDescription.setText("Uhrzeit:");
+			
+			time = new Label(timeComposite, SWT.NONE);
+		}
+		else {
+			disposeComposite(timeComposite);
+			
+			Label departureLabel = new Label(timeComposite, SWT.NONE);
+		    departureLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		    departureLabel.setText("Beginn der Simulation:");
+		    
+		    startDayCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		    startDayCombo.add("Montag");
+		    startDayCombo.add("Dienstag");
+		    startDayCombo.add("Mittwoch");
+		    startDayCombo.add("Donnerstag");
+		    startDayCombo.add("Freitag");
+		    startDayCombo.add("Samstag");
+		    startDayCombo.add("Sonntag");
+		    startDayCombo.select(0);
+		    
+		    startHourCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		    startHourCombo.add("00");
+		    startHourCombo.add("01");
+		    startHourCombo.add("02");
+			startHourCombo.add("03");
+			startHourCombo.add("04");
+			startHourCombo.add("05");
+			startHourCombo.add("06");
+			startHourCombo.add("07");
+			startHourCombo.add("08");
+			startHourCombo.add("09");
+			for (int i=10; i<24; i++) {
+				startHourCombo.add(Integer.toString(i));
+			}
+			startHourCombo.select(1);
+			
+			startMinuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
+			startMinuteCombo.add("00");
+			startMinuteCombo.add("01");
+			startMinuteCombo.add("02");
+			startMinuteCombo.add("03");
+			startMinuteCombo.add("04");
+			startMinuteCombo.add("05");
+			startMinuteCombo.add("06");
+			startMinuteCombo.add("07");
+			startMinuteCombo.add("08");
+			startMinuteCombo.add("09");
+			for (int i=10; i<=59; i=i+1) {
+				startMinuteCombo.add(Integer.toString(i));
+			}
+			startMinuteCombo.select(0);
+			
+			timeComposite.layout();
+		}
 	}
 	
 	/**
@@ -341,5 +473,39 @@ public class SimulationComposite implements Observer {
 				timeComposite.layout();
 			}
 		}); 
+	}
+	
+	/**
+	 * Creates a help icon that shows some tips when hovering over it.
+	 * 
+	 * @param composite
+	 * 			The parent composite of the icon.
+	 * @param message
+	 * 			The message that should be displayed.
+	 */
+	public void createQuestionMark(Composite composite, String message) {
+		final Shell tipShell = new Shell(shell, SWT.TOOL|SWT.ON_TOP);
+		tipShell.setVisible(false);
+		tipShell.setLayout(new RowLayout());
+		
+		Label information = new Label(tipShell, SWT.NONE);
+		information.setText(message);
+		tipShell.layout();
+		tipShell.setSize(information.getSize().x + 10, information.getSize().y + 10);
+		
+		final Label questionLabel = new Label(composite, SWT.NONE);
+		questionLabel.setImage(ImageHelper.getImage("questionMarkSmall"));
+		questionLabel.addMouseTrackListener(new MouseTrackAdapter() {
+			public void mouseEnter(MouseEvent e) {
+				PointerInfo a = MouseInfo.getPointerInfo();
+				java.awt.Point b = a.getLocation();
+				tipShell.setLocation(b.x + 15, b.y + 20);
+				tipShell.setVisible(true);
+			}
+			
+			public void mouseExit(MouseEvent e) {
+				tipShell.setVisible(false);
+			}
+		});
 	}
 }
