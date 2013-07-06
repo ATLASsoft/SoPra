@@ -31,8 +31,6 @@ import de.atlassoft.util.ImageHelper;
  */
 public class MainWindow {
 
-	//TODO: Schließen Button überarbeiten
-	//TODO: Fenstergröße verändern
 	private ApplicationService applicationService;
 	private Shell shell;
 	private Display display;
@@ -51,7 +49,7 @@ public class MainWindow {
 		this.applicationService = applicationService;
 		I18N = I18NSingleton.getInstance();
 		display = Display.getDefault();
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM);
 		shell.setText(I18NSingleton.getInstance().getMessage("MainWindow.ProgramName"));
 		shell.setSize(1050, 670);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
@@ -151,6 +149,9 @@ public class MainWindow {
 	    			errorMessageBox.setText(I18N.getMessage("AllSchedulesComposite.ErrorTitle"));
 	    			errorMessageBox.setMessage(I18N.getMessage("MainWindow.Error.NoTrainTypes"));
 	    			errorMessageBox.open();
+				}
+				else if(applicationService.getModel().getActiveRailwaySys() == null) {
+					ErrorHelper.createErrorMessage("Fehler", "Es gibt kein aktives Streckennetz");
 				}
 				else {  
 					ScheduleComposite scheduleComposite = new ScheduleComposite(shell, mainComposite, layout, applicationService);

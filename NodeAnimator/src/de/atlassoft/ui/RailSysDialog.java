@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -28,7 +30,7 @@ import de.atlassoft.util.ImageHelper;
  * 
  * @author Silvan Haeussermann
  */
-public class RailSysDialog {
+public class RailSysDialog implements PropertyChangeListener {
 	//TODO: Fehler abfangen, wenn letztes Streckennetz gelöscht wird
 	private Shell shell;
 	private I18NService I18N;
@@ -41,19 +43,7 @@ public class RailSysDialog {
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
 		model = applicationService.getModel();
-		model.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (evt.getPropertyName().equals(ModelService.RAILSYS_IDS_PROPNAME)) {
-					trainSysList.removeAll();
-					@SuppressWarnings("unchecked")
-					java.util.List<String> railSysIDs = (java.util.List<String>) evt.getNewValue();
-					for (String id : railSysIDs) {
-						trainSysList.add(id);
-					}
-				}
-			}
-		});
+		model.addPropertyChangeListener(this);
 		
 		shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText(I18N.getMessage("ListDialog.Title"));
@@ -65,6 +55,13 @@ public class RailSysDialog {
 		shellGridData.verticalAlignment = SWT.FILL;
 		shellGridData.horizontalAlignment = SWT.FILL;
 		shell.setLayoutData(shellGridData);
+		shell.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent arg0) {
+				model.removePropertyChangeListener(RailSysDialog.this);
+			}
+		});
+		
 		initUI();
 		MainWindow.center(shell);
 		shell.open();
@@ -131,8 +128,6 @@ public class RailSysDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applicationService.deleteRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
-//				shell.close();
-//				shell.dispose();
 			}
 		});
 		
@@ -148,5 +143,17 @@ public class RailSysDialog {
 				shell.dispose();
 			}
 		});		
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(ModelService.RAILSYS_IDS_PROPNAME)) {
+			trainSysList.removeAll();
+			@SuppressWarnings("unchecked")
+			java.util.List<String> railSysIDs = (java.util.List<String>) evt.getNewValue();
+			for (String id : railSysIDs) {
+				trainSysList.add(id);
+			}
+		}
 	}
 }

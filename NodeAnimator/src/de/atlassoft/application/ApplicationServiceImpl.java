@@ -21,6 +21,7 @@ import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
+import de.atlassoft.ui.SplashScreen;
 import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
@@ -120,6 +121,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		// load train types
 		try {
+			for (String temp: persistence.getRailwaySystemIDs()){
+				model.addRailwaySystemID(temp);
+			}
 			List<TrainType> trainTypes = persistence.loadTrainTypes();
 			for (TrainType type : trainTypes) {
 				model.addTrainType(type);
@@ -231,6 +235,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		try {
 			persistence.deleteRailwaySystem(railSysID);
 			persistence.deleteSchedules(railSysID);
+			model.removeRailwaySystemID(railSysID);
 			if (activeRailSysID.equals(railSysID)) {
 				model.setActiveRailwaySys(null);
 			}
