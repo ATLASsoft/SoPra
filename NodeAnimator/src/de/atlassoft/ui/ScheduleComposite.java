@@ -509,7 +509,7 @@ public class ScheduleComposite {
 			public void widgetSelected(SelectionEvent e) {
 
 				//check the arrays
-				if (nodeList.isEmpty()|nodeList.size()<2) {
+				if (nodeList.isEmpty() || nodeList.size()<2) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 					messageBox.setText(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"));
 					messageBox.setMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.NoStations"));

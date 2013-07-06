@@ -16,7 +16,6 @@ import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
@@ -79,7 +78,7 @@ public class SimulationComposite implements Observer {
 		I18N = I18NSingleton.getInstance();
 		simulationPaused = false;
 		simulationActive = false;
-		dateFormat = new SimpleDateFormat("EEEE hh:mm");
+		dateFormat = new SimpleDateFormat("EEEE HH:mm");
 		initUI();
 	}
 	
@@ -107,7 +106,7 @@ public class SimulationComposite implements Observer {
 	    /*
 	     * Composite for the selection of the starting time
 	     */
-	    createQuestionMark(controllerComposite, "hallo");
+	    createQuestionMark(controllerComposite, I18N.getMessage("SimulationComposite.Help.StartTime"));
 	    
 	    timeComposite = new Composite(controllerComposite, SWT.BORDER);
 	    timeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -117,16 +116,16 @@ public class SimulationComposite implements Observer {
 	    
 	    Label departureLabel = new Label(timeComposite, SWT.NONE);
 	    departureLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-	    departureLabel.setText("Beginn der Simulation:");
+	    departureLabel.setText(I18N.getMessage("SimulationComposite.BeginSimulation"));
 	    
 	    startDayCombo = new Combo(timeComposite, SWT.READ_ONLY);
-	    startDayCombo.add("Montag");
-	    startDayCombo.add("Dienstag");
-	    startDayCombo.add("Mittwoch");
-	    startDayCombo.add("Donnerstag");
-	    startDayCombo.add("Freitag");
-	    startDayCombo.add("Samstag");
-	    startDayCombo.add("Sonntag");
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Monday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Tuesday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Wednesday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Thursday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Friday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Saturday"));
+	    startDayCombo.add(I18N.getMessage("SimulationComposite.Sunday"));
 	    startDayCombo.select(0);
 	    
 	    startHourCombo = new Combo(timeComposite, SWT.READ_ONLY);
@@ -164,7 +163,7 @@ public class SimulationComposite implements Observer {
 		/*
 		 * The speed scale
 		 */
-		createQuestionMark(controllerComposite, "hallo");
+		createQuestionMark(controllerComposite, I18N.getMessage("SimulationComposite.Help.SimulationSpeed"));
 		
 		Composite speedScaleComposite = new Composite(controllerComposite, SWT.BORDER);
 		GridData speedScaleCompositeData = new GridData();
@@ -173,12 +172,12 @@ public class SimulationComposite implements Observer {
 		speedScaleComposite.setLayout(new GridLayout(2, false));
 		
 		Label speedLabel = new Label(speedScaleComposite, SWT.NONE);
-		speedLabel.setText("Simulationsgeschwindigkeit:");
+		speedLabel.setText(I18N.getMessage("SimulationComposite.SimulationSpeed"));
 		
 		speedText = new Text(speedScaleComposite, SWT.BORDER);
 		speedText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
 		speedText.setEditable(false);
-		speedText.setText("Echtzeit");
+		speedText.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
 		
 		speedScale = new Scale(speedScaleComposite, SWT.HORIZONTAL);
 		GridData speedScaleData = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
@@ -195,7 +194,7 @@ public class SimulationComposite implements Observer {
 					speedText.setText(String.valueOf(speedScale.getSelection()) + "x");
 				}
 				else {
-					speedText.setText("Echtzeit");
+					speedText.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
 				}
 				applicationService.setTimeLapse(speedScale.getSelection());
 			}
@@ -207,7 +206,7 @@ public class SimulationComposite implements Observer {
 		speedScale.setEnabled(false);
 		
 		Label trueSpeed = new Label(speedScaleComposite, SWT.NONE);
-		trueSpeed.setText("Echtzeit");
+		trueSpeed.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
 		
 		Label threeThousand = new Label(speedScaleComposite, SWT.NONE);
 		threeThousand.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
@@ -216,7 +215,7 @@ public class SimulationComposite implements Observer {
 		/*
 		 * Composite for the controller buttons
 		 */
-		createQuestionMark(controllerComposite, "hallo");
+		createQuestionMark(controllerComposite, I18N.getMessage("SimulationComposite.Help.Buttons"));
 		
 		Composite buttonComposite = new Composite(controllerComposite, SWT.BORDER);
 		buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -227,7 +226,7 @@ public class SimulationComposite implements Observer {
 			//The play button
 		playButton = new Button(buttonComposite, SWT.PUSH);
 		playButton.setImage(ImageHelper.getImage("playIconSmall"));
-		playButton.setToolTipText("Simulation starten");
+		playButton.setToolTipText(I18N.getMessage("SimulationComposite.SimulationStart"));
 		playButton.setLayoutData(new RowData(43, 40));
 		playButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -259,7 +258,7 @@ public class SimulationComposite implements Observer {
 			//The pause button
 		pauseButton = new Button(buttonComposite, SWT.TOGGLE);
 		pauseButton.setImage(ImageHelper.getImage("pauseIconSmall"));
-		pauseButton.setToolTipText("Simulation pausieren");
+		pauseButton.setToolTipText(I18N.getMessage("SimulationComposite.SimulationPause"));
 		pauseButton.setLayoutData(new RowData(43, 40));
 		pauseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -286,7 +285,7 @@ public class SimulationComposite implements Observer {
 			//The stop button
 		stopButton = new Button(buttonComposite, SWT.PUSH);
 		stopButton.setImage(ImageHelper.getImage("stopIconSmall"));
-		stopButton.setToolTipText("Simulation stoppen");
+		stopButton.setToolTipText(I18N.getMessage("SimulationComposite.SimulationStop"));
 		stopButton.setLayoutData(new RowData(43, 40));
 		stopButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -295,6 +294,7 @@ public class SimulationComposite implements Observer {
 					applicationService.quitSimulation();
 					createTimeDisplay();
 					
+					speedScale.setSelection(1);
 					speedScale.setEnabled(false);
 					pauseButton.setSelection(false);
 					pauseButton.setEnabled(false);
@@ -311,7 +311,7 @@ public class SimulationComposite implements Observer {
 		 */
 		Button cancelButton = new Button(controllerComposite, SWT.PUSH);
 		cancelButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
-		cancelButton.setText("Abbrechen");
+		cancelButton.setText(I18N.getMessage("SimulationComposite.Cancel"));
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				//quits the simulation if it is active

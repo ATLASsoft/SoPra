@@ -295,7 +295,7 @@ public class RailSysComposite {
 		addStation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (Integer.parseInt(xCoord.getText()) > 600 | Integer.parseInt(yCoord.getText()) > 500) {
+				if (Integer.parseInt(xCoord.getText()) > 600 || Integer.parseInt(yCoord.getText()) > 500) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 					messageBox.setText(I18N.getMessage("RailSysComposite.Error.RangeTitle"));
 					messageBox.setMessage(I18N.getMessage("RailSysComposite.Error.CoordinateRange"));
