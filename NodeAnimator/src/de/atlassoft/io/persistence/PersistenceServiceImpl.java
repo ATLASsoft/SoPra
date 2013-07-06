@@ -16,6 +16,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.TrainType;
@@ -28,7 +29,7 @@ import de.atlassoft.model.TrainType;
 public class PersistenceServiceImpl implements PersistenceService {
 
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");// getJarPath().resolveSibling("savedata");
-	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");;
+	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");
 	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
 	private static final Path RAILWAYSYS_PATH = SAVE_DATA_PATH.resolve("railwaysys.xml");
 	
@@ -116,8 +117,8 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 
 	@Override
-	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException {
-		return xmlParser.loadRailwaySystem(railSysID, RAILWAYSYS_PATH);
+	public RailwaySystem loadRailwaySystem(String railSysID, ModelServiceImpl modelService) throws IOException {
+		return xmlParser.loadRailwaySystem(railSysID, RAILWAYSYS_PATH, modelService);
 	}
 
 	@Override

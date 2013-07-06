@@ -1,11 +1,23 @@
 package de.atlassoft.io.docexport;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 // TODO: Klasse implementieren
 public class DocExportServicePDFImpl implements DocExportService {
 
+	PDFCreator pdfCreator = new PDFCreator();
+	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");
+	private static final Path SCHEDULE_DOC_PATH = SAVE_DATA_PATH.resolve("schedule.pdf");
 	@Override
 	public void createStatisticDoc(SimulationStatistic stat) {
 		// TODO Auto-generated method stub
@@ -13,9 +25,13 @@ public class DocExportServicePDFImpl implements DocExportService {
 	}
 
 	@Override
-	public void createScheduleDoc(ScheduleScheme schedule) {
-		// TODO Auto-generated method stub
-		
+	public void createScheduleDoc(ScheduleScheme schedule) throws FileNotFoundException, DocumentException {
+	      Document document = new Document();
+	      PdfWriter.getInstance(document, new FileOutputStream(SCHEDULE_DOC_PATH.toString()));
+	      document.open();
+	      pdfCreator.addTitlePage(document, "Schedule", "Test");
+	      pdfCreator.addScheduleContent(document, schedule);
+	      document.close();	
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
@@ -605,9 +606,58 @@ class XMLParser {
 
 	}
 	
-	protected RailwaySystem loadRailwaySystem(String railSysID, Path path) throws IOException {
-		// TODO Auto-generated method stub
-		return new RailwaySystem(railSysID);
+	protected RailwaySystem loadRailwaySystem(String railSysID, Path path, ModelServiceImpl modelService) throws IOException {
+		RailwaySystem res = null;
+		RailwaySystem railsys = modelService.getActiveRailwaySys();
+		if (!Files.exists(path)) {
+			return res;
+		}
+		res = new RailwaySystem(railSysID);
+		SAXBuilder builder = new SAXBuilder();
+		File xmlFile = new File(path.toString());
+
+		try {
+
+			Document document = (Document) builder.build(xmlFile);
+
+			// RailwaySystems Element
+			Element rootNode = document.getRootElement();
+
+			// all Railwaysystem Elements
+			List<Element> railwaysystemListe = rootNode.getChildren();
+
+			for (int i = 0; i < railwaysystemListe.size(); i++) {
+				
+				if(railwaysystemListe.get(i).getAttributeValue("id").equalsIgnoreCase(railSysID)){
+				// one Railwaysystem Element
+				Element railwaysystem = (Element) railwaysystemListe.get(i);
+				
+				//all Node Elements
+				List<Element> nodesListe = railwaysystem.getChild("Nodes").getChildren();
+				
+				//one Node Element
+				for (Element node : nodesListe){
+					Node newNode = new Node(node.getChildText("Name"), 
+							Integer.parseInt(node.getChildText("X-Koordinate")), 
+							Integer.parseInt(node.getChildText("Y-Koordinate")));
+					res.addNode(newNode);
+				}
+				
+				//all Path Elements
+				List<de.atlassoft.model.Path> pathsListe = railsys.getPaths();
+				
+				for (de.atlassoft.model.Path singlePath : pathsListe){
+					de.atlassoft.model.Path newPath = new de.atlassoft.model.Path(singlePath.getStart(),singlePath.getEnd(), singlePath.getTopSpeed());
+					res.addPath(newPath);
+				}
+				
+			}
+			}
+		return res;
+			} catch (JDOMException exp) {
+				{throw new IOException(exp);
+			} 
+			} 
 	}
 	
 	protected List<String> getRailwaySystemIDs(Path path) throws IOException {

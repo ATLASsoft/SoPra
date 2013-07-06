@@ -1,5 +1,9 @@
 package de.atlassoft.io.docexport;
 
+import java.io.FileNotFoundException;
+
+import com.itextpdf.text.DocumentException;
+
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
@@ -24,7 +28,7 @@ public interface DocExportService {
 	 *
 	 * @param schedule The ScheduleScheme to be added to the document.
 	 */
-	void createScheduleDoc (ScheduleScheme schedule);
+	void createScheduleDoc (ScheduleScheme schedule) throws FileNotFoundException, DocumentException;
 	
 	/**
 	 * 

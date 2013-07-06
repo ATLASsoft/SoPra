@@ -2,6 +2,8 @@ package de.atlassoft.io.persistence;
 
 import java.io.IOException;
 import java.util.List;
+
+import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.TrainType;
@@ -101,7 +103,7 @@ public interface PersistenceService {
 	 *            The ID of the RailwaySystem that is to be loaded
 	 * @return RailwaySystem The RailwaySystem that was requested
 	 */
-	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException;
+	public RailwaySystem loadRailwaySystem(String railSysID, ModelServiceImpl modelService) throws IOException;
 
 	/**
 	 * Deletes a RailwaySystem from the file which stores all RailwaySystems
