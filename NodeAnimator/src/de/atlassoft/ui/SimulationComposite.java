@@ -37,7 +37,6 @@ import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 import de.hohenheim.view.map.NodeMap;
 
-//TODO: internationalisieren
 /**
  * This class creates the Composite for viewing a simulation.
  * 
