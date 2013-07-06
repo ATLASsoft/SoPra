@@ -2,6 +2,8 @@ package de.atlassoft.io.docexport;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -28,7 +30,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 	}
 
 	@Override
-	public void createScheduleDoc(ScheduleScheme schedule) throws FileNotFoundException, DocumentException {
+	public void createScheduleDoc(ScheduleScheme schedule) throws DocumentException, MalformedURLException, IOException {
 	      Document document = new Document();
 	      PdfWriter.getInstance(document, new FileOutputStream(SCHEDULE_DOC_PATH.toString()));
 	      document.open();

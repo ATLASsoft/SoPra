@@ -1,6 +1,8 @@
 package de.atlassoft.io.docexport;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 import com.itextpdf.text.DocumentException;
 
@@ -28,7 +30,7 @@ public interface DocExportService {
 	 *
 	 * @param schedule The ScheduleScheme to be added to the document.
 	 */
-	void createScheduleDoc (ScheduleScheme schedule) throws FileNotFoundException, DocumentException;
+	void createScheduleDoc (ScheduleScheme schedule) throws FileNotFoundException, DocumentException, MalformedURLException, IOException;
 	
 	/**
 	 * 

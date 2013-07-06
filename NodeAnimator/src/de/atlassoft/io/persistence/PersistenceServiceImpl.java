@@ -84,9 +84,9 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 
 	@Override
-	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys)
+	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys, List<TrainType> trainTypes)
 			throws IOException {
-		return xmlParser.loadSchedules(railSys, SCHEDULESCHEME_PATH);
+		return xmlParser.loadSchedules(railSys, SCHEDULESCHEME_PATH, trainTypes);
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class PersistenceServiceImpl implements PersistenceService {
 	}
 
 	@Override
-	public RailwaySystem loadRailwaySystem(String railSysID, ModelServiceImpl modelService) throws IOException {
-		return xmlParser.loadRailwaySystem(railSysID, RAILWAYSYS_PATH, modelService);
+	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException {
+		return xmlParser.loadRailwaySystem(railSysID, RAILWAYSYS_PATH);
 	}
 
 	@Override

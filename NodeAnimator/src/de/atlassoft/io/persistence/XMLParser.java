@@ -79,6 +79,13 @@ class XMLParser {
 
 			train.addContent(new Element("priority").setText(Integer
 					.toString(type.getPriority())));
+			String img;
+			if (type.getImg() == null){
+				img = "null";
+			}else{
+				img = type.getImg().toString();
+			}
+			train.addContent(new Element("picpath").setText(img));
 
 			doc.getRootElement().addContent(train);
 
@@ -262,7 +269,7 @@ class XMLParser {
 	/*
 	 * LOAD Schedules
 	 */
-	protected List<ScheduleScheme> loadSchedules(RailwaySystem railSys, Path path)
+	protected List<ScheduleScheme> loadSchedules(RailwaySystem railSys, Path path, List<TrainType> trainTypes)
 			throws IOException {
 		List<ScheduleScheme> res = new ArrayList<ScheduleScheme>();
 		if (!Files.exists(path)) {
@@ -606,9 +613,8 @@ class XMLParser {
 
 	}
 	
-	protected RailwaySystem loadRailwaySystem(String railSysID, Path path, ModelServiceImpl modelService) throws IOException {
+	protected RailwaySystem loadRailwaySystem(String railSysID, Path path) throws IOException {
 		RailwaySystem res = null;
-		RailwaySystem railsys = modelService.getActiveRailwaySys();
 		if (!Files.exists(path)) {
 			return res;
 		}
@@ -643,11 +649,24 @@ class XMLParser {
 					res.addNode(newNode);
 				}
 				
+				//aktuell im geladenen Streckennetz vorhanden knoten
+				List<Node> resultNodes = res.getNodes();
 				//all Path Elements
-				List<de.atlassoft.model.Path> pathsListe = railsys.getPaths();
+				List<Element> pathsListe = railwaysystem.getChild("Paths").getChildren();
 				
-				for (de.atlassoft.model.Path singlePath : pathsListe){
-					de.atlassoft.model.Path newPath = new de.atlassoft.model.Path(singlePath.getStart(),singlePath.getEnd(), singlePath.getTopSpeed());
+				for (Element singlePath : pathsListe){
+					Node startNodeToAdd = null;
+					Node endNodeToAdd = null;
+					for (Node resultNode : resultNodes){
+						if (resultNode.getName().equalsIgnoreCase(singlePath.getChildText("Start"))){
+							 startNodeToAdd = resultNode;
+						}
+							if (resultNode.getName().equalsIgnoreCase(
+									singlePath.getChildText("End"))) {
+								 endNodeToAdd = resultNode;
+							}
+					}
+					de.atlassoft.model.Path newPath = new de.atlassoft.model.Path(startNodeToAdd,endNodeToAdd, Double.parseDouble(singlePath.getChildText("Topspeed")));
 					res.addPath(newPath);
 				}
 				

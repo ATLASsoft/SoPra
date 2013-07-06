@@ -57,7 +57,7 @@ public interface PersistenceService {
 	 * @return List<ScheduleScheme> The List of all the ScheduleSchemes that
 	 *         belong to the RailwaySystem
 	 */
-	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys) throws IOException;
+	public List<ScheduleScheme> loadSchedules(RailwaySystem railSys, List<TrainType> trainTypes) throws IOException;
 
 	/**
 	 * Deletes all Schedules belonging to a specific RailwaySystem
@@ -103,7 +103,7 @@ public interface PersistenceService {
 	 *            The ID of the RailwaySystem that is to be loaded
 	 * @return RailwaySystem The RailwaySystem that was requested
 	 */
-	public RailwaySystem loadRailwaySystem(String railSysID, ModelServiceImpl modelService) throws IOException;
+	public RailwaySystem loadRailwaySystem(String railSysID) throws IOException;
 
 	/**
 	 * Deletes a RailwaySystem from the file which stores all RailwaySystems

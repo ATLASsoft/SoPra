@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 
+import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 
 //TODO: implementieren, Konstruktor fehlt noch.
@@ -195,7 +201,11 @@ class PDFCreator {
 		document.add(drivingDays);
 		document.add(intervall);
 		document.add(railsys);
-
+		
+		Paragraph table = new Paragraph("Angefahrene Haltestellen:");
+		addEmptyLine(table,3);
+		createTable(table, schedule);
+		document.add(table);
 	}
 
 	/**
@@ -247,10 +257,40 @@ class PDFCreator {
 	 *            table.
 	 * 
 	 */
-	protected void createTabel(Section subCatPart) {
-		if (subCatPart == null) {
+	protected void createTable(Paragraph buildTable, ScheduleScheme sced) {
+		if (buildTable == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
+		 PdfPTable table = new PdfPTable(3);
+
+		    // t.setBorderColor(BaseColor.GRAY);
+		    // t.setPadding(4);
+		    // t.setSpacing(4);
+		    // t.setBorderWidth(1);
+
+		    PdfPCell c1 = new PdfPCell(new Phrase("Name"));
+		    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		    table.addCell(c1);
+
+		    c1 = new PdfPCell(new Phrase("Ankunftszeit"));
+		    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		    table.addCell(c1);
+
+		    c1 = new PdfPCell(new Phrase("Aufenthaltszeit"));
+		    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		    table.addCell(c1);
+		    table.setHeaderRows(1);
+		    
+		    List<Integer> arrivalTimesList = sced.getArrivalTimes();
+		    List<Integer> idleTimesList = sced.getIdleTimes();
+		    List<Node> nodeList = sced.getStations();
+		    for (int i = 0; i < nodeList.size(); i++){
+		    	table.addCell(nodeList.get(i).getName());
+		    	table.addCell(arrivalTimesList.get(i).toString());
+		    	table.addCell(idleTimesList.get(i).toString());
+		    }
+
+		    buildTable.add(table);
 	}
 
 	/**
