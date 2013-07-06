@@ -204,6 +204,7 @@ public class SimulationComposite implements Observer {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
+		speedScale.setEnabled(false);
 		
 		Label trueSpeed = new Label(speedScaleComposite, SWT.NONE);
 		trueSpeed.setText("Echtzeit");
@@ -235,6 +236,7 @@ public class SimulationComposite implements Observer {
 					//start simulation
 					startSimulation();
 					
+					speedScale.setEnabled(true);
 					pauseButton.setEnabled(true);
 					stopButton.setEnabled(true);
 					playButton.setEnabled(false);
@@ -293,6 +295,7 @@ public class SimulationComposite implements Observer {
 					applicationService.quitSimulation();
 					createTimeDisplay();
 					
+					speedScale.setEnabled(false);
 					pauseButton.setSelection(false);
 					pauseButton.setEnabled(false);
 					playButton.setEnabled(true);
