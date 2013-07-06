@@ -131,8 +131,8 @@ public class RailSysDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applicationService.deleteRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
-				shell.close();
-				shell.dispose();
+//				shell.close();
+//				shell.dispose();
 			}
 		});
 		

@@ -229,7 +229,6 @@ public class SimulationComposite implements Observer {
 			public void widgetSelected(SelectionEvent e) {
 				//quits the simulation if it is active
 				if (simulationActive) {
-					//TODO: Statistics einfügen
 					applicationService.quitSimulation();
 				}
 				

@@ -507,7 +507,6 @@ public class ScheduleAndTrainTypeComposite {
 		passiveSchedules.select(passiveSchedules.getItemCount()-1);
 	}
 	
-	//TODO: Fehler abfangen, dass die Tabelle auf sich selbst droppen kann
 	/**
 	 * Adds a drag and drop listener to the given list.
 	 * 
@@ -552,7 +551,7 @@ public class ScheduleAndTrainTypeComposite {
 
 			@Override
 			public void dragSetData(DragSourceEvent event) {
-				event.data = list.getItem(list.getSelectionIndex());
+				event.data = list.getItem(0);
 			}
 
 			@Override
