@@ -185,13 +185,13 @@ public class TrainTypeDialog {
 	        	final String priority = comboPriority.getText();	        	
 	        	
 	        	TrainType type = new TrainType(nameOfTrainType, Double.parseDouble(topSpeed), Integer.parseInt(priority));
-	        	applicationService.addTrainType(type);
 	       		if (!textImage.getText().equals("")){
 	       			Image img = new Image(null, textImage.getText());
 	       			type.setImg(img);
 	       		} else {
 	       			type.setImg(null);
 	       		}
+	       		applicationService.addTrainType(type);
 	       		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
 	       		messageBox.setText(I18N.getMessage("TrainTypeDialog.informationSaved"));
         	    messageBox.setMessage(I18N.getMessage("TrainTypeDialog.informationTrainTypeSaved"));
