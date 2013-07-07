@@ -3,6 +3,7 @@ package de.atlassoft.io.docexport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import com.itextpdf.text.DocumentException;
 
@@ -40,5 +41,5 @@ public interface DocExportService {
 	 * @param station The Node from which the departure board is requested.
 	 */
 	//TODO: Entwurf der methode ist noch unklar, nochmal diskutieren bevor implementieren
-	void createDepartureBoard (Node station) throws DocumentException, MalformedURLException, IOException;
+	void createDepartureBoard (Node station, List<ScheduleScheme> scedList) throws DocumentException, MalformedURLException, IOException;
 }

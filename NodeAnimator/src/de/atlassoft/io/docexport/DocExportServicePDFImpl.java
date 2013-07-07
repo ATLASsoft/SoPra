@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -16,7 +17,7 @@ import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 
 public class DocExportServicePDFImpl implements DocExportService {
-
+	//TODO Exception Handling!
 	PDFCreator pdfCreator = new PDFCreator();
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");
 	private static final Path SCHEDULE_DOC_PATH = SAVE_DATA_PATH.resolve("schedule");
@@ -45,12 +46,12 @@ public class DocExportServicePDFImpl implements DocExportService {
 	}
 
 	@Override
-	public void createDepartureBoard(Node station) throws DocumentException, MalformedURLException, IOException {
+	public void createDepartureBoard(Node station, List<ScheduleScheme> scedList) throws DocumentException, MalformedURLException, IOException {
 		Document document = new Document();
 		PdfWriter.getInstance(document, new FileOutputStream(DEPARTURE_DOC_PATH.toString() + "_"  + station.getName() + ".pdf"));
 		document.open();
 		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen zu allen Abfahrtszeiten zu der Station: " + station.getName());
-		//TODO pdfCreator.addDeartureContent(document, data, schedule);
+		pdfCreator.addDepartureContent(document, station, scedList);
 		document.close();
 	}
 

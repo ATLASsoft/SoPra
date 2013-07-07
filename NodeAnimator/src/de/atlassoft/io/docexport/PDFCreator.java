@@ -263,10 +263,20 @@ class PDFCreator {
 	 *            The actual content which should be added.
 	 * 
 	 */
-	protected void addDepartureContent(Document document, Object data,
-			ScheduleScheme schedule) {
+	protected void addDepartureContent(Document document, Node station, List<ScheduleScheme> scedList) {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
+		}
+		List<Integer> relevantSpots = new ArrayList<Integer>();
+		for (ScheduleScheme sced : scedList){
+			List<Node> nodeList = sced.getStations();
+			for (int i = 0; i < nodeList.size(); i++){
+				if (station.getName().equals(nodeList.get(i).getName())){
+					relevantSpots.add(i); 
+				}
+			}
+			sced.getArrivalTimes();
+			sced.getIdleTimes();
 		}
 		
 
