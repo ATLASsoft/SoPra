@@ -231,11 +231,13 @@ public class ScheduleScheme {
 	 *             if interval is negative or zero
 	 */
 	public void setInterval(int interval) {
-		if (interval <= 0) {
-			throw new IllegalArgumentException(
-					"intervall must be a positive number");
+		if (scheduleType.equals(ScheduleType.INTERVALL)) {
+			if (interval <= 0) {
+				throw new IllegalArgumentException(
+						"intervall must be a positive number");
+			}
+			this.interval = interval;
 		}
-		this.interval = interval;
 	}
 
 	/**
