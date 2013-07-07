@@ -14,7 +14,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
-// TODO: Klasse implementieren
+
 public class DocExportServicePDFImpl implements DocExportService {
 
 	PDFCreator pdfCreator = new PDFCreator();
@@ -29,7 +29,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		PdfWriter.getInstance(document, new FileOutputStream(STATISTIC_DOC_PATH.toString() + "_"  + ".pdf"));
 		document.open();
 		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik");
-		//pdfCreator.addStatisticContent(document, data, schedule);
+		//TODO pdfCreator.addStatisticContent(document, data, schedule);
 		document.close();
 	
 	}
@@ -50,7 +50,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		PdfWriter.getInstance(document, new FileOutputStream(DEPARTURE_DOC_PATH.toString() + "_"  + station.getName() + ".pdf"));
 		document.open();
 		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen zu allen Abfahrtszeiten zu der Station: " + station.getName());
-		//pdfCreator.addDeartureContent(document, data, schedule);
+		//TODO pdfCreator.addDeartureContent(document, data, schedule);
 		document.close();
 	}
 
