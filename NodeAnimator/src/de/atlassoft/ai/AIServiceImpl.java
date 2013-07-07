@@ -34,12 +34,15 @@ public class AIServiceImpl implements AIService {
 	
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
-		if (!running) {
-			loop = new SimulationLoop(new Graph(railSys));
-			loop.addObserver(o);
-			loop.startRun(start, schemes);
-			running = true;
-		}
+		Graph g = new Graph(railSys);
+		System.out.println(g.SSSP_Dijkstra((Node) railSys.getNodeMap().getNodes().get("Node 1").getModellObject(), (Node) railSys.getNodeMap().getNodes().get("Node 4").getModellObject(), 5.0));
+		
+//		if (!running) {
+//			loop = new SimulationLoop(new Graph(railSys));
+//			loop.addObserver(o);
+//			loop.startRun(start, schemes);
+//			running = true;
+//		}
 	}
 
 	@Override
@@ -75,8 +78,7 @@ public class AIServiceImpl implements AIService {
 
 	@Override
 	public boolean isConnected(RailwaySystem railSys) {
-		// TODO Auto-generated method stub
-		return false;
+		return new Graph(railSys).isConnected();
 	}
 
 	@Override

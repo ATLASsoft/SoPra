@@ -87,4 +87,6 @@ public interface ApplicationService {
 	void showScheduleDoc(ScheduleScheme scheduleScheme);
 	
 	void showDepartureBoardDoc(Node station);
+	
+	boolean isConnected(RailwaySystem railSys);
 }

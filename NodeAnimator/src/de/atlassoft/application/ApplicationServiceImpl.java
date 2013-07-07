@@ -309,4 +309,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 	}
 
+
+	@Override
+	public boolean isConnected(RailwaySystem railSys) {
+		if (railSys == null) {
+			throw new IllegalArgumentException("railSys must not be null");
+		}
+		return ai.isConnected(railSys);
+	}
+
 }

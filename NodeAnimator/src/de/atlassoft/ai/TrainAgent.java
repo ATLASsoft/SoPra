@@ -60,9 +60,11 @@ public class TrainAgent implements Runnable {
 	@Override
 	public void run() {
 		
-		Vertex[] preList = graph.SSSP_Dijkstra(schedule.getStations()[0],
+		
+		System.out.println(graph.SSSP_Dijkstra(schedule.getStations()[0],
 				schedule.getStations()[schedule.getStations().length - 1],
-				schedule.getScheme().getTrainType().getTopSpeed());
+				schedule.getScheme().getTrainType().getTopSpeed())
+		);
 		
 //		Vertex target = graph.getVertex(schedule.getStations()[1]);
 //		List<NodeFigure> path = new ArrayList<>();

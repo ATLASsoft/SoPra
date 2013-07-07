@@ -1,10 +1,14 @@
 package de.atlassoft.ai;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
@@ -119,7 +123,7 @@ class Graph {
 	 * @param trainTopSpeed
 	 * @return Predecessor array
 	 */
-	Vertex[] SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
+	List<Node> SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
 		Vertex start = vertexMap.get(source);
 		
 		// init dist array
@@ -156,16 +160,62 @@ class Graph {
 		}
 		
 		// construct list from predecessor array
-
-		//output zu testzewcken TODO entfernen
-		int c = 0;
-		for (Vertex ver : predecessor) {
-			System.out.println("Knoten: " + vertexes[c++] + "Vorgänger: " + ver);
+		List<Node> path = new ArrayList<>();
+		path.add(target);
+		int i = 0;
+		Vertex pre;
+		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
+			path.add(pre.getModelObject());
+			i++;
+		}
+		Collections.reverse(path);
+		
+		return path;
+	}
+	
+	/**
+	 * Checks whether this graph is connected by doing a breadth first search.
+	 * 
+	 * @return true if connected, otherwise false
+	 */
+	protected boolean isConnected() {
+		if (vertexes.length < 2) {
+			return true;
 		}
 		
-		return predecessor;
-	}
+		// init BFS
+		boolean[] reached = new boolean[vertexes.length]; // bool inits with false
+		Queue<Vertex> R = new LinkedList<>();
+		Vertex start = vertexes[0];
+		reached[start.getID()] = true;
+		R.add(start);
 		
+		// BFS
+		Vertex v, u;
+		while (!R.isEmpty()) {
+			v = R.poll();
+			for (Edge e : v.getOutgoingEdges()) {
+				u = e.getEnd();
+				if (!reached[u.getID()]) {
+					reached[u.getID()] = true;
+					R.offer(u);
+				}
+			}
+		}
+		
+		// return false if at least one vertex was not reached
+		for (boolean isReached : reached) {
+			if (!isReached) {
+				return false;
+			}
+		}
+		
+		// all vertexes has been reached, return true
+		return true;
+	}
+	
+	
+	
 	protected Vertex getVertex(Node n) {
 		return vertexMap.get(n);
 	}
