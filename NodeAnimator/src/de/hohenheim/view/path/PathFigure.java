@@ -37,8 +37,14 @@ public class PathFigure extends PolylineConnection {
 	    this.setLineAttributes(attr);
 	    this.modellObject=modellObject;
 	    
-	    double topSpeed = ((Path) modellObject).getTopSpeed();
-	    setToolTip(new Label(Math.round(topSpeed) + " km/h"));
+	    StringBuilder toolTip = new StringBuilder();
+	    toolTip.append("Höchstgeschwindigkeit: ");
+	    toolTip.append(Math.round(((Path) modellObject).getTopSpeed()));
+	    toolTip.append(" km/h");
+//	    toolTip.append("Länge: "); //TODO: wtf
+//	    toolTip.append(Math.round(this.getDistance() * 100));
+//	    toolTip.append(" Meter");
+	    this.setToolTip(new Label(toolTip.toString()));
 	  }
 	  
 	  /**
@@ -62,6 +68,7 @@ public class PathFigure extends PolylineConnection {
 	   * @return double
 	   */
 	  public double getDistance() {
+		  Path p = (Path) modellObject;
 		  return Utility.getDistance(this);
 	  }
 	}

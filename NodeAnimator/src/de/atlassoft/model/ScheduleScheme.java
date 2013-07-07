@@ -168,7 +168,7 @@ public class ScheduleScheme {
 	 *            point in time when to arrive at station in seconds after the
 	 *            start at the first station
 	 * @param idleTime
-	 *            time the train should wait at the station.
+	 *            time the train should wait at the station in seconds
 	 * @throws IllegalArgumentException
 	 *             if station is null</br> if idleTime is a negative number</br>
 	 *             if arrival is too early.

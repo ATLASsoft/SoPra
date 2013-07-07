@@ -96,6 +96,92 @@ class Graph {
 	}
 	
 	/**
+	 * Checks whether this graph is connected by doing a breadth first search.
+	 * 
+	 * @return true if connected, otherwise false
+	 */
+	protected boolean isConnected() {
+		if (vertexes.length < 2) {
+			return true;
+		}
+
+		// init BFS
+		boolean[] reached = new boolean[vertexes.length]; // bool inits with
+															// false
+		Queue<Vertex> R = new LinkedList<>();
+		Vertex start = vertexes[0];
+		reached[start.getID()] = true;
+		R.add(start);
+
+		// BFS
+		Vertex v, u;
+		while (!R.isEmpty()) {
+			v = R.poll();
+			for (Edge e : v.getOutgoingEdges()) {
+				u = e.getEnd();
+				if (!reached[u.getID()]) {
+					reached[u.getID()] = true;
+					R.offer(u);
+				}
+			}
+		}
+
+		// return false if at least one vertex was not reached
+		for (boolean isReached : reached) {
+			if (!isReached) {
+				return false;
+			}
+		}
+
+		// all vertexes has been reached, return true
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @param topSpeed
+	 * @return
+	 */
+	protected double getShortestTravelTime(Node source, Node target, double topSpeed) {
+		// Dijkstra
+		Double[] dist = new Double[vertexes.length];
+		Vertex[] predecessor = new Vertex[vertexes.length];
+		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
+		
+		// compute travel time
+		return dist[getVertex(target).getID()]; // ist pixel / km/h
+	}
+	
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @param topSpeed
+	 * @return
+	 */
+	protected List<Node> getShortestPath(Node source, Node target, double topSpeed) {
+		Double[] dist = new Double[vertexes.length];
+		Vertex[] predecessor = new Vertex[vertexes.length];
+		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
+		
+		// construct list from predecessor array
+		List<Node> path = new ArrayList<>();
+		path.add(target);
+		int i = 0;
+		Vertex pre;
+		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
+			path.add(pre.getModelObject());
+			i++;
+		}
+		Collections.reverse(path);
+		
+		return path;
+	}
+	
+	
+	/**
 	 * Comparator to compare to {@link Vertex} instances. Compares by comparing
 	 * the values in a given distance array affiliated with the particular
 	 * vertexes.
@@ -118,21 +204,23 @@ class Graph {
 	
 	/**
 	 * Computes shortest paths from start to every other vertex using a
-	 * implementation of Dijkstra's algorithm. The algorithm causes no side
-	 * effects at all. Returns a predecessor array of vertexes where the entry
+	 * implementation of Dijkstra's algorithm. The algorithm alters the two passed arrays
+	 * but other than that causes no side effects at all. The predecessor array contains all vertexes where the entry
 	 * at position i is the predecessor of the vertex with the id i along every
 	 * shortest path from start through the vertex with the id i.
+	 * The dist array //TODO: kommentar
 	 * 
 	 * @param start
 	 *            Source vertex of the algorithm
 	 * @param trainTopSpeed
 	 * @return Predecessor array
 	 */
-	Vertex[] SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
+	private void SSSP_Dijkstra(Node source, Node target, double trainTopSpeed,
+			Vertex[] predecessor, Double[] dist) {
+		
 		Vertex start = vertexMap.get(source);
 		
 		// init dist array
-		Double[] dist = new Double[vertexes.length];
 		for (int i = 0; i < dist.length; i++) {
 			dist[i] = Double.POSITIVE_INFINITY;
 		}
@@ -144,7 +232,6 @@ class Graph {
 		
 		
 		// compute shortest paths from start
-		Vertex[] predecessor = new Vertex[vertexes.length];
 		Vertex v, u;
 		double d;
 		while (!R.isEmpty()) {
@@ -163,100 +250,10 @@ class Graph {
 			}
 			
 		}
-		
-		return predecessor;
-		// construct list from predecessor array
-//		List<Node> path = new ArrayList<>();
-//		path.add(target);
-//		int i = 0;
-//		Vertex pre;
-//		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
-//			path.add(pre.getModelObject());
-//			i++;
-//		}
-//		Collections.reverse(path);
-//		
-//		return path;
 	}
 	
-	/**
-	 * Checks whether this graph is connected by doing a breadth first search.
-	 * 
-	 * @return true if connected, otherwise false
-	 */
-	protected boolean isConnected() {
-		if (vertexes.length < 2) {
-			return true;
-		}
-		
-		// init BFS
-		boolean[] reached = new boolean[vertexes.length]; // bool inits with false
-		Queue<Vertex> R = new LinkedList<>();
-		Vertex start = vertexes[0];
-		reached[start.getID()] = true;
-		R.add(start);
-		
-		// BFS
-		Vertex v, u;
-		while (!R.isEmpty()) {
-			v = R.poll();
-			for (Edge e : v.getOutgoingEdges()) {
-				u = e.getEnd();
-				if (!reached[u.getID()]) {
-					reached[u.getID()] = true;
-					R.offer(u);
-				}
-			}
-		}
-		
-		// return false if at least one vertex was not reached
-		for (boolean isReached : reached) {
-			if (!isReached) {
-				return false;
-			}
-		}
-		
-		// all vertexes has been reached, return true
-		return true;
-	}
 	
-	//TODO: besser lösen, momentan dijktra kopie
-	protected double getDistance(Node source, Node target, double topSpeed) {
-		Vertex start = vertexMap.get(source);
-		
-		// init dist array
-		Double[] dist = new Double[vertexes.length];
-		for (int i = 0; i < dist.length; i++) {
-			dist[i] = Double.POSITIVE_INFINITY;
-		}
-
-		// init heap
-		PriorityQueue<Vertex> R = new PriorityQueue<>(dist.length, new VertexComperator(dist));
-		dist[start.getID()] = 0.0;
-		R.offer(start);
-		
-		
-		// compute shortest paths from start
-		Vertex[] predecessor = new Vertex[vertexes.length];
-		Vertex v, u;
-		double d;
-		while (!R.isEmpty()) {
-			v = R.poll();
-			for (Edge e : v.getOutgoingEdges()) {
-				if (!e.isBlocked()) {
-					u = e.getEnd();
-					d = (e.getDistance() / Math.min(e.getTopSpeed(), topSpeed)) + dist[v.getID()];
-					if (d < dist[u.getID()]) {
-						R.remove(u);
-						dist[u.getID()] = d;
-						R.offer(u);
-						predecessor[u.getID()] = v;
-					}
-				}
-			}
-		}
-		return dist[getVertex(target).getID()]; // ist pixel / km/h
-	}
+	
 	
 	
 }
