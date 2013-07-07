@@ -200,8 +200,7 @@ class PDFCreator {
 			throw new IllegalArgumentException("document must not be null");
 		}
 		String fahrplanTyp;
-		DateFormat dateFormatSingle = new SimpleDateFormat("dd.MM.yyyy");
-		DateFormat dateFormatIntervall = new SimpleDateFormat("dd.MM.yyyy  ;  HH:mm");
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		// Einzelfahrt
 		if (schedule.getScheduleType() == ScheduleType.SINGLE_RIDE) {
 			fahrplanTyp = "Einzelfahrt";
@@ -212,34 +211,31 @@ class PDFCreator {
 			// Fahrplantyp
 			Paragraph scheduleType = new Paragraph("Fahrplantyp :  "
 					+ fahrplanTyp, smallBold);
-			// Erster Fahrtag
-			Paragraph firstDay = new Paragraph("Erster Fahrtag :  "
-					+ dateFormatSingle.format(schedule.getFirstRide().getTime()), smallBold);
-			List<String> drivingDaysArray = new ArrayList<String>();
-			for (int i : schedule.getDays()) {
-				drivingDaysArray.add(getWeekDay(i));
-			}
 			// Fahrtage
-			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  "
-					+ drivingDaysArray, smallBold);
+			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  ", smallBold);
+			List<Integer> dday = schedule.getDays();
+			for (int i = 0 ; i < dday.size() ; i++) {
+				if (i == dday.size() - 1){
+					drivingDays.add(getWeekDay(dday.get(i)));
+				} else {
+					drivingDays.add(getWeekDay(dday.get(i))+ ", ");
+				}
+			}
 			// Abfahrtszeit der Einzelfahrten
 			Paragraph abfahrtszeit = new Paragraph("Abfahrtszeit :  "
-					+ schedule.getFirstRide().HOUR_OF_DAY + ":"
-					+ schedule.getFirstRide().MINUTE, smallBold);
+					+ dateFormat.format(schedule.getFirstRide().getTime()), smallBold);
 			// Streckennetz
 			Paragraph railsys = new Paragraph(
-					"Gehört zu Streckennetznummer :  "
+					"Gehört zu Streckennetz :  "
 							+ schedule.getRailSysID(), smallBold);
 
 			addEmptyLine(railsys, 3);
 			addEmptyLine(abfahrtszeit, 1);
 			addEmptyLine(scheduleName, 1);
 			addEmptyLine(scheduleType, 1);
-			addEmptyLine(firstDay, 1);
 			addEmptyLine(drivingDays, 1);
 			document.add(scheduleName);
 			document.add(scheduleType);
-			document.add(firstDay);
 			document.add(drivingDays);
 			document.add(abfahrtszeit);
 			document.add(railsys);
@@ -255,25 +251,28 @@ class PDFCreator {
 			Paragraph scheduleType = new Paragraph("Fahrplantyp :  "
 					+ fahrplanTyp, smallBold);
 			// Erster Fahrtag
-			Paragraph firstDay = new Paragraph("Erster Fahrtag :  "
-					+ dateFormatIntervall.format(schedule.getFirstRide().getTime()), smallBold);
+			Paragraph firstDay = new Paragraph("Erste Fahrt :  "
+					+ dateFormat.format(schedule.getFirstRide().getTime()), smallBold);
 			// Letzter Fahrtag
-			Paragraph lastDay = new Paragraph("Letzter Fahrtag :  "
-					+ dateFormatIntervall.format(schedule.getLastRide().getTime()), smallBold);
-			List<String> drivingDaysArray = new ArrayList<String>();
-			for (int i : schedule.getDays()) {
-				drivingDaysArray.add(getWeekDay(i));
-			}
+			Paragraph lastDay = new Paragraph("Letzte Fahrt :  "
+					+ dateFormat.format(schedule.getLastRide().getTime()), smallBold);
 			// Fahrtage
-			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  "
-					+ drivingDaysArray, smallBold);
+			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  ", smallBold);
+			List<Integer> dday = schedule.getDays();
+			for (int i = 0 ; i < dday.size() ; i++) {
+				if (i == dday.size() - 1){
+					drivingDays.add(getWeekDay(dday.get(i)));
+				} else {
+					drivingDays.add(getWeekDay(dday.get(i))+ ", ");
+				}
+			}
 			// Intervall
 			Paragraph intervall = new Paragraph("Fährt alle :  "
 					+ schedule.getInterval()
 					+ " Minuten", smallBold);
 			// Streckennetz
 			Paragraph railsys = new Paragraph(
-					"Gehört zu Streckennetznummer :  "
+					"Gehört zu Streckennetz :  "
 							+ schedule.getRailSysID(), smallBold);
 			addEmptyLine(railsys, 3);
 			addEmptyLine(scheduleName, 1);
