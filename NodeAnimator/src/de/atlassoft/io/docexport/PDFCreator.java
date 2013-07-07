@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -386,11 +387,23 @@ class PDFCreator {
 		List<Node> nodeList = sced.getStations();
 		
 		DecimalFormat doubleFormater = new DecimalFormat("#0"); 
+		DateFormat arrivalFormat = new SimpleDateFormat("HH:mm");
 		double idleMin;
+		double arrivalMin;
+		Calendar newCal;
+		
 		for (int i = 0; i < nodeList.size(); i++) {
-			idleMin = idleTimesList.get(i) / 60.0;	
+			
+			// Adding the seconds of the i-th arrival time to the start time
+			newCal = sced.getFirstRide();
+			newCal.add(Calendar.SECOND, arrivalTimesList.get(i));
+			
+			// Calculating the idle time in minutes
+			idleMin = idleTimesList.get(i) / 60.0;
+			
+			// adding the Content to the table
 			table.addCell(nodeList.get(i).getName());
-			table.addCell(arrivalTimesList.get(i).toString());
+			table.addCell(arrivalFormat.format(newCal.getTime()));
 			table.addCell(doubleFormater.format(idleMin));
 		}
 
