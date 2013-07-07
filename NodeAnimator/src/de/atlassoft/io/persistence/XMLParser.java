@@ -1,5 +1,9 @@
 package de.atlassoft.io.persistence;
 
+
+
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +14,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import org.eclipse.swt.graphics.Image;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -79,6 +86,10 @@ class XMLParser {
 
 			train.addContent(new Element("priority").setText(Integer
 					.toString(type.getPriority())));
+			
+//			Image test = type.getImg();
+//			File outPutFile = new File(".png");
+//			ImageIO.write(test, "png", outPutFile);		
 			String img;
 			if (type.getImg() == null){
 				img = "null";
@@ -206,9 +217,7 @@ class XMLParser {
 			sced.addContent(new Element("RailSysID").setText(schedule
 					.getRailSysID()));
 			sced.addContent(new Element("TrainType").setText(
-					schedule.getTrainType().getName() 
-					+ ":" + schedule.getTrainType().getTopSpeed() 
-					+ ":" + schedule.getTrainType().getPriority()));
+					schedule.getTrainType().getName()));
 			sced.addContent(new Element("ScheduleType").setText(schedule
 					.getScheduleType().toString()));
 
@@ -295,7 +304,7 @@ class XMLParser {
 				if (node.getChildText("RailSysID").equalsIgnoreCase(railSys.getID())) {
 
 					String railSysId = node.getChildText("RailSysID");
-					String[] trainType = node.getChildText("TrainType").split(":");
+					String trainType = node.getChildText("TrainType");
 					String scheduleType = node.getChildText("ScheduleType");
 					String newName = node.getAttributeValue("id");
 					String newInterval = node.getChildText("Intervall");
@@ -323,17 +332,11 @@ class XMLParser {
 						newDrivingDays.add(Integer.parseInt(drivingDays.get(x).getText()));
 					}
 
-
-					// neuen TrainType erstellen
-//					TrainType newTrainType = new TrainType(
-//							trainType[0],
-//							Double.parseDouble(trainType[1]),
-//							Integer.parseInt(trainType[2]));
-					// stimmt das so?
+					// trainType aus dem Model holen
 					TrainType newTrainType = null;
 					
 					for (TrainType singleTrainType : trainTypes){
-						if (singleTrainType.getName().equalsIgnoreCase(trainType[0])){
+						if (singleTrainType.getName().equalsIgnoreCase(trainType)){
 							 newTrainType = singleTrainType;
 						}
 					}

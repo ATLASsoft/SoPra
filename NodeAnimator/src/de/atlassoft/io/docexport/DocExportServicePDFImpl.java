@@ -31,6 +31,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik");
 		//pdfCreator.addStatisticContent(document, data, schedule);
 		document.close();
+	
 	}
 
 	@Override
