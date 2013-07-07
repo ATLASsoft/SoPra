@@ -1,13 +1,16 @@
 package de.atlassoft.ai;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import de.atlassoft.model.Node;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.State;
 import de.atlassoft.model.TrainRideStatistic;
 import de.hohenheim.view.FigureFactory;
 import de.hohenheim.view.mobile.TrainFigure;
+import de.hohenheim.view.node.NodeFigure;
 
 //TODO: implementiern
 public class TrainAgent implements Runnable {
@@ -61,16 +64,18 @@ public class TrainAgent implements Runnable {
 	public void run() {
 		
 		
-//	graph.SSSP_Dijkstra(schedule.getStations()[0],
-//				schedule.getStations()[schedule.getStations().length - 1],
-//				schedule.getScheme().getTrainType().getTopSpeed())
+		List<Node> path = graph.getShortestPath(schedule.getStations()[0],
+				schedule.getStations()[schedule.getStations().length - 1],
+				schedule.getScheme().getTrainType().getTopSpeed());
 		
-		
-//		Vertex target = graph.getVertex(schedule.getStations()[1]);
-//		List<NodeFigure> path = new ArrayList<>();
-//		path.add(schedule.getStations()[1].getNodeFigure());
-//		path.add(preList[target.getID()].getModelObject().getNodeFigure());
-			
+		Iterator<Node> it = path.iterator();
+		List<NodeFigure> figurePath = new ArrayList<>();
+		it.next(); // one does not need first element
+		while (it.hasNext()) {
+			figurePath.add(it.next().getNodeFigure());
+		}
+		figure.walkAlong(figurePath).setVelocity(0.5);
+		figure.startAnimation();	
 		
 	}
 	

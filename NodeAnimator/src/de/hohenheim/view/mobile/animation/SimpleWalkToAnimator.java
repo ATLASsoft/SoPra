@@ -299,12 +299,12 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 * To start(run) the animation only use this method!
 	 */
 	public void start() {
-		this.stop=false;
+		this.stop=false;System.out.println("gestartet");
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.MOVE_STARTED));
 		delta = 0;
 		last = System.currentTimeMillis();
-		map.getDisplay().timerExec(0, this);
+		map.getDisplay().asyncExec(this);
 	}
 	/**
 	 * Stops the animation. The animation can be restarted with @see {@link #start()}

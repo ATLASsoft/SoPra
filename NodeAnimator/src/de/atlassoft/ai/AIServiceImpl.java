@@ -34,14 +34,12 @@ public class AIServiceImpl implements AIService {
 	
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
-		System.out.println(fastestArrival(railSys, (Node) railSys.getNodeMap().getNodes().get("Node 1").getModellObject(), (Node) railSys.getNodeMap().getNodes().get("Node 5").getModellObject(), 500.0));
-		System.out.println();
-//		if (!running) {
-//			loop = new SimulationLoop(new Graph(railSys));
-//			loop.addObserver(o);
-//			loop.startRun(start, schemes);
-//			running = true;
-//		}
+		if (!running) {
+			loop = new SimulationLoop(new Graph(railSys));
+			loop.addObserver(o);
+			loop.startRun(start, schemes);
+			running = true;
+		}
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class AIServiceImpl implements AIService {
 	public int fastestArrival(RailwaySystem railSys, Node start, Node goal,
 			double topSpeed) {
 		double d = new Graph(railSys).getShortestTravelTime(start, goal, topSpeed);
-		return ((int) (d / 10.0 * 60.0)) + 1;
+		return ((int) (d / 10.0 * 60.0)) + 1;  // convert from pixel / km/h to minutes and round up
 	}
 
 	@Override
