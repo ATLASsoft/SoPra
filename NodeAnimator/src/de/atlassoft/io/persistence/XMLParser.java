@@ -325,10 +325,18 @@ class XMLParser {
 
 
 					// neuen TrainType erstellen
-					TrainType newTrainType = new TrainType(
-							trainType[0],
-							Double.parseDouble(trainType[1]),
-							Integer.parseInt(trainType[2]));
+//					TrainType newTrainType = new TrainType(
+//							trainType[0],
+//							Double.parseDouble(trainType[1]),
+//							Integer.parseInt(trainType[2]));
+					// stimmt das so?
+					TrainType newTrainType = null;
+					
+					for (TrainType singleTrainType : trainTypes){
+						if (singleTrainType.getName().equalsIgnoreCase(trainType[0])){
+							 newTrainType = singleTrainType;
+						}
+					}
 					
 					// neues ScheduleScheme erstellen
 					ScheduleScheme newSchedule = new ScheduleScheme(
