@@ -372,8 +372,13 @@ class PDFCreator {
 		PdfPCell c1 = new PdfPCell(new Phrase("Name"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Ankunftszeit"));
+		
+		if (sced.getScheduleType() == ScheduleType.SINGLE_RIDE){
+			c1 = new PdfPCell(new Phrase("Ankunftszeit"));
+		} else {
+			c1 = new PdfPCell(new Phrase("Ankunft nach (in Minuten)"));
+		}
+		
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 
@@ -400,10 +405,17 @@ class PDFCreator {
 			
 			// Calculating the idle time in minutes
 			idleMin = idleTimesList.get(i) / 60.0;
+			arrivalMin = arrivalTimesList.get(i) / 60.0;
 			
 			// adding the Content to the table
 			table.addCell(nodeList.get(i).getName());
-			table.addCell(arrivalFormat.format(newCal.getTime()));
+			
+			if (sced.getScheduleType() == ScheduleType.SINGLE_RIDE){
+				table.addCell(arrivalFormat.format(newCal.getTime()));
+			} else {
+				table.addCell(doubleFormater.format(arrivalMin));
+			}
+			
 			table.addCell(doubleFormater.format(idleMin));
 		}
 
