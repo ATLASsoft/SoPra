@@ -205,8 +205,6 @@ public class SimulationStatisticDialog {
 		comboScheduleScheme2.setItems(scheduleSchemeSelection);
 		comboScheduleScheme2.select(0);
 		final Combo comboNode2 = new Combo(mainComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-	    comboNode2.setItems(nodeSelection);
-	    comboNode2.select(0);
 	    
 	    // Tenth row with the result of "MeanDelay (ScheduleScheme, Node)"
 		new Label(mainComposite, SWT.NONE);
@@ -236,6 +234,17 @@ public class SimulationStatisticDialog {
 						selectedScheduleScheme2 = scheduleScheme;
 					}
 				}
+				
+				java.util.List<Node> nodes2 = selectedScheduleScheme2.getStations();
+				String[] node2Selection = new String [nodes2.size()];
+				int index = 0;
+				for (Node node : nodes2) {
+					node2Selection[index] = node.getName();
+					index++;
+				}
+				comboNode2.setItems(trainTypeSelection);
+				comboNode2.select(0);
+				
 				Node selectedNode2 = null;
 				for (Node node : nodes) {
 					if (node.getName().equals(comboNode2.getText())) {
