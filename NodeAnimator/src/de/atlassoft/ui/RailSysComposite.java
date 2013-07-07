@@ -35,6 +35,7 @@ import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
+import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
@@ -397,11 +398,11 @@ public class RailSysComposite {
 		          e.doit = false;
 		          Display.getCurrent().beep();
 		        }
-				//catches numbers higher than 300
+				//catches numbers higher than 500
 				else if(e.text.equals("") == false) {
 					final String oldS = topSpeed.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
-					if(Integer.parseInt(newS) > 300) {
+					if(Integer.parseInt(newS) > 500) {
 						e.doit = false;
 						Display.getCurrent().beep();
 					}
@@ -457,12 +458,18 @@ public class RailSysComposite {
 		save.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				railSys.setID(railSysNameText.getText());
-				applicationService.saveRailwaySystem(railSys);
-				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
-	    		layout.topControl = homeScreenComposite.getComposite();
-	    		mainComposite.layout();
-	    		railSysComposite.dispose();
+				if (!applicationService.isConnected(railSys)) {
+					//TODO: Internationalisieren
+					ErrorHelper.createErrorMessage("Fehler", "Das Streckennetz ist nicht zusammenhängend");
+				}
+				else {
+					railSys.setID(railSysNameText.getText());
+					applicationService.saveRailwaySystem(railSys);
+					HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+		    		layout.topControl = homeScreenComposite.getComposite();
+		    		mainComposite.layout();
+		    		railSysComposite.dispose();
+				}
 			}
 		});
 		

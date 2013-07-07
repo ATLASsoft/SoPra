@@ -700,7 +700,14 @@ public class ScheduleComposite {
 									stationList.add(lastStationList.getItem(0));
 									lastStationList.removeAll();
 									lastStationList.add(temp.getName());
-									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
+									
+									//get the last and the present station station
+									Node lastStation = nodeList.get(nodeList.size()-1);
+									Node presentStation = temp;
+									System.out.println(lastStation.getName());
+									System.out.println(presentStation.getName());
+//									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
+									arrivalTime.add(calculateFastestTime(lastStation, presentStation));
 									idleTime.add(5);
 									nodeList.add(temp);
 								}
@@ -919,19 +926,41 @@ public class ScheduleComposite {
 	 * Refreshes the values of the two spinners.
 	 */
 	private void refreshSpinner() {
+		//The first station spinner
 		if (firstStationList.getSelectionIndex() >= 0) {
 			timeSpinner.setSelection(0);
 			delaySpinner.setSelection(0);
 		}
+		//The last station spinner
 		else if(lastStationList.getSelectionIndex() >= 0) {
 			timeSpinner.setSelection(arrivalTime.get(arrivalTime.size()-1));
 			delaySpinner.setSelection(0);
 		}
+		//The stopover stations spinner
 		else if(stationList.getSelectionIndex() >= 0) {
 			timeSpinner.setSelection(arrivalTime.get(stationList.getSelectionIndex()+1));
 			delaySpinner.setSelection(idleTime.get(stationList.getSelectionIndex()+1));
 		}
 	}
+	
+	/**
+	 * Calculates the fastest time a train could reach a certain station.
+	 * 
+	 * @return
+	 * 		The fastest possible time.
+	 */
+	private int calculateFastestTime(Node start, Node end) {
+		double topSpeed = 100;
+		for (TrainType temp : applicationService.getModel().getTrainTypes()) {
+			if (temp.getName().equals(trainTypeCombo.getItem(trainTypeCombo.getSelectionIndex()))) {
+				topSpeed = temp.getTopSpeed();
+			}
+		}
+		System.out.println(applicationService.getFastestTravelTime(applicationService.getModel().getActiveRailwaySys(), start, end, topSpeed));
+		return applicationService.getFastestTravelTime(
+			   applicationService.getModel().getActiveRailwaySys(), start, end, topSpeed);
+	}
+	
 	
 	/**
 	 * Creates a help icon that shows some tips when hovering over it.

@@ -40,6 +40,7 @@ public class RailSysDialog implements PropertyChangeListener {
 	private ModelService model;
 	private Composite mainComposite;
 	private StackLayout layout;
+	private Button loadButton, deleteButton;
 	
 	public RailSysDialog(Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		
@@ -110,7 +111,7 @@ public class RailSysDialog implements PropertyChangeListener {
 		buttonLayout.justify = true;
 		buttonComposite.setLayout(buttonLayout);
 		
-		Button loadButton = new Button(buttonComposite, SWT.PUSH);
+		loadButton = new Button(buttonComposite, SWT.PUSH);
 		loadButton.setText(I18N.getMessage("ListDialog.Load"));
 		loadButton.setImage(ImageHelper.getImage("loadButton"));
 		RowData loadRowData = new RowData(130, 52);
@@ -127,7 +128,7 @@ public class RailSysDialog implements PropertyChangeListener {
 			}
 		});
 
-		Button deleteButton = new Button(buttonComposite, SWT.PUSH);
+		deleteButton = new Button(buttonComposite, SWT.PUSH);
 		deleteButton.setText(I18N.getMessage("ListDialog.Delete"));
 		deleteButton.setImage(ImageHelper.getImage("trashIcon"));
 		RowData deleteRowData = new RowData(130, 52);
@@ -136,6 +137,7 @@ public class RailSysDialog implements PropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applicationService.deleteRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
+				checkButtons();
 			}
 		});
 		
@@ -150,9 +152,22 @@ public class RailSysDialog implements PropertyChangeListener {
 				shell.close();
 				shell.dispose();
 			}
-		});		
+		});
+		
+		checkButtons();
 	}
 
+	private void checkButtons() {
+		if (applicationService.getModel().getRailwaySystemIDs().isEmpty()) {
+			loadButton.setEnabled(false);
+			deleteButton.setEnabled(false);
+		}
+		else {
+			loadButton.setEnabled(true);
+			deleteButton.setEnabled(true);
+		}
+	}
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(ModelService.RAILSYS_IDS_PROPNAME)) {
