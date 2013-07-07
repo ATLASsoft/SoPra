@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -266,8 +267,7 @@ class PDFCreator {
 			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  "
 					+ drivingDaysArray, smallBold);
 			// Intervall
-			Paragraph intervall = new Paragraph("Intervall :  "
-					+ "fährt alle:  "
+			Paragraph intervall = new Paragraph("Fährt alle :  "
 					+ schedule.getInterval()
 					+ " Minuten", smallBold);
 			// Streckennetz
@@ -376,7 +376,7 @@ class PDFCreator {
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 
-		c1 = new PdfPCell(new Phrase("Aufenthaltszeit"));
+		c1 = new PdfPCell(new Phrase("Aufenthaltszeit (in Minuten)"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.addCell(c1);
 		table.setHeaderRows(1);
@@ -384,10 +384,14 @@ class PDFCreator {
 		List<Integer> arrivalTimesList = sced.getArrivalTimes();
 		List<Integer> idleTimesList = sced.getIdleTimes();
 		List<Node> nodeList = sced.getStations();
+		
+		DecimalFormat doubleFormater = new DecimalFormat("#0"); 
+		double idleMin;
 		for (int i = 0; i < nodeList.size(); i++) {
+			idleMin = idleTimesList.get(i) / 60.0;	
 			table.addCell(nodeList.get(i).getName());
 			table.addCell(arrivalTimesList.get(i).toString());
-			table.addCell(idleTimesList.get(i).toString());
+			table.addCell(doubleFormater.format(idleMin));
 		}
 
 		buildTable.add(table);
