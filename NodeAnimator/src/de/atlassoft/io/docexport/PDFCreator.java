@@ -212,18 +212,21 @@ class PDFCreator {
 			Paragraph scheduleType = new Paragraph("Fahrplantyp :  "
 					+ fahrplanTyp, smallBold);
 			// Fahrtage
-			List<String> drivingDaysArray = new ArrayList<String>();
-			for (int i : schedule.getDays()) {
-				drivingDaysArray.add(getWeekDay(i));
+			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  ", smallBold);
+			List<Integer> dday = schedule.getDays();
+			for (int i = 0 ; i < dday.size() ; i++) {
+				if (i == dday.size() - 1){
+					drivingDays.add(getWeekDay(dday.get(i)));
+				} else {
+					drivingDays.add(getWeekDay(dday.get(i))+ ", ");
+				}
 			}
-			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  "
-					+ drivingDaysArray, smallBold);
 			// Abfahrtszeit der Einzelfahrten
 			Paragraph abfahrtszeit = new Paragraph("Abfahrtszeit :  "
 					+ dateFormat.format(schedule.getFirstRide().getTime()), smallBold);
 			// Streckennetz
 			Paragraph railsys = new Paragraph(
-					"Gehört zu Streckennetznummer :  "
+					"Gehört zu Streckennetz :  "
 							+ schedule.getRailSysID(), smallBold);
 
 			addEmptyLine(railsys, 3);
@@ -253,20 +256,23 @@ class PDFCreator {
 			// Letzter Fahrtag
 			Paragraph lastDay = new Paragraph("Letzte Fahrt :  "
 					+ dateFormat.format(schedule.getLastRide().getTime()), smallBold);
-			List<String> drivingDaysArray = new ArrayList<String>();
-			for (int i : schedule.getDays()) {
-				drivingDaysArray.add(getWeekDay(i));
-			}
 			// Fahrtage
-			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  "
-					+ drivingDaysArray, smallBold);
+			Paragraph drivingDays = new Paragraph("Fährt an den Tagen :  ", smallBold);
+			List<Integer> dday = schedule.getDays();
+			for (int i = 0 ; i < dday.size() ; i++) {
+				if (i == dday.size() - 1){
+					drivingDays.add(getWeekDay(dday.get(i)));
+				} else {
+					drivingDays.add(getWeekDay(dday.get(i))+ ", ");
+				}
+			}
 			// Intervall
 			Paragraph intervall = new Paragraph("Fährt alle :  "
 					+ schedule.getInterval()
 					+ " Minuten", smallBold);
 			// Streckennetz
 			Paragraph railsys = new Paragraph(
-					"Gehört zu Streckennetznummer :  "
+					"Gehört zu Streckennetz :  "
 							+ schedule.getRailSysID(), smallBold);
 			addEmptyLine(railsys, 3);
 			addEmptyLine(scheduleName, 1);
