@@ -11,7 +11,9 @@ import de.atlassoft.model.RailwaySystem;
 
 abstract class SaveDataAssistent {
 	
-	private static RailwaySystem createRailSys1() {
+	private static PersistenceService persistence = new PersistenceServiceImpl();
+	
+	private static void createRailSys1() throws IOException {
 		RailwaySystem railSys = new RailwaySystem("RailSys 1");
 
 		// create nodes
@@ -38,12 +40,11 @@ abstract class SaveDataAssistent {
 		path = new Path(node2, node4, 500);
 		railSys.addPath(path);
 
-		return railSys;
+		persistence.saveRailwaySystem(railSys);
 	}
 	
 	
 	public static void main(String[] args) throws IOException {
-		PersistenceService persistence = new PersistenceServiceImpl();
-		//persistence.saveRailwaySystem(createRailSys1());
+//		createRailSys1();
 	}
 }
