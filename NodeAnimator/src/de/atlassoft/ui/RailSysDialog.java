@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,13 +38,17 @@ public class RailSysDialog implements PropertyChangeListener {
 	private List trainSysList;
 	private ApplicationService applicationService;
 	private ModelService model;
+	private Composite mainComposite;
+	private StackLayout layout;
 	
-	public RailSysDialog(ApplicationService applicationService) {
+	public RailSysDialog(Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
 		model = applicationService.getModel();
 		model.addPropertyChangeListener(this);
+		this.mainComposite = mainComposite;
+		this.layout = layout;
 		
 		shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText(I18N.getMessage("ListDialog.Title"));
@@ -114,6 +119,9 @@ public class RailSysDialog implements PropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applicationService.setActiveRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+	    		layout.topControl = homeScreenComposite.getComposite();
+	    		mainComposite.layout();
 				shell.close();
 				shell.dispose();
 			}

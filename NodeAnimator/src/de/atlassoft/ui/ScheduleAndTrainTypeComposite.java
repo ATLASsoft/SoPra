@@ -60,6 +60,7 @@ public class ScheduleAndTrainTypeComposite {
 	private java.util.List<ScheduleScheme> active, passive;
 	private ScheduleScheme activeSchedule;
 	private Composite trainTypeComposite;
+	private FontData fontData;
 	
 	/**
 	 * Constructor for the class ScheduleAndTrainTypeComposite
@@ -77,6 +78,8 @@ public class ScheduleAndTrainTypeComposite {
 		this.applicationService = applicationService;
 		active = applicationService.getModel().getActiveScheduleSchemes();
 		passive = applicationService.getModel().getPassiveScheduleSchemes();
+		fontData = new FontData();
+
 //		activeSchedule = null;
 		
 		//Overall composite of the tab folder
@@ -115,7 +118,6 @@ public class ScheduleAndTrainTypeComposite {
 	private void initScheduleUI() {
 		
 		//Font for the titles of the schedules lists
-		FontData fontData = new FontData();
 		fontData.setStyle(SWT.BOLD);
 		fontData.setHeight(9);
 		
@@ -318,11 +320,23 @@ public class ScheduleAndTrainTypeComposite {
 		
 		// Here we fill this composite over the whole area
 		scrolledTrainTypeComposite.setLayout(new GridLayout (1, true));
-		scrolledTrainTypeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-		
+		GridData scrolledTrainTypeCompositeData = new GridData();
+		scrolledTrainTypeCompositeData.widthHint = 340;
+		scrolledTrainTypeCompositeData.verticalAlignment = SWT.FILL;
+		scrolledTrainTypeCompositeData.grabExcessVerticalSpace = true;
+		scrolledTrainTypeComposite.setLayoutData(scrolledTrainTypeCompositeData);
+
 		// This is the composite where we generate the content of mainComposite (scrolledTrainTypeComposite)
 		trainTypeComposite = new Composite (scrolledTrainTypeComposite, SWT.NULL);
 		trainTypeComposite.setLayout(new GridLayout (1, true));
+		
+		// Shows the description
+		Label trainTypeLabel = new Label(trainTypeComposite, SWT.NONE);
+		GridData trainTypeLabelData = new GridData();
+		trainTypeLabelData.heightHint = 20;
+		trainTypeLabel.setLayoutData(trainTypeLabelData);
+		trainTypeLabel.setFont(new Font(Display.getCurrent(), fontData));
+		trainTypeLabel.setText("Zugtypen:");
 		
 		// create Content of the TrainTypeComposite
 		createContent();

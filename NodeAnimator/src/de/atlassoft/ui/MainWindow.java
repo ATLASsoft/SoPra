@@ -181,7 +181,7 @@ public class MainWindow {
 		manageRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new RailSysDialog(applicationService);
+				new RailSysDialog(mainComposite, layout, applicationService);
 			}
 		});
 		
@@ -224,6 +224,7 @@ public class MainWindow {
 				new AboutDialog(display);
 			}
 		});
+		System.out.println(aboutItem.getWidth());
 	}
 	
 	public void close() {

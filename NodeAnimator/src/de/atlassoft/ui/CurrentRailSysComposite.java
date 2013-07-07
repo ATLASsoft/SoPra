@@ -29,7 +29,7 @@ import de.hohenheim.view.map.NodeMap;
  * This class creates a composite in which the current railway
  * system is shown.
  * 
- * @author Silvan Haeussermnn
+ * @author Silvan Haeussermnn, Tobias Ilg
  */
 public class CurrentRailSysComposite {
 	
@@ -70,65 +70,65 @@ public class CurrentRailSysComposite {
 	    gridData.widthHint = 600;
 	    gridData.heightHint = 500;
 	    c.setLayoutData(gridData);
-	    c.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-//				Node node = new Node("Node", e.x - 7, e.y - 7, 15, 15);
-//				applicationService.getModel().getActiveRailwaySys().addNode(node);
-				for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
-					if (temp.getNodeFigure().getBounds().contains(new Point(e.x, e.y))) {
-						name.setText(temp.getName());
-						int x = temp.getNodeFigure().getBounds().x;
-						int y = temp.getNodeFigure().getBounds().y;
-						Integer converter = new Integer(x);
-				        String coordinate = converter.toString();
-						coordinate1.setText("X:   " + coordinate);
-						converter = new Integer(y);
-				        coordinate = converter.toString();
-						coordinate2.setText("Y:   " + coordinate);
-						informationTable.removeAll();
-						final java.util.List<Path> paths = applicationService.getModel().getActiveRailwaySys().getPaths();
-						for (Path path : paths) {
-							if (path.getStart().equals(temp)) {
-						       TableItem item = new TableItem(informationTable, SWT.NONE);
-						       item.setText(0, path.getEnd().toString());
-						       x = path.getEnd().getNodeFigure().getBounds().x;
-						       converter = new Integer(x);
-						       coordinate = converter.toString();
-						       item.setText(1, coordinate);
-						       y = path.getEnd().getNodeFigure().getBounds().y;
-						       converter = new Integer(y);
-						       coordinate = converter.toString();
-						       item.setText(2, coordinate);
-						       item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
-							} else if (path.getEnd().equals(temp)) {
-							   TableItem item = new TableItem(informationTable, SWT.NONE);
-							   item.setText(0, path.getStart().toString());
-						       x = path.getStart().getNodeFigure().getBounds().x;
-						       converter = new Integer(x);
-						       coordinate = converter.toString();
-						       item.setText(1, coordinate);
-						       y = path.getStart().getNodeFigure().getBounds().y;
-						       converter = new Integer(y);
-						       coordinate = converter.toString();
-						       item.setText(2, coordinate);
-							   item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
+	    if (applicationService.getModel().getActiveRailwaySys() != null) {
+		    c.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
+						if (temp.getNodeFigure().getBounds().contains(new Point(e.x, e.y))) {
+							name.setText(temp.getName());
+							int x = temp.getNodeFigure().getBounds().x;
+							int y = temp.getNodeFigure().getBounds().y;
+							Integer converter = new Integer(x);
+					        String coordinate = converter.toString();
+							coordinate1.setText("X:   " + coordinate);
+							converter = new Integer(y);
+					        coordinate = converter.toString();
+							coordinate2.setText("Y:   " + coordinate);
+							informationTable.removeAll();
+							final java.util.List<Path> paths = applicationService.getModel().getActiveRailwaySys().getPaths();
+							for (Path path : paths) {
+								if (path.getStart().equals(temp)) {
+							       TableItem item = new TableItem(informationTable, SWT.NONE);
+							       item.setText(0, path.getEnd().toString());
+							       x = path.getEnd().getNodeFigure().getBounds().x;
+							       converter = new Integer(x);
+							       coordinate = converter.toString();
+							       item.setText(1, coordinate);
+							       y = path.getEnd().getNodeFigure().getBounds().y;
+							       converter = new Integer(y);
+							       coordinate = converter.toString();
+							       item.setText(2, coordinate);
+							       item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
+								} else if (path.getEnd().equals(temp)) {
+								   TableItem item = new TableItem(informationTable, SWT.NONE);
+								   item.setText(0, path.getStart().toString());
+							       x = path.getStart().getNodeFigure().getBounds().x;
+							       converter = new Integer(x);
+							       coordinate = converter.toString();
+							       item.setText(1, coordinate);
+							       y = path.getStart().getNodeFigure().getBounds().y;
+							       converter = new Integer(y);
+							       coordinate = converter.toString();
+							       item.setText(2, coordinate);
+								   item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
+								}
 							}
+							for (int i=0; i<3; i++) {
+						    	informationTable.getColumn (i).pack ();
+						    	if (i == 0) {
+						    		informationTable.getColumn(i).setWidth(120);
+						    	}
+						    } 
+						    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						    informationTable.setVisible(true);
 						}
-						for (int i=0; i<3; i++) {
-					    	informationTable.getColumn (i).pack ();
-					    	if (i == 0) {
-					    		informationTable.getColumn(i).setWidth(120);
-					    	}
-					    } 
-					    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-					    informationTable.setVisible(true);
 					}
 				}
-			}
-	    });
+		    });
+	    }
 	    
-	    //TODO: Hab ich nur eingefügt dass des Programm lauffähig ist
+	    //Catches the error that occurs when there is no active railway system
 	    if (applicationService.getModel().getActiveRailwaySys() != null) {
 	    	map = applicationService.getModel().getActiveRailwaySys().getNodeMap();
 	    }
@@ -138,7 +138,7 @@ public class CurrentRailSysComposite {
 		map.paintNodeMap(c);
 		currentRailSysComposite.layout();
 		
-		// the composite of the rigth side
+		// the composite of the right side
 		Composite currenRailSysInfoComposite = new Composite(currentRailSysComposite, SWT.BORDER);
 		currenRailSysInfoComposite.setLayout(new GridLayout(1, true));
 		currenRailSysInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -146,7 +146,6 @@ public class CurrentRailSysComposite {
 		// the composite with the Information
 		Composite informationComposite = new Composite(currenRailSysInfoComposite, SWT.NULL);
 		informationComposite.setLayout(new GridLayout(1, true));
-//		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// GridDate which center
 		new Label (informationComposite, SWT.NULL);
@@ -155,7 +154,6 @@ public class CurrentRailSysComposite {
 		Label title = new Label (informationComposite, SWT.NULL);
 		title.setText(I18N.getMessage("CurrentRailSysComposite.Title"));
 		title.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
-//		title.setLayoutData(dataCenter);
 		new Label (informationComposite, SWT.NULL);
 		
 		// the composite with the Information
