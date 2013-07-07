@@ -1,6 +1,8 @@
 package de.atlassoft.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the statistic of the current continuous simulation
@@ -31,6 +33,16 @@ public class SimulationStatistic {
 	 */
 	public void addStatistic(TrainRideStatistic statistic) {
 		trainRideStatistic.add(statistic);
+	}
+	
+	/**
+	 * Returns all {@link TrainRideStatistic} instances that have been added
+	 * to this class.
+	 * 
+	 * @return the statistic
+	 */
+	public List<TrainRideStatistic> getStatistics() {
+		return Collections.unmodifiableList(trainRideStatistic);
 	}
 	
 	/**
