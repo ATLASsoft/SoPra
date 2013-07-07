@@ -53,7 +53,7 @@ public interface AIService {
 	 * @param topSpeed
 	 * @return
 	 */
-	long fastestArrival(RailwaySystem railSys, Node start, Node goal, double topSpeed);
+	int fastestArrival(RailwaySystem railSys, Node start, Node goal, double topSpeed);
 	
 	boolean isRunning();
 	

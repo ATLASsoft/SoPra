@@ -71,24 +71,29 @@ class Graph {
 		}
 		
 	}
+
+
 	
-	//TODO: entferen
 	/**
-	 * Testfunktion ob der Graph richtig erzeugt wurde
+	 * Returns the vertex that belongs to the {@link Node} n.
+	 * 
+	 * @param n
+	 *            The model object of the wanted vertex
+	 * @return The {@link Vertex} that belongs to n
+	 * @see {@link Vertex#getModelObject()}
 	 */
-	void output() {
-		System.out.println("Graph");
-		for (Vertex v : vertexes) {
-			System.out.println(v);
-			System.out.println("ausgehende Kanten:");
-			for (Edge edge : v.getOutgoingEdges()) {
-				System.out.println(edge.toString());
-			}
-			System.out.println("");
-		}
-		
+	protected Vertex getVertex(Node n) {
+		return vertexMap.get(n);
 	}
-		
+	
+	/**
+	 * Returns the {@link RailwaySystem} this graph belongs to.
+	 * 
+	 * @return The {@link RailwaySystem} this graph belongs to
+	 */
+	protected RailwaySystem getRailwaySystem() {
+		return railSys;
+	}
 	
 	/**
 	 * Comparator to compare to {@link Vertex} instances. Compares by comparing
@@ -123,7 +128,7 @@ class Graph {
 	 * @param trainTopSpeed
 	 * @return Predecessor array
 	 */
-	List<Node> SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
+	Vertex[] SSSP_Dijkstra(Node source, Node target,double trainTopSpeed) {
 		Vertex start = vertexMap.get(source);
 		
 		// init dist array
@@ -159,18 +164,19 @@ class Graph {
 			
 		}
 		
+		return predecessor;
 		// construct list from predecessor array
-		List<Node> path = new ArrayList<>();
-		path.add(target);
-		int i = 0;
-		Vertex pre;
-		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
-			path.add(pre.getModelObject());
-			i++;
-		}
-		Collections.reverse(path);
-		
-		return path;
+//		List<Node> path = new ArrayList<>();
+//		path.add(target);
+//		int i = 0;
+//		Vertex pre;
+//		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
+//			path.add(pre.getModelObject());
+//			i++;
+//		}
+//		Collections.reverse(path);
+//		
+//		return path;
 	}
 	
 	/**
@@ -214,16 +220,43 @@ class Graph {
 		return true;
 	}
 	
-	
-	
-	protected Vertex getVertex(Node n) {
-		return vertexMap.get(n);
-	}
-	
-	
+	//TODO: besser lösen, momentan dijktra kopie
+	protected double getDistance(Node source, Node target, double topSpeed) {
+		Vertex start = vertexMap.get(source);
 		
-	protected RailwaySystem getRailwaySystem() {
-		return railSys;
+		// init dist array
+		Double[] dist = new Double[vertexes.length];
+		for (int i = 0; i < dist.length; i++) {
+			dist[i] = Double.POSITIVE_INFINITY;
+		}
+
+		// init heap
+		PriorityQueue<Vertex> R = new PriorityQueue<>(dist.length, new VertexComperator(dist));
+		dist[start.getID()] = 0.0;
+		R.offer(start);
+		
+		
+		// compute shortest paths from start
+		Vertex[] predecessor = new Vertex[vertexes.length];
+		Vertex v, u;
+		double d;
+		while (!R.isEmpty()) {
+			v = R.poll();
+			for (Edge e : v.getOutgoingEdges()) {
+				if (!e.isBlocked()) {
+					u = e.getEnd();
+					d = (e.getDistance() / Math.min(e.getTopSpeed(), topSpeed)) + dist[v.getID()];
+					if (d < dist[u.getID()]) {
+						R.remove(u);
+						dist[u.getID()] = d;
+						R.offer(u);
+						predecessor[u.getID()] = v;
+					}
+				}
+			}
+		}
+		return dist[getVertex(target).getID()]; // ist pixel / km/h
 	}
+	
 	
 }

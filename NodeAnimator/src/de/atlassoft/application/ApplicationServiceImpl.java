@@ -1,9 +1,7 @@
 package de.atlassoft.application;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Observer;
 
@@ -14,14 +12,11 @@ import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.Node;
-import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
-import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
-import de.atlassoft.ui.SplashScreen;
 import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
@@ -40,52 +35,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 	
 	
-	//TODO: im Finalen Programm löschen
-	// Nur für Testzwecke, hier kann jeder seine Dummy Daten einspeisen,
-	// falls er welche benötigt
-	private void createDummy(){
-		TrainType testType = new TrainType("Testzug", 150, 10);
-		model.addTrainType(testType);
-		
-		RailwaySystem testRailSys = new RailwaySystem("1");
-		model.setActiveRailwaySys(testRailSys);
-		model.addRailwaySystemID("1");
-		
-		Node node1 = new Node("Node 1", 15, 23, 15, 15);
-		model.getActiveRailwaySys().addNode(node1);
-		Node node2 = new Node("Node 2", 555, 200, 15, 15);
-		model.getActiveRailwaySys().addNode(node2);
-		Node node3 = new Node("Node 3", 400, 300, 15, 15);
-		model.getActiveRailwaySys().addNode(node3);
-		Node node4 = new Node("Node 4", 555, 400, 15, 15);
-		model.getActiveRailwaySys().addNode(node4);
-		Node node5 = new Node("Node 5", 100, 53, 15, 15);
-		model.getActiveRailwaySys().addNode(node5);
-		
-		Path path = new Path(node1, node5, 120);
-		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node5, node3, 200);
-		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node4, node3, 5);
-		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node3, node2, 500);
-		model.getActiveRailwaySys().addPath(path);
-		path = new Path(node2, node4, 500);
-		model.getActiveRailwaySys().addPath(path);
-		
-		for(int i=1; i<=20; i++) {
-			ScheduleType testScheduleType = ScheduleType.SINGLE_RIDE;
-			java.util.List<Integer> testDays = new ArrayList<Integer>();
-			testDays.add(2);
-			testDays.add(3);
-			Calendar firstRide = new GregorianCalendar();
-			firstRide.set(0, 0, 0, 15, 20);
-			ScheduleScheme testScheduleScheme = new ScheduleScheme (testScheduleType, testType, testDays, firstRide, "1", "Testfahrplan" + i);
-			testScheduleScheme.addStop(node1, 0, 5);
-			testScheduleScheme.addStop(node4, 10, 5);
-			model.addActiveScheduleScheme(testScheduleScheme);
-		}
-	}
+	
 	
 	@Override
 	public void initialize() {
@@ -96,8 +46,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		I18N = I18NSingleton.getInstance();
 		// TODO: unvollständig
 		
-//		createDummy();
-
 		// load images
 		ImageHelper.loadImage("greenCheck", "img/greencheck.png");
 		ImageHelper.loadImage("questionMark", "img/fragezeichen.jpg");
@@ -316,6 +264,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 			throw new IllegalArgumentException("railSys must not be null");
 		}
 		return ai.isConnected(railSys);
+	}
+
+
+	@Override
+	public int getFastestTravelTime(RailwaySystem railSys, Node start, Node goal, double topSpeed) {
+		return ai.fastestArrival(railSys, start, goal, topSpeed);
 	}
 
 }

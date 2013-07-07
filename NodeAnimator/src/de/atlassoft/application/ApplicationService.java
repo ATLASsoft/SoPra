@@ -1,7 +1,6 @@
 package de.atlassoft.application;
 
 import java.util.Calendar;
-import java.util.Observable;
 import java.util.Observer;
 
 import de.atlassoft.model.ModelService;
@@ -89,4 +88,22 @@ public interface ApplicationService {
 	void showDepartureBoardDoc(Node station);
 	
 	boolean isConnected(RailwaySystem railSys);
-}
+	
+	/**
+	 * Computes the quickest possible travel time for an agent with the
+	 * specified top speed from start to goal i.e. going along the shortest route
+	 * without being detained and no stops at any nodes.
+	 * 
+	 * @param railSys
+	 *            {@link RailwaySystem} start and goal belong to
+	 * @param start
+	 *            The start {@link Node}
+	 * @param goal
+	 *            The goal {@link Node}
+	 * @param topSpeed
+	 *            The top speed of the agent
+	 * @return fastest travel time in minutes
+	 */
+	public int getFastestTravelTime(RailwaySystem railSys, Node start, Node goal, double topSpeed);
+
+	}

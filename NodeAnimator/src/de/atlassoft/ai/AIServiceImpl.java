@@ -34,15 +34,12 @@ public class AIServiceImpl implements AIService {
 	
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
-		Graph g = new Graph(railSys);
-		System.out.println(g.SSSP_Dijkstra((Node) railSys.getNodeMap().getNodes().get("Node 1").getModellObject(), (Node) railSys.getNodeMap().getNodes().get("Node 4").getModellObject(), 5.0));
-		
-//		if (!running) {
-//			loop = new SimulationLoop(new Graph(railSys));
-//			loop.addObserver(o);
-//			loop.startRun(start, schemes);
-//			running = true;
-//		}
+		if (!running) {
+			loop = new SimulationLoop(new Graph(railSys));
+			loop.addObserver(o);
+			loop.startRun(start, schemes);
+			running = true;
+		}
 	}
 
 	@Override
@@ -70,10 +67,10 @@ public class AIServiceImpl implements AIService {
 	}
 
 	@Override
-	public long fastestArrival(RailwaySystem railSys, Node start, Node goal,
+	public int fastestArrival(RailwaySystem railSys, Node start, Node goal,
 			double topSpeed) {
-		// TODO Auto-generated method stub
-		return 0;
+		double d = new Graph(railSys).getDistance(start, goal, topSpeed);
+		return ((int) (d * 100_000.0 / 60.0)) + 1;
 	}
 
 	@Override
@@ -86,6 +83,7 @@ public class AIServiceImpl implements AIService {
 		return running;
 	}
 	
+	@Override
 	public void setTimeLapse(int timeLapse) {
 		if (running) {
 			loop.setTimeLapse(timeLapse);
