@@ -1,13 +1,17 @@
 package de.atlassoft.util;
 
+import java.io.IOException;
+
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.io.persistence.PersistenceService;
+import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
 
 abstract class SaveDataAssistent {
 	
-	public static void createRailSys1(ApplicationService app) {
+	private static RailwaySystem createRailSys1() {
 		RailwaySystem railSys = new RailwaySystem("RailSys 1");
 
 		// create nodes
@@ -34,7 +38,12 @@ abstract class SaveDataAssistent {
 		path = new Path(node2, node4, 500);
 		railSys.addPath(path);
 
-		app.saveRailwaySystem(railSys);
+		return railSys;
 	}
 	
+	
+	public static void main(String[] args) throws IOException {
+		PersistenceService persistence = new PersistenceServiceImpl();
+		//persistence.saveRailwaySystem(createRailSys1());
+	}
 }
