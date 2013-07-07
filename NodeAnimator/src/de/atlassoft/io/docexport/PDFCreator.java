@@ -1,14 +1,23 @@
 package de.atlassoft.io.docexport;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
@@ -26,13 +35,13 @@ import de.atlassoft.model.ScheduleScheme;
  * 
  */
 class PDFCreator {
-
+	
 	/**
 	 * One of the Fonts used in the PDF document.
 	 */
 	private Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
 			Font.NORMAL);
-
+	
 	/**
 	 * One of the Fonts used in the PDF document.
 	 */
@@ -77,7 +86,18 @@ class PDFCreator {
 		document.addAuthor("ATLASsoft");
 		document.addCreator("ATLASsoft");
 	}
-
+	
+//    protected static Image loadImage(String ref) {  
+//        Image bimg = null;  
+//        try {  
+//  
+//            bimg = ImageIO.re 
+//        } catch (Exception e) {  
+//            e.printStackTrace();  
+//        }  
+//        return bimg;  
+//    }  
+	
 	/**
 	 * Generates a title page for a PDF document. If document is null, an
 	 * {@link IllegalArgumentException} is thrown. If the insertion to the
@@ -90,10 +110,12 @@ class PDFCreator {
 	 * @param description
 	 *            The description to the title page.
 	 * @throws DocumentException
+	 * @throws IOException 
+	 * @throws MalformedURLException 
 	 * 
 	 */
 	protected void addTitlePage(Document document, String title,
-			String descrption) throws DocumentException {
+			String description) throws DocumentException, MalformedURLException, IOException {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
@@ -110,12 +132,15 @@ class PDFCreator {
 				smallBold));
 		addEmptyLine(preface, 3);
 		preface.add(new Paragraph(
-				"This document describes something which is very important ",
+				description,
 				smallBold));
 
 		addEmptyLine(preface, 8);
-
+		//BufferedImage img = loadImage("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
+		Image imgToAdd = Image.getInstance("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
+		
 		document.add(preface);
+		document.add(imgToAdd);
 		// Start a new page
 		document.newPage();
 	}
@@ -193,7 +218,7 @@ class PDFCreator {
 				+ schedule.getInterval());
 		Paragraph railsys = new Paragraph("Gehört zu Streckennetznummer : "
 				+ schedule.getRailSysID());
-
+		addEmptyLine(railsys, 3);
 		document.add(scheduleName);
 		document.add(scheduleType);
 		document.add(firstDay);
@@ -203,7 +228,7 @@ class PDFCreator {
 		document.add(railsys);
 		
 		Paragraph table = new Paragraph("Angefahrene Haltestellen:");
-		addEmptyLine(table,3);
+		addEmptyLine(table, 2);
 		createTable(table, schedule);
 		document.add(table);
 	}
@@ -243,6 +268,7 @@ class PDFCreator {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
+		
 
 	}
 

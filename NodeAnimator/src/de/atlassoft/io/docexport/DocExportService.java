@@ -21,7 +21,7 @@ public interface DocExportService {
 	 *
 	 * @param stat The statistics to be added to the document.
 	 */
-	void createStatisticDoc (SimulationStatistic stat);
+	void createStatisticDoc (SimulationStatistic stat) throws DocumentException, MalformedURLException, IOException;
 	
 	/**
 	 * 
@@ -40,5 +40,5 @@ public interface DocExportService {
 	 * @param station The Node from which the departure board is requested.
 	 */
 	//TODO: Entwurf der methode ist noch unklar, nochmal diskutieren bevor implementieren
-	void createDepartureBoard (Node station);
+	void createDepartureBoard (Node station) throws DocumentException, MalformedURLException, IOException;
 }
