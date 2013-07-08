@@ -30,7 +30,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		PdfWriter.getInstance(document, new FileOutputStream(STATISTIC_DOC_PATH.toString() + "_"  + ".pdf"));
 		document.open();
 		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik");
-		//TODO pdfCreator.addStatisticContent(document, data, schedule);
+		System.out.print(stat.getStatistics().get(0));//TODO pdfCreator.addStatisticContent(document, data, schedule);
 		document.close();
 	
 	}

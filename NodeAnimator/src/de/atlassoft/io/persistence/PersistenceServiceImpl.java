@@ -32,6 +32,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");
 	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
 	private static final Path RAILWAYSYS_PATH = SAVE_DATA_PATH.resolve("railwaysys.xml");
+	private static final Path PIC_PATH = SAVE_DATA_PATH.resolve("image_");
 	
 	private static Path getJarPath() {
 		String classpath = System.getProperty("java.class.path");
@@ -60,7 +61,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 		if (!Files.exists(TRAIN_TYPE_PATH)) {
 			xmlParser.createXML(TRAIN_TYPE_PATH, "Traintypes");
 		}
-		xmlParser.saveTrainType(type, TRAIN_TYPE_PATH);
+		xmlParser.saveTrainType(type, TRAIN_TYPE_PATH, PIC_PATH);
 	}
 
 	@Override

@@ -16,7 +16,11 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -67,7 +71,7 @@ class XMLParser {
 	/*
 	 * SAVE TrainType
 	 */
-	protected void saveTrainType(TrainType type, Path path) throws IOException {
+	protected void saveTrainType(TrainType type, Path path, Path picpath) throws IOException {
 		// if file does not exist, create new
 		FileWriter out = null;
 
@@ -79,7 +83,7 @@ class XMLParser {
 
 			Document doc = (Document) builder.build(path.toFile());
 
-			Element train = new Element(type.getName());
+			Element train = new Element("Name").setAttribute(new Attribute("ID", type.getName()));
 
 			train.addContent(new Element("topspeed").setText(Double
 					.toString(type.getTopSpeed())));
@@ -89,14 +93,23 @@ class XMLParser {
 			
 //			Image test = type.getImg();
 //			File outPutFile = new File(".png");
-//			ImageIO.write(test, "png", outPutFile);		
-			String img;
-			if (type.getImg() == null){
-				img = "null";
-			}else{
-				img = type.getImg().toString();
+//			ImageIO.write(test, "png", outPutFile);
+			String imgToAddInXML;
+			//Display d = Display.getDefault();
+			
+	
+			Image image = type.getImg();
+
+			if (image == null) {
+				imgToAddInXML = "Nicht vorhanden";
+			} else {
+				ImageLoader saver = new ImageLoader();
+				saver.data = new ImageData[] { image.getImageData() };
+				saver.save(picpath + type.getName() + ".png", SWT.IMAGE_PNG);
+				imgToAddInXML = picpath + type.getName() + ".png";
 			}
-			train.addContent(new Element("picpath").setText(img));
+			
+			train.addContent(new Element("picpath").setText(imgToAddInXML));
 
 			doc.getRootElement().addContent(train);
 
@@ -139,9 +152,14 @@ class XMLParser {
 
 				Element node = (Element) list.get(i);
 
-				TrainType newTrainType = new TrainType(node.getName(),
+				TrainType newTrainType = new TrainType(node.getAttributeValue("ID"),
 						Double.parseDouble(node.getChildText("topspeed")),
 						Integer.parseInt(node.getChildText("priority")));
+				if (!node.getChildText("picpath").equals("Nicht vorhanden")) {
+					Display d = Display.getDefault();
+					Image imgToAdd = new Image(d, node.getChildText("picpath"));
+					newTrainType.setImg(imgToAdd);
+				}
 				res.add(newTrainType);
 			}
 
@@ -169,8 +187,14 @@ class XMLParser {
 
 			Document doc = (Document) builder.build(path.toFile());
 			Element rootNode = doc.getRootElement();
-
-			rootNode.removeChild(type.getName());
+			
+			List<Element> allTrainTypes = rootNode.getChildren();
+			
+			for (Element oneTrainType : allTrainTypes){
+				if (oneTrainType.getAttributeValue("ID").equals(type.getName())){
+					rootNode.removeContent(oneTrainType);
+				}
+			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();
 
@@ -370,7 +394,6 @@ class XMLParser {
 					newSchedule.setInterval(Integer.parseInt(newInterval));
 			
 					res.add(newSchedule);
-					System.out.println(res.size());
 				}
 			}
 
