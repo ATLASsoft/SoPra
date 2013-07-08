@@ -295,6 +295,7 @@ public class SimulationComposite implements Observer {
 					
 					speedScale.setSelection(1);
 					speedScale.setEnabled(false);
+					speedText.setText("Echtzeit");
 					pauseButton.setSelection(false);
 					pauseButton.setEnabled(false);
 					playButton.setEnabled(true);

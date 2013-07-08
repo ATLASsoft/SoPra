@@ -204,7 +204,10 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (applicationService.getModel().getActiveRailwaySys() == null) {
-					ErrorHelper.createErrorMessage("Fehler", "Es ist kein aktives Streckennetz vorhanden");
+					ErrorHelper.createErrorMessage(I18N.getMessage("MainWindow.Error.Title"), I18N.getMessage("MainWindow.Error.NoActiveRailSys"));
+				}
+				else if (applicationService.getModel().getActiveScheduleSchemes().size() <= 0) {
+					ErrorHelper.createErrorMessage(I18N.getMessage("MainWindow.Error.Title"), I18N.getMessage("MainWindow.Error.NoActiveSchedule"));
 				}
 				else {
 					SimulationComposite simComp = new SimulationComposite(shell, mainComposite, layout, applicationService);
@@ -224,7 +227,6 @@ public class MainWindow {
 				new AboutDialog(display);
 			}
 		});
-		System.out.println(aboutItem.getWidth());
 	}
 	
 	public void close() {

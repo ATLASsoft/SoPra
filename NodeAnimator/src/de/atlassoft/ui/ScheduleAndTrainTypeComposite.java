@@ -130,7 +130,7 @@ public class ScheduleAndTrainTypeComposite {
 		informationComposite.setLayout(new GridLayout(2, false));
 		
 		Label noSelection = new Label(informationComposite, SWT.NONE);
-		noSelection.setText("Kein Fahrplan ausgewählt");
+		noSelection.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.NoScheduleSelected"));
 		
 		//Shows the two lists and the buttons to switch
 		Composite listComposite = new Composite(scheduleComposite, SWT.NONE);
@@ -140,7 +140,7 @@ public class ScheduleAndTrainTypeComposite {
 		//Active schedules list
 		Label activeSchedulesLabel = new Label(listComposite, SWT.NONE);
 		activeSchedulesLabel.setFont(new Font(Display.getCurrent(), fontData));
-		activeSchedulesLabel.setText("Aktive Fahrpläne:");
+		activeSchedulesLabel.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.ActiveSchedules"));
 		
 		activeSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
 		GridData activeSchedulesData = new GridData();
@@ -177,7 +177,7 @@ public class ScheduleAndTrainTypeComposite {
 	    
 	    	// /\ Button
 	    Button setScheduleActive = new Button(buttonComposite, SWT.PUSH);
-	    setScheduleActive.setText("/\\ Aktiv setzen");
+	    setScheduleActive.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.SetActive"));
 	    setScheduleActive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetActiveTooltip"));
 	    setScheduleActive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
@@ -251,7 +251,7 @@ public class ScheduleAndTrainTypeComposite {
 	    
 	    	// \/ Button
 	    Button setSchedulePassive = new Button(buttonComposite, SWT.PUSH);
-	    setSchedulePassive.setText("\\/ Passiv setzen");
+	    setSchedulePassive.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.SetPassive"));
 	    setSchedulePassive.setToolTipText(I18N.getMessage("AllSchedulesComposite.SetPassiveTooltip"));
 	    setSchedulePassive.addSelectionListener(new SelectionAdapter() {
 	    	@Override
@@ -277,7 +277,7 @@ public class ScheduleAndTrainTypeComposite {
 		//Passive schedules list
 	    Label passiveSchedulesLabel = new Label(listComposite, SWT.NONE);
 	    passiveSchedulesLabel.setFont(new Font(Display.getCurrent(), fontData));
-	    passiveSchedulesLabel.setText("Passive Fahrpläne:");
+	    passiveSchedulesLabel.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.PassiveSchedules"));
 	    
 		passiveSchedules = new List(listComposite,  SWT.BORDER|SWT.V_SCROLL|SWT.SINGLE);
 		GridData passiveSchedulesData = new GridData();
@@ -336,7 +336,7 @@ public class ScheduleAndTrainTypeComposite {
 		trainTypeLabelData.heightHint = 20;
 		trainTypeLabel.setLayoutData(trainTypeLabelData);
 		trainTypeLabel.setFont(new Font(Display.getCurrent(), fontData));
-		trainTypeLabel.setText("Zugtypen:");
+		trainTypeLabel.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypes"));
 		
 		// create Content of the TrainTypeComposite
 		createContent();
@@ -354,48 +354,48 @@ public class ScheduleAndTrainTypeComposite {
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm");
 		
 		Label name = new Label(informationComposite, SWT.NONE);
-		name.setText("Name:");
+		name.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Name"));
 		
 		Label nameInformation = new Label(informationComposite, SWT.NONE);
 		nameInformation.setText(activeSchedule.getID());
 		
 		Label trainType = new Label(informationComposite, SWT.NONE);
-		trainType.setText("Zugtyp:");
+		trainType.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.TrainType"));
 		
 		Label trainTypeInformation = new Label(informationComposite, SWT.NONE);
 		trainTypeInformation.setText(activeSchedule.getTrainType().getName());
 		
 		Label repetition = new Label(informationComposite, SWT.NONE);
-		repetition.setText("Wiederholungsart:");
+		repetition.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Repetition"));
 
 		if (activeSchedule.getScheduleType() == ScheduleType.SINGLE_RIDE) {
 			Label repetitionInformation = new Label(informationComposite, SWT.NONE);
-			repetitionInformation.setText("Einmalig");
+			repetitionInformation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.NoRepetition"));
 			
 			Label departure = new Label(informationComposite, SWT.NONE);
-			departure.setText("Abfahrt:");
+			departure.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Departure"));
 			
 			Label departureInformation = new Label(informationComposite, SWT.NONE);
 			departureInformation.setText(dateFormat.format(activeSchedule.getFirstRide().getTime()));
 		}
 		else {
 			Label repetitionInformation = new Label(informationComposite, SWT.NONE);
-			repetitionInformation.setText("Intervall");
+			repetitionInformation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.IntervalType"));
 			
 			Label firstRide = new Label(informationComposite, SWT.NONE);
-			firstRide.setText("Erste Fahrt:");
+			firstRide.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.FirstRide"));
 			
 			Label firstRideInformation = new Label(informationComposite, SWT.NONE);
 			firstRideInformation.setText(dateFormat.format(activeSchedule.getFirstRide().getTime()));
 			
 			Label lastRide = new Label(informationComposite, SWT.NONE);
-			lastRide.setText("Letzte Fahrt:");
+			lastRide.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.LastRide"));
 			
 			Label lastRideInformation = new Label(informationComposite, SWT.NONE);
 			lastRideInformation.setText(dateFormat.format(activeSchedule.getLastRide().getTime()));
 			
 			Label interval = new Label(informationComposite, SWT.NONE);
-			interval.setText("Intervall:");
+			interval.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Interval"));
 			
 			Label intervalInformation = new Label(informationComposite, SWT.NONE);
 			intervalInformation.setText(String.valueOf(activeSchedule.getInterval()) + " minütig");
@@ -403,7 +403,7 @@ public class ScheduleAndTrainTypeComposite {
 		
 		Label days = new Label(informationComposite, SWT.NONE);
 		days.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
-		days.setText("Tage:");
+		days.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Days"));
 		
 		Composite allDaysComposite = new Composite(informationComposite, SWT.NONE);
 		RowLayout allDaysCompositeLayout = new RowLayout(SWT.VERTICAL);
@@ -412,36 +412,36 @@ public class ScheduleAndTrainTypeComposite {
 		for (Integer temp : activeSchedule.getDays()) {
 			if (temp == Calendar.MONDAY) {
 				Label monday = new Label(allDaysComposite, SWT.NONE);
-				monday.setText("Montag");
+				monday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Monday"));
 			}
 			else if (temp == Calendar.TUESDAY) {
 				Label tuesday = new Label(allDaysComposite, SWT.NONE);
-				tuesday.setText("Dienstag");
+				tuesday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Tuesday"));
 			}
 			else if (temp == Calendar.WEDNESDAY) {
 				Label wednesday = new Label(allDaysComposite, SWT.NONE);
-				wednesday.setText("Mittwoch");
+				wednesday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Wednesday"));
 			}
 			else if (temp == Calendar.THURSDAY) {
 				Label thursday = new Label(allDaysComposite, SWT.NONE);
-				thursday.setText("Donnerstag");
+				thursday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Thursday"));
 			}
 			else if (temp == Calendar.FRIDAY) {
 				Label friday = new Label(allDaysComposite, SWT.NONE);
-				friday.setText("Freitag");
+				friday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Friday"));
 			}
 			else if (temp == Calendar.SATURDAY) {
 				Label saturday = new Label(allDaysComposite, SWT.NONE);
-				saturday.setText("Samstag");
+				saturday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Saturday"));
 			}
 			else {
 				Label sunday = new Label(allDaysComposite, SWT.NONE);
-				sunday.setText("Sonntag");
+				sunday.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Sunday"));
 			}
 		}
 		
 		Label firstStation = new Label(informationComposite, SWT.NONE);
-		firstStation.setText("Erste Station:");
+		firstStation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.FirstStation"));
 		
 		Label firstStationInformation = new Label(informationComposite, SWT.NONE);
 		firstStationInformation.setText(activeSchedule.getStations().get(0).getName());
@@ -449,12 +449,13 @@ public class ScheduleAndTrainTypeComposite {
 		if (activeSchedule.getStations().size() > 2) {
 			Label stopOverStations = new Label (informationComposite, SWT.NONE);
 			stopOverStations.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
-			stopOverStations.setText("Zwischenstationen:");
+			stopOverStations.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.StopOverStations"));
 			
 			Composite stopOverComposite = new Composite(informationComposite, SWT.NONE);
 			GridLayout stopOverCompositeLayout = new GridLayout();
 			stopOverCompositeLayout.numColumns = 2;
 			stopOverCompositeLayout.marginWidth = 0;
+			stopOverCompositeLayout.marginHeight = 0;
 			stopOverComposite.setLayout(stopOverCompositeLayout);
 			
 			for (int i=1; i<activeSchedule.getStations().size()-1; i++) {
@@ -462,12 +463,12 @@ public class ScheduleAndTrainTypeComposite {
 				station.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 				station.setText(activeSchedule.getStations().get(i).getName());
 				Label delay = new Label(stopOverComposite, SWT.NONE);
-				delay.setText("nach " + activeSchedule.getArrivalTimes().get(i)/60 + " mins");
+				delay.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.After") + activeSchedule.getArrivalTimes().get(i)/60 + " mins");
 			}
 		}
 		
 		Label lastStation = new Label(informationComposite, SWT.NONE);
-		lastStation.setText("Letzte Station:");
+		lastStation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.LastStation"));
 		
 		Composite lastStationComposite = new Composite(informationComposite, SWT.NONE);
 		GridLayout lastStationCompositeLayout = new GridLayout(2, false);
@@ -479,7 +480,7 @@ public class ScheduleAndTrainTypeComposite {
 		lastStationInformation.setText(activeSchedule.getStations().get(last-1).getName());
 		
 		Label lastStationDelay = new Label(lastStationComposite, SWT.NONE);
-		lastStationDelay.setText("nach " + activeSchedule.getArrivalTimes().get(last-1)/60 + " mins");
+		lastStationDelay.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.After") + activeSchedule.getArrivalTimes().get(last-1)/60 + " mins");
 		
 		informationComposite.layout();
 	}

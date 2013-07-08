@@ -683,7 +683,16 @@ public class ScheduleComposite {
 									messageBox.open();
 								} else {
 									lastStationList.add(temp.getName());
-									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
+									
+									//get the last and the present station
+									Node lastStation = nodeList.get(nodeList.size()-1);
+									Node presentStation = temp;
+									
+									//compute the minimal time needed to reach the added station
+									int lastArrivalTime = arrivalTime.get(arrivalTime.size()-1);
+									int lastIdleTime = idleTime.get(idleTime.size()-1);
+									arrivalTime.add(calculateFastestTime(lastStation, presentStation) + lastArrivalTime + lastIdleTime);
+									
 									idleTime.add(5);
 									nodeList.add(temp);
 								}
@@ -704,10 +713,11 @@ public class ScheduleComposite {
 									//get the last and the present station station
 									Node lastStation = nodeList.get(nodeList.size()-1);
 									Node presentStation = temp;
-									System.out.println(lastStation.getName());
-									System.out.println(presentStation.getName());
-//									arrivalTime.add(arrivalTime.get(arrivalTime.size()-1) + 5);
-									arrivalTime.add(calculateFastestTime(lastStation, presentStation));
+									
+									//compute the minimal time needed to reach the added station
+									int lastArrivalTime = arrivalTime.get(arrivalTime.size()-1);
+									int lastIdleTime = idleTime.get(idleTime.size()-1);
+									arrivalTime.add(calculateFastestTime(lastStation, presentStation) + lastArrivalTime + lastIdleTime);
 									idleTime.add(5);
 									nodeList.add(temp);
 								}
@@ -956,7 +966,6 @@ public class ScheduleComposite {
 				topSpeed = temp.getTopSpeed();
 			}
 		}
-		System.out.println(applicationService.getFastestTravelTime(applicationService.getModel().getActiveRailwaySys(), start, end, topSpeed));
 		return applicationService.getFastestTravelTime(
 			   applicationService.getModel().getActiveRailwaySys(), start, end, topSpeed);
 	}

@@ -32,7 +32,7 @@ import de.atlassoft.util.ImageHelper;
  * @author Silvan Haeussermann
  */
 public class RailSysDialog implements PropertyChangeListener {
-	//TODO: Fehler abfangen, wenn letztes Streckennetz gelöscht wird
+
 	private Shell shell;
 	private I18NService I18N;
 	private List trainSysList;
@@ -41,7 +41,7 @@ public class RailSysDialog implements PropertyChangeListener {
 	private Composite mainComposite;
 	private StackLayout layout;
 	private Button loadButton, deleteButton;
-	
+
 	public RailSysDialog(Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		
 		I18N = I18NSingleton.getInstance();
@@ -149,6 +149,9 @@ public class RailSysDialog implements PropertyChangeListener {
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+	    		layout.topControl = homeScreenComposite.getComposite();
+	    		mainComposite.layout();
 				shell.close();
 				shell.dispose();
 			}
