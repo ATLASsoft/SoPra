@@ -9,6 +9,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 
+import de.atlassoft.ai.TrainAgent;
+import de.atlassoft.model.Path;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
 import de.hohenheim.view.mobile.animation.exceptions.PathNotFoundException;
@@ -33,11 +35,6 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 * The figure to animate.
 	 */
 	AnimationFigure animationFigure;
-	
-	/**
-	 * Velocity in pixels per millisecond.
-	 */
-	private double velocity;
 	
 	/**
 	 * Milliseconds since the last execution of run.
@@ -105,7 +102,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	boolean stopped;
 	
 	/**
-	 * Indicates that a stopaction has started. Problem is that we nust wait till it is really stopped!
+	 * Indicates that a stopaction has started. Problem is that we must wait till it is really stopped!
 	 */
 	boolean stop;
 	
@@ -117,6 +114,17 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 * indicates if the animation is finished.
 	 */
 	boolean finished;
+	
+	/**
+	 * Real time velocity this figure drives with at the moment. (Without
+	 * considering time lapse) in pixel per millisecond.
+	 */
+	double velocity;
+	
+	/**
+	 * Time lapse of the simulation.
+	 */
+	int timeLapse;
 	
 	/**
 	 * Constructor. creates the Animation.
@@ -141,12 +149,12 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	
 	
 	/**
-	 * Sets the velocity of this animation.
+	 * Sets the time lapse of this animation.
 	 * 
-	 * @param velocity in pixel per millisecond
+	 * @param timeLapse
 	 */
-	public void setVelocity(double velocity) {
-		this.velocity = velocity;
+	public void setTimeLapse(int timeLapse) {
+		this.timeLapse = timeLapse;
 	}
 	
 	/**
@@ -191,7 +199,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	}
 	
 	/**
-	 * Indicates if the current animation is stopped succesfully.
+	 * Indicates if the current animation is stopped successfully.
 	 */
 	public boolean isStopped() {
 		return this.stopped;
@@ -222,6 +230,11 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
 				
+				//notify waiting threads
+				synchronized (this) { // acquire lock
+					this.notifyAll();
+				}
+				
 				//Notify Observers
 				setChanged();				
 				notifyObservers(animationFigure);
@@ -230,6 +243,14 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			end_node = walking_path.next();			
 			path = getPathTo(end_node);
+			
+			// set speed as maximal possible speed (minimum of train and path
+			// top speed) on the current path
+			velocity = Math.min(((Path) path.getModellObject()).getTopSpeed(),
+					((TrainAgent) animationFigure.getModelObject())
+							.getSchedule().getScheme().getTrainType()
+							.getTopSpeed());
+			velocity = velocity / 360_000.0; // convert from km/h to pixel/ms
 			
 			segments = Utils.getSegments(path, end_node, animationFigure);
 			
@@ -242,6 +263,11 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
+				
+				//notify waiting threads
+				synchronized (this) { // acquire lock
+					this.notifyAll();
+				}
 				
 				//Notify Observers
 				setChanged();				
@@ -260,7 +286,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 		delta = (int) (System.currentTimeMillis() - last);
 		last = System.currentTimeMillis();
 		
-		pixelToMoveT = (velocity * delta) + pixelCarry;
+		pixelToMoveT = (velocity * timeLapse * delta) + pixelCarry;   //(velocity * delta) + pixelCarry;
 		pixelToMoveP = (int) pixelToMoveT; // round down to next lower integer
 		pixelCarry = pixelToMoveT - pixelToMoveP;
 		segment_nr += pixelToMoveP;
@@ -299,7 +325,8 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 * To start(run) the animation only use this method!
 	 */
 	public void start() {
-		this.stop=false;System.out.println("gestartet");
+		this.stop = false;
+		
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.MOVE_STARTED));
 		delta = 0;

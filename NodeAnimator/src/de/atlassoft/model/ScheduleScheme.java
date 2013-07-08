@@ -182,7 +182,7 @@ public class ScheduleScheme {
 			throw new IllegalArgumentException("idleTime must not be negative");
 		}
 		// special constraints if first stop is added
-		if (arrivalTimes.size() == 0) {
+		if (arrivalTimes.isEmpty()) {
 			if (arrival != 0) {
 				throw new IllegalArgumentException(
 						"arrival must be 0 at the first stop");

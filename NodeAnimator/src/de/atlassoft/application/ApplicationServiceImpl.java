@@ -179,12 +179,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void deleteRailwaySystem(String railSysID) {
-		String activeRailSysID = model.getActiveRailwaySys().getID();
 		try {
 			persistence.deleteRailwaySystem(railSysID);
 			persistence.deleteSchedules(railSysID);
 			model.removeRailwaySystemID(railSysID);
-			if (activeRailSysID.equals(railSysID)) {
+			
+			RailwaySystem activeRailSys = model.getActiveRailwaySys();
+			if (activeRailSys != null && activeRailSys.getID().equals(railSysID)) {
 				model.setActiveRailwaySys(null);
 			}
 		} catch (IOException e) {

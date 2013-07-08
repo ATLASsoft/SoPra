@@ -2,6 +2,7 @@ package de.atlassoft.ai;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SimulationLoop extends Observable {
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
 	private PriorityQueue<Schedule> schedules;
-	private Queue<TrainAgent> activeAgents;
+	private List<TrainAgent> activeAgents;
 	private Queue<TrainAgent> finishedTrains;
 	private Loop loop;
 	private Graph graph;
@@ -61,7 +62,7 @@ public class SimulationLoop extends Observable {
 		this.graph = graph;
 		timeLapse = 1;
 		finishedTrains = new ConcurrentLinkedQueue<>();
-		activeAgents = new ConcurrentLinkedQueue<>();
+		activeAgents = Collections.synchronizedList(new ArrayList<TrainAgent>());
 		readySchedules = new ArrayList<>();
 		executor = Executors.newCachedThreadPool();
 		loop = new Loop();
@@ -105,17 +106,39 @@ public class SimulationLoop extends Observable {
 		alive = true;
 		last = System.currentTimeMillis();
 
+		// start simulation loop
 		new Thread(loop).start();
+		
+		// start trains
+		synchronized (activeAgents) {
+			Iterator<TrainAgent> it = activeAgents.iterator();
+			while (it.hasNext()) {
+				it.next().continueRide();
+			}
+		}
 	}
 
 	protected void stopRun() {
+		// stop simulation loop
 		alive = false;
-		// TODO: züge stoppen
-		deleteFinishedTrains();
+		
+		// stop trains
+		synchronized (activeAgents) {
+			Iterator<TrainAgent> it = activeAgents.iterator();
+			while (it.hasNext()) {
+				it.next().pauseRide();
+			}
+		}
 	}
 	
 	protected void setTimeLapse(int timeLapse) {
 		this.timeLapse = timeLapse;
+		synchronized (activeAgents) {
+			Iterator<TrainAgent> it = activeAgents.iterator();
+			while (it.hasNext()) {
+				it.next().setTimeLapse(timeLapse);
+			}
+		}
 	}
 	
 	protected void shutDown() {
@@ -145,10 +168,9 @@ public class SimulationLoop extends Observable {
 		@Override
 		public void run() {
 			while (alive) {
-				computeDelta(); System.out.println("delta: " + delta);
+				computeDelta(); //System.out.println("delta: " + delta);
 				updateSimTime();
 				createNewTrains();
-				deleteFinishedTrains();
 
 				try {
 					Thread.sleep(10);
@@ -215,24 +237,12 @@ public class SimulationLoop extends Observable {
 			s = it.next();
 			if (s.getStations()[0].getState().getState() != State.BLOCKED) {
 				it.remove();
-				agent = new TrainAgent(graph, agentCounter, s);
+				agent = new TrainAgent(graph, agentCounter, s, activeAgents);
 				agentCounter++;
-				activeAgents.offer(agent);
+				agent.setTimeLapse(timeLapse);
+				activeAgents.add(agent);
 				executor.execute(agent);
 			}
 		}
 	}
-
-	private void deleteFinishedTrains() {
-		if (!finishedTrains.isEmpty()) {
-			NodeMap map = graph.getRailwaySystem().getNodeMap();
-			TrainAgent agent;
-			while (!finishedTrains.isEmpty()) {
-				agent = finishedTrains.poll();
-				map.getAnimationLayer().remove(agent.getTrainFigure());
-				map.getMobileObjects().remove("" + agent.getID());
-			}
-		}
-	}
-
 }
