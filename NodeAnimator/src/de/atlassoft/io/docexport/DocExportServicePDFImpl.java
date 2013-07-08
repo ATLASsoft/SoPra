@@ -31,16 +31,8 @@ public class DocExportServicePDFImpl implements DocExportService {
 		PdfWriter.getInstance(document, new FileOutputStream(STATISTIC_DOC_PATH.toString() + "_"  + ".pdf"));
 		document.open();
 		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik", "");
-		System.out.print(stat.getStatistics().get(0));//TODO pdfCreator.addStatisticContent(document, data, schedule);
+		pdfCreator.addStatisticContent(document, stat);
 		document.close();
-//		stat.
-		List<TrainRideStatistic> test = stat.getStatistics();
-		test.get(0).getScheduleScheme().getTrainType();
-//		test.get(0).getScheduleScheme().get
-//		List<Node> stat23 = test.get(0).getStations();
-//		test.get(0).getDelay(stat23.get(0));
-//		
-//		stat.get
 	}
 
 	@Override
@@ -58,7 +50,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		Document document = new Document();
 		PdfWriter.getInstance(document, new FileOutputStream(DEPARTURE_DOC_PATH.toString() + "_"  + station.getName() + ".pdf"));
 		document.open();
-		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen zu allen Abfahrtszeiten zu der Station: " , station.getName());
+		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen, zu allen Abfahrtszeiten, zu der Station: " , station.getName());
 		pdfCreator.addDepartureContent(document, station, scedList);
 		document.close();
 	}

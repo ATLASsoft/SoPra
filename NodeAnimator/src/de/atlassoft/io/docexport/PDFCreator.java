@@ -23,6 +23,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
+import de.atlassoft.model.SimulationStatistic;
+import de.atlassoft.model.TrainRideStatistic;
 
 
 //TODO: implementieren, Konstruktor fehlt noch.
@@ -300,12 +302,42 @@ class PDFCreator {
 	 *            The actual content which should be added.
 	 * 
 	 */
-	protected void addStatisticContent(Document document, Object data,
-			ScheduleScheme schedule) {
+	protected void addStatisticContent(Document document,
+			SimulationStatistic stat) {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
+		
+		List<TrainRideStatistic> test = stat.getStatistics();
+		Double trainTypeWithMostMDelay = 0.0;
+		Double scheduleSchemeMostMDelay = 0.0;
+		Double nodeMostMDelay = 0.0;
+		
+		for (TrainRideStatistic trs : test) {
+			// Liste über all Knoten der Statistik + Knoten mit most MeanDelay
+			List<Node> nodeStat = trs.getStations();
+			for (Node node : nodeStat) {
+				if (stat.getMeanDelay(node) > nodeMostMDelay) {
+					nodeMostMDelay = stat.getMeanDelay(node);
+				}
+			}
 
+			// ScheduleScheme with most MeanDelay
+			if (stat.getMeanDelay(trs.getScheduleScheme()) > scheduleSchemeMostMDelay) {
+				scheduleSchemeMostMDelay = stat.getMeanDelay(trs
+						.getScheduleScheme());
+				// + Anzahl der Fahrten auf diesem ScheduleScheme
+				stat.getNumberOfRides(trs.getScheduleScheme());
+			}
+
+			// TrainType with most MeanDelay!
+			if (stat.getMeanDelay(trs.getScheduleScheme().getTrainType()) > trainTypeWithMostMDelay) {
+				trainTypeWithMostMDelay = stat.getMeanDelay(trs
+						.getScheduleScheme().getTrainType());
+				// + Anzahl der Fahrten mit diesem Zugtyp
+				stat.getNumberOfRides(trs.getScheduleScheme().getTrainType());
+			}
+		}
 	}
 
 	/**
@@ -350,7 +382,7 @@ class PDFCreator {
 				for (int y = relevantSpot + 1; y < nodeList.size(); y++) {
 					name.add(" - " + nodeList.get(y).getName());
 				}
-					Paragraph test = new Paragraph(arrivalFormat.format(newCal.getTime()));
+					Paragraph zeit = new Paragraph(arrivalFormat.format(newCal.getTime()));
 					
 					String scedType;
 					if (sced.getScheduleType() == ScheduleType.SINGLE_RIDE){
@@ -358,9 +390,9 @@ class PDFCreator {
 					}else{
 						scedType = "Intervallfahrt, fährt alle: " + sced.getInterval() + " Minuten";
 					}
-					test.add("     " + scedType + " mit " + sced.getTrainType().getName());
+					zeit.add("     " + scedType + " mit " + sced.getTrainType().getName());
 					document.add(name);
-					document.add(test);
+					document.add(zeit);
 				}
 			relevantSpots.remove(remove);
 		}
