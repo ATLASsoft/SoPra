@@ -1,22 +1,15 @@
 package de.atlassoft.io.docexport;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -25,13 +18,12 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
-import com.itextpdf.text.TabStop.Alignment;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
+
 
 //TODO: implementieren, Konstruktor fehlt noch.
 /**
@@ -123,10 +115,14 @@ class PDFCreator {
 		// We add one empty line
 		addEmptyLine(preface, 1);
 		
-		Paragraph ueberschrift= new Paragraph(title, bigBold);
-		ueberschrift.setAlignment(Element.ALIGN_CENTER);
+		Chunk underlineUeberschrift= new Chunk(title, bigBold);
+		underlineUeberschrift.setUnderline(0.1f, -2f);
+		
+		Paragraph ueberschriftr = new Paragraph(underlineUeberschrift);
+		ueberschriftr.setAlignment(Element.ALIGN_CENTER);
+		
 		// Lets write a big header
-		preface.add(ueberschrift);
+		preface.add(ueberschriftr);
 		
 
 		// Description
@@ -137,14 +133,11 @@ class PDFCreator {
 		preface.add(new Paragraph(id));
 
 		addEmptyLine(preface, 8);
-		// TODO Path geht so nicht
-		// BufferedImage img =
-		// loadImage("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
-		// Image imgToAdd =
-		// Image.getInstance("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
 
+		Image imgToAdd = Image.getInstance("img/ATLASsoftLogo.gif");
+		imgToAdd.setAlignment(Element.ALIGN_CENTER);
 		document.add(preface);
-		// document.add(imgToAdd);
+		document.add(imgToAdd);
 		// Start a new page
 		document.newPage();
 	}
