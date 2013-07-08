@@ -614,12 +614,7 @@ public class ScheduleAndTrainTypeComposite {
 			Composite trainType = new Composite (trainTypeComposite, SWT.BORDER);
 			trainType.setLayout(new GridLayout(3, false));
 			trainType.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
-			//TODO: if-Bedinung rausnehmen, wenn fertig
-			if (type.getImg() == null) {
-				new Label (trainType, SWT.NULL).setImage(ImageHelper.getImage("standardTrainIcon"));
-			} else {
-				new Label (trainType, SWT.NULL).setImage(type.getImg());
-			}
+			new Label (trainType, SWT.NULL).setImage(type.getImg());
 			Label information = new Label(trainType, SWT.NULL);
 			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
 								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h   \n" +
