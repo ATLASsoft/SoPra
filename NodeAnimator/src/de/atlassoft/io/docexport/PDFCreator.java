@@ -1,22 +1,15 @@
 package de.atlassoft.io.docexport;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -27,10 +20,12 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
+import de.atlassoft.model.SimulationStatistic;
+import de.atlassoft.model.TrainRideStatistic;
+
 
 //TODO: implementieren, Konstruktor fehlt noch.
 /**
@@ -54,6 +49,8 @@ class PDFCreator {
 			Font.BOLD);
 
 	private Font bigBold = new Font(Font.FontFamily.TIMES_ROMAN, 24, Font.BOLD);
+	
+	
 
 	/**
 	 * Generates empty lines in an specific paragraph. If paragraph is null, an
@@ -94,17 +91,6 @@ class PDFCreator {
 		document.addCreator("ATLASsoft");
 	}
 
-	// protected static Image loadImage(String ref) {
-	// Image bimg = null;
-	// try {
-	//
-	// bimg = ImageIO.re
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// return bimg;
-	// }
-
 	/**
 	 * Generates a title page for a PDF document. If document is null, an
 	 * {@link IllegalArgumentException} is thrown. If the insertion to the
@@ -122,7 +108,7 @@ class PDFCreator {
 	 * 
 	 */
 	protected void addTitlePage(Document document, String title,
-			String description) throws DocumentException,
+			String description, String identifier) throws DocumentException,
 			MalformedURLException, IOException {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
@@ -130,22 +116,30 @@ class PDFCreator {
 		Paragraph preface = new Paragraph();
 		// We add one empty line
 		addEmptyLine(preface, 1);
+		
+		Chunk underlineUeberschrift= new Chunk(title, bigBold);
+		underlineUeberschrift.setUnderline(0.1f, -2f);
+		
+		Paragraph ueberschriftr = new Paragraph(underlineUeberschrift);
+		ueberschriftr.setAlignment(Element.ALIGN_CENTER);
+		
 		// Lets write a big header
-		preface.add(new Paragraph("                     " + title, bigBold));
+		preface.add(ueberschriftr);
+		
 
 		// Description
 		addEmptyLine(preface, 10);
 		preface.add(new Paragraph(description, bigBold));
+		Paragraph id = new Paragraph(identifier, bigBold);
+		id.setAlignment(Element.ALIGN_CENTER);
+		preface.add(new Paragraph(id));
 
 		addEmptyLine(preface, 8);
-		// TODO Path geht so nicht
-		// BufferedImage img =
-		// loadImage("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
-		// Image imgToAdd =
-		// Image.getInstance("C:/Users/Szlatki/git/SoPra/NodeAnimator/img/ATLASsoftLogo.gif");
 
+		Image imgToAdd = Image.getInstance("img/ATLASsoftLogo.gif");
+		imgToAdd.setAlignment(Element.ALIGN_CENTER);
 		document.add(preface);
-		// document.add(imgToAdd);
+		document.add(imgToAdd);
 		// Start a new page
 		document.newPage();
 	}
@@ -308,12 +302,42 @@ class PDFCreator {
 	 *            The actual content which should be added.
 	 * 
 	 */
-	protected void addStatisticContent(Document document, Object data,
-			ScheduleScheme schedule) {
+	protected void addStatisticContent(Document document,
+			SimulationStatistic stat) {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
+		
+		List<TrainRideStatistic> test = stat.getStatistics();
+		Double trainTypeWithMostMDelay = 0.0;
+		Double scheduleSchemeMostMDelay = 0.0;
+		Double nodeMostMDelay = 0.0;
+		
+		for (TrainRideStatistic trs : test) {
+			// Liste über all Knoten der Statistik + Knoten mit most MeanDelay
+			List<Node> nodeStat = trs.getStations();
+			for (Node node : nodeStat) {
+				if (stat.getMeanDelay(node) > nodeMostMDelay) {
+					nodeMostMDelay = stat.getMeanDelay(node);
+				}
+			}
 
+			// ScheduleScheme with most MeanDelay
+			if (stat.getMeanDelay(trs.getScheduleScheme()) > scheduleSchemeMostMDelay) {
+				scheduleSchemeMostMDelay = stat.getMeanDelay(trs
+						.getScheduleScheme());
+				// + Anzahl der Fahrten auf diesem ScheduleScheme
+				stat.getNumberOfRides(trs.getScheduleScheme());
+			}
+
+			// TrainType with most MeanDelay!
+			if (stat.getMeanDelay(trs.getScheduleScheme().getTrainType()) > trainTypeWithMostMDelay) {
+				trainTypeWithMostMDelay = stat.getMeanDelay(trs
+						.getScheduleScheme().getTrainType());
+				// + Anzahl der Fahrten mit diesem Zugtyp
+				stat.getNumberOfRides(trs.getScheduleScheme().getTrainType());
+			}
+		}
 	}
 
 	/**
@@ -325,25 +349,54 @@ class PDFCreator {
 	 *            {@link Document} which gets edited.
 	 * @param data
 	 *            The actual content which should be added.
+	 * @throws DocumentException 
 	 * 
 	 */
 	protected void addDepartureContent(Document document, Node station,
-			List<ScheduleScheme> scedList) {
+			List<ScheduleScheme> scedList) throws DocumentException {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
 		List<Integer> relevantSpots = new ArrayList<Integer>();
 		for (ScheduleScheme sced : scedList) {
+			
+			int remove = 0;
 			List<Node> nodeList = sced.getStations();
+			System.out.println(nodeList.size());
 			for (int i = 0; i < nodeList.size(); i++) {
 				if (station.getName().equals(nodeList.get(i).getName())) {
 					relevantSpots.add(i);
+					remove = i;
 				}
 			}
-			sced.getArrivalTimes();
-			sced.getIdleTimes();
+			System.out.println(relevantSpots.size());
+			for (int relevantSpot : relevantSpots) {
+				int result = sced.getArrivalTimes().get(relevantSpot)
+						+ sced.getIdleTimes().get(relevantSpot);
+				System.out.println(result);
+				Calendar newCal;
+				newCal = sced.getFirstRide();
+				newCal.add(Calendar.SECOND, result);
+				DateFormat arrivalFormat = new SimpleDateFormat("HH:mm");
+				Paragraph name = new Paragraph(station.getName(), smallBold);
+				for (int y = relevantSpot + 1; y < nodeList.size(); y++) {
+					name.add(" - " + nodeList.get(y).getName());
+				}
+					Paragraph zeit = new Paragraph(arrivalFormat.format(newCal.getTime()));
+					
+					String scedType;
+					if (sced.getScheduleType() == ScheduleType.SINGLE_RIDE){
+						scedType = "Einzelfahrt";
+					}else{
+						scedType = "Intervallfahrt, fährt alle: " + sced.getInterval() + " Minuten";
+					}
+					zeit.add("     " + scedType + " mit " + sced.getTrainType().getName());
+					document.add(name);
+					document.add(zeit);
+				}
+			relevantSpots.remove(remove);
 		}
-
+		
 	}
 
 	/**

@@ -360,7 +360,7 @@ class XMLParser {
 					TrainType newTrainType = null;
 					
 					for (TrainType singleTrainType : trainTypes){
-						if (singleTrainType.getName().equalsIgnoreCase(trainType)){
+						if (singleTrainType.getName().equals(trainType)){
 							 newTrainType = singleTrainType;
 						}
 					}
