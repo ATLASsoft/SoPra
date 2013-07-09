@@ -468,7 +468,7 @@ public class SimulationComposite implements Observer {
 	 */
 	@Override
 	public void update(Observable arg0, final Object arg1) {
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				Calendar cal = (Calendar) arg1;
