@@ -1,5 +1,8 @@
 package de.atlassoft.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import de.hohenheim.view.node.NodeFigure;
@@ -15,6 +18,8 @@ public class Node {
 	private State state;
 	private NodeFigure nodeFigure;
 	private String name;
+	private Map<TrainType, Integer> trainTypeMap;
+	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
 	/**
@@ -68,6 +73,9 @@ public class Node {
 		// set properties
 		this.name = name;
 		state = new State(this);
+		trainTypeMap = new HashMap<>();
+		schemeMap = new HashMap<>();
+		
 		NodeFigure nodeFigure = new NodeFigure(this);
 		nodeFigure.setName(name);    
 		nodeFigure.setBounds(new Rectangle(x, y, width, height));	
@@ -103,6 +111,13 @@ public class Node {
 		return name;
 	}
 	
+	public Map<TrainType, Integer> getTrainTypeWorkloadMap() {
+		return trainTypeMap;
+	}
+	
+	public Map<ScheduleScheme, Integer> getScheduleSchemeWorkloadMap() {
+		return schemeMap;
+	}
 	
 	
 	@Override

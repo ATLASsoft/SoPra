@@ -1,5 +1,8 @@
 package de.atlassoft.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hohenheim.view.path.CenterAnchor;
 import de.hohenheim.view.path.PathFigure;
 
@@ -16,7 +19,8 @@ public class Path {
 	private Node start;
 	private Node end;
 	int id;
-	
+	private Map<TrainType, Integer> trainTypeMap;
+	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
 	/**
@@ -47,6 +51,9 @@ public class Path {
 		state = new State(this);
 		this.start = start;
 		this.end = end;
+		trainTypeMap = new HashMap<>();
+		schemeMap = new HashMap<>();
+
 		PathFigure path = new PathFigure(this);
 		path.setSourceAnchor(new CenterAnchor(start.getNodeFigure())); // new ChopboxAnchor(start)
 		path.setTargetAnchor(new CenterAnchor(end.getNodeFigure()));// new ChopboxAnchor(end)
@@ -123,6 +130,14 @@ public class Path {
 	
 	public int getID() {
 		return id;
+	}
+	
+	public Map<TrainType, Integer> getTrainTypeWorkloadMap() {
+		return trainTypeMap;
+	}
+	
+	public Map<ScheduleScheme, Integer> getScheduleSchemeWorkloadMap() {
+		return schemeMap;
 	}
 	
 }
