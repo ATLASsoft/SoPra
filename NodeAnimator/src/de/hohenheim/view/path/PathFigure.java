@@ -1,7 +1,5 @@
 package de.hohenheim.view.path;
 
-import java.text.DecimalFormat;
-
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
@@ -26,17 +24,21 @@ public class PathFigure extends PolylineConnection {
 	   * A Object that is connected to this {@link PathFigure} as the modell.
 	   */
 	  private Object modellObject;
+	  
+	  public PathFigure() {
+		BendpointConnectionRouter router = new BendpointConnectionRouter();
+		setConnectionRouter(router);
+		LineAttributes attr = new LineAttributes(LINE_WIDTH);
+		this.setLineAttributes(attr);
+	  }
+	  
 	  /**
 	   * The constructor sets a {@link BendpointConnectionRouter} to draw the path
 	   * as a line.  
 	   */
 	  public PathFigure(Object modellObject) {
-		BendpointConnectionRouter router = new BendpointConnectionRouter();
-	    setConnectionRouter(router);
-	    LineAttributes attr = new LineAttributes(LINE_WIDTH);
-	    this.setLineAttributes(attr);
-	    this.modellObject=modellObject;
-	    
+		this();
+		this.modellObject=modellObject;
 	    StringBuilder toolTip = new StringBuilder();
 	    toolTip.append("Höchstgeschwindigkeit: ");
 	    toolTip.append(Math.round(((Path) modellObject).getTopSpeed()));
@@ -68,7 +70,6 @@ public class PathFigure extends PolylineConnection {
 	   * @return double
 	   */
 	  public double getDistance() {
-		  Path p = (Path) modellObject;
 		  return Utility.getDistance(this);
 	  }
 	}
