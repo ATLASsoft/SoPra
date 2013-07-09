@@ -301,6 +301,9 @@ public class SimulationComposite implements Observer {
 					playButton.setEnabled(true);
 					stopButton.setEnabled(false);
 					simulationActive = false;
+					
+					//TODO: Einfügen wenn Statistik implementiert
+//					new SimulationStatisticDialog(applicationService);
 				}
 			}
 		});

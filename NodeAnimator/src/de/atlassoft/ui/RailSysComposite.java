@@ -256,7 +256,7 @@ public class RailSysComposite {
 		          e.doit = false;
 		          Display.getCurrent().beep();
 		        }
-				//catches numbers higher than 600
+				//catches numbers higher than 500
 				else if(e.text.equals("") == false) {
 					final String oldS = yCoord.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
@@ -390,7 +390,7 @@ public class RailSysComposite {
 		topSpeed = new Text(topSpeedComposite, SWT.BORDER);
 		topSpeed.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		topSpeed.setEnabled(false);
-		topSpeed.setText("0");
+		topSpeed.setText("100");
 		topSpeed.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
 				//catches non numbers
@@ -398,11 +398,15 @@ public class RailSysComposite {
 		          e.doit = false;
 		          Display.getCurrent().beep();
 		        }
-				//catches numbers higher than 500
+				//catches numbers higher than 500 and lower than 1
 				else if(e.text.equals("") == false) {
 					final String oldS = topSpeed.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
 					if(Integer.parseInt(newS) > 500) {
+						e.doit = false;
+						Display.getCurrent().beep();
+					}
+					else if(Integer.parseInt(newS) < 1) {
 						e.doit = false;
 						Display.getCurrent().beep();
 					}
