@@ -90,6 +90,7 @@ public class CurrentRailSysComposite {
 							converter = new Integer(y);
 					        coordinate = converter.toString();
 							coordinate2.setText("Y:   " + coordinate);
+							informationTable.setRedraw(false);
 							informationTable.removeAll();
 							final java.util.List<Path> paths = applicationService.getModel().getActiveRailwaySys().getPaths();
 							for (Path path : paths) {
@@ -121,11 +122,9 @@ public class CurrentRailSysComposite {
 							}
 							for (int i=0; i<3; i++) {
 						    	informationTable.getColumn (i).pack ();
-						    	if (i == 0) {
-						    		informationTable.getColumn(i).setWidth(120);
-						    	}
 						    } 
 						    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						    informationTable.setRedraw(true);
 						    informationTable.setVisible(true);
 		        			exportScheduleButton.setVisible(true);
 						}
@@ -145,64 +144,66 @@ public class CurrentRailSysComposite {
 		currentRailSysComposite.layout();
 		
 		// the composite of the right side
-		Composite currenRailSysInfoComposite = new Composite(currentRailSysComposite, SWT.BORDER);
-		currenRailSysInfoComposite.setLayout(new GridLayout(1, true));
-		currenRailSysInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite currentRailSysInfoComposite = new Composite(currentRailSysComposite, SWT.BORDER);
+		currentRailSysInfoComposite.setLayout(new GridLayout(1, true));
+		currentRailSysInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		// the composite with the Information
-		Composite informationComposite = new Composite(currenRailSysInfoComposite, SWT.NULL);
-		informationComposite.setLayout(new GridLayout(1, true));
-		
-		// GridDate which center
-		new Label (informationComposite, SWT.NULL);
+		// Information title
+		new Label (currentRailSysInfoComposite, SWT.NULL);
 		GridData dataCenter = new GridData(GridData.FILL);
 		dataCenter.horizontalAlignment = GridData.CENTER;
-		Label title = new Label (informationComposite, SWT.NULL);
+		Label title = new Label (currentRailSysInfoComposite, SWT.NULL);
 		title.setText(I18N.getMessage("CurrentRailSysComposite.Title"));
 		title.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
-		new Label (informationComposite, SWT.NULL);
+		title.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+		new Label (currentRailSysInfoComposite, SWT.NULL);
 		
-		// the composite with the Information
-		Composite informationComposite2 = new Composite(informationComposite, SWT.BORDER);
-		informationComposite2.setLayout(new GridLayout(2, true));
-		informationComposite2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		// the composite with the Values 
+		Composite informationComposite = new Composite(currentRailSysInfoComposite, SWT.BORDER);
+		informationComposite.setLayout(new GridLayout(2, true));
+		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		
 		// Label with Name
-		new Label (informationComposite2, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelName"));
-		name = new Label (informationComposite2, SWT.NULL);
+		new Label (informationComposite, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelName"));
+		name = new Label (informationComposite, SWT.NULL);
 		name.setText(I18N.getMessage("CurrentRailSysComposite.labelFirstName"));
 		
 		//Label with coordinates
-		new Label (informationComposite2, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelCoordinates"));
-		coordinate1 = new Label (informationComposite2, SWT.NULL);
+		new Label (informationComposite, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelCoordinates"));
+		coordinate1 = new Label (informationComposite, SWT.NULL);
 		coordinate1.setText("X:   " + I18N.getMessage("CurrentRailSysComposite.noValue"));
 		
-		new Label (informationComposite2, SWT.NULL);
-		coordinate2 = new Label (informationComposite2, SWT.NULL);
+		new Label (informationComposite, SWT.NULL);
+		coordinate2 = new Label (informationComposite, SWT.NULL);
 		coordinate2.setText("Y:   " + I18N.getMessage("CurrentRailSysComposite.noValue"));
-				
-		//Composite for the Table
-		Composite informationComposite3 = new Composite(currenRailSysInfoComposite, SWT.NULL);
-		informationComposite3.setLayout(new GridLayout(1, true));
-		informationComposite3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		//Label with Table Title
-		new Label (informationComposite3, SWT.NULL);
-		new Label (informationComposite3, SWT.NULL);
-		new Label (informationComposite3, SWT.NULL);
-		new Label (informationComposite3, SWT.NULL);
-		new Label (informationComposite3, SWT.NULL);
-		Label tableTitle = new Label (informationComposite3, SWT.NULL);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		Label tableTitle = new Label (currentRailSysInfoComposite, SWT.NULL);
 		tableTitle.setText(I18N.getMessage("CurrentRailSysComposite.tableCompositeTitel"));
 		tableTitle.setFont(new Font(Display.getCurrent(), new FontData("Helvetica", 13, SWT.BOLD)));
-		tableTitle.setLayoutData(dataCenter);
-		new Label (informationComposite3, SWT.NULL);
+		tableTitle.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		
+		// Table Composite
+		Composite tableComposite = new Composite (currentRailSysInfoComposite, SWT.NULL);
+		tableComposite.setLayout(new GridLayout(1, true));
+		GridData dataComposite = new GridData(SWT.FILL, SWT.NULL, true, false);
+		dataComposite.widthHint = 300;
+		dataComposite.heightHint = 130;
+		tableComposite.setLayoutData(dataComposite);		
 		
 		//Table of Connections
-		informationTable = new Table(informationComposite3, SWT.BORDER | SWT.Resize);
+		informationTable = new Table(tableComposite, SWT.BORDER | SWT.V_SCROLL);
 		informationTable.setLinesVisible(true);
 		informationTable.setHeaderVisible(true);
-		informationTable.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		GridData dataTable = new GridData();
+		dataTable.widthHint = 300;
+		dataTable.heightHint = 130;
+		informationTable.setLayoutData(dataTable);
 		
 		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), "X", "Y", I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
 		for (int i = 0; i < titles.length; i++) {
@@ -211,13 +212,16 @@ public class CurrentRailSysComposite {
 	    }
 	    
 	    for (int i=0; i<titles.length; i++) {
-	    	informationTable.getColumn (i).pack ();
+	    	informationTable.getColumn(i).pack ();
 	    } 
-	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		informationTable.setVisible(false);
+	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, 115));
+	    informationTable.getVerticalBar();
 		
 		//PDF
-		exportScheduleButton = new Button(currenRailSysInfoComposite, SWT.PUSH);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		new Label (currentRailSysInfoComposite, SWT.NULL);
+		exportScheduleButton = new Button(currentRailSysInfoComposite, SWT.PUSH);
 	    exportScheduleButton.setImage(ImageHelper.getImage("pdfIcon"));
 	    exportScheduleButton.setText(I18N.getMessage("CurrenTailSysComposite.createPDF"));
 	    exportScheduleButton.setLayoutData(dataCenter);
