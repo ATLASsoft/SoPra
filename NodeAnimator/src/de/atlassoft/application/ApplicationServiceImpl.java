@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Observer;
 
+import org.eclipse.swt.graphics.Image;
+
 import de.atlassoft.ai.AIService;
 import de.atlassoft.ai.AIServiceImpl;
 import de.atlassoft.io.persistence.PersistenceService;
@@ -66,6 +68,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("playIconSmall", "img/playIconSmall.png");
 		ImageHelper.loadImage("pauseIconSmall", "img/pauseIconSmall.png");
 		ImageHelper.loadImage("stopIconSmall", "img/stopIconSmall.png");
+		ImageHelper.loadImage("pdfIcon", "img/pdfIcon.png");
 		
 		// load train types
 		try {
