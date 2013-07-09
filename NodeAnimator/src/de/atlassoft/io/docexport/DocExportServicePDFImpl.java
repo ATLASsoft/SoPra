@@ -22,15 +22,16 @@ public class DocExportServicePDFImpl implements DocExportService {
 	PDFCreator pdfCreator = new PDFCreator();
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");
 	private static final Path SCHEDULE_DOC_PATH = SAVE_DATA_PATH.resolve("schedule");
-	private static final Path STATISTIC_DOC_PATH = SAVE_DATA_PATH.resolve("statistic");
+	private static final Path STATISTIC_DOC_PATH = SAVE_DATA_PATH.resolve("simulationStatistic");
 	private static final Path DEPARTURE_DOC_PATH = SAVE_DATA_PATH.resolve("departure");
 	
 	@Override
 	public void createStatisticDoc(SimulationStatistic stat) throws DocumentException, MalformedURLException, IOException {
 		Document document = new Document();
-		PdfWriter.getInstance(document, new FileOutputStream(STATISTIC_DOC_PATH.toString() + "_"  + ".pdf"));
+		PdfWriter.getInstance(document, new FileOutputStream(STATISTIC_DOC_PATH.toString() + ".pdf"));
 		document.open();
-		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik", "");
+		pdfCreator.addMetaData(document, "SimulationStatistic");
+		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik des letzten Simulationdurchlaufs", "");
 		pdfCreator.addStatisticContent(document, stat);
 		document.close();
 	}
@@ -40,6 +41,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 	      Document document = new Document();
 	      PdfWriter.getInstance(document, new FileOutputStream(SCHEDULE_DOC_PATH.toString() + "_" + schedule.getID() + ".pdf"));
 	      document.open();
+	      pdfCreator.addMetaData(document, "ScheduleScheme_" + schedule.getID());
 	      pdfCreator.addTitlePage(document, "Fahrplaninformationen" , "Dieses Dokument, beinhaltet alle relevanten Informationen zu dem Fahrplan: " , schedule.getID());
 	      pdfCreator.addScheduleContent(document, schedule);
 	      document.close();	
@@ -50,6 +52,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		Document document = new Document();
 		PdfWriter.getInstance(document, new FileOutputStream(DEPARTURE_DOC_PATH.toString() + "_"  + station.getName() + ".pdf"));
 		document.open();
+		pdfCreator.addMetaData(document, "DepartureBoard_" + station.getName());
 		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen, zu allen Abfahrtszeiten, zu der Station: " , station.getName());
 		pdfCreator.addDepartureContent(document, station, scedList);
 		document.close();
