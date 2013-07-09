@@ -223,12 +223,7 @@ public class TrainTypeDialog {
 	    cancel.setLayoutData(dataCancel);
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
-	        	MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION |SWT.YES | SWT.NO);
-	            messageBox.setMessage(I18N.getMessage("TrainTypeDialog.cancelQuestion"));
-	            int rc = messageBox.open();
-	            if (rc == SWT.YES) {
-	            	shell.close();
-	            }
+	        	shell.close();
 	        }
 	    });
 	    
