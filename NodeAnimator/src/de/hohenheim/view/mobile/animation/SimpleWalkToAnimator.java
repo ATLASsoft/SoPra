@@ -282,7 +282,6 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			if ((((Path) path.getModellObject()).getState().getState() == State.BLOCKED) || ((Node) end_node.getModellObject()).getState().getState() == State.BLOCKED)  {
 				synchronized (this) { // acquire lock
 					this.notifyAll();
-					System.out.println("abbruch");
 				}
 				return;
 			}

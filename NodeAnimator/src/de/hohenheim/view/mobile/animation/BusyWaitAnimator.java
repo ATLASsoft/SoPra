@@ -2,7 +2,7 @@ package de.hohenheim.view.mobile.animation;
 
 import java.util.Observable;
 
-import de.hohenheim.modell.State;
+import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
@@ -54,7 +54,7 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 			this.animationFigure.showBusy(false);
 			return;
 		}
-		if(this.state==null || this.state.geState()==State.UNBLOCKED) {
+		if(this.state==null || this.state.getState() == State.UNBLOCKED) {
 			this.finished=true;
 		    this.animationFigure.showBusy(false);
 			//notify Listeners and tell them that animation finished. This listeners are user defined listeners which will be informed.
@@ -77,7 +77,7 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));
 		this.stopped=false;
-		map.getDisplay().timerExec(0, this);
+		map.getDisplay().asyncExec(this);
 	}
 	
 	/**

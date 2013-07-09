@@ -26,6 +26,7 @@ public class TrainAgent implements Runnable {
 	private int timeLapse;
 	private SimpleWalkToAnimator anim;
 	private List<TrainAgent> agents;
+	private Thread runningThread;
 	
 	protected TrainAgent(Graph graph, int id, Schedule schedule, List<TrainAgent> agents) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
@@ -79,7 +80,7 @@ public class TrainAgent implements Runnable {
 	
 	@Override
 	public void run() {
-		
+		runningThread = Thread.currentThread();
 		List<NodeFigure> path;
 		for (int i = 0; i < schedule.getStations().length - 1; i++) {
 			path = getShortestPath(schedule.getStations()[i], schedule.getStations()[i + 1]);
@@ -90,36 +91,47 @@ public class TrainAgent implements Runnable {
 			// wait till animator reached end
 			synchronized (anim) { // acquire lock
 				try {
-					anim.wait();
-					if (anim.isFinished()) {
-						// normal weiter
-					}
-					// wurde abgebrochen
-					else {
-						System.out.println("Zug Nr. " + id + " gestoppt");return;
+					while (!((Node) figure.getNodeFigure().getModellObject()).equals(schedule.getStations()[i+1])) {
+						anim.wait();
+						
+						// animation is finished, goal reached
+						if (anim.isFinished()) {
+							
+						}
+						// animation has been aborted before reaching goal
+						else {
+							System.out.println("train agent " + id + " waits");
+							figure.stopAnimation();//TODO: gscheit reagieren
+							figure.clearAnimations();
+							State s = new State(this);
+							s.setState(State.BLOCKED);
+							figure.waitFor(s);
+							figure.startAnimation();
+						}
 					}
 				} catch (InterruptedException e) {
-					System.out.println("interrupted");
-					e.printStackTrace();
+					System.out.println("train agent " + id + " has been interrupted, terminates");
+					return;
 				}
 			}
 			
 			
 		}
 		removeFigure();//TODO: animation/warten bevor die züge verschwinden
+		agents.remove(this);
 		
 	}
 	
 	protected void terminate() {
-		
+		runningThread.interrupt(); //TODO: states cleanen
+		removeFigure();
 	}
 	
 	private void removeFigure() {
-		agents.remove(this);
 		figure.stopAnimation();
 		figure.clearAnimations();
 		final NodeMap map = graph.getRailwaySystem().getNodeMap();
-		map.getDisplay().syncExec(new Runnable() {
+		map.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				map.getAnimationLayer().remove(figure);

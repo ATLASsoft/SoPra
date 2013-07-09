@@ -73,7 +73,7 @@ public class ControllerCanvas extends Canvas {
 						it.next().setState(State.UNBLOCKED);	
 					}
 					
-					f.waitFor(State.statemap.get(node));					
+//					f.waitFor(State.statemap.get(node));					
 					f.walkTo(map.getNodes().get(node));					
 					f.startAnimation();
 				}

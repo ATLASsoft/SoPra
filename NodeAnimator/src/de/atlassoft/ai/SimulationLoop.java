@@ -8,18 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import de.atlassoft.model.ModelService;
+import org.eclipse.swt.widgets.Display;
+
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.State;
 import de.atlassoft.util.ScheduleFactory;
-import de.hohenheim.view.map.NodeMap;
 
 //TODO: unvollständig
 /**
@@ -31,18 +29,18 @@ public class SimulationLoop extends Observable {
 
 	private int delta;
 	private long last;
-	private boolean alive;
+	private volatile boolean alive;
 	private Calendar lastTime;
 	private Calendar simTime;
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
 	private PriorityQueue<Schedule> schedules;
 	private List<TrainAgent> activeAgents;
-	private Queue<TrainAgent> finishedTrains;
 	private Loop loop;
 	private Graph graph;
 	private int agentCounter;
 	private ExecutorService executor;
+	private Thread loopThread;
 
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
@@ -53,7 +51,7 @@ public class SimulationLoop extends Observable {
 	 * Time lapse. For example timeLapse = 1000 means one second in real time
 	 * equals 1000 seconds in simulated time.
 	 */
-	private int timeLapse;
+	private volatile int timeLapse;
 	
 	/**
 	 * Creates a new simulation loop.
@@ -61,7 +59,6 @@ public class SimulationLoop extends Observable {
 	protected SimulationLoop(Graph graph) {
 		this.graph = graph;
 		timeLapse = 1;
-		finishedTrains = new ConcurrentLinkedQueue<>();
 		activeAgents = Collections.synchronizedList(new ArrayList<TrainAgent>());
 		readySchedules = new ArrayList<>();
 		executor = Executors.newCachedThreadPool();
@@ -94,7 +91,8 @@ public class SimulationLoop extends Observable {
 		last = System.currentTimeMillis();
 
 		alive = true;
-		new Thread(loop).start();
+		loopThread = new Thread(loop);
+		loopThread.start();
 	}
 
 	/**
@@ -107,7 +105,8 @@ public class SimulationLoop extends Observable {
 		last = System.currentTimeMillis();
 
 		// start simulation loop
-		new Thread(loop).start();
+		loopThread = new Thread(loop);
+		loopThread.start();
 		
 		// start trains
 		synchronized (activeAgents) {
@@ -121,7 +120,12 @@ public class SimulationLoop extends Observable {
 	protected void stopRun() {
 		// stop simulation loop
 		alive = false;
-		
+		try {
+			loopThread.join();
+		} catch (InterruptedException e) {
+			System.out.println("unhandled interrupt @ stopRun");
+		}
+		System.out.println("loop gestopt");
 		// stop trains
 		synchronized (activeAgents) {
 			Iterator<TrainAgent> it = activeAgents.iterator();
@@ -129,6 +133,8 @@ public class SimulationLoop extends Observable {
 				it.next().pauseRide();
 			}
 		}
+		
+		
 	}
 	
 	protected void setTimeLapse(int timeLapse) {
@@ -142,14 +148,22 @@ public class SimulationLoop extends Observable {
 	}
 	
 	protected void shutDown() {
+		System.out.println("standard shutdown");
 		executor.shutdown();
+		synchronized (activeAgents) {
+			Iterator<TrainAgent> it = activeAgents.iterator();
+			while (it.hasNext()) {
+				it.next().terminate();
+			}
+			activeAgents.clear();
+		}
 		try {
-			if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+			if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+				System.out.println("forced shutdown");
 				executor.shutdownNow();
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (InterruptedException e) {  
+			System.out.println("unhandled interrupt @ forced shutdown");
 		}
 		
 	}
@@ -168,17 +182,18 @@ public class SimulationLoop extends Observable {
 		@Override
 		public void run() {
 			while (alive) {
-				computeDelta(); //System.out.println("delta: " + delta);
+				computeDelta();
+//				System.out.println("delta: " + delta);
 				updateSimTime();
 				createNewTrains();
 
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					System.out.println("loop has been interrupted, terminates");
+					alive = false;
 				}
 			}
-
 		}
 
 	}
@@ -200,8 +215,15 @@ public class SimulationLoop extends Observable {
 		passedSimTime += delta * timeLapse;
 		lastTime.setTime(simTime.getTime());
 		simTime.add(Calendar.MILLISECOND, delta * timeLapse);
+		
+		// notify observer
 		setChanged();
-		notifyObservers(simTime);
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				notifyObservers(simTime);
+			}
+		});
 		
 		// create new schedules when day of sim time has changed
 		if (simTime.get(Calendar.DAY_OF_WEEK) != lastTime.get(Calendar.DAY_OF_WEEK)) {
@@ -239,7 +261,7 @@ public class SimulationLoop extends Observable {
 				it.remove();
 				agent = new TrainAgent(graph, agentCounter, s, activeAgents);
 				agentCounter++;
-				agent.setTimeLapse(timeLapse);
+				agent.setTimeLapse(timeLapse);//TODO: was passiert wenn eine aktion zwischen erstellen und starten durchgeführt wird
 				activeAgents.add(agent);
 				executor.execute(agent);
 			}

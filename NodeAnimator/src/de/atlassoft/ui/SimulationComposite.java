@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
@@ -471,14 +470,11 @@ public class SimulationComposite implements Observer {
 	 */
 	@Override
 	public void update(Observable arg0, final Object arg1) {
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				Calendar cal = (Calendar) arg1;
-				time.setText(dateFormat.format(cal.getTime()));	
-				timeComposite.layout();
-			}
-		}); 
+		if (!time.isDisposed()) {
+			Calendar cal = (Calendar) arg1;
+			time.setText(dateFormat.format(cal.getTime()));	
+			timeComposite.layout();
+		}
 	}
 	
 	/**
