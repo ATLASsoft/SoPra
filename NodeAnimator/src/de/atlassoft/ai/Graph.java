@@ -13,7 +13,6 @@ import java.util.Queue;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
-import de.hohenheim.view.mobile.Utility;
 
 class Graph {
 
@@ -59,9 +58,8 @@ class Graph {
 		for (Path mPath : modelPaths) {
 			start = vertexMap.get(mPath.getStart());
 			end = vertexMap.get(mPath.getEnd());
-			distance = Utility.getDistance(mPath.getPathFigure());
+			distance = mPath.getPathFigure().getDistance() / 10.0; // convert distance from pixel to km
 			topSpeed = mPath.getTopSpeed();
-			
 			e1 = new Edge(start, end, distance, topSpeed); // edges in both directions
 			e2 = new Edge(end, start, distance, topSpeed);
 			
@@ -110,7 +108,7 @@ class Graph {
 															// false
 		Queue<Vertex> R = new LinkedList<>();
 		Vertex start = vertexes[0];
-		reached[start.getID()] = true;
+		reached[start.id] = true;
 		R.add(start);
 
 		// BFS
@@ -119,8 +117,8 @@ class Graph {
 			v = R.poll();
 			for (Edge e : v.getOutgoingEdges()) {
 				u = e.getEnd();
-				if (!reached[u.getID()]) {
-					reached[u.getID()] = true;
+				if (!reached[u.id]) {
+					reached[u.id] = true;
 					R.offer(u);
 				}
 			}
@@ -151,7 +149,7 @@ class Graph {
 		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
 		
 		// compute travel time
-		return dist[getVertex(target).getID()]; // ist pixel / km/h
+		return dist[getVertex(target).id]; // ist pixel / km/h
 	}
 	
 	/**
@@ -171,7 +169,7 @@ class Graph {
 		path.add(target);
 		int i = 0;
 		Vertex pre;
-		while ((pre = predecessor[vertexMap.get(path.get(i)).getID()]) != null) {
+		while ((pre = predecessor[vertexMap.get(path.get(i)).id]) != null) {
 			path.add(pre.getModelObject());
 			i++;
 		}
@@ -198,7 +196,7 @@ class Graph {
 		
 		@Override
 		public int compare(Vertex o1, Vertex o2) {
-			return dist[o1.getID()].compareTo(dist[o2.getID()]);
+			return dist[o1.id].compareTo(dist[o2.id]);
 		}
 	}
 	
@@ -225,28 +223,33 @@ class Graph {
 			dist[i] = Double.POSITIVE_INFINITY;
 		}
 
-		// init heap
-		PriorityQueue<Vertex> R = new PriorityQueue<>(dist.length, new VertexComperator(dist));
-		dist[start.getID()] = 0.0;
-		R.offer(start);
-		
+		// init open and closed list
+		PriorityQueue<Vertex> openList = new PriorityQueue<>(dist.length, new VertexComperator(dist));
+		boolean[] closedList = new boolean[vertexes.length];
+		dist[start.id] = 0.0;
+		openList.offer(start);
 		
 		// compute shortest paths from start
 		Vertex v, u;
 		double d;
-		while (!R.isEmpty()) {
-			v = R.poll();
+		while (!openList.isEmpty()) {
+			v = openList.poll();
+			closedList[v.id] = true;;
 			for (Edge e : v.getOutgoingEdges()) {
-				if (!e.isBlocked()) {
-					u = e.getEnd();
-					d = (e.getDistance() / Math.min(e.getTopSpeed(), trainTopSpeed)) + dist[v.getID()];
-					if (d < dist[u.getID()]) {
-						R.remove(u);
-						dist[u.getID()] = d;
-						R.offer(u);
-						predecessor[u.getID()] = v;
-					}
+				u = e.getEnd();
+				
+				if (closedList[u.id]) {
+					continue;
 				}
+				
+				d = e.getActualCost(trainTopSpeed) + dist[v.id];
+				if (d < dist[u.id]) {
+					openList.remove(u);
+					dist[u.id] = d;
+					openList.offer(u);
+					predecessor[u.id] = v;
+				}
+
 			}
 			
 		}

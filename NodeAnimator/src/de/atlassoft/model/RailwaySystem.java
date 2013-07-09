@@ -21,7 +21,6 @@ public class RailwaySystem {
 	private List<Path> paths;
 	
 	
-	
 	/**
 	 * Creates a new railway system.
 	 * @param id Name of this railway system. Must not be null or empty
@@ -98,6 +97,7 @@ public class RailwaySystem {
 		}
 		
 		// add path to data structure
+		path.setID(paths.size()); // number paths serially
 		paths.add(path);
 		
 		// add path to NodeMap

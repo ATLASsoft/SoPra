@@ -15,6 +15,7 @@ public class Path {
 	private State state;
 	private Node start;
 	private Node end;
+	int id;
 	
 	
 	
@@ -114,6 +115,14 @@ public class Path {
 	 */
 	public Node getEnd() {
 		return end;
+	}
+	
+	protected void setID(int id) {
+		this.id = id;
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 }

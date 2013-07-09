@@ -10,7 +10,9 @@ import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 
 import de.atlassoft.ai.TrainAgent;
+import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
+import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
 import de.hohenheim.view.mobile.animation.exceptions.PathNotFoundException;
@@ -219,6 +221,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			if (start_node == null) {
 				// TODO: wurde aufgerufen während sich die animationFigure auf einem Pfad aufgehalten hat (nur interessant beim ersten durchlauf)
+				throw new RuntimeException("unklar");
 			}
 			
 			if (!walking_path.hasNext()) {
@@ -272,6 +275,15 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				//Notify Observers
 				setChanged();				
 				notifyObservers(animationFigure);
+				return;
+			}
+			
+			// path is blocked TODO: besser lösen, synchronisieren, reicht nicht auch der node check
+			if ((((Path) path.getModellObject()).getState().getState() == State.BLOCKED) || ((Node) end_node.getModellObject()).getState().getState() == State.BLOCKED)  {
+				synchronized (this) { // acquire lock
+					this.notifyAll();
+					System.out.println("abbruch");
+				}
 				return;
 			}
 			

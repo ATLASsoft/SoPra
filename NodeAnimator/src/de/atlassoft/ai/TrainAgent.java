@@ -90,7 +90,14 @@ public class TrainAgent implements Runnable {
 			// wait till animator reached end
 			synchronized (anim) { // acquire lock
 				try {
-					System.out.println("warten");anim.wait();System.out.println("genug gewartet");
+					anim.wait();
+					if (anim.isFinished()) {
+						// normal weiter
+					}
+					// wurde abgebrochen
+					else {
+						System.out.println("Zug Nr. " + id + " gestoppt");return;
+					}
 				} catch (InterruptedException e) {
 					System.out.println("interrupted");
 					e.printStackTrace();

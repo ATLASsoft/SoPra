@@ -140,16 +140,15 @@ public abstract class AnimationFigure extends Figure {
 			((Path) path.getModellObject()).getState().setState(State.UNBLOCKED);
 			this.path = null;
 		}
-		
-		this.direction_to_room = null;
 	}
 	
 	/**
-	 * Sets the RoomFigure to which the current animated Figure is walking to... 
+	 * Sets the RoomFigure to which the current animated Figure is walking to and reserves it. 
 	 * @param room RoomFigure, to which the mobile object is actually walking to.
 	 */
 	public void setDirection_to_node(NodeFigure room) {
-		this.direction_to_room=room;
+		this.direction_to_room = room;
+		((Node) room.getModellObject()).getState().setState(State.BLOCKED);
 	}
 	
 	/**
