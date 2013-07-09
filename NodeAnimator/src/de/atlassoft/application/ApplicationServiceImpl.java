@@ -70,11 +70,21 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("stopIconSmall", "img/stopIconSmall.png");
 		ImageHelper.loadImage("pdfIcon", "img/pdfIcon.png");
 		
-		// load train types
+
+		// load railway system ids
 		try {
 			for (String temp: persistence.getRailwaySystemIDs()){
 				model.addRailwaySystemID(temp);
 			}
+		} catch (IOException e) {
+			ErrorHelper.createErrorMessage(
+					I18N.getMessage("ApplicationService.LoadErrorTitle"),
+					I18N.getMessage("ApplicationService.LoadRailSysIDsErrorMsg"));
+			e.printStackTrace();
+		}
+		
+		// load train types
+		try {
 			List<TrainType> trainTypes = persistence.loadTrainTypes();
 			for (TrainType type : trainTypes) {
 				model.addTrainType(type);
@@ -171,7 +181,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		try {
 			persistence.saveRailwaySystem(railSys);
 			model.addRailwaySystemID(railSys.getID());
-			setActiveRailwaySystem(railSys.getID());
+			model.setActiveRailwaySys(railSys);
 		} catch (IOException e) {
 			e.printStackTrace();
 			ErrorHelper.createErrorMessage(
