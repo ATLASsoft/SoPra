@@ -34,7 +34,7 @@ public class BackgroundLayerdPane extends LayeredPane {
 			Point p1= new Point(i,0);
 			Point p2= new Point(i,r.height);
 			graphics.drawLine(p1, p2);
-			graphics.setForegroundColor(ColorConstants.red);
+			graphics.setForegroundColor(ColorConstants.black);
 			graphics.drawText(i+"", p1);
 			graphics.setForegroundColor(ColorConstants.titleGradient);
 		}
@@ -42,7 +42,7 @@ public class BackgroundLayerdPane extends LayeredPane {
 			Point p1= new Point(0,i);
 			Point p2= new Point(r.width,i);
 			graphics.drawLine(p1, p2);
-			graphics.setForegroundColor(ColorConstants.red);
+			graphics.setForegroundColor(ColorConstants.black);
 			graphics.drawText(i+"", p1);
 			graphics.setForegroundColor(ColorConstants.titleGradient);
 		}
