@@ -5,10 +5,13 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -23,6 +26,7 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
+import de.atlassoft.util.ImageHelper;
 import de.hohenheim.view.map.NodeMap;
 
 /**
@@ -42,6 +46,7 @@ public class CurrentRailSysComposite {
 	private Label coordinate1;
 	private Label coordinate2;
 	private Table informationTable;
+	private Button exportScheduleButton;
 	
 	/**
 	 * Constructor for the class CurrentRailSysComposite
@@ -122,6 +127,7 @@ public class CurrentRailSysComposite {
 						    } 
 						    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 						    informationTable.setVisible(true);
+		        			exportScheduleButton.setVisible(true);
 						}
 					}
 				}
@@ -209,6 +215,24 @@ public class CurrentRailSysComposite {
 	    } 
 	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		informationTable.setVisible(false);
+		
+		//PDF
+		exportScheduleButton = new Button(currenRailSysInfoComposite, SWT.PUSH);
+	    exportScheduleButton.setImage(ImageHelper.getImage("pdfIcon"));
+	    exportScheduleButton.setText(I18N.getMessage("CurrenTailSysComposite.createPDF"));
+	    exportScheduleButton.setLayoutData(dataCenter);
+	    exportScheduleButton.setVisible(false);
+	    exportScheduleButton.addSelectionListener(new SelectionAdapter() {
+	        public void widgetSelected(SelectionEvent e) {
+	        	Node tempNode = null;
+	        	for (Node temp : applicationService.getModel().getActiveRailwaySys().getNodes()) {
+	        		if (temp.getName().equals(name.getText())) {
+	        			tempNode = temp;
+	        			applicationService.showDepartureBoardDoc(tempNode);
+	        		}
+	        	}
+	        }
+	    });
 	}
 	
 	/**

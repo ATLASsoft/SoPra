@@ -206,9 +206,6 @@ public class ScheduleAndTrainTypeComposite {
 	    littleButtonCompositeLayout.marginHeight = 0;
 	    littleButtonComposite.setLayout(littleButtonCompositeLayout);
 	    
-	    Button exportScheduleButton = new Button(littleButtonComposite, SWT.PUSH);
-	    exportScheduleButton.setImage(ImageHelper.getImage("pdfIcon"));
-	    
 	    Button deleteSchedule = new Button(littleButtonComposite, SWT.PUSH);
 	    deleteSchedule.setImage(ImageHelper.getImage("trashIconSmall"));
 	    deleteSchedule.addSelectionListener(new SelectionAdapter() {
