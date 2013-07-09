@@ -200,13 +200,7 @@ public class ScheduleAndTrainTypeComposite {
 	    	}
 	    });
 	    
-	    //Composite for the delete and export as pdf button
-	    Composite littleButtonComposite = new Composite(buttonComposite, SWT.NONE);
-	    GridLayout littleButtonCompositeLayout = new GridLayout(2, false);
-	    littleButtonCompositeLayout.marginHeight = 0;
-	    littleButtonComposite.setLayout(littleButtonCompositeLayout);
-	    
-	    Button deleteSchedule = new Button(littleButtonComposite, SWT.PUSH);
+	    Button deleteSchedule = new Button(buttonComposite, SWT.PUSH);
 	    deleteSchedule.setImage(ImageHelper.getImage("trashIconSmall"));
 	    deleteSchedule.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent e) {
