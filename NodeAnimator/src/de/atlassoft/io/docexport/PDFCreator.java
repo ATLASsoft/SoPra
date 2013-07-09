@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.swing.GroupLayout.Alignment;
+
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Chunk;
@@ -41,16 +41,13 @@ class PDFCreator {
 	/**
 	 * One of the Fonts used in the PDF document.
 	 */
-	private Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
-			Font.NORMAL);
+	private Font bigBold = new Font(Font.FontFamily.TIMES_ROMAN, 24, Font.BOLD);
 
 	/**
 	 * One of the Fonts used in the PDF document.
 	 */
 	private Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 18,
 			Font.BOLD);
-
-	private Font bigBold = new Font(Font.FontFamily.TIMES_ROMAN, 24, Font.BOLD);
 
 	/**
 	 * Generates empty lines in an specific paragraph. If paragraph is null, an

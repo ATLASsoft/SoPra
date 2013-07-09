@@ -2,8 +2,7 @@ package de.atlassoft.io.persistence;
 
 
 
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -29,12 +25,12 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import de.atlassoft.model.ModelServiceImpl;
+
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
-import de.atlassoft.model.State;
+
 import de.atlassoft.model.TrainType;
 
 /**
@@ -44,7 +40,7 @@ import de.atlassoft.model.TrainType;
  */
 class XMLParser {
 	
-	private PersistenceServiceImpl impl;
+
 
 	/*
 	 * CREATE XML

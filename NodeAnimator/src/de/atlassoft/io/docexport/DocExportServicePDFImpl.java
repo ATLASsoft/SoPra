@@ -1,6 +1,6 @@
 package de.atlassoft.io.docexport;
 
-import java.io.FileNotFoundException;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,7 +15,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
-import de.atlassoft.model.TrainRideStatistic;
+
 
 public class DocExportServicePDFImpl implements DocExportService {
 	//TODO Exception Handling!

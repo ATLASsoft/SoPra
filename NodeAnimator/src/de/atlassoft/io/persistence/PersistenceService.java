@@ -2,8 +2,6 @@ package de.atlassoft.io.persistence;
 
 import java.io.IOException;
 import java.util.List;
-
-import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.TrainType;

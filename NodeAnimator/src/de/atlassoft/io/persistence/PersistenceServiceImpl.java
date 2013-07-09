@@ -1,22 +1,11 @@
 package de.atlassoft.io.persistence;
 
-import java.io.File;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import de.atlassoft.model.ModelServiceImpl;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.TrainType;
