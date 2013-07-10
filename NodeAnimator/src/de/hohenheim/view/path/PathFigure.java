@@ -23,7 +23,7 @@ public class PathFigure extends PolylineConnection {
 	  /**
 	   * A Object that is connected to this {@link PathFigure} as the modell.
 	   */
-	  private Object modellObject;
+	  private Path modellObject;
 	  
 	  public PathFigure() {
 		BendpointConnectionRouter router = new BendpointConnectionRouter();
@@ -36,12 +36,12 @@ public class PathFigure extends PolylineConnection {
 	   * The constructor sets a {@link BendpointConnectionRouter} to draw the path
 	   * as a line.  
 	   */
-	  public PathFigure(Object modellObject) {
+	  public PathFigure(Path modellObject) {
 		this();
-		this.modellObject=modellObject;
+		this.modellObject = modellObject;
 	    StringBuilder toolTip = new StringBuilder();
 	    toolTip.append("Höchstgeschwindigkeit: ");
-	    toolTip.append(Math.round(((Path) modellObject).getTopSpeed()));
+	    toolTip.append(Math.round(modellObject.getTopSpeed()));
 	    toolTip.append(" km/h");
 //	    toolTip.append("Länge: "); //TODO: wtf
 //	    toolTip.append(Math.round(this.getDistance() * 100));
@@ -51,9 +51,9 @@ public class PathFigure extends PolylineConnection {
 	  
 	  /**
 	   * Sets the modellObject for this {@link PathFigure}.
-	   * @param modellObject - The modell object that belongs to this PathFigure.
+	   * @param modellObject - The model object that belongs to this PathFigure.
 	   */
-	  public void setModellObject(Object modellObject) {
+	  public void setModellObject(Path modellObject) {
 		  this.modellObject = modellObject;
 	  }
 	  
@@ -61,7 +61,7 @@ public class PathFigure extends PolylineConnection {
 	   * Returns the modellObject of this PathFigure.
 	   * @return {@link Object}
 	   */
-	  public Object getModellObject() {
+	  public Path getModellObject() {
 		  return this.modellObject;
 	  }	  
 	  

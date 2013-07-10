@@ -74,7 +74,7 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));
 		this.stopped=false;
-		map.getDisplay().timerExec(0, this);
+		map.getDisplay().asyncExec(this);
 	}
 	
 	/**

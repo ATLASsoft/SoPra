@@ -11,7 +11,7 @@ import de.hohenheim.view.path.PathFigure;
  * 
  * @author Alexander Balogh
  */
-public class Path {
+public class Path implements Blockable {
 	
 	private PathFigure pathFigure;
 	private double topSpeed;
@@ -96,12 +96,7 @@ public class Path {
 		return pathFigure;
 	}
 
-	/**
-	 * Returns the {@link State} in order to see whether the path is blocked or
-	 * not blocked.
-	 * 
-	 * @return the state object
-	 */
+	@Override
 	public State getState() {
 		return state;
 	}

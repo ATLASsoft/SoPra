@@ -1,14 +1,11 @@
 package de.hohenheim.view;
 
-import java.util.ArrayList;
-
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.node.NodeFigure;
-import de.hohenheim.view.path.CenterAnchor;
 import de.hohenheim.view.path.PathFigure;
 
 /**
@@ -33,23 +30,25 @@ public class FigureFactory {
 	 */
 	 
 	public static NodeFigure createNode(NodeMap map, String room_name, int x, int y, int width, int height, Object modellObject) {    
-		  NodeFigure node = new NodeFigure(modellObject);
-		  node.setName(room_name);    
-		  node.setBounds(new Rectangle(x, y, width, height));	  
-		  map.getNodeLayer().add(node);
-		  map.getPaths().put(node, new ArrayList<PathFigure>());
-		  map.getNodes().put(room_name, node);
-		  return node;
+		throw new RuntimeException("Deprecated method");
+//		NodeFigure node = new NodeFigure(modellObject);
+//		node.setName(room_name);
+//		node.setBounds(new Rectangle(x, y, width, height));
+//		map.getNodeLayer().add(node);
+//		map.getPaths().put(node, new ArrayList<PathFigure>());
+//		map.getNodes().put(room_name, node);
+//		return node;
 	}
 	
 	public static NodeFigure createNode(NodeMap map, String room_name, int x, int y, int width, int height, Object modellObject, Image backgroundImage) {    
-		  NodeFigure node = new NodeFigure(modellObject, backgroundImage);
-		  node.setName(room_name);    
-		  node.setBounds(new Rectangle(x, y, width, height));	  
-		  map.getNodeLayer().add(node);
-		  map.getPaths().put(node, new ArrayList<PathFigure>());
-		  map.getNodes().put(room_name, node);
-		  return node;
+		throw new RuntimeException("Deprecated method");  
+//		NodeFigure node = new NodeFigure(modellObject, backgroundImage);
+//		  node.setName(room_name);    
+//		  node.setBounds(new Rectangle(x, y, width, height));	  
+//		  map.getNodeLayer().add(node);
+//		  map.getPaths().put(node, new ArrayList<PathFigure>());
+//		  map.getNodes().put(room_name, node);
+//		  return node;
 	}
 	
 	
@@ -88,18 +87,19 @@ public class FigureFactory {
 	 * @return {@link PathFigure} - The path after it is created, connected to the rooms and added to the RoomMap.
 	 */
 	public static PathFigure createPath(NodeMap map, NodeFigure start, NodeFigure end, Object modellObject) {
-		  PathFigure path = new PathFigure(modellObject);		  
-		  path.setSourceAnchor(new CenterAnchor(start)); //new ChopboxAnchor(start)		  
-		  path.setTargetAnchor(new CenterAnchor(end));//new ChopboxAnchor(end)
-		  map.getNodeLayer().add(path);
-		  map.getPaths().get(start).add(path);
-		  map.getPaths().get(end).add(path);	
-		  map.getNodeLayer().remove(start);
-		  map.getNodeLayer().add(start);
-		  map.getNodeLayer().remove(end);
-		  map.getNodeLayer().add(end);
-		  
-		  return path;
+		throw new RuntimeException("Deprecated method");
+//		PathFigure path = new PathFigure(modellObject);		  
+//		  path.setSourceAnchor(new CenterAnchor(start)); //new ChopboxAnchor(start)		  
+//		  path.setTargetAnchor(new CenterAnchor(end));//new ChopboxAnchor(end)
+//		  map.getNodeLayer().add(path);
+//		  map.getPaths().get(start).add(path);
+//		  map.getPaths().get(end).add(path);	
+//		  map.getNodeLayer().remove(start);
+//		  map.getNodeLayer().add(start);
+//		  map.getNodeLayer().remove(end);
+//		  map.getNodeLayer().add(end);
+//		  
+//		  return path;
 	}
 	
 }

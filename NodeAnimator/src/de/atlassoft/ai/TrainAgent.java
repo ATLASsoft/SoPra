@@ -91,21 +91,19 @@ public class TrainAgent implements Runnable {
 			// wait till animator reached end
 			synchronized (anim) { // acquire lock
 				try {
-					while (!((Node) figure.getNodeFigure().getModellObject()).equals(schedule.getStations()[i+1])) {
+					while (! figure.getNodeFigure().getModellObject().equals(schedule.getStations()[i+1])) {
 						anim.wait();
 						
 						// animation is finished, goal reached
 						if (anim.isFinished()) {
-							
+							statistic.addStop(figure.getNodeFigure().getModellObject(), 10); //TODO: delay
 						}
 						// animation has been aborted before reaching goal
 						else {
 							System.out.println("train agent " + id + " waits");
 							figure.stopAnimation();//TODO: gscheit reagieren
 							figure.clearAnimations();
-							State s = new State(this);
-							s.setState(State.BLOCKED);
-							figure.waitFor(s);
+							figure.busy(30);
 							figure.startAnimation();
 						}
 					}

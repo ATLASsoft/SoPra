@@ -13,7 +13,7 @@ import de.hohenheim.view.node.NodeFigure;
  *  
  * @author Alexander Balogh
  */
-public class Node {
+public class Node implements Blockable {
 
 	private State state;
 	private NodeFigure nodeFigure;
@@ -93,11 +93,7 @@ public class Node {
 		return nodeFigure;
 	}
 
-	/**
-	 * Returns the {@link State} of this node.
-	 * 
-	 * @return the state
-	 */
+	@Override
 	public State getState() {
 		return state;
 	}

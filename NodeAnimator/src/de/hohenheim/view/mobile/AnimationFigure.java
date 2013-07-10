@@ -7,8 +7,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.swt.graphics.Image;
 
-import de.atlassoft.model.Node;
-import de.atlassoft.model.Path;
 import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.animation.AnimationFinishedQueueObserver;
@@ -134,10 +132,10 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setNode(NodeFigure room) {
 		this.room = room;
-		((Node) room.getModellObject()).getState().setState(State.BLOCKED);
+		room.getModellObject().getState().setState(State.BLOCKED);
 		
 		if (this.path != null) {
-			((Path) path.getModellObject()).getState().setState(State.UNBLOCKED);
+			path.getModellObject().getState().setState(State.UNBLOCKED);
 			this.path = null;
 		}
 	}
@@ -148,7 +146,7 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setDirection_to_node(NodeFigure room) {
 		this.direction_to_room = room;
-		((Node) room.getModellObject()).getState().setState(State.BLOCKED);
+		room.getModellObject().getState().setState(State.BLOCKED);
 	}
 	
 	/**
@@ -175,10 +173,10 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setPath(PathFigure on_path) {
 		this.path = on_path;
-		((Path) path.getModellObject()).getState().setState(State.BLOCKED);
+		path.getModellObject().getState().setState(State.BLOCKED);
 		
 		if (this.room != null) {
-			((Node) room.getModellObject()).getState().setState(State.UNBLOCKED);
+			room.getModellObject().getState().setState(State.UNBLOCKED);
 			this.room = null;
 		}
 	}

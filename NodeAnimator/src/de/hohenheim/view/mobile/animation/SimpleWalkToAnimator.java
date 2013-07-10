@@ -249,7 +249,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			// set speed as maximal possible speed (minimum of train and path
 			// top speed) on the current path
-			velocity = Math.min(((Path) path.getModellObject()).getTopSpeed(),
+			velocity = Math.min(path.getModellObject().getTopSpeed(),
 					((TrainAgent) animationFigure.getModelObject())
 							.getSchedule().getScheme().getTrainType()
 							.getTopSpeed());
@@ -279,7 +279,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			}
 			
 			// path is blocked TODO: besser lösen, synchronisieren, reicht nicht auch der node check
-			if ((((Path) path.getModellObject()).getState().getState() == State.BLOCKED) || ((Node) end_node.getModellObject()).getState().getState() == State.BLOCKED)  {
+			if ((path.getModellObject().getState().getState() == State.BLOCKED) || end_node.getModellObject().getState().getState() == State.BLOCKED)  {
 				synchronized (this) { // acquire lock
 					this.notifyAll();
 				}

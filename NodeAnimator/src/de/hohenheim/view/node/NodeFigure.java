@@ -10,6 +10,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
+import de.atlassoft.model.Node;
+
 /**
  * This class is for drawing of a room.
  * @author Marc Fernandes
@@ -18,38 +20,37 @@ import org.eclipse.swt.graphics.Image;
 public class NodeFigure extends Figure {
 	private String name = new String();
 	
-	private Object modellObject;
+	private Node modellObject;
 	
-	private Image backgroundImage=null;
+	private Image backgroundImage  =null;
 	
 	/**
 	 * Constructor. Creates a room with a name.
 	 * The Name will be displayed in the center of the figure.
 	 * @param String roomName 
 	 */
-	
-	public NodeFigure(Object modellObject) {
+	public NodeFigure(Node modellObject) {
 		setModelObject(modellObject);
 	}
 	
-	public NodeFigure(Object modellObject, Image backgroundImg) {
+	public NodeFigure(Node modellObject, Image backgroundImg) {
 		this(modellObject);
 		this.backgroundImage=backgroundImg;
 	}
 	
 	/**
-	 * Returns the modell object of this RoomFigure.
+	 * Returns the model object of this RoomFigure.
 	 * @return {@link Object}
 	 */
-	public Object getModellObject() {
+	public Node getModellObject() {
 		return this.modellObject;
 	}
 	/**
-	 * Sets the Object which is the modell part of this view object .
-	 * @param modellObject - The modell object which belongs to this RoomFigure.
+	 * Sets the Object which is the model part of this view object .
+	 * @param modellObject - The model object which belongs to this RoomFigure.
 	 */
-	public void setModelObject(Object modellObject) {
-		this.modellObject=modellObject;
+	public void setModelObject(Node modellObject) {
+		this.modellObject = modellObject;
 	}
 	
 	/**
