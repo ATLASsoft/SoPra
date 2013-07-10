@@ -21,6 +21,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -80,10 +81,8 @@ public class ScheduleAndTrainTypeComposite {
 		passive = applicationService.getModel().getPassiveScheduleSchemes();
 		fontData = new FontData();
 
-//		activeSchedule = null;
-		
 		//Overall composite of the tab folder
-		scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.BORDER);
+		scheduleAndTrainTypeComposite = new Composite (tabFolder, SWT.NONE);
 		scheduleAndTrainTypeComposite.setLayout(new GridLayout(2, false));
 		
 		//Composites above the mainComposite
@@ -351,7 +350,7 @@ public class ScheduleAndTrainTypeComposite {
 	 * Builds the composite which shows the information about the schedule.
 	 */
 	private void createInformation() {
-		DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		
 		Label name = new Label(informationComposite, SWT.NONE);
 		name.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Name"));
@@ -615,7 +614,13 @@ public class ScheduleAndTrainTypeComposite {
 			Composite trainType = new Composite (trainTypeComposite, SWT.BORDER);
 			trainType.setLayout(new GridLayout(3, false));
 			trainType.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
+			
+			Image img = type.getImg();
+			if (img == null) {
+				img = ImageHelper.getImage("standardTrainIcon");
+			}
 			new Label (trainType, SWT.NULL).setImage(type.getImg());
+			
 			Label information = new Label(trainType, SWT.NULL);
 			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
 								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h   \n" +
