@@ -143,7 +143,7 @@ public class SimulationStatisticDialog {
 				selectedN = node;
 			}
 		}
-		Label meanDelayNode = new Label(mainComposite, SWT.NONE);
+		final Label meanDelayNode = new Label(mainComposite, SWT.NONE);
 		meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
 		toTheEnd(meanDelayNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
@@ -157,7 +157,7 @@ public class SimulationStatisticDialog {
 						selectedNode = node;
 					}
 				}
-				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedNode)));
+				meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedNode)));
 			}
 		});
 		
@@ -167,7 +167,7 @@ public class SimulationStatisticDialog {
 		final String[] scheduleSchemeSelection = new String [scheduleSchemes.size()];
 		index = 0;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
-			nodeSelection[index] = scheduleScheme.getID();
+			scheduleSchemeSelection[index] = scheduleScheme.getID();
 			index++;
 		}
 		final Combo comboScheduleScheme = new Combo(mainComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -207,6 +207,24 @@ public class SimulationStatisticDialog {
 		comboScheduleScheme2.setItems(scheduleSchemeSelection);
 		comboScheduleScheme2.select(0);
 		final Combo comboNode2 = new Combo(mainComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		ScheduleScheme selectedScheduleScheme2 = null;
+		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
+			if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
+				selectedScheduleScheme2 = scheduleScheme;
+			}
+		}
+		
+		if (selectedScheduleScheme2 != null) {
+			java.util.List<Node> nodes2 = selectedScheduleScheme2.getStations();
+			String[] node2Selection = new String [nodes2.size()];
+			int index2 = 0;
+			for (Node node : nodes2) {
+				node2Selection[index2] = node.getName();
+				index2++;
+			}
+			comboNode2.setItems(node2Selection);
+			comboNode2.select(0);
+		}
 	    
 	    // Tenth row with the result of "MeanDelay (ScheduleScheme, Node)"
 		new Label(mainComposite, SWT.NONE);
@@ -222,7 +240,7 @@ public class SimulationStatisticDialog {
 				selectedN2 = node;
 			}
 		}
-		Label meanDelayScheduleSchemeAndNode = new Label(mainComposite, SWT.NONE);
+		final Label meanDelayScheduleSchemeAndNode = new Label(mainComposite, SWT.NONE);
 		meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
 		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
@@ -244,7 +262,7 @@ public class SimulationStatisticDialog {
 					node2Selection[index] = node.getName();
 					index++;
 				}
-				comboNode2.setItems(trainTypeSelection);
+				comboNode2.setItems(node2Selection);
 				comboNode2.select(0);
 				
 				Node selectedNode2 = null;
@@ -253,7 +271,7 @@ public class SimulationStatisticDialog {
 						selectedNode2 = node;
 					}
 				}
-				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
 			}
 		});
 		
@@ -271,7 +289,7 @@ public class SimulationStatisticDialog {
 						selectedNode2 = node;
 					}
 				}
-				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
 			}
 		});
 		

@@ -7,7 +7,7 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.swt.graphics.Image;
 
-import de.atlassoft.model.State;
+import de.atlassoft.ai.TrainAgent;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.animation.AnimationFinishedQueueObserver;
 import de.hohenheim.view.mobile.animation.Animator;
@@ -47,17 +47,17 @@ public abstract class AnimationFigure extends Figure {
 	 * A modelObject can extend the viewpart with other information,  
 	 * for example for state informations, capacity and so on
 	 */
-	Object modellObject = null;
+	TrainAgent modellObject = null;
 	
 	/**
 	 * Constructor
 	 * @param {@link NodeMap} map - the RoomMap the {@link AnimationFigure} is located.
 	 * @param {@link NodeFigure} room - The room the {@link AnimationFigure} is located. 
 	 */
-	public AnimationFigure(NodeMap map, NodeFigure room, int id, Object modellObject) {
+	public AnimationFigure(NodeMap map, NodeFigure room, int id, TrainAgent modellObject) {
+		setModelObject(modellObject);
 		setNode(room);
 		setRoomMap(map);
-		setModelObject(modellObject);
 		this.figure_id=id;
 	}	
 	
@@ -73,7 +73,7 @@ public abstract class AnimationFigure extends Figure {
 	 * Sets the Modelobject which belongs to this AnimationFigure.
 	 * @param {@link Object} o - The Modelobject. 
 	 */
-	public void setModelObject(Object o) {
+	public void setModelObject(TrainAgent o) {
 		this.modellObject=o;
 	}
 	
@@ -81,7 +81,7 @@ public abstract class AnimationFigure extends Figure {
 	 * Gets the Modelobject which belongs to this AnimationFigure.
 	 * @return {@link Object} o - The Modelobject. 
 	 */
-	public Object getModelObject() {
+	public TrainAgent getModelObject() {
 		return this.modellObject;
 	}
 	
@@ -132,10 +132,12 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setNode(NodeFigure room) {
 		this.room = room;
-		room.getModellObject().getState().setState(State.BLOCKED);
-		
+		modellObject.block(room.getModellObject().getState());
+		room.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+
 		if (this.path != null) {
-			path.getModellObject().getState().setState(State.UNBLOCKED);
+			modellObject.unBlock(path.getModellObject().getState());
 			this.path = null;
 		}
 	}
@@ -146,7 +148,7 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setDirection_to_node(NodeFigure room) {
 		this.direction_to_room = room;
-		room.getModellObject().getState().setState(State.BLOCKED);
+		modellObject.block(direction_to_room.getModellObject().getState());
 	}
 	
 	/**
@@ -173,10 +175,12 @@ public abstract class AnimationFigure extends Figure {
 	 */
 	public void setPath(PathFigure on_path) {
 		this.path = on_path;
-		path.getModellObject().getState().setState(State.BLOCKED);
-		
+		modellObject.block(path.getModellObject().getState());
+		path.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+
 		if (this.room != null) {
-			room.getModellObject().getState().setState(State.UNBLOCKED);
+			modellObject.unBlock(room.getModellObject().getState());
 			this.room = null;
 		}
 	}

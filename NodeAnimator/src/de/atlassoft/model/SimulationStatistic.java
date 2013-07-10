@@ -128,7 +128,9 @@ public class SimulationStatistic {
 				}
 			}
  		}
-		meanDelay = meanDelay / numberOfRides;
+		if (numberOfRides != 0) {
+			meanDelay = meanDelay / numberOfRides;
+		}
 		return meanDelay;
 	}
 	

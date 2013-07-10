@@ -27,6 +27,7 @@ public class TrainAgent implements Runnable {
 	private SimpleWalkToAnimator anim;
 	private Thread runningThread;
 	private AIServiceImpl aiPort;
+	private List<Node>currentPath;
 	
 	protected TrainAgent(Graph graph, int id, Schedule schedule, AIServiceImpl aiPort) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
@@ -44,6 +45,16 @@ public class TrainAgent implements Runnable {
 	
 	
 	
+	public void block(State state) {
+		state.setState(State.BLOCKED, this);
+		blockedState.add(state);
+	}
+	
+	public void unBlock(State state) {
+		state.setState(State.UNBLOCKED, null);
+		blockedState.remove(state);
+	}
+	
 	protected void continueRide() { //TODO: wenn nur start/stop aufgerufen wird überflüssig, da des auch in der loop gemacht werden kann
 		figure.startAnimation();
 	}
@@ -59,6 +70,10 @@ public class TrainAgent implements Runnable {
 		}
 	}
 	
+	
+	protected List<Node> getCurrentPath() {
+		return currentPath;
+	}
 	
 	protected TrainFigure getTrainFigure() {
 		return figure;
@@ -81,26 +96,63 @@ public class TrainAgent implements Runnable {
 	@Override
 	public void run() {
 		runningThread = Thread.currentThread();
-		List<NodeFigure> path;
+		
 		for (int i = 0; i < schedule.getStations().length - 1; i++) {
-			path = getShortestPath(schedule.getStations()[i], schedule.getStations()[i + 1]);
-			anim = figure.walkAlong(path);
+			currentPath = graph.getShortestPath(schedule.getStations()[i], schedule.getStations()[i + 1],
+					schedule.getScheme().getTrainType().getTopSpeed());
+			anim = figure.walkAlong(transformPath(currentPath));
 			anim.setTimeLapse(timeLapse);
 			figure.startAnimation();	
 			
-			// wait till animator reached end
-			synchronized (anim) { // acquire lock
+			// wait till animation ends or interrupted
+			synchronized (anim) { // acquire lock in order to wait
 				try {
-					while (! figure.getNodeFigure().getModellObject().equals(schedule.getStations()[i+1])) {
+					// wait and maybe elude till next station is reached 
+					while (!figure.getNodeFigure().getModellObject()
+							.equals(schedule.getStations()[i + 1])) {
+						
+						// wait till animation stops since it reached the next station or
+						// the path is blocked
 						anim.wait();
 						
-						// animation is finished, goal reached
+						// animation is finished, next station reached
 						if (anim.isFinished()) {
-							statistic.addStop(figure.getNodeFigure().getModellObject(), 10); //TODO: delay
+							
+							// compute delay and add it to the statistic
+							long simTime = aiPort.getLoop().getSimTimeInMillis();
+							int delay = (int) Math.round(((simTime - schedule.getATs()[i+1]) / 1000.0)); 
+							statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
+							
+							//TODO: warten
 						}
-						// animation has been aborted before reaching goal
+						
+						// animation has been aborted before reaching goal,
+						// search for best alternative strategy
 						else {
 							System.out.println("train agent " + id + " waits");
+							
+							Node currentPosition = figure.getNodeFigure().getModellObject();
+							Node goal = schedule.getStations()[i+1];
+							Node blockedNode = currentPath.get
+									(1 + currentPath.indexOf(currentPosition));
+							TrainAgent blockingAgent = blockedNode.getState().getBlocker();
+							
+							// strategy 1: wait till other agent has passed
+							List<Node> pathOther = blockingAgent.getCurrentPath();
+							Node nextAfterBlockO =
+									pathOther.get(1 + pathOther.indexOf(blockedNode));
+							if (!nextAfterBlockO.equals(currentPosition)) {
+								
+							}
+							
+							
+							// strategy 2 compute alternative route
+							// strategy 3 draw back and let other pass
+							
+							
+							
+							
+							
 							figure.stopAnimation();//TODO: gscheit reagieren
 							figure.clearAnimations();
 							figure.busy(100);
@@ -115,7 +167,7 @@ public class TrainAgent implements Runnable {
 			
 			
 		}
-		removeFigure();//TODO: animation/warten bevor die züge verschwinden
+		removeFigure();//TODO: animation/warten bevor die züge verschwinden, sound
 		aiPort.getLoop().activeAgents.remove(this);
 		aiPort.getSimStat().addStatistic(statistic);
 	}
@@ -128,6 +180,9 @@ public class TrainAgent implements Runnable {
 	private void removeFigure() {
 		figure.stopAnimation();
 		figure.clearAnimations();
+		for (State s : blockedState) {
+			s.setState(State.UNBLOCKED, null);
+		}
 		final NodeMap map = graph.getRailwaySystem().getNodeMap();
 		map.getDisplay().asyncExec(new Runnable() {
 			@Override
@@ -138,14 +193,19 @@ public class TrainAgent implements Runnable {
 		});
 	}
 	
-	
-	private List<NodeFigure> getShortestPath(Node source, Node target) {
-		List<Node> path = graph.getShortestPath(source, target,
-				schedule.getScheme().getTrainType().getTopSpeed());
-		
-		Iterator<Node> it = path.iterator();
+	/**
+	 * Transforms list of {@link Node}s into a list of {@link NodeFigure}s. Also
+	 * the first element of the list will be left out and therefore the size of
+	 * new list is decreases by one.
+	 * 
+	 * @param walkingPath
+	 *            The list of {@link Node}s to be transformed
+	 * @return Transformed list
+	 */
+	private List<NodeFigure> transformPath(List<Node> walkingPath) {
+		Iterator<Node> it = walkingPath.iterator();
 		List<NodeFigure> figurePath = new ArrayList<>();
-		it.next(); // one does not need first element
+		it.next(); // skip first element
 		while (it.hasNext()) {
 			figurePath.add(it.next().getNodeFigure());
 		}

@@ -16,8 +16,8 @@ public class Train {
 	private State state;
 
 	public Train(NodeMap map, int id, Schedule schedule) {
-		trainFigure = FigureFactory.createTrainFigure(
-				map, schedule.getStations()[0].getNodeFigure(), id, this);
+//		trainFigure = FigureFactory.createTrainFigure(
+//				map, schedule.getStations()[0].getNodeFigure(), id, this);
 		this.id = id;
 		this.schedule = schedule;
 		this.statistic = new TrainRideStatistic(schedule.getScheme());

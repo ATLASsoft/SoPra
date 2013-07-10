@@ -13,13 +13,52 @@ import de.hohenheim.view.path.PathFigure;
  */
 public class Path implements Blockable {
 	
+	/**
+	 * The graphical representation of this {@link Path}.
+	 */
 	private PathFigure pathFigure;
+	
+	/**
+	 * The top speed that is allowed on this {@link Path} in kilometer per
+	 * hours.
+	 */
 	private double topSpeed;
+	
+	/**
+	 * Indicates the state of this {@link Path}.
+	 */
 	private State state;
+	
+	/**
+	 * The start {@link Node} of this {@link Path}.
+	 */
 	private Node start;
+	
+	/**
+	 * The end {@link Node} of this {@link Path}.
+	 */
 	private Node end;
+	
+	/**
+	 * The id of this path. Should be unique within the {@link RailwaySystem}
+	 * this path belongs to.
+	 */
 	int id;
+	
+	/**
+	 * The train type workload map of this {@link Path}. Indicates how often
+	 * this train has been passed over by the different {@link TrainType
+	 * TrainTypes} since the instantiation of this object or the last
+	 * {@link Path#clear() clear()}.
+	 */
 	private Map<TrainType, Integer> trainTypeMap;
+	
+	/**
+	 * The schedule scheme workload map of this {@link Path}. Indicates how
+	 * often this train has been passed over by trains of the different
+	 * {@link ScheduleScheme ScheduleSchemes} since the instantiation of this
+	 * object or the last {@link Path#clear() clear()}.
+	 */
 	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
@@ -61,17 +100,40 @@ public class Path implements Blockable {
 	}
 	
 	
+	
 	/**
-	 * Returns the top speed that is allowed in this path.
+	 * Removes all data that has been collected during one or multiple
+	 * simulations from this path.
+	 * @see {@link Path#trainTypeMap}, {@link Path#schemeMap}, {@link Path#state}
+	 */
+	protected void clear() {
+		state.setState(State.UNBLOCKED, null);
+		trainTypeMap.clear();
+		schemeMap.clear();
+	}
+	
+	/**
+	 * Sets the id. The id should be unique within the {@link RailwaySystem}
+	 * this path belongs to. However, this method does not check for uniqueness.
 	 * 
-	 * @return The top speed.
+	 * @param id
+	 *            The id
+	 */
+	protected void setID(int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Returns the top speed that is allowed on this path.
+	 * 
+	 * @return The top speed in kilometer per hours
 	 */
 	public double getTopSpeed() {
 		return topSpeed;
 	}
 
 	/**
-	 * Sets the top speed that is allowed in this path. If topSpeed is a
+	 * Sets the top speed that is allowed on this path. If topSpeed is a
 	 * negative number, an {@link IllegalArgumentException} is thrown.
 	 * 
 	 * @param topSpeed
@@ -119,20 +181,98 @@ public class Path implements Blockable {
 		return end;
 	}
 	
-	protected void setID(int id) {
-		this.id = id;
-	}
-	
+	/**
+	 * Returns the id of this path. The id is unique within the {@link RailwaySystem}
+	 * this path belongs to.
+	 * @return
+	 */
 	public int getID() {
 		return id;
 	}
 	
+	/**
+	 * Increases the work load ,i.e. how often this {@link Node} has been passed
+	 * over, by one.
+	 * 
+	 * @param scheme
+	 *            {@link ScheduleScheme} of the train that passed over this
+	 *            {@link Node}
+	 */
+	public void incrementWorkLoad(ScheduleScheme scheme) {
+		// increase work load in scheme map
+		if (schemeMap.containsKey(scheme)) {
+			Integer i = (schemeMap.get(scheme));
+			i++;
+		} else {
+			schemeMap.put(scheme, new Integer(1));
+		}
+		
+		// increase work load in train type map
+		if (trainTypeMap.containsKey(scheme.getTrainType())) {
+			Integer j = trainTypeMap.get(scheme.getTrainType());
+			j++;
+		} else {
+			trainTypeMap.put(scheme.getTrainType(), new Integer(1));
+		}
+	}
+	
+	/**
+	 * Returns the train type workload map of this {@link Node} that indicates
+	 * how often this train has been passed over by the different
+	 * {@link TrainType}s within the last simulation.
+	 * 
+	 * @return The train type workload map
+	 */
 	public Map<TrainType, Integer> getTrainTypeWorkloadMap() {
 		return trainTypeMap;
 	}
 	
+	/**
+	 * Returns the schedule scheme workload map of this {@link Node} that indicates
+	 * how often this train has been passed over by trains of the different
+	 * {@link ScheduleScheme}s within the last simulation.
+	 * 
+	 * @return The schedule scheme workload map
+	 */
 	public Map<ScheduleScheme, Integer> getScheduleSchemeWorkloadMap() {
 		return schemeMap;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[{");
+		sb.append(start);
+		sb.append("}<-->{");
+		sb.append(end);
+		sb.append("}; topSpeed:");
+		sb.append(topSpeed);
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Path)) {
+			return false;
+		} else {
+			Path other = (Path) obj;
+			if (this.start.equals(other.start)
+					&& this.end.equals(other.end)
+					&& (this.topSpeed - other.topSpeed) < 0.01) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + start.hashCode();
+		result = 31 * result + end.hashCode();
+		result = 31 * result + (int) topSpeed;
+		return result;
+	}
 }

@@ -3,6 +3,7 @@ package de.hohenheim.view;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
+import de.atlassoft.ai.TrainAgent;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.node.NodeFigure;
@@ -60,7 +61,7 @@ public class FigureFactory {
 	 * @param a unique id for the fork truck! Developer must ensure this...
 	 * @return ForkTruckFigure The fork truck after creation.
 	 */
-	public static TrainFigure createTrainFigure(final NodeMap map, final NodeFigure in_node, final int train_id, final Object modellObject) {
+	public static TrainFigure createTrainFigure(final NodeMap map, final NodeFigure in_node, final int train_id, final TrainAgent modellObject) {
 		final TrainFigure mobile = new TrainFigure(map, in_node, train_id,
 				modellObject);
 		Rectangle b = in_node.getBounds();

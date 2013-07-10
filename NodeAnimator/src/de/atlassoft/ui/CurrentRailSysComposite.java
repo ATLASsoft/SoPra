@@ -161,7 +161,11 @@ public class CurrentRailSysComposite {
 		// the composite with the Values 
 		Composite informationComposite = new Composite(currentRailSysInfoComposite, SWT.BORDER);
 		informationComposite.setLayout(new GridLayout(2, true));
-		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		GridData dataValuesComposite = new GridData(SWT.FILL, SWT.NULL, true, false);
+		dataValuesComposite.horizontalAlignment = SWT.CENTER;
+		dataValuesComposite.widthHint = 300;
+		dataValuesComposite.heightHint = 65;		
+		informationComposite.setLayoutData(dataValuesComposite);
 		
 		// Label with Name
 		new Label (informationComposite, SWT.NULL).setText(I18N.getMessage("CurrentRailSysComposite.labelName"));
@@ -203,7 +207,7 @@ public class CurrentRailSysComposite {
 		informationTable.setHeaderVisible(true);
 		GridData dataTable = new GridData();
 		dataTable.widthHint = 300;
-		dataTable.heightHint = 30;
+		dataTable.heightHint = 130;
 		informationTable.setLayoutData(dataTable);
 		
 		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), "X", "Y", I18N.getMessage("CurrentRailSysComposite.tableTitel2")};

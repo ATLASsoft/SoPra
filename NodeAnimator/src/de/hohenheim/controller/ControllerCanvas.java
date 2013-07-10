@@ -1,7 +1,6 @@
 package de.hohenheim.controller;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -13,11 +12,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import de.hohenheim.modell.State;
-import de.hohenheim.modell.Train;
 import de.hohenheim.view.map.NodeMap;
-import de.hohenheim.view.mobile.AnimationFigure;
-import de.hohenheim.view.mobile.TrainFigure;
 
 public class ControllerCanvas extends Canvas {
     
@@ -58,25 +53,25 @@ public class ControllerCanvas extends Canvas {
 		walkto.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event arg0) {
-				int i_node = node_combo.getSelectionIndex();
-				String node = node_combo.getItem(i_node);
-				int i_mobile = train_combo.getSelectionIndex();
-				String train = train_combo.getItem(i_mobile);				
-				AnimationFigure fig = map.getMobileObjects().get(train);
-				if(fig instanceof TrainFigure) {
-					TrainFigure f = (TrainFigure)fig;
-					Train ft = (Train)f.getModelObject(); 	
-					f.stopAnimation();
-					f.clearAnimations();
-					Iterator<State> it = ft.getBlockedStates();
-					while(it.hasNext()) {
-						it.next().setState(State.UNBLOCKED);	
-					}
-					
+//				int i_node = node_combo.getSelectionIndex();
+//				String node = node_combo.getItem(i_node);
+//				int i_mobile = train_combo.getSelectionIndex();
+//				String train = train_combo.getItem(i_mobile);				
+//				AnimationFigure fig = map.getMobileObjects().get(train);
+//				if(fig instanceof TrainFigure) {
+//					TrainFigure f = (TrainFigure)fig;
+//					Train ft = (Train)f.getModelObject(); 	
+//					f.stopAnimation();
+//					f.clearAnimations();
+//					Iterator<State> it = ft.getBlockedStates();
+//					while(it.hasNext()) {
+//						it.next().setState(State.UNBLOCKED);	
+//					}
+//					
 //					f.waitFor(State.statemap.get(node));					
-					f.walkTo(map.getNodes().get(node));					
-					f.startAnimation();
-				}
+//					f.walkTo(map.getNodes().get(node));					
+//					f.startAnimation();
+//				}
 			}
 		});
 		
