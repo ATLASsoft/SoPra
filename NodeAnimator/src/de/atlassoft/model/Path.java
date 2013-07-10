@@ -135,4 +135,41 @@ public class Path implements Blockable {
 		return schemeMap;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[{");
+		sb.append(start);
+		sb.append("}<-->{");
+		sb.append(end);
+		sb.append("}; topSpeed:");
+		sb.append(topSpeed);
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Path)) {
+			return false;
+		} else {
+			Path other = (Path) obj;
+			if (this.start.equals(other.start)
+					&& this.end.equals(other.end)
+					&& (this.topSpeed - other.topSpeed) < 0.01) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + start.hashCode();
+		result = 31 * result + end.hashCode();
+		result = 31 * result + (int) topSpeed;
+		return result;
+	}
 }

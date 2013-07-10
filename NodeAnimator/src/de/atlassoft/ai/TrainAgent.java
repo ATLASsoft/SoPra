@@ -44,6 +44,16 @@ public class TrainAgent implements Runnable {
 	
 	
 	
+	public void block(State state) {
+		state.setState(State.BLOCKED, this);
+		blockedState.add(state);
+	}
+	
+	public void unBlock(State state) {
+		state.setState(State.UNBLOCKED, null);
+		blockedState.remove(state);
+	}
+	
 	protected void continueRide() { //TODO: wenn nur start/stop aufgerufen wird überflüssig, da des auch in der loop gemacht werden kann
 		figure.startAnimation();
 	}
@@ -118,7 +128,7 @@ public class TrainAgent implements Runnable {
 			
 			
 		}
-		removeFigure();//TODO: animation/warten bevor die züge verschwinden
+		removeFigure();//TODO: animation/warten bevor die züge verschwinden, sound
 		aiPort.getLoop().activeAgents.remove(this);
 		aiPort.getSimStat().addStatistic(statistic);
 	}
@@ -131,6 +141,9 @@ public class TrainAgent implements Runnable {
 	private void removeFigure() {
 		figure.stopAnimation();
 		figure.clearAnimations();
+		for (State s : blockedState) {
+			s.setState(State.UNBLOCKED, null);
+		}
 		final NodeMap map = graph.getRailwaySystem().getNodeMap();
 		map.getDisplay().asyncExec(new Runnable() {
 			@Override

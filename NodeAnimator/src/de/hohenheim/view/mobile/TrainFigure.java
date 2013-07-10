@@ -56,12 +56,12 @@ public class TrainFigure extends AnimationFigure {
 	 * @param NodeFigure The Room where the mobile object is located when it is instantiated.
 	 * @param int id - a unique id for the fork truck. 
 	 */
-	public TrainFigure(NodeMap map, NodeFigure in_room, int id, Object modellObject) {
+	public TrainFigure(NodeMap map, NodeFigure in_room, int id, TrainAgent modellObject) {
 		super(map,in_room, id, modellObject);
 		this.setFont(Constants.TRAIN_FONT);
 		
 		// set tool tip
-		ScheduleScheme scheme = ((TrainAgent) modellObject).getSchedule().getScheme();
+		ScheduleScheme scheme = modellObject.getSchedule().getScheme();
 		StringBuilder toolTip = new StringBuilder();
 		toolTip.append("Linie: ");
 		toolTip.append(scheme.getID() + "\n");

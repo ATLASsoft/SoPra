@@ -4,7 +4,6 @@ package de.hohenheim.modell;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import de.hohenheim.view.FigureFactory;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
@@ -17,7 +16,7 @@ public class Train {
 	ArrayList<State> my_blocking_states_list = new ArrayList<State>();
 	
 	public Train(NodeMap map, NodeFigure in_room, int train_id) {
-		figure = FigureFactory.createTrainFigure(map, in_room, train_id, this);
+//		figure = FigureFactory.createTrainFigure(map, in_room, train_id, this);
 	    figure.addAnimationListener(new AnimationListener() {
 			
 			public void animationFinished(AnimationFinishedEvent e) {
