@@ -233,14 +233,14 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
 				
+				//Notify Observers
+				setChanged();				
+				notifyObservers(animationFigure);
+				
 				//notify waiting threads
 				synchronized (this) { // acquire lock
 					this.notifyAll();
 				}
-				
-				//Notify Observers
-				setChanged();				
-				notifyObservers(animationFigure);
 				return;
 			}
 			
@@ -267,14 +267,14 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
 				
+				//Notify Observers
+				setChanged();				
+				notifyObservers(animationFigure);
+				
 				//notify waiting threads
 				synchronized (this) { // acquire lock
 					this.notifyAll();
 				}
-				
-				//Notify Observers
-				setChanged();				
-				notifyObservers(animationFigure);
 				return;
 			}
 			

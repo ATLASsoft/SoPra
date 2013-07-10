@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Display;
 
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
-import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.State;
 import de.atlassoft.util.ScheduleFactory;
 
@@ -28,6 +27,7 @@ import de.atlassoft.util.ScheduleFactory;
  */
 public class SimulationLoop extends Observable {
 
+	private Calendar simStartTime;
 	private int delta;
 	private long last;
 	private volatile boolean alive;
@@ -55,6 +55,8 @@ public class SimulationLoop extends Observable {
 	 */
 	private volatile int timeLapse;
 	
+	
+	
 	/**
 	 * Creates a new simulation loop.
 	 */
@@ -68,6 +70,8 @@ public class SimulationLoop extends Observable {
 		loop = new Loop();
 	}
 
+	
+	
 	/**
 	 * Starts a new run at specified time with passed schemes.
 	 * 
@@ -78,28 +82,36 @@ public class SimulationLoop extends Observable {
 	 *            simulation
 	 */
 	protected void startRun(Calendar startTime, List<ScheduleScheme> schemes) {
+		simStartTime = new GregorianCalendar();
+		simStartTime.clear();
+		simStartTime.set(Calendar.DAY_OF_WEEK, startTime.get(Calendar.DAY_OF_WEEK));
+		simStartTime.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
+		simStartTime.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
+		simStartTime.set(Calendar.SECOND, 0);
+		simStartTime.set(Calendar.MILLISECOND, 0);
+		simTime = (Calendar) simStartTime.clone();
+		lastTime = (Calendar) simStartTime.clone();
+		
+		
 		readySchedules.clear();
 		activeSchemes = schemes;
 		schedules = ScheduleFactory
-				.createScheduleQueue(schemes, startTime); // create schedules
-															// for first day
+				.createScheduleQueue(simStartTime, simTime, schemes); // create schedules
 		
 		agentCounter = 1;
+		alive = true;
 		
 		// init time management
 		delta = 0;
 		passedSimTime = 0;
-		simTime = (Calendar) startTime.clone();
-		lastTime = (Calendar) startTime.clone();
 		last = System.currentTimeMillis();
 
-		alive = true;
 		loopThread = new Thread(loop);
 		loopThread.start();
 	}
 
 	/**
-	 * Continues the last run.
+	 * Continues the last run and all agents/animations.
 	 */
 	protected void continueRun() {
 		// reset time management
@@ -120,6 +132,9 @@ public class SimulationLoop extends Observable {
 		}
 	}
 
+	/**
+	 * Stops an ongoing run and all agents/animations.
+	 */
 	protected void stopRun() {
 		// stop simulation loop
 		alive = false;
@@ -140,6 +155,10 @@ public class SimulationLoop extends Observable {
 		
 	}
 	
+	/**
+	 * Sets the time lapse factor for this loop and all agents/animations.
+	 * @param timeLapse The time lapse factor to be set
+	 */
 	protected void setTimeLapse(int timeLapse) {
 		this.timeLapse = timeLapse;
 		synchronized (activeAgents) {
@@ -150,6 +169,12 @@ public class SimulationLoop extends Observable {
 		}
 	}
 	
+	/**
+	 * Shuts down the thread pool and all agents. This instance of
+	 * {@link SimulationLoop} cannot be used again after the shutdown. In order
+	 * to shut down properly one should first call
+	 * {@link SimulationLoop#stopRun()}.
+	 */
 	protected void shutDown() {
 		System.out.println("standard shutdown");
 		executor.shutdown();
@@ -172,6 +197,16 @@ public class SimulationLoop extends Observable {
 	}
 
 	/**
+	 * Returns a {@link Calendar} instance, that represents the current
+	 * simulation time.
+	 * 
+	 * @return Copy of simTime
+	 */
+	protected Calendar getSimTime() {
+		return (Calendar) simTime.clone();
+	}
+	
+	/**
 	 * Indicates whether the simulation loop is running at the moment.
 	 * 
 	 * @return true if running
@@ -180,6 +215,9 @@ public class SimulationLoop extends Observable {
 		return alive;
 	}
 
+	
+	
+	
 	private class Loop implements Runnable { // TODO: shutdown sicherstellen
 
 		@Override
@@ -200,6 +238,9 @@ public class SimulationLoop extends Observable {
 		}
 
 	}
+	
+	
+	
 
 	/**
 	 * Computes delta since last loop pass in milliseconds. Sets
@@ -209,6 +250,7 @@ public class SimulationLoop extends Observable {
 		delta = (int) (System.currentTimeMillis() - last);
 		last = System.currentTimeMillis();
 	}
+	
 
 	/**
 	 * Updates the simulation time and creates new schedules at every day
@@ -234,23 +276,23 @@ public class SimulationLoop extends Observable {
 		}
 	}
 
+	
 	/**
 	 * Creates all schedules for the day that is set for simTime has at the
 	 * moment.
 	 */
 	private void createNewSchedules() {
-		Calendar cal = new GregorianCalendar();
-		cal.clear();
-		cal.set(Calendar.DAY_OF_WEEK, simTime.get(Calendar.DAY_OF_WEEK));
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		schedules.addAll(ScheduleFactory.createScheduleQueue(activeSchemes, cal));
+		schedules.addAll(ScheduleFactory.createScheduleQueue(simStartTime, simTime, activeSchemes));
 	}
+	
 
+	/**
+	 * Creates and starts new {@link TrainAgent} instances.
+	 */
 	private void createNewTrains() {
 		// add trains that have to start to ready schedules
 		while (!schedules.isEmpty()
-				&& ScheduleFactory.isAfter(simTime, schedules.peek().getArrivalTimes()[0])) {
+				&& schedules.peek().getATs()[0] < passedSimTime) {
 			readySchedules.add(schedules.poll());
 		}
 		

@@ -92,10 +92,13 @@ public class TrainAgent implements Runnable {
 			synchronized (anim) { // acquire lock
 				try {
 					while (! figure.getNodeFigure().getModellObject().equals(schedule.getStations()[i+1])) {
+						
 						anim.wait();
 						
 						// animation is finished, goal reached
 						if (anim.isFinished()) {
+							// compute delay and add it to the statistic
+							aiPort.getLoop().getSimTime();
 							statistic.addStop(figure.getNodeFigure().getModellObject(), 10); //TODO: delay
 						}
 						// animation has been aborted before reaching goal
