@@ -214,15 +214,17 @@ public class SimulationStatisticDialog {
 			}
 		}
 		
-		java.util.List<Node> nodes2 = selectedScheduleScheme2.getStations();
-		String[] node2Selection = new String [nodes2.size()];
-		int index2 = 0;
-		for (Node node : nodes2) {
-			node2Selection[index2] = node.getName();
-			index2++;
+		if (selectedScheduleScheme2 != null) {
+			java.util.List<Node> nodes2 = selectedScheduleScheme2.getStations();
+			String[] node2Selection = new String [nodes2.size()];
+			int index2 = 0;
+			for (Node node : nodes2) {
+				node2Selection[index2] = node.getName();
+				index2++;
+			}
+			comboNode2.setItems(node2Selection);
+			comboNode2.select(0);
 		}
-		comboNode2.setItems(node2Selection);
-		comboNode2.select(0);
 	    
 	    // Tenth row with the result of "MeanDelay (ScheduleScheme, Node)"
 		new Label(mainComposite, SWT.NONE);
