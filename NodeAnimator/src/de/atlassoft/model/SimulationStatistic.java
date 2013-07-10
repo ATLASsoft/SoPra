@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents the statistic of the current continuous simulation
+ * Represents the statistic of one simulation pass.
  * 
  * @author Tobias Ilg
  *
@@ -13,43 +13,52 @@ import java.util.List;
 public class SimulationStatistic {
 	
 	/**
-	 * This List contains all trainRideStatistics
-	 * 
+	 * The {@link RailwaySystem} on witch the simulation, affiliated with this
+	 * statistic took place.
+	 */
+	private RailwaySystem railSys;
+
+	/**
+	 * This List contains all {@link TrainRideStatistic}s.
 	 */
 	java.util.List<TrainRideStatistic> trainRideStatistic;
-	
+
+
+
 	/**
 	 * This is the constructor where the List will initialized
-	 * 
 	 */
-	public SimulationStatistic() {
-		trainRideStatistic = new ArrayList <TrainRideStatistic>();
+	public SimulationStatistic(RailwaySystem railSys) {
+		trainRideStatistic = new ArrayList<TrainRideStatistic>();
+		this.railSys = railSys;
 	}
-	
+
+
+
 	/**
-	 * This method will add the current TrainRideStatistics to the List
+	 * This method adds the specified {@link TrainRideStatistic} to this
+	 * {@link SimulationStatistic}.
 	 * 
-	 * @param statistic
+	 * @param statistic {@link TrainRideStatistic} to be added
 	 */
-	public void addStatistic(TrainRideStatistic statistic) {
+	public synchronized void addStatistic(TrainRideStatistic statistic) {
 		trainRideStatistic.add(statistic);
 	}
-	
+
 	/**
-	 * Returns all {@link TrainRideStatistic} instances that have been added
-	 * to this class.
+	 * Returns all {@link TrainRideStatistic} instances that have been added to
+	 * this class.
 	 * 
-	 * @return the statistic
+	 * @return Unmodifiable list of all {@link TrainRideStatistic} instances
 	 */
 	public List<TrainRideStatistic> getStatistics() {
 		return Collections.unmodifiableList(trainRideStatistic);
 	}
-	
+
 	/**
-	 * This method will calculate the mean Delay of the whole Simulation
+	 * This method will calculate the mean delay of the whole simulation.
 	 * 
 	 * @return meanDelay
-	 * 
 	 */
 	public double getMeanDelay() {
 		double meanDelay;
@@ -58,7 +67,7 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will calculate the total Delay of the whole Simulation
+	 * This method will calculate the total delay of the whole simulation.
 	 * 
 	 * @return totalDelay
 	 */
@@ -76,8 +85,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will calculate the mean Delay
-	 * of an specify TrainType of the whole Simulation
+	 * This method will calculate the mean delay
+	 * of the specified {@link TrainType} of the whole simulation.
 	 * 
 	 * @param trainType
 	 * @return meanDelay
@@ -99,8 +108,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will calculate the mean Delay
-	 * of an specify Node of the whole Simulation
+	 * This method will calculate the mean delay
+	 * of the specified {@link Node} of the whole simulation
 	 * 
 	 * @param station
 	 * @return meanDelay
@@ -124,8 +133,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will calculate the mean Delay of
-	 * an specify ScheduleScheme of the whole Simulation
+	 * This method will calculate the mean delay of
+	 * the specified {@link ScheduleScheme} of the whole simulation.
 	 * 
 	 * @param scheduleScheme
 	 * @return meanDelay
@@ -147,8 +156,9 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will calculate the mean Delay of
-	 * an specify ScheduleScheme and an specify Node of the whole Simulation
+	 * This method will calculate the mean delay of the specified
+	 * {@link ScheduleScheme} and the specified {@link Node} of the whole
+	 * simulation.
 	 * 
 	 * @param scheduleScheme
 	 * @param station
@@ -173,8 +183,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will get the number of all TrainRides
-	 * of the whole Simulation
+	 * This method will get the number of all train rides
+	 * of the whole simulation.
 	 * 
 	 * @return numberOfRides
 	 */
@@ -184,8 +194,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will get the number of all TrainRides
-	 * of an specify TrainType of the whole Simulation
+	 * This method will get the number of all train rides
+	 * of the specified {@link TrainType} of the whole simulation.
 	 * 
 	 * @param trainType
 	 * @return numberOfRides
@@ -201,8 +211,8 @@ public class SimulationStatistic {
 	}
 	
 	/**
-	 * This method will get the number of all TrainRides
-	 * of an specify ScheduleScheme of the whole Simulation
+	 * This method will get the number of all train rides of the specified
+	 * {@link ScheduleScheme} of the whole simulation.
 	 * 
 	 * @param scheduleScheme
 	 * @return numberOfRides
@@ -215,6 +225,16 @@ public class SimulationStatistic {
 			}
 		}
 		return numberOfRides;
+	}
+	
+	/**
+	 * Returns the {@link RailwaySystem} affiliated with this
+	 * {@link SimulationStatistic}.
+	 * 
+	 * @return The {@link RailwaySystem}
+	 */
+	public RailwaySystem getRailwaySystem() {
+		return railSys;
 	}
 	
 }

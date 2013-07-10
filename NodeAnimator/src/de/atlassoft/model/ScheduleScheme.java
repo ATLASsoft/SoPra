@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-//TODO: Klasse testen
 /**
  * This class is an abstraction of the <code>Schedule</code> class. An
  * <code>ScheduleScheme</code> determines the train type, the stations and the
@@ -350,6 +349,38 @@ public class ScheduleScheme {
 	 */
 	public String getID() {
 		return name;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[railSysID:");
+		sb.append(railSysID);
+		sb.append("; name:");
+		sb.append(name);
+		sb.append("; type");
+		sb.append(scheduleType);
+		sb.append("; trainType:{");
+		sb.append(trainType.toString());
+		sb.append("}; ");
+		sb.append("interval:");
+		sb.append(interval);
+		return sb.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof ScheduleScheme)) {
+			return false;
+		} else {
+			ScheduleScheme other = (ScheduleScheme) obj;
+			return (railSysID.equals(other.railSysID) && name.equals(other.name));
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return (railSysID + ":" + name).hashCode();
 	}
 
 }

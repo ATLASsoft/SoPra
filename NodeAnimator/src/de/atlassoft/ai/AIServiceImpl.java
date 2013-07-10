@@ -20,6 +20,7 @@ import de.atlassoft.model.SimulationStatistic;
 public class AIServiceImpl implements AIService {
 
 	private SimulationLoop loop;
+	private SimulationStatistic statistic;
 	
 	/**
 	 * Indicates if there is an ongoing simulation.
@@ -35,8 +36,9 @@ public class AIServiceImpl implements AIService {
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {
-			loop = new SimulationLoop(new Graph(railSys));
+			loop = new SimulationLoop(new Graph(railSys), this);
 			loop.addObserver(o);
+			statistic = new SimulationStatistic(railSys);
 			loop.startRun(start, schemes);
 			running = true;
 		}
@@ -60,8 +62,9 @@ public class AIServiceImpl implements AIService {
 	public SimulationStatistic finishSimulation() {
 		if (running) {
 			loop.stopRun();
-			loop.shutDown(); //TODO: statistik
+			loop.shutDown();
 			running = false;
+			return statistic;
 		}
 		return null;
 	}
@@ -89,5 +92,17 @@ public class AIServiceImpl implements AIService {
 			loop.setTimeLapse(timeLapse);
 		}
 	}
+	
+	
+	
+	
+	protected SimulationLoop getLoop() {
+		return loop;
+	}
+	
+	protected SimulationStatistic getSimStat() {
+		return statistic;
+	}
+	
 	
 }

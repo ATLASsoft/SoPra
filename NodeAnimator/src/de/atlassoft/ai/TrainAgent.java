@@ -25,15 +25,15 @@ public class TrainAgent implements Runnable {
 	private List<State> blockedState;
 	private int timeLapse;
 	private SimpleWalkToAnimator anim;
-	private List<TrainAgent> agents;
 	private Thread runningThread;
+	private AIServiceImpl aiPort;
 	
-	protected TrainAgent(Graph graph, int id, Schedule schedule, List<TrainAgent> agents) {
+	protected TrainAgent(Graph graph, int id, Schedule schedule, AIServiceImpl aiPort) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
 		this.schedule = schedule;
 		this.id = id;
 		this.graph = graph;
-		this.agents = agents;
+		this.aiPort = aiPort;
 		this.blockedState = new ArrayList<>();
 		figure = FigureFactory.createTrainFigure(
 				graph.getRailwaySystem().getNodeMap(),
@@ -103,7 +103,7 @@ public class TrainAgent implements Runnable {
 							System.out.println("train agent " + id + " waits");
 							figure.stopAnimation();//TODO: gscheit reagieren
 							figure.clearAnimations();
-							figure.busy(30);
+							figure.busy(100);
 							figure.startAnimation();
 						}
 					}
@@ -116,8 +116,8 @@ public class TrainAgent implements Runnable {
 			
 		}
 		removeFigure();//TODO: animation/warten bevor die züge verschwinden
-		agents.remove(this);
-		
+		aiPort.getLoop().activeAgents.remove(this);
+		aiPort.getSimStat().addStatistic(statistic);
 	}
 	
 	protected void terminate() {

@@ -137,6 +137,19 @@ public class TrainType {
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[name:");
+		sb.append(name);
+		sb.append("; priority:");
+		sb.append(priority);
+		sb.append("; topSpeed:");
+		sb.append(topSpeed);
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		// only compares name since name should be unique
 		if (obj instanceof TrainType) {

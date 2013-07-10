@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
+import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.State;
 import de.atlassoft.util.ScheduleFactory;
 
@@ -35,12 +36,13 @@ public class SimulationLoop extends Observable {
 	private List<ScheduleScheme> activeSchemes;
 	private List<Schedule> readySchedules;
 	private PriorityQueue<Schedule> schedules;
-	private List<TrainAgent> activeAgents;
+	protected List<TrainAgent> activeAgents;
 	private Loop loop;
 	private Graph graph;
 	private int agentCounter;
 	private ExecutorService executor;
 	private Thread loopThread;
+	private AIServiceImpl aiPort;
 
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
@@ -56,8 +58,9 @@ public class SimulationLoop extends Observable {
 	/**
 	 * Creates a new simulation loop.
 	 */
-	protected SimulationLoop(Graph graph) {
+	protected SimulationLoop(Graph graph, AIServiceImpl aiPort) {
 		this.graph = graph;
+		this.aiPort = aiPort;
 		timeLapse = 1;
 		activeAgents = Collections.synchronizedList(new ArrayList<TrainAgent>());
 		readySchedules = new ArrayList<>();
@@ -125,7 +128,7 @@ public class SimulationLoop extends Observable {
 		} catch (InterruptedException e) {
 			System.out.println("unhandled interrupt @ stopRun");
 		}
-		System.out.println("loop gestopt");
+		System.out.println("loop stopped");
 		// stop trains
 		synchronized (activeAgents) {
 			Iterator<TrainAgent> it = activeAgents.iterator();
@@ -259,7 +262,7 @@ public class SimulationLoop extends Observable {
 			s = it.next();
 			if (s.getStations()[0].getState().getState() != State.BLOCKED) {
 				it.remove();
-				agent = new TrainAgent(graph, agentCounter, s, activeAgents);
+				agent = new TrainAgent(graph, agentCounter, s, aiPort);
 				agentCounter++;
 				agent.setTimeLapse(timeLapse);//TODO: was passiert wenn eine aktion zwischen erstellen und starten durchgeführt wird
 				activeAgents.add(agent);

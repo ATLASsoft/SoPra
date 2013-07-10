@@ -12,7 +12,7 @@ import de.atlassoft.model.TrainType;
 
 //TODO: Interface auskommentieren
 /**
- * Interface provideing access to the application service layer (highest
+ * Interface providing access to the application service layer (highest
  * abstraction) of this application.
  * 
  * @author Alexander Balogh
@@ -63,8 +63,31 @@ public interface ApplicationService {
 	 */
 	void continueSimulation();
 	
-	void quitSimulation();
+	/**
+	 * Terminates an ongoing simulation run. If there is no simulation run at
+	 * the moment, no action is taken and no exception thrown. After terminating
+	 * the simulation this method returns the {@link SimulationStatistic}
+	 * associated with the terminated simulation. If there was no ongoing
+	 * simulation, null will be returned.
+	 * 
+	 * @return {@link SimulationStatistic} of the terminated simulation or null
+	 */
+	SimulationStatistic quitSimulation();
 	
+	/**
+	 * Sets the time lapse factor for the ongoing simulation. Thereby, factor n
+	 * means one time unit (i.e. second) in real time equates n time units in
+	 * simulation time. <code>timeLapse</code> must be an integer between 1 and
+	 * 3000 (inclusive), otherwise an {@link IllegalArgumentException} is
+	 * thrown. If there is no simulation run at the moment, no action is taken
+	 * and no exception is thrown unless timeLapse does not match the previously
+	 * mentioned constraints.
+	 * 
+	 * @param timeLapse
+	 *            Time lapse factor to be set
+	 * @throws IllegalArgumentException
+	 *             if <code>timeLapse</code> is less than 1 or more than 3000
+	 */
 	void setTimeLapse(int timeLapse);
 	
 	void addScheduleScheme(ScheduleScheme scheduleScheme);
@@ -87,6 +110,13 @@ public interface ApplicationService {
 	
 	void showDepartureBoardDoc(Node station);
 	
+	/**
+	 * Checks whether the specified {@link RailwaySystem} is connected.
+	 * 
+	 * @param railSys
+	 *            {@link RailwaySystem} to check
+	 * @return true if <code>railSys</code> is connected, otherwise false
+	 */
 	boolean isConnected(RailwaySystem railSys);
 	
 	/**

@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Observer;
 
-import org.eclipse.swt.graphics.Image;
-
 import de.atlassoft.ai.AIService;
 import de.atlassoft.ai.AIServiceImpl;
 import de.atlassoft.io.persistence.PersistenceService;
@@ -136,8 +134,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public void quitSimulation() {
-		ai.finishSimulation(); //TODO: statistik
+	public SimulationStatistic quitSimulation() {
+		return ai.finishSimulation();
 	}
 
 	@Override
