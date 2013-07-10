@@ -228,6 +228,58 @@ public class SimulationStatistic {
 	}
 	
 	/**
+	 * Returns a List of all ScheduleSchemes
+	 *  
+	 * @return trainTypes
+	 * 			A List of all involved ScheduleSchemes
+	 */
+	public List <ScheduleScheme> getInvolvedScheduleSchemes () {
+		java.util.List<ScheduleScheme> scheduleSchemes= new ArrayList <ScheduleScheme>();
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			if (!scheduleSchemes.contains(statistic.getScheduleScheme())){
+				scheduleSchemes.add(statistic.getScheduleScheme());
+			}
+		}
+		return scheduleSchemes;
+		
+	}	
+	
+	/**
+	 * Returns a List of all TrainTypes
+	 *  
+	 * @return trainTypes
+	 * 			A List of all involved TrainTypes
+	 */
+	public List <TrainType> getInvolvedTrainTypes() {
+		java.util.List<TrainType> trainTypes= new ArrayList <TrainType>();
+		for (ScheduleScheme scheduleScheme : getInvolvedScheduleSchemes()) {
+			if (!trainTypes.contains(scheduleScheme.getTrainType())) {
+				trainTypes.add(scheduleScheme.getTrainType());
+			}
+		}
+		return trainTypes;
+	}
+	
+	/**
+	 * Returns a List of all Stations
+	 *  
+	 * @return nodes
+	 * 			A List of all involved Stations
+	 */
+	public List <Node> getInvolvedNodes() {
+		java.util.List<Node> nodes= new ArrayList <Node>();
+		for (ScheduleScheme scheduleScheme : getInvolvedScheduleSchemes()) {
+			java.util.List<Node> addNode = scheduleScheme.getStations();
+			for (Node node : addNode) {
+				if (!nodes.contains(node)) {
+				nodes.add(node);
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	/**
 	 * Returns the {@link RailwaySystem} affiliated with this
 	 * {@link SimulationStatistic}.
 	 * 
