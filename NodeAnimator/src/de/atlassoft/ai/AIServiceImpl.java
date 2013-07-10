@@ -38,14 +38,7 @@ public class AIServiceImpl implements AIService {
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {
-			// clear all blockades
-			for (Node n : railSys.getNodes()) {
-				n.getState().setState(State.UNBLOCKED, null);
-			}
-			for (Path p : railSys.getPaths()) {
-				p.getState().setState(State.UNBLOCKED, null);
-			}
-			
+			railSys.clear();
 			loop = new SimulationLoop(new Graph(railSys), this);
 			loop.addObserver(o);
 			statistic = new SimulationStatistic(railSys);

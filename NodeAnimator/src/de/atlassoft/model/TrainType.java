@@ -91,12 +91,9 @@ public class TrainType {
 			if (rec.height != 32 || rec.width != 32) {
 				throw new IllegalArgumentException(
 						"img must be of size 32x32 pixel");
-			} else {
-				this.img = img;
 			}
-		} else {
-			this.img = ImageHelper.getImage("standardTrainIcon");
 		}
+		this.img = img;
 	}
 
 	/**

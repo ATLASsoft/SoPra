@@ -126,7 +126,8 @@ public class TrainAgent implements Runnable {
 							//TODO: warten
 						}
 						
-						// animation has been aborted before reaching goal, search for alternative strategy
+						// animation has been aborted before reaching goal,
+						// search for best alternative strategy
 						else {
 							System.out.println("train agent " + id + " waits");
 							
@@ -136,8 +137,14 @@ public class TrainAgent implements Runnable {
 									(1 + currentPath.indexOf(currentPosition));
 							TrainAgent blockingAgent = blockedNode.getState().getBlocker();
 							
-							// strategy 1 wait till other agent has passed
-							blockingAgent.getCurrentPath();
+							// strategy 1: wait till other agent has passed
+							List<Node> pathOther = blockingAgent.getCurrentPath();
+							Node nextAfterBlockO =
+									pathOther.get(1 + pathOther.indexOf(blockedNode));
+							if (!nextAfterBlockO.equals(currentPosition)) {
+								
+							}
+							
 							
 							// strategy 2 compute alternative route
 							// strategy 3 draw back and let other pass

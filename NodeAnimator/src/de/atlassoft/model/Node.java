@@ -15,10 +15,36 @@ import de.hohenheim.view.node.NodeFigure;
  */
 public class Node implements Blockable {
 
+	/**
+	 * Indicates the state of this {@link Node}.
+	 */
 	private State state;
+	
+	/**
+	 * The graphical representation of the {@link Node}.
+	 */
 	private NodeFigure nodeFigure;
+	
+	/**
+	 * The name of this {@link Node}. Must be unique within the
+	 * {@link RailwaySystem} this node {@link Node} belongs to
+	 */
 	private String name;
+	
+	/**
+	 * The train type workload map of this {@link Node}. Indicates how often
+	 * this train has been passed over by the different {@link TrainType
+	 * TrainTypes} since the instantiation of this object or the last
+	 * {@link Node#clear() clear()}.
+	 */
 	private Map<TrainType, Integer> trainTypeMap;
+	
+	/**
+	 * The schedule scheme workload map of this {@link Node}. Indicates how
+	 * often this train has been passed over by trains of the different
+	 * {@link ScheduleScheme ScheduleSchemes} since the instantiation of this
+	 * object or the last {@link Node#clear() clear()}.
+	 */
 	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
@@ -85,6 +111,17 @@ public class Node implements Blockable {
 	
 	
 	/**
+	 * Removes all data that has been collected during one or multiple
+	 * simulations from this node.
+	 * @see {@link Node#trainTypeMap}, {@link Node#schemeMap}, {@link Node#state}
+	 */
+	protected void clear() {
+		state.setState(State.UNBLOCKED, null);
+		trainTypeMap.clear();
+		schemeMap.clear();
+	}
+	
+	/**
 	 * Returns the {@link NodeFigure} of this node.
 	 * 
 	 * @return the NodeFigure
@@ -107,10 +144,50 @@ public class Node implements Blockable {
 		return name;
 	}
 	
+	/**
+	 * Increases the work load ,i.e. how often this {@link Node} has been passed
+	 * over, by one.
+	 * 
+	 * @param scheme
+	 *            {@link ScheduleScheme} of the train that passed over this
+	 *            {@link Node}
+	 */
+	public void incrementWorkLoad(ScheduleScheme scheme) {
+		// increase work load in scheme map
+		if (schemeMap.containsKey(scheme)) {
+			Integer i = (schemeMap.get(scheme));
+			i++;
+		} else {
+			schemeMap.put(scheme, new Integer(1));
+		}
+		
+		// increase work load in train type map
+		if (trainTypeMap.containsKey(scheme.getTrainType())) {
+			Integer j = trainTypeMap.get(scheme.getTrainType());
+			j++;
+		} else {
+			trainTypeMap.put(scheme.getTrainType(), new Integer(1));
+		}
+	}
+	
+	/**
+	 * Returns the train type workload map of this {@link Node} that indicates
+	 * how often this train has been passed over by the different
+	 * {@link TrainType}s within the last simulation.
+	 * 
+	 * @return The train type workload map
+	 */
 	public Map<TrainType, Integer> getTrainTypeWorkloadMap() {
 		return trainTypeMap;
 	}
 	
+	/**
+	 * Returns the schedule scheme workload map of this {@link Node} that indicates
+	 * how often this train has been passed over by trains of the different
+	 * {@link ScheduleScheme}s within the last simulation.
+	 * 
+	 * @return The schedule scheme workload map
+	 */
 	public Map<ScheduleScheme, Integer> getScheduleSchemeWorkloadMap() {
 		return schemeMap;
 	}

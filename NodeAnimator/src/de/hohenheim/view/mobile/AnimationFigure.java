@@ -133,7 +133,9 @@ public abstract class AnimationFigure extends Figure {
 	public void setNode(NodeFigure room) {
 		this.room = room;
 		modellObject.block(room.getModellObject().getState());
-		
+		room.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+
 		if (this.path != null) {
 			modellObject.unBlock(path.getModellObject().getState());
 			this.path = null;
@@ -174,7 +176,9 @@ public abstract class AnimationFigure extends Figure {
 	public void setPath(PathFigure on_path) {
 		this.path = on_path;
 		modellObject.block(path.getModellObject().getState());
-		
+		path.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+
 		if (this.room != null) {
 			modellObject.unBlock(room.getModellObject().getState());
 			this.room = null;

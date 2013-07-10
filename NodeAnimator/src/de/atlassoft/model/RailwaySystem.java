@@ -114,6 +114,22 @@ public class RailwaySystem {
 	}
 	
 	/**
+	 * Removes all data that has been collected during one or multiple
+	 * simulations.
+	 * 
+	 * @see {@link Path#incrementWorkLoad(ScheduleScheme)},
+	 *      {@link Node#incrementWorkLoad(ScheduleScheme)}, {@link State}
+	 */
+	public void clear() {
+		for (Node n : nodes) {
+			n.clear();
+		}
+		for (Path p : paths) {
+			p.clear();
+		}
+	}
+	
+	/**
 	 * Returns the id of this railway system.
 	 * 
 	 * @return the id
