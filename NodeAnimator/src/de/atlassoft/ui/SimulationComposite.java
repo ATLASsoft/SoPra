@@ -303,7 +303,7 @@ public class SimulationComposite implements Observer {
 					simulationActive = false;
 					
 					//TODO: Einfügen wenn Statistik implementiert
-//					new SimulationStatisticDialog(applicationService);
+					new SimulationStatisticDialog(stat);
 				}
 			}
 		});
