@@ -6,9 +6,11 @@ import java.util.Observer;
 
 import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
+import de.atlassoft.model.Path;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
+import de.atlassoft.model.State;
 //TODO: implementieren
 /**
  * Implements the {@link ApplicationService} interface. Provides access to the
@@ -36,6 +38,14 @@ public class AIServiceImpl implements AIService {
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {
+			// clear all blockades
+			for (Node n : railSys.getNodes()) {
+				n.getState().setState(State.UNBLOCKED, null);
+			}
+			for (Path p : railSys.getPaths()) {
+				p.getState().setState(State.UNBLOCKED, null);
+			}
+			
 			loop = new SimulationLoop(new Graph(railSys), this);
 			loop.addObserver(o);
 			statistic = new SimulationStatistic(railSys);

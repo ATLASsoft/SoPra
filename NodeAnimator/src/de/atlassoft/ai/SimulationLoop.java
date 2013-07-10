@@ -202,8 +202,8 @@ public class SimulationLoop extends Observable {
 	 * 
 	 * @return Copy of simTime
 	 */
-	protected Calendar getSimTime() {
-		return (Calendar) simTime.clone();
+	protected long getSimTimeInMillis() {
+		return passedSimTime;
 	}
 	
 	/**
