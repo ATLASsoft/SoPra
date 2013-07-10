@@ -198,12 +198,12 @@ public class CurrentRailSysComposite {
 		tableComposite.setLayoutData(dataComposite);		
 		
 		//Table of Connections
-		informationTable = new Table(tableComposite, SWT.BORDER | SWT.V_SCROLL);
+		informationTable = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		informationTable.setLinesVisible(true);
 		informationTable.setHeaderVisible(true);
 		GridData dataTable = new GridData();
 		dataTable.widthHint = 300;
-		dataTable.heightHint = 130;
+		dataTable.heightHint = 30;
 		informationTable.setLayoutData(dataTable);
 		
 		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), "X", "Y", I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
@@ -214,10 +214,11 @@ public class CurrentRailSysComposite {
 	    
 	    for (int i=0; i<titles.length; i++) {
 	    	informationTable.getColumn(i).pack ();
+	    	if (i > 0) {
+	    		informationTable.getColumn(i).setResizable(false);
+	    	}
 	    } 
 		informationTable.setVisible(false);
-	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, 115));
-	    informationTable.getVerticalBar();
 		
 		//PDF
 		new Label (currentRailSysInfoComposite, SWT.NULL);
