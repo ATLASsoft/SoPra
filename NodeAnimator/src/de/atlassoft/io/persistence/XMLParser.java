@@ -186,10 +186,16 @@ class XMLParser {
 			
 			List<Element> allTrainTypes = rootNode.getChildren();
 			
+			Element toDelete = null;
 			for (Element oneTrainType : allTrainTypes){
 				if (oneTrainType.getAttributeValue("ID").equals(type.getName())){
-					rootNode.removeContent(oneTrainType);
+					toDelete = oneTrainType;
+					break;
 				}
+			}
+			
+			if (toDelete != null) {
+				rootNode.removeContent(toDelete);
 			}
 
 			XMLOutputter xmlOutput = new XMLOutputter();
@@ -261,12 +267,12 @@ class XMLParser {
 					+ Integer.toString(schedule.getFirstRide().get(
 							Calendar.MINUTE))));
 			sced.addContent(new Element("Lastride").setText(Integer
-					.toString(schedule.getFirstRide().get(Calendar.DAY_OF_WEEK))
+					.toString(schedule.getLastRide().get(Calendar.DAY_OF_WEEK))
 					+ ":"
-					+ Integer.toString(schedule.getFirstRide().get(
+					+ Integer.toString(schedule.getLastRide().get(
 							Calendar.HOUR_OF_DAY))
 					+ ":"
-					+ Integer.toString(schedule.getFirstRide().get(
+					+ Integer.toString(schedule.getLastRide().get(
 							Calendar.MINUTE))));
 			sced.addContent(new Element("Intervall").setText(Integer
 					.toString(schedule.getInterval())));
