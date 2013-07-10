@@ -63,6 +63,7 @@ public class SimulationStatistic {
 	public double getMeanDelay() {
 		double meanDelay;
 		meanDelay = getTotalDelay() / getNumberOfRides();
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
 	
@@ -104,6 +105,7 @@ public class SimulationStatistic {
 			}
 		}
 		meanDelay = meanDelay / getNumberOfRides(trainType);
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
 	
@@ -130,6 +132,7 @@ public class SimulationStatistic {
  		}
 		if (numberOfRides != 0) {
 			meanDelay = meanDelay / numberOfRides;
+			meanDelay = Math.round(meanDelay*100.0)/100.0;
 		}
 		return meanDelay;
 	}
@@ -154,6 +157,7 @@ public class SimulationStatistic {
 			}
  		}
 		meanDelay = meanDelay / getNumberOfRides(scheduleScheme);
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
 	
@@ -181,6 +185,7 @@ public class SimulationStatistic {
 			}
  		}
 		meanDelay = meanDelay / getNumberOfRides(scheduleScheme);
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
 	

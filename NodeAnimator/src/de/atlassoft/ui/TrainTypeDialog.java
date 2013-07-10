@@ -229,8 +229,8 @@ public class TrainTypeDialog {
 	    
 	    name.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
-				// check if the entered name have less than 25 signs
-				if (name.getText().length() >= 25) {
+				// check if the entered name have less than 15 signs
+				if (name.getText().length() >= 15) {
 					if (e.keyCode == 8) {
 						e.doit = true;
 					} else {

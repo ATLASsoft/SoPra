@@ -104,7 +104,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayTrainType = new Label(mainComposite, SWT.NONE);
-		meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedTT)));
+		meanDelayTrainType.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedTT)));
 		toTheEnd(meanDelayTrainType);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
@@ -144,7 +144,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayNode = new Label(mainComposite, SWT.NONE);
-		meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
+		meanDelayNode.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
 		toTheEnd(meanDelayNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
@@ -184,7 +184,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		Label meanDelayScheduleScheme = new Label(mainComposite, SWT.NONE);
-		meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
+		meanDelayScheduleScheme.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
 		toTheEnd(meanDelayScheduleScheme);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
@@ -241,7 +241,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayScheduleSchemeAndNode = new Label(mainComposite, SWT.NONE);
-		meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
+		meanDelayScheduleSchemeAndNode.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
 		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(mainComposite, SWT.NONE).setText("s");
 		
@@ -289,7 +289,7 @@ public class SimulationStatisticDialog {
 						selectedNode2 = node;
 					}
 				}
-				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));				
 			}
 		});
 		
