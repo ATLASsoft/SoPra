@@ -192,6 +192,7 @@ public class CurrentRailSysComposite {
 		Composite tableComposite = new Composite (currentRailSysInfoComposite, SWT.NULL);
 		tableComposite.setLayout(new GridLayout(1, true));
 		GridData dataComposite = new GridData(SWT.FILL, SWT.NULL, true, false);
+		dataComposite.horizontalAlignment = SWT.CENTER;
 		dataComposite.widthHint = 300;
 		dataComposite.heightHint = 130;
 		tableComposite.setLayoutData(dataComposite);		
