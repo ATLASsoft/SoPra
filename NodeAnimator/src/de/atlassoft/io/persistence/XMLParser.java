@@ -266,16 +266,25 @@ class XMLParser {
 					+ ":"
 					+ Integer.toString(schedule.getFirstRide().get(
 							Calendar.MINUTE))));
-			sced.addContent(new Element("Lastride").setText(Integer
-					.toString(schedule.getLastRide().get(Calendar.DAY_OF_WEEK))
-					+ ":"
-					+ Integer.toString(schedule.getLastRide().get(
-							Calendar.HOUR_OF_DAY))
-					+ ":"
-					+ Integer.toString(schedule.getLastRide().get(
-							Calendar.MINUTE))));
-			sced.addContent(new Element("Intervall").setText(Integer
-					.toString(schedule.getInterval())));
+			
+			if (schedule.getScheduleType().equals(ScheduleType.INTERVALL)) {
+				sced.addContent(new Element("Lastride").setText(Integer
+						.toString(schedule.getLastRide().get(
+								Calendar.DAY_OF_WEEK))
+						+ ":"
+						+ Integer.toString(schedule.getLastRide().get(
+								Calendar.HOUR_OF_DAY))
+						+ ":"
+						+ Integer.toString(schedule.getLastRide().get(
+								Calendar.MINUTE))));
+
+				sced.addContent(new Element("Intervall").setText(Integer
+						.toString(schedule.getInterval())));
+			} else {
+				sced.addContent(new Element("Lastride").setText("N/A"));
+				sced.addContent(new Element("Intervall").setText("N/A"));
+			}
+			
 			List<Integer> fahrtage = schedule.getDays();
 			for (int i = 0; i < fahrtage.size(); i++) {
 				String add = fahrtage.get(i).toString();
@@ -333,11 +342,10 @@ class XMLParser {
 					String trainType = node.getChildText("TrainType");
 					String scheduleType = node.getChildText("ScheduleType");
 					String newName = node.getAttributeValue("id");
-					String newInterval = node.getChildText("Intervall");
 					List<Integer> newDrivingDays = new ArrayList<Integer>();
 					String[] departures = null;
 					
-					// FirstRide && LastRide
+					// FirstRide
 					String[] firstRide = node.getChildText("Firstride").split(":");
 					String[] lastRide = node.getChildText("Lastride").split(":");
 					
@@ -345,11 +353,6 @@ class XMLParser {
 					newCalFirst.set(Calendar.DAY_OF_WEEK,Integer.parseInt(firstRide[0]));
 					newCalFirst.set(Calendar.HOUR_OF_DAY, Integer.parseInt(firstRide[1]));
 					newCalFirst.set(Calendar.MINUTE, Integer.parseInt(firstRide[2]));
-					
-					Calendar newCalLast = new GregorianCalendar();
-					newCalLast.set(Calendar.DAY_OF_WEEK,Integer.parseInt(lastRide[0]));
-					newCalLast.set(Calendar.HOUR_OF_DAY, Integer.parseInt(lastRide[1]));
-					newCalLast.set(Calendar.MINUTE, Integer.parseInt(lastRide[2]));
 					
 					// schleife über drivingDays
 					List<Element> drivingDays = node.getChild("DrivingDays")
@@ -391,10 +394,18 @@ class XMLParser {
 						}
 						newSchedule.addStop(newNode, Integer.parseInt(departures[1]), Integer.parseInt(departures[2]));
 					}
+					
+					if (newSchedule.getScheduleType().equals(ScheduleType.INTERVALL)) {
+						Calendar newCalLast = new GregorianCalendar();
+						newCalLast.set(Calendar.DAY_OF_WEEK,Integer.parseInt(lastRide[0]));
+						newCalLast.set(Calendar.HOUR_OF_DAY, Integer.parseInt(lastRide[1]));
+						newCalLast.set(Calendar.MINUTE, Integer.parseInt(lastRide[2]));
+						newSchedule.setLastRide(newCalLast);
+						
+						String newInterval = node.getChildText("Intervall");
+						newSchedule.setInterval(Integer.parseInt(newInterval));
+					}
 
-					newSchedule.setLastRide(newCalLast);
-					newSchedule.setInterval(Integer.parseInt(newInterval));
-			
 					res.add(newSchedule);
 				}
 			}
