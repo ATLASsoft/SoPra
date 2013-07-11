@@ -10,8 +10,6 @@ import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 
 import de.atlassoft.ai.TrainAgent;
-import de.atlassoft.model.Node;
-import de.atlassoft.model.Path;
 import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
@@ -228,7 +226,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				this.finished=true;
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
-				animationFigure.setNode(end_node);
+//				animationFigure.setNode(end_node); //TODO: auskommentiert damit nicht doppelt gezählt wird für heapmap, ausprobieren ob noch alles klappt
 				
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));

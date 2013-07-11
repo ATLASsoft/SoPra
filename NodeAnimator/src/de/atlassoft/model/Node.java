@@ -155,18 +155,17 @@ public class Node implements Blockable {
 	public void incrementWorkLoad(ScheduleScheme scheme) {
 		// increase work load in scheme map
 		if (schemeMap.containsKey(scheme)) {
-			Integer i = (schemeMap.get(scheme));
-			i++;
+			schemeMap.put(scheme, schemeMap.get(scheme) + 1);
 		} else {
 			schemeMap.put(scheme, new Integer(1));
 		}
-		
+
 		// increase work load in train type map
-		if (trainTypeMap.containsKey(scheme.getTrainType())) {
-			Integer j = trainTypeMap.get(scheme.getTrainType());
-			j++;
+		TrainType type = scheme .getTrainType();
+		if (trainTypeMap.containsKey(type)) {
+			trainTypeMap.put(type, trainTypeMap.get(type) + 1);
 		} else {
-			trainTypeMap.put(scheme.getTrainType(), new Integer(1));
+			trainTypeMap.put(type, new Integer(1));
 		}
 	}
 	

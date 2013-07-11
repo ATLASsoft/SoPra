@@ -97,4 +97,9 @@ public class NodeFigure extends Figure {
       Dimension dim = FigureUtilities.getStringExtents(nam, f);
       g.drawText(nam, r.x+r.width/2-dim.width/2 , r.y+r.height/2-dim.height/2);
   }  
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }

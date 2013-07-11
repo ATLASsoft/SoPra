@@ -1,8 +1,10 @@
 package de.atlassoft.ai;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Schedule;
@@ -22,7 +24,7 @@ public class TrainAgent implements Runnable {
 	private Schedule schedule;
 	private TrainRideStatistic statistic;
 	private Graph graph;
-	private List<State> blockedState;
+	private Set<State> blockedState;
 	private int timeLapse;
 	private SimpleWalkToAnimator anim;
 	private Thread runningThread;
@@ -35,7 +37,7 @@ public class TrainAgent implements Runnable {
 		this.id = id;
 		this.graph = graph;
 		this.aiPort = aiPort;
-		this.blockedState = new ArrayList<>();
+		this.blockedState = new HashSet<>();
 		figure = FigureFactory.createTrainFigure(
 				graph.getRailwaySystem().getNodeMap(),
 				schedule.getStations()[0].getNodeFigure(),
@@ -183,6 +185,7 @@ public class TrainAgent implements Runnable {
 		figure.stopAnimation();
 		figure.clearAnimations();
 		for (State s : blockedState) {
+			System.out.println(s);
 			s.setState(State.UNBLOCKED, null);
 		}
 		final NodeMap map = graph.getRailwaySystem().getNodeMap();
