@@ -181,7 +181,7 @@ public class MainWindow {
 		manageRailSystemItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new RailSysDialog(mainComposite, layout, applicationService);
+				new RailSysDialog(shell, mainComposite, layout, applicationService);
 			}
 		});
 		

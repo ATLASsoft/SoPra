@@ -198,6 +198,7 @@ public class TrainTypeDialog {
         	    shell.setVisible(false);
         	    messageBox.open();
 	            shell.close();
+	            shell.dispose();
 	        }
 	    });
 	    
@@ -224,6 +225,7 @@ public class TrainTypeDialog {
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	        public void widgetSelected(SelectionEvent e) {
 	        	shell.close();
+	        	shell.dispose();
 	        }
 	    });
 	    

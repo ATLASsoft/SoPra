@@ -33,6 +33,7 @@ import de.atlassoft.util.ImageHelper;
  */
 public class RailSysDialog implements PropertyChangeListener {
 
+	private Shell mainShell;
 	private Shell shell;
 	private I18NService I18N;
 	private List trainSysList;
@@ -42,8 +43,9 @@ public class RailSysDialog implements PropertyChangeListener {
 	private StackLayout layout;
 	private Button loadButton, deleteButton;
 
-	public RailSysDialog(Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
+	public RailSysDialog(Shell mainShell, Composite mainComposite, StackLayout layout, ApplicationService applicationService) {
 		
+		this.mainShell = mainShell;
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
 		model = applicationService.getModel();
@@ -120,7 +122,7 @@ public class RailSysDialog implements PropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applicationService.setActiveRailwaySystem(trainSysList.getItem(trainSysList.getSelectionIndex()));
-				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(mainShell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 				shell.close();
@@ -149,7 +151,7 @@ public class RailSysDialog implements PropertyChangeListener {
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
+				HomeScreenComposite homeScreenComposite = new HomeScreenComposite(mainShell, mainComposite, applicationService);		
 	    		layout.topControl = homeScreenComposite.getComposite();
 	    		mainComposite.layout();
 				shell.close();

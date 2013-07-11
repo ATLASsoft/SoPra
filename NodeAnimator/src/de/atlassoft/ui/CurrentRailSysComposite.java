@@ -123,6 +123,7 @@ public class CurrentRailSysComposite {
 							for (int i=0; i<3; i++) {
 						    	informationTable.getColumn (i).pack ();
 						    } 
+						    informationTable.pack(true);
 						    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 						    informationTable.setRedraw(true);
 						    informationTable.setVisible(true);
@@ -218,10 +219,9 @@ public class CurrentRailSysComposite {
 	    
 	    for (int i=0; i<titles.length; i++) {
 	    	informationTable.getColumn(i).pack ();
-	    	if (i > 0) {
-	    		informationTable.getColumn(i).setResizable(false);
-	    	}
 	    } 
+	    informationTable.pack();
+	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		informationTable.setVisible(false);
 		
 		//PDF

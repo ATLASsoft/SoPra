@@ -52,6 +52,7 @@ import de.atlassoft.util.ImageHelper;
  *
  */
 public class ScheduleAndTrainTypeComposite {
+	// TODO: Nach Löschen Infos neuer Auswahl oder keine Infos falls keine Auswahl mehr möglich! 
 	
 	private Shell shell;
 	private Composite scheduleAndTrainTypeComposite, scheduleComposite, informationComposite;
@@ -73,7 +74,7 @@ public class ScheduleAndTrainTypeComposite {
 	 * @param applicationService
 	 * 		The application Service of the application.
 	 */
-	public ScheduleAndTrainTypeComposite(Shell shell, TabFolder tabFolder, ApplicationService applicationService) {
+	public ScheduleAndTrainTypeComposite(Shell shell, TabFolder tabFolder, final ApplicationService applicationService) {
 		this.shell = shell;
 		I18N = I18NSingleton.getInstance();
 		this.applicationService = applicationService;
@@ -96,6 +97,14 @@ public class ScheduleAndTrainTypeComposite {
 					Control[] children = trainTypeComposite.getChildren();
 					for (int i = 0; i<= children.length - 1; i++) {
 						children[i].dispose();
+					}
+					activeSchedules.removeAll();
+					for (ScheduleScheme temp: applicationService.getModel().getActiveScheduleSchemes()) {
+						activeSchedules.add(temp.getID());
+					}
+					passiveSchedules.removeAll();
+					for (ScheduleScheme temp: applicationService.getModel().getPassiveScheduleSchemes()) {
+						passiveSchedules.add(temp.getID());
 					}
 					createContent();
 					scrolledTrainTypeComposite.setContent(trainTypeComposite);
@@ -225,6 +234,19 @@ public class ScheduleAndTrainTypeComposite {
 		    		passiveSchedules.remove(passiveSchedules.getSelectionIndex());
 		    		if (passiveSchedules.getItemCount() > 0) {
 		    			passiveSchedules.select(0);
+		    			String name = passiveSchedules.getItem(passiveSchedules.getSelectionIndex());
+						for (ScheduleScheme temp : passive) {
+							if (temp.getID().equals(name)) {
+								activeSchedule = temp;
+								disposeCompsite();
+								createInformation();
+								activeSchedules.deselectAll();
+							}
+						}
+		    		} else {
+		    			disposeCompsite();
+		    			new Label(informationComposite, SWT.NONE).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.NoScheduleSelected"));
+		    			informationComposite.layout();
 		    		}
 	    		}
 	    		//Check if an active schedule is selected
@@ -241,10 +263,21 @@ public class ScheduleAndTrainTypeComposite {
 		    		activeSchedules.remove(activeSchedules.getSelectionIndex());
 		    		if (activeSchedules.getItemCount() > 0) {
 		    			activeSchedules.select(0);
+		    			String name = activeSchedules.getItem(activeSchedules.getSelectionIndex());
+						for (ScheduleScheme temp : active) {
+							if (temp.getID().equals(name)) {
+								activeSchedule = temp;
+								disposeCompsite();
+								createInformation();
+								passiveSchedules.deselectAll();
+							}
+						}
+		    		} else {
+		    			disposeCompsite();
+		    			new Label(informationComposite, SWT.NONE).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.NoScheduleSelected"));
+		    			informationComposite.layout();
 		    		}
 	    		}
-	    		
-	    		
 	    	}
 		});
 	    
