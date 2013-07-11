@@ -40,6 +40,7 @@ import de.atlassoft.model.ModelService;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.TrainType;
+import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
@@ -213,7 +214,30 @@ public class ScheduleAndTrainTypeComposite {
 	    	}
 	    });
 	    
-	    Button deleteSchedule = new Button(buttonComposite, SWT.PUSH);
+	    Composite deleteButtonComposite = new Composite(buttonComposite, SWT.NONE);
+	    GridLayout deleteButtonCompositeLayout = new GridLayout(2, false);
+	    deleteButtonCompositeLayout.marginHeight = 0;
+	    deleteButtonComposite.setLayout(deleteButtonCompositeLayout);
+	    
+	    Button pdfButton = new Button(deleteButtonComposite, SWT.PUSH);
+	    pdfButton.setImage(ImageHelper.getImage("pdfIcon"));
+	    pdfButton.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+	    		if (activeSchedule == null) {
+	    			ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Error.Title"),
+	    					I18N.getMessage("ScheduleAndTrainTypeComposite.Error.NoScheduleSelected"));
+	    		}
+	    		else {
+	    			applicationService.showScheduleDoc(activeSchedule);
+	    			MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
+		       		messageBox.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Message.Title"));
+	        	    messageBox.setMessage(I18N.getMessage("ScheduleAndTrainTypeComposite.Message.PDFCreate"));
+	        	    messageBox.open();
+	    		}
+	    	}
+		});
+	    
+	    Button deleteSchedule = new Button(deleteButtonComposite, SWT.PUSH);
 	    deleteSchedule.setImage(ImageHelper.getImage("trashIconSmall"));
 	    deleteSchedule.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent e) {
