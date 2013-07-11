@@ -1,12 +1,18 @@
 package de.atlassoft.application;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Observer;
 
+import com.itextpdf.text.DocumentException;
+
 import de.atlassoft.ai.AIService;
 import de.atlassoft.ai.AIServiceImpl;
+import de.atlassoft.io.docexport.DocExportService;
+import de.atlassoft.io.docexport.DocExportServicePDFImpl;
 import de.atlassoft.io.persistence.PersistenceService;
 import de.atlassoft.io.persistence.PersistenceServiceImpl;
 import de.atlassoft.model.ModelService;
@@ -24,9 +30,10 @@ import de.atlassoft.util.ImageHelper;
 
 public class ApplicationServiceImpl implements ApplicationService {
 
-	private ModelServiceImpl model;
+	private ModelService model;
 	private PersistenceService persistence;
 	private AIService ai;
+	private DocExportService docExport;
 	private I18NService I18N;
 	
 	
@@ -43,6 +50,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		model = new ModelServiceImpl();
 		persistence = new PersistenceServiceImpl();
 		ai = new AIServiceImpl(this);
+		docExport = new DocExportServicePDFImpl();
 		I18N = I18NSingleton.getInstance();
 		// TODO: unvollständig
 		
@@ -252,20 +260,43 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 	@Override
 	public void showStatisticDoc(SimulationStatistic statistic) {
-		// TODO Auto-generated method stub
-		
+		try {
+			docExport.createStatisticDoc(statistic);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void showScheduleDoc(ScheduleScheme scheduleScheme) {
-		// TODO Auto-generated method stub
-		
+		try {
+			docExport.createScheduleDoc(scheduleScheme);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void showDepartureBoardDoc(Node station) {
-		// TODO Auto-generated method stub
-		
+		try {
+			docExport.createDepartureBoard(station, getModel().getActiveScheduleSchemes());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
