@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,9 +12,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 
-import de.atlassoft.application.ApplicationService;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
+import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.util.ColorHelper;
@@ -34,7 +33,6 @@ import de.hohenheim.view.path.PathFigure;
 public class HeatMapComposite {
 
 	private Composite heatMapComposite;
-	private ApplicationService applicationService;
 	private NodeMap map;
 	private int highestWorkload;
 	private SimulationStatistic simulationStatistic;
@@ -46,9 +44,8 @@ public class HeatMapComposite {
 	 * 		The applicationService of the application.
 	 */
 	public HeatMapComposite(TabFolder parent, SimulationStatistic simulationStatistic) {
-		heatMapComposite = new Composite(parent, SWT.BORDER);
+		heatMapComposite = new Composite(parent, SWT.NONE);
 		this.simulationStatistic = simulationStatistic;
-//		this.applicationService = applicationService;
 		map = new NodeMap();
 		highestWorkload = 0;
 		
@@ -73,6 +70,7 @@ public class HeatMapComposite {
 		
 		heatMapComposite.setLayout(new GridLayout(2, false));
 		
+		//Creates the map
 		Canvas c = new Canvas(heatMapComposite, SWT.FILL);
 		c.setBackground(ColorConstants.white);
 		c.setBounds(0, 0, 600, 500);
@@ -81,26 +79,28 @@ public class HeatMapComposite {
 		canvasGridData.heightHint = 500;
 		c.setLayoutData(canvasGridData);
 		
-		//Adds all the nodes to the map
+			//Adds all the nodes to the map
 		for (Node temp : simulationStatistic.getRailwaySystem().getNodes()) {
 			addNode(temp.getNodeFigure());
 		}
 		
-		//Adds all the paths to the map
+			//Adds all the paths to the map
 		for (Path temp : simulationStatistic.getRailwaySystem().getPaths()) {
-			addPath(temp.getStart().getNodeFigure(), temp.getEnd().getNodeFigure(), calculateWorkload(temp));
+			addPath(temp.getStart().getNodeFigure(), temp.getEnd().getNodeFigure(), calculateOverallWorkload(temp));
 		}
 		
 		map.paintNodeMap(c);
 		
 		//Contains all the information on the right side
 		Composite informationComposite = new Composite(heatMapComposite, SWT.BORDER);
+		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		informationComposite.setLayout(new GridLayout());
 		
 		/*
 		 * Container for the legend
 		 */
 		Composite legendComposite = new Composite(informationComposite, SWT.BORDER);
+		legendComposite.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		legendComposite.setLayout(new GridLayout(3, false));
 		
 		Label relativeWorkloadLabel = new Label(legendComposite, SWT.NONE);
@@ -110,6 +110,7 @@ public class HeatMapComposite {
 			//first row
 		Label yellow = new Label(legendComposite, SWT.NONE);
 		yellow.setBackground(ColorHelper.getColor("yellow"));
+		yellow.setLayoutData(new GridData(20, 2));
 		
 		Label dot1 = new Label(legendComposite, SWT.NONE);
 		dot1.setText(":");
@@ -120,6 +121,7 @@ public class HeatMapComposite {
 			//second row
 		Label orange = new Label(legendComposite, SWT.NONE);
 		orange.setBackground(ColorHelper.getColor("orange"));
+		orange.setLayoutData(new GridData(20, 4));
 		
 		Label dot2 = new Label(legendComposite, SWT.NONE);
 		dot2.setText(":");
@@ -130,6 +132,7 @@ public class HeatMapComposite {
 			//third row
 		Label darkOrange = new Label(legendComposite, SWT.NONE);
 		darkOrange.setBackground(ColorHelper.getColor("darkOrange"));
+		darkOrange.setLayoutData(new GridData(20, 6));
 		
 		Label dot3 = new Label(legendComposite, SWT.NONE);
 		dot3.setText(":");
@@ -140,6 +143,7 @@ public class HeatMapComposite {
 			//fourth row
 		Label red = new Label(legendComposite, SWT.NONE);
 		red.setBackground(ColorHelper.getColor("red"));
+		red.setLayoutData(new GridData(20, 8));
 		
 		Label dot4 = new Label(legendComposite, SWT.NONE);
 		dot4.setText(":");
@@ -150,6 +154,7 @@ public class HeatMapComposite {
 			//fifth row
 		Label darkRed = new Label(legendComposite, SWT.NONE);
 		darkRed.setBackground(ColorHelper.getColor("darkRed"));
+		darkRed.setLayoutData(new GridData(20, 10));
 		
 		Label dot5 = new Label(legendComposite, SWT.NONE);
 		dot5.setText(":");
@@ -167,14 +172,14 @@ public class HeatMapComposite {
 	 * @return
 	 * 		The relative workload of the path.
 	 */
-	private float calculateWorkload(Path path) {
+	private float calculateOverallWorkload(Path path) {
 		
 		int pathWorkload = 0;
-		for (Entry<TrainType, Integer> entry : path.getTrainTypeWorkloadMap().entrySet()) {
+		for (Entry<ScheduleScheme, Integer> entry : path.getScheduleSchemeWorkloadMap().entrySet()) {
 			pathWorkload = pathWorkload + entry.getValue();
 		}
-		
-		return pathWorkload/highestWorkload;
+		float wl = (float) pathWorkload/(float)highestWorkload;
+		return wl;
 	}
 	
 	/**
