@@ -89,24 +89,29 @@ public class SimulationStatisticDialog {
 	private void initUI() {
 		final I18NService I18N = I18NSingleton.getInstance();
 		mainStatisticComposite = new Composite (tabFolder, SWT.NULL);
-		mainStatisticComposite.setLayout (new GridLayout(3, false));
+		mainStatisticComposite.setLayout (new GridLayout(1, true));
+		
+		// Obererteil
+		final Composite topStatisticComposite = new Composite (mainStatisticComposite, SWT.NULL);
+		topStatisticComposite.setLayout (new GridLayout(3, false));
+		topStatisticComposite.setLayoutData(new GridData(SWT.CENTER, SWT.NULL, true, false));
 		
 		// First row with three labels for "TotalDelay"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.TotalDelay") + "\t");
-		Label totalDelay = new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.TotalDelay") + "\t");
+		Label totalDelay = new Label(topStatisticComposite, SWT.NONE);
 		totalDelay.setText(String.valueOf(simulationStatistic.getTotalDelay()));
 		toTheEnd(totalDelay);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Second row with three labels for "MeanDelay"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelay") + "\t");
-		Label meanDelay = new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelay") + "\t");
+		Label meanDelay = new Label(topStatisticComposite, SWT.NONE);
 		meanDelay.setText(String.valueOf(simulationStatistic.getMeanDelay()));
 		toTheEnd(meanDelay);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Third row with three labels for "MeanDelay (TrainType)"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayTrainType") + "\t");
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayTrainType") + "\t");
 	 	final List<TrainType> trainTypes = simulationStatistic.getInvolvedTrainTypes();
 	 	final String[] trainTypeSelection = new String [trainTypes.size()];
 		int index = 0;
@@ -114,23 +119,23 @@ public class SimulationStatisticDialog {
 			trainTypeSelection[index] = type.getName();
 			index++;
 		}
-		final Combo comboTrainType = new Combo(mainStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo comboTrainType = new Combo(topStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboTrainType.setItems(trainTypeSelection);
 	    comboTrainType.select(0);
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		
 		// Fourth row with the result of "MeanDelay (TrainType)"
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		TrainType selectedTT = null;
 		for (TrainType type : trainTypes) {
 			if (type.getName().equals(comboTrainType.getText())) {
 				selectedTT = type;
 			}
 		}
-		final Label meanDelayTrainType = new Label(mainStatisticComposite, SWT.NONE);
+		final Label meanDelayTrainType = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedTT)));
 		toTheEnd(meanDelayTrainType);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Listener for the combo TrainType
 		comboTrainType.addSelectionListener(new SelectionAdapter() {
@@ -142,12 +147,12 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedTrainType)));
-				mainStatisticComposite.layout();
+				topStatisticComposite.layout();
 			}
 		});
 		
 		// Fifth row with "MeanDelay (Node)"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayNode") + "\t");
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayNode") + "\t");
 	 	final java.util.List<Node> nodes = simulationStatistic.getInvolvedNodes();
 		final String[] nodeSelection = new String [nodes.size()];
 		index = 0;
@@ -155,23 +160,23 @@ public class SimulationStatisticDialog {
 			nodeSelection[index] = node.getName();
 			index++;
 		}
-		final Combo comboNode = new Combo(mainStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo comboNode = new Combo(topStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboNode.setItems(nodeSelection);
 	    comboNode.select(0);
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		
 		// Sixth row with the result of "MeanDelay (Node)"
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		Node selectedN = null;
 		for (Node node : nodes) {
 			if (node.getName().equals(comboNode.getText())) {
 				selectedN = node;
 			}
 		}
-		final Label meanDelayNode = new Label(mainStatisticComposite, SWT.NONE);
+		final Label meanDelayNode = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
 		toTheEnd(meanDelayNode);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Listener for the combo Node
 		comboNode.addSelectionListener(new SelectionAdapter() {
@@ -183,12 +188,12 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedNode)));
-				mainStatisticComposite.layout();
+				topStatisticComposite.layout();
 			}
 		});
 		
 		// Seventh row with "MeanDelay (ScheduleScheme)"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleScheme") + "\t");
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleScheme") + "\t");
 	 	final java.util.List<ScheduleScheme> scheduleSchemes = simulationStatistic.getInvolvedScheduleSchemes();
 		final String[] scheduleSchemeSelection = new String [scheduleSchemes.size()];
 		index = 0;
@@ -196,23 +201,23 @@ public class SimulationStatisticDialog {
 			scheduleSchemeSelection[index] = scheduleScheme.getID();
 			index++;
 		}
-		final Combo comboScheduleScheme = new Combo(mainStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo comboScheduleScheme = new Combo(topStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboScheduleScheme.setItems(scheduleSchemeSelection);
 		comboScheduleScheme.select(0);
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		
 		// Eighth row with the result of "MeanDelay (ScheduleScheme)"
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		ScheduleScheme selectedSS = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
 			if (scheduleScheme.getID().equals(comboScheduleScheme.getText())) {
 				selectedSS = scheduleScheme;
 			}
 		}
-		Label meanDelayScheduleScheme = new Label(mainStatisticComposite, SWT.NONE);
+		final Label meanDelayScheduleScheme = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
 		toTheEnd(meanDelayScheduleScheme);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Listener for the combo ScheduleScheme
 		comboScheduleScheme.addSelectionListener(new SelectionAdapter() {
@@ -223,17 +228,17 @@ public class SimulationStatisticDialog {
 						selectedScheduleScheme = scheduleScheme;
 					}
 				}
-				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme)));
-				mainStatisticComposite.layout();
+				meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme)));
+				topStatisticComposite.layout();
 			}
 		});
 		
 		// Ninth row with "MeanDelay (ScheduleScheme, Node)"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleSchemeAndNode") + "\t");
-		final Combo comboScheduleScheme2 = new Combo(mainStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelayScheduleSchemeAndNode") + "\t");
+		final Combo comboScheduleScheme2 = new Combo(topStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboScheduleScheme2.setItems(scheduleSchemeSelection);
 		comboScheduleScheme2.select(0);
-		final Combo comboNode2 = new Combo(mainStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo comboNode2 = new Combo(topStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		ScheduleScheme selectedScheduleScheme2 = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
 			if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
@@ -254,7 +259,7 @@ public class SimulationStatisticDialog {
 		}
 	    
 	    // Tenth row with the result of "MeanDelay (ScheduleScheme, Node)"
-		new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE);
 		ScheduleScheme selectedSS2 = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
 			if (scheduleScheme.getID().equals(comboScheduleScheme2.getText())) {
@@ -267,10 +272,10 @@ public class SimulationStatisticDialog {
 				selectedN2 = node;
 			}
 		}
-		final Label meanDelayScheduleSchemeAndNode = new Label(mainStatisticComposite, SWT.NONE);
+		final Label meanDelayScheduleSchemeAndNode = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
 		toTheEnd(meanDelayScheduleSchemeAndNode);
-		new Label(mainStatisticComposite, SWT.NONE).setText("s");
+		new Label(topStatisticComposite, SWT.NONE).setText("s");
 		
 		// Listener for the combo scheduleScheme and Node
 		comboScheduleScheme2.addSelectionListener(new SelectionAdapter() {
@@ -299,7 +304,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
-				mainStatisticComposite.layout();
+				topStatisticComposite.layout();
 			}
 		});
 		
@@ -318,16 +323,16 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));				
-				mainStatisticComposite.layout();
+				topStatisticComposite.layout();
 			}
 		});
 		
 		// Eleventh row with "NumberOfRides"
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.NumberOfRides") + "\t");
-		Label meanDelayRides = new Label(mainStatisticComposite, SWT.NONE);
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.NumberOfRides") + "\t");
+		Label meanDelayRides = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayRides.setText(String.valueOf(simulationStatistic.getNumberOfRides()));
 		toTheEnd(meanDelayRides);
-		new Label(mainStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.Rides"));
+		new Label(topStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.Rides"));
 		
 		// Twelfth row with Button "Save as PDF"
 		Button save = new Button(shell, SWT.PUSH);
