@@ -141,7 +141,7 @@ public class SimulationComposite implements Observer {
 		for (int i=10; i<24; i++) {
 			startHourCombo.add(Integer.toString(i));
 		}
-		startHourCombo.select(1);
+		startHourCombo.select(0);
 		
 		startMinuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
 		startMinuteCombo.add("00");
@@ -302,8 +302,9 @@ public class SimulationComposite implements Observer {
 					stopButton.setEnabled(false);
 					simulationActive = false;
 					
-					//TODO: Einfügen wenn Statistik implementiert
-					new SimulationStatisticDialog(stat);
+					if (!stat.getStatistics().isEmpty()) {
+						new SimulationStatisticDialog(stat);
+					}
 				}
 			}
 		});
@@ -404,7 +405,7 @@ public class SimulationComposite implements Observer {
 			for (int i=10; i<24; i++) {
 				startHourCombo.add(Integer.toString(i));
 			}
-			startHourCombo.select(1);
+			startHourCombo.select(0);
 			
 			startMinuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
 			startMinuteCombo.add("00");
