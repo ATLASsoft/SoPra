@@ -214,7 +214,7 @@ public class SimulationStatisticDialog {
 				selectedSS = scheduleScheme;
 			}
 		}
-		Label meanDelayScheduleScheme = new Label(topStatisticComposite, SWT.NONE);
+		final Label meanDelayScheduleScheme = new Label(topStatisticComposite, SWT.NONE);
 		meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
 		toTheEnd(meanDelayScheduleScheme);
 		new Label(topStatisticComposite, SWT.NONE).setText("s");
@@ -228,7 +228,7 @@ public class SimulationStatisticDialog {
 						selectedScheduleScheme = scheduleScheme;
 					}
 				}
-				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme)));
+				meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme)));
 				topStatisticComposite.layout();
 			}
 		});
