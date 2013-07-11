@@ -95,7 +95,7 @@ public class ScheduleAndTrainTypeComposite {
 			public void propertyChange(PropertyChangeEvent evt) {
 				if (evt.getPropertyName().equals(ModelService.TRAIN_TYPES_PROPNAME)) {
 					Control[] children = trainTypeComposite.getChildren();
-					for (int i = 0; i<= children.length - 1; i++) {
+					for (int i = 1; i<= children.length - 1; i++) {
 						children[i].dispose();
 					}
 					activeSchedules.removeAll();
@@ -108,6 +108,11 @@ public class ScheduleAndTrainTypeComposite {
 					}
 					createContent();
 					scrolledTrainTypeComposite.setContent(trainTypeComposite);
+					activeSchedules.deselectAll();
+					passiveSchedules.deselectAll();
+	    			disposeCompsite();
+	    			new Label(informationComposite, SWT.NONE).setText(I18N.getMessage("ScheduleAndTrainTypeComposite.NoScheduleSelected"));
+	    			informationComposite.layout();
 				}
 			}
 		});
