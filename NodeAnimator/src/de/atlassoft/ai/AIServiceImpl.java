@@ -76,7 +76,7 @@ public class AIServiceImpl implements AIService {
 	public int fastestArrival(RailwaySystem railSys, Node start, Node goal,
 			double topSpeed) {
 		double d = new Graph(railSys).getShortestTravelTime(start, goal, topSpeed);
-		return ((int) (d / 10.0 * 60.0)) + 1;  // convert from pixel / km/h to minutes and round up
+		return ((int) (d * 60.0)) + 1;  // convert from hours to minute and round up
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -95,7 +96,24 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public void deleteTrainType(TrainType type) {
 		trainTypes.remove(type);
+		
+		Iterator<ScheduleScheme> it = activeSchemes.iterator();
+		while (it.hasNext()) {
+			if (it.next().getTrainType().equals(type)) {
+				it.remove();
+			}
+		}
+		
+		it = passiveSchemes.iterator();
+		while (it.hasNext()) {
+			if (it.next().getTrainType().equals(type)) {
+				it.remove();
+			}
+		}
+		
 		pcSupport.firePropertyChange(TRAIN_TYPES_PROPNAME, null, getTrainTypes());
+		pcSupport.firePropertyChange(PASSIVE_SCHEDULE_SCHEMES_PROPNAME, null, getPassiveScheduleSchemes());
+		pcSupport.firePropertyChange(ACTIVE_SCHEDULE_SCHEMES_PROPNAME, null, getActiveScheduleSchemes());
 	}
 
 	@Override

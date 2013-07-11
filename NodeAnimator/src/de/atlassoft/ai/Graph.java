@@ -149,7 +149,7 @@ class Graph {
 		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
 		
 		// compute travel time
-		return dist[getVertex(target).id]; // ist pixel / km/h
+		return dist[getVertex(target).id]; // in hours
 	}
 	
 	/**

@@ -108,8 +108,7 @@ public class TrainAgent implements Runnable {
 			synchronized (anim) { // acquire lock in order to wait
 				try {
 					// wait and maybe elude till next station is reached 
-					while (!figure.getNodeFigure().getModellObject()
-							.equals(schedule.getStations()[i + 1])) {
+					while (innerLoopCondition(i)) {
 						
 						// wait till animation stops since it reached the next station or
 						// the path is blocked
@@ -122,8 +121,11 @@ public class TrainAgent implements Runnable {
 							long simTime = aiPort.getLoop().getSimTimeInMillis();
 							int delay = (int) Math.round(((simTime - schedule.getATs()[i+1]) / 1000.0)); 
 							statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
+							figure.stopAnimation();
+							figure.clearAnimations();
 							
-							//TODO: warten
+							
+							//TODO: warten (idle time)
 						}
 						
 						// animation has been aborted before reaching goal,
@@ -211,7 +213,15 @@ public class TrainAgent implements Runnable {
 		}
 		return figurePath;
 	}
-	
+
+	private boolean innerLoopCondition(int i) {
+		NodeFigure currentNodeFigure = figure.getNodeFigure();
+		if (currentNodeFigure == null) {
+			return true;
+		}
+		return (!currentNodeFigure.getModellObject()
+				.equals(schedule.getStations()[i + 1]));
+	}
 	
 	
 	@Override
