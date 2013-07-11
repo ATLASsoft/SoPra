@@ -303,7 +303,7 @@ public class SimulationComposite implements Observer {
 					simulationActive = false;
 					
 					if (!stat.getStatistics().isEmpty()) {
-						new SimulationStatisticDialog(stat);
+						new SimulationStatisticDialog(applicationService, stat);
 					}
 				}
 			}

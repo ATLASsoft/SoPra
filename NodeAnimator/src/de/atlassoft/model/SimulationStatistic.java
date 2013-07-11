@@ -287,6 +287,28 @@ public class SimulationStatistic {
 	}
 	
 	/**
+	 * Returns a List of all Stations of
+	 * an special ScheduleScheme
+	 *  
+	 * @return nodes
+	 * 			A List of all involved Stations
+	 */
+	public List <Node> getInvolvedNodes(ScheduleScheme scheduleScheme) {
+		java.util.List<Node> nodes= new ArrayList <Node>();
+		for (ScheduleScheme scheduleSchemes : getInvolvedScheduleSchemes()) {
+			if (scheduleSchemes.getID().equals(scheduleScheme)) {
+				java.util.List<Node> addNode = scheduleSchemes.getStations();
+				for (Node node : addNode) {
+					if (!nodes.contains(node)) {
+						nodes.add(node);
+					}
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	/**
 	 * Returns the {@link RailwaySystem} affiliated with this
 	 * {@link SimulationStatistic}.
 	 * 
