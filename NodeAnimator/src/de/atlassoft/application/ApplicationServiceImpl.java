@@ -67,7 +67,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ImageHelper.loadImage("pauseIconSmall", "img/pauseIconSmall.png");
 		ImageHelper.loadImage("stopIconSmall", "img/stopIconSmall.png");
 		ImageHelper.loadImage("pdfIcon", "img/pdfIcon.png");
-		
 
 		// load railway system ids
 		try {
