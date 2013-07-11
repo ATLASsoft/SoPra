@@ -619,12 +619,12 @@ public class ScheduleAndTrainTypeComposite {
 			if (img == null) {
 				img = ImageHelper.getImage("standardTrainIcon");
 			}
-			new Label (trainType, SWT.NULL).setImage(type.getImg());
+			new Label (trainType, SWT.NULL).setImage(img);
 			
 			Label information = new Label(trainType, SWT.NULL);
-			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t\t" + type.getName() + "\n" +
-								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h   \n" +
-								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t\t" + type.getPriority()); 
+			information.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.name") + "\t\t" + type.getName() + "\n" +
+								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.topSpeed") + "\t" + type.getTopSpeed() + " km/h   \t\n" +
+								I18N.getMessage("ScheduleAndTrainTypeComposite.TrainTypeComposite.priority") + "\t" + type.getPriority()); 
 			
 			Button delete = new Button(trainType, SWT.PUSH);
 			delete.setImage(ImageHelper.getImage("trashIcon"));
