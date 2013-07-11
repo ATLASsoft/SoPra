@@ -128,7 +128,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayTrainType = new Label(mainStatisticComposite, SWT.NONE);
-		meanDelayTrainType.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedTT)));
+		meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedTT)));
 		toTheEnd(meanDelayTrainType);
 		new Label(mainStatisticComposite, SWT.NONE).setText("s");
 		
@@ -142,6 +142,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedTrainType)));
+				mainStatisticComposite.layout();
 			}
 		});
 		
@@ -168,7 +169,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayNode = new Label(mainStatisticComposite, SWT.NONE);
-		meanDelayNode.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
+		meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedN)));
 		toTheEnd(meanDelayNode);
 		new Label(mainStatisticComposite, SWT.NONE).setText("s");
 		
@@ -182,6 +183,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedNode)));
+				mainStatisticComposite.layout();
 			}
 		});
 		
@@ -208,7 +210,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		Label meanDelayScheduleScheme = new Label(mainStatisticComposite, SWT.NONE);
-		meanDelayScheduleScheme.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
+		meanDelayScheduleScheme.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS)));
 		toTheEnd(meanDelayScheduleScheme);
 		new Label(mainStatisticComposite, SWT.NONE).setText("s");
 		
@@ -222,6 +224,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayTrainType.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme)));
+				mainStatisticComposite.layout();
 			}
 		});
 		
@@ -265,7 +268,7 @@ public class SimulationStatisticDialog {
 			}
 		}
 		final Label meanDelayScheduleSchemeAndNode = new Label(mainStatisticComposite, SWT.NONE);
-		meanDelayScheduleSchemeAndNode.setText("        " + String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
+		meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedSS2, selectedN2)));
 		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(mainStatisticComposite, SWT.NONE).setText("s");
 		
@@ -296,6 +299,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));
+				mainStatisticComposite.layout();
 			}
 		});
 		
@@ -314,6 +318,7 @@ public class SimulationStatisticDialog {
 					}
 				}
 				meanDelayScheduleSchemeAndNode.setText(String.valueOf(simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2)));				
+				mainStatisticComposite.layout();
 			}
 		});
 		
@@ -326,7 +331,7 @@ public class SimulationStatisticDialog {
 		
 		// Twelfth row with Button "Save as PDF"
 		Button save = new Button(shell, SWT.PUSH);
-		save.setImage(ImageHelper.getImage("loadButton"));
+		save.setImage(ImageHelper.getImage("pdfIcon"));
 		save.setText(I18N.getMessage("SimulationStatisticDialog.Save"));
 		GridData dataSave = new GridData(GridData.FILL);
 		dataSave.horizontalAlignment = GridData.CENTER;
