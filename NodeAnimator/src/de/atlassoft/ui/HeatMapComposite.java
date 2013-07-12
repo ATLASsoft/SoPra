@@ -28,6 +28,8 @@ import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.util.ColorHelper;
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.node.NodeFigure;
 import de.hohenheim.view.path.CenterAnchor;
@@ -45,6 +47,7 @@ public class HeatMapComposite {
 	//TODO: Internationalisieren
 	private Composite heatMapComposite, informationComposite, nodeInformationComposite;
 	private NodeMap map;
+	private I18NService I18N;
 	private int highestWorkload;
 	private SimulationStatistic simulationStatistic;
 	private HashMap<NodeFigure, NodeFigure> nodeFigures;
@@ -62,6 +65,7 @@ public class HeatMapComposite {
 	public HeatMapComposite(TabFolder parent, SimulationStatistic simulationStatistic) {
 		heatMapComposite = new Composite(parent, SWT.NONE);
 		this.simulationStatistic = simulationStatistic;
+		I18N = I18NSingleton.getInstance();
 		map = new NodeMap();
 		highestWorkload = 0;
 		nodeFigures = new HashMap<NodeFigure, NodeFigure>();
@@ -145,13 +149,13 @@ public class HeatMapComposite {
 		selectionCompositeTitleData.heightHint = 30;
 		selectionCompositeTitle.setLayoutData(selectionCompositeTitleData);
 		selectionCompositeTitle.setFont(captionFont);
-		selectionCompositeTitle.setText("Heatmap anzeigen für:");
+		selectionCompositeTitle.setText(I18N.getMessage("HeatMapComposite.ShowHeatmap"));
 		
 		Label scheduleLabel = new Label(selectionComposite, SWT.NONE);
-		scheduleLabel.setText("Fahrplan:");
+		scheduleLabel.setText(I18N.getMessage("HeatMapComposite.Schedule"));
 		
 		scheduleCombo = new Combo(selectionComposite, SWT.READ_ONLY);
-		scheduleCombo.add("Alle Fahrpläne");
+		scheduleCombo.add(I18N.getMessage("HeatMapComposite.AllSchedules"));
 		for (ScheduleScheme temp : simulationStatistic.getInvolvedScheduleSchemes()) {
 			scheduleCombo.add(temp.getID());
 		}
@@ -183,10 +187,10 @@ public class HeatMapComposite {
 		});
 		
 		Label trainTypeLabel = new Label(selectionComposite, SWT.NONE);
-		trainTypeLabel.setText("Zugtyp:");
+		trainTypeLabel.setText(I18N.getMessage("HeatMapComposite.TrainType"));
 		
 		trainTypeCombo = new Combo(selectionComposite, SWT.READ_ONLY);
-		trainTypeCombo.add("Alle Zugtypen");
+		trainTypeCombo.add(I18N.getMessage("HeatMapComposite.AllTrainTypes"));
 		for (TrainType temp : simulationStatistic.getInvolvedTrainTypes()) {
 			trainTypeCombo.add(temp.getName());
 		}
@@ -230,10 +234,10 @@ public class HeatMapComposite {
 		nodeInformationLabel.setLayoutData(nodeInformationLabelData);
 		nodeInformationLabel.setFont(captionFont);
 
-		nodeInformationLabel.setText("Information:");
+		nodeInformationLabel.setText(I18N.getMessage("HeatMapComposite.Information"));
 		
 		Label noInformation = new Label(nodeInformationComposite, SWT.NONE);
-		noInformation.setText("Kein Element ausgewählt");
+		noInformation.setText(I18N.getMessage("HeatMapComposite.NoElementSelected"));
 		
 		/*
 		 * Container for the legend
@@ -247,7 +251,7 @@ public class HeatMapComposite {
 		relativeWorkloadLabelData.heightHint = 25;
 		relativeWorkloadLabel.setLayoutData(relativeWorkloadLabelData);
 		relativeWorkloadLabel.setFont(captionFont);
-		relativeWorkloadLabel.setText("Legende:");
+		relativeWorkloadLabel.setText(I18N.getMessage("HeatMapComposite.Legend"));
 		
 			//first row
 		Label yellow = new Label(legendComposite, SWT.NONE);
@@ -258,7 +262,7 @@ public class HeatMapComposite {
 		dot1.setText(":");
 		
 		Label yellowWorkload = new Label(legendComposite, SWT.NONE);
-		yellowWorkload.setText("0 - 20 % Auslastung");
+		yellowWorkload.setText(I18N.getMessage("HeatMapComposite.Legend1"));
 		
 			//second row
 		Label orange = new Label(legendComposite, SWT.NONE);
@@ -269,7 +273,7 @@ public class HeatMapComposite {
 		dot2.setText(":");
 		
 		Label orangeWorkload = new Label(legendComposite, SWT.NONE);
-		orangeWorkload.setText("20 - 40 % Auslastung");
+		orangeWorkload.setText(I18N.getMessage("HeatMapComposite.Legend2"));
 		
 			//third row
 		Label darkOrange = new Label(legendComposite, SWT.NONE);
@@ -280,7 +284,7 @@ public class HeatMapComposite {
 		dot3.setText(":");
 		
 		Label darkOrangeWorkload = new Label(legendComposite, SWT.NONE);
-		darkOrangeWorkload.setText("40 - 60 % Auslastung");
+		darkOrangeWorkload.setText(I18N.getMessage("HeatMapComposite.Legend3"));
 		
 			//fourth row
 		Label red = new Label(legendComposite, SWT.NONE);
@@ -291,7 +295,7 @@ public class HeatMapComposite {
 		dot4.setText(":");
 		
 		Label redWorkload = new Label(legendComposite, SWT.NONE);
-		redWorkload.setText("60 - 80 % Auslastung");
+		redWorkload.setText(I18N.getMessage("HeatMapComposite.Legend4"));
 		
 			//fifth row
 		Label darkRed = new Label(legendComposite, SWT.NONE);
@@ -302,7 +306,7 @@ public class HeatMapComposite {
 		dot5.setText(":");
 		
 		Label darkRedWorkload = new Label (legendComposite, SWT.NONE);
-		darkRedWorkload.setText("80 - 100 % Auslastung");
+		darkRedWorkload.setText(I18N.getMessage("HeatMapComposite.Legend5"));
 		
 		
 		heatMapComposite.layout();
@@ -533,16 +537,16 @@ public class HeatMapComposite {
 		titleData.heightHint = 25;
 		title.setLayoutData(titleData);
 		title.setFont(captionFont);
-		title.setText("Stationsinformation:");
+		title.setText(I18N.getMessage("HeatMapComposite.StationInformation"));
 		
 		Label nameTitle = new Label(composite, SWT.NONE);
-		nameTitle.setText("Name:");
+		nameTitle.setText(I18N.getMessage("HeatMapComposite.StationName"));
 		
 		Label name = new Label(composite, SWT.NONE);
 		name.setText(node.getName());
 		
 		Label counterTitle = new Label(composite, SWT.NONE);
-		counterTitle.setText("Anzahl Fahrten:");
+		counterTitle.setText(I18N.getMessage("HeatMapComposite.CountRides"));
 		
 		int counterC = 0;
 		double meanDelayM = 0;
@@ -575,7 +579,7 @@ public class HeatMapComposite {
 		counter.setText(String.valueOf(counterC));
 		
 		Label meanDelayTitle = new Label(composite, SWT.NONE);
-		meanDelayTitle.setText("Durchschnittsverspätung:");
+		meanDelayTitle.setText(I18N.getMessage("HeatMapComposite.MeanDelay"));
 		
 		Label meanDelay = new Label(composite, SWT.NONE);
 		meanDelay.setText(String.valueOf(meanDelayM/60) + " m");
@@ -598,10 +602,10 @@ public class HeatMapComposite {
 		titleData.heightHint = 25;
 		title.setLayoutData(titleData);
 		title.setFont(captionFont);
-		title.setText("Streckeninformation:");
+		title.setText(I18N.getMessage("HeatMapComposite.PathInformation"));
 		
 		Label counterTitle = new Label(composite, SWT.NONE);
-		counterTitle.setText("Anzahl Fahrten:");
+		counterTitle.setText(I18N.getMessage("HeatMapComposite.CountRides"));
 		
 		int counterC = 0;
 		//if a special train type is selected
@@ -630,7 +634,7 @@ public class HeatMapComposite {
 		counter.setText(String.valueOf(counterC));
 		
 		Label topSpeedTitle = new Label(composite, SWT.NONE);
-		topSpeedTitle.setText("Höchstgeschwindigkeit:");
+		topSpeedTitle.setText(I18N.getMessage("HeatMapComposite.TopSpeed"));
 		
 		Label topSpeed = new Label(composite, SWT.NONE);
 		topSpeed.setText(String.valueOf(path.getTopSpeed()));
@@ -652,10 +656,10 @@ public class HeatMapComposite {
 		nodeInformationLabelData.heightHint = 25;
 		nodeInformationLabel.setLayoutData(nodeInformationLabelData);
 		nodeInformationLabel.setFont(captionFont);
-		nodeInformationLabel.setText("Information:");
+		nodeInformationLabel.setText(I18N.getMessage("HeatMapComposite.Information"));
 		
 		Label noInformation = new Label(composite, SWT.NONE);
-		noInformation.setText("Kein Element ausgewählt");
+		noInformation.setText(I18N.getMessage("HeatMapComposite.NoElementSelected"));
 		
 		composite.layout();
 		informationComposite.layout();
