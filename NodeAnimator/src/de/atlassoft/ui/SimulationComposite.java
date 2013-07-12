@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
@@ -46,7 +47,8 @@ public class SimulationComposite implements Observer {
 	
 	private Shell shell;
 	private StackLayout layout;
-	private Composite mainComposite, simulationComposite, timeComposite;
+	private Composite mainComposite, simulationComposite,
+					  controllerComposite, timeComposite;
 	private I18NService I18N;
 	private ApplicationService applicationService;
 	private boolean simulationActive, simulationPaused;
@@ -56,6 +58,8 @@ public class SimulationComposite implements Observer {
 	private Button playButton, pauseButton, stopButton;
 	private Scale speedScale;
 	private Text speedText;
+	private GridLayout timeCompositeLayout;
+	private int startDay;
 	
 	/**
 	 * Constructor for the SimulationComposite class.
@@ -94,7 +98,7 @@ public class SimulationComposite implements Observer {
 	    simulationComposite.setLayout(simulationCompositeLayout);
 	    
 	    //Composite for the control elements
-	    Composite controllerComposite = new Composite(simulationComposite, SWT.NONE);
+	    controllerComposite = new Composite(simulationComposite, SWT.NONE);
 	    controllerComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
 	    GridLayout controllerCompositeLayout = new GridLayout();
 	    controllerCompositeLayout.verticalSpacing = 10;
@@ -109,7 +113,7 @@ public class SimulationComposite implements Observer {
 	    
 	    timeComposite = new Composite(controllerComposite, SWT.BORDER);
 	    timeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-	    GridLayout timeCompositeLayout = new GridLayout(3, false);
+	    timeCompositeLayout = new GridLayout(3, false);
 	    timeCompositeLayout.verticalSpacing = 20;
 	    timeComposite.setLayout(timeCompositeLayout);
 	    
@@ -183,9 +187,9 @@ public class SimulationComposite implements Observer {
 		speedScaleData.horizontalIndent = 5;
 		speedScale.setLayoutData(speedScaleData);
 		speedScale.setMinimum(1);
-		speedScale.setMaximum(3000);
+		speedScale.setMaximum(1000);
 		speedScale.setIncrement(1);
-		speedScale.setPageIncrement(2999);
+		speedScale.setPageIncrement(999);
 		speedScale.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -207,9 +211,9 @@ public class SimulationComposite implements Observer {
 		Label trueSpeed = new Label(speedScaleComposite, SWT.NONE);
 		trueSpeed.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
 		
-		Label threeThousand = new Label(speedScaleComposite, SWT.NONE);
-		threeThousand.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		threeThousand.setText("3000x");
+		Label oneThousand = new Label(speedScaleComposite, SWT.NONE);
+		oneThousand.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		oneThousand.setText("1000x");
 		
 		/*
 		 * Composite for the controller buttons
@@ -232,7 +236,7 @@ public class SimulationComposite implements Observer {
 				//If there is no ongoing active simulation
 				if(!simulationActive) {
 					//start simulation
-					startSimulation();
+					startResetSimulation();
 					
 					speedScale.setEnabled(true);
 					pauseButton.setEnabled(true);
@@ -290,7 +294,7 @@ public class SimulationComposite implements Observer {
 			public void widgetSelected(SelectionEvent e) {
 				if(simulationActive) {
 					//stop simulation
-					SimulationStatistic stat = applicationService.quitSimulation(); //TODO: statistik verarbeiten
+					SimulationStatistic stat = applicationService.quitSimulation();
 					createTimeDisplay();
 					
 					speedScale.setSelection(1);
@@ -348,16 +352,31 @@ public class SimulationComposite implements Observer {
 	}
 	
 	/**
-	 * Starts the simulation.
+	 * Starts the simulation with reseting the statistics.
 	 */
-	private void startSimulation() {
+	private void startResetSimulation() {
 		Calendar startTime = new GregorianCalendar();
 		int startHour = Integer.parseInt(startHourCombo.getItem(startHourCombo.getSelectionIndex()));
 		int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
 		startTime.clear();
 		startTime.set(0, 0, getDay(), startHour, startMinute);
-		applicationService.startSimulation(startTime, SimulationComposite.this);
+		startDay = getDay();
+		applicationService.startSimulation(startTime, SimulationComposite.this, true);
 		createTimeDisplay();
+	}
+	
+	/**
+	 * Starts the simulation without reseting the statistics.
+	 */
+	private void startNonResetSimulation() {
+		Calendar startTime = new GregorianCalendar();
+		int startHour = Integer.parseInt(startHourCombo.getItem(startHourCombo.getSelectionIndex()));
+		int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
+		startTime.clear();
+		startTime.set(0, 0, startDay, startHour, startMinute);
+		applicationService.startSimulation(startTime, SimulationComposite.this, false);
+		speedScale.setSelection(0);
+		speedText.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
 	}
 	
 	/**
@@ -370,16 +389,62 @@ public class SimulationComposite implements Observer {
 			
 			Label timeDescription = new Label(timeComposite, SWT.NONE);
 			timeDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-			timeDescription.setText("Uhrzeit:");
+			timeDescription.setText(I18N.getMessage("SimulationComposite.Time"));
 			
 			time = new Label(timeComposite, SWT.NONE);
+			time.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+			
+			startHourCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		    startHourCombo.add("00");
+		    startHourCombo.add("01");
+		    startHourCombo.add("02");
+			startHourCombo.add("03");
+			startHourCombo.add("04");
+			startHourCombo.add("05");
+			startHourCombo.add("06");
+			startHourCombo.add("07");
+			startHourCombo.add("08");
+			startHourCombo.add("09");
+			for (int i=10; i<24; i++) {
+				startHourCombo.add(Integer.toString(i));
+			}
+			startHourCombo.select(0);
+			
+			startMinuteCombo = new Combo(timeComposite, SWT.READ_ONLY);
+			startMinuteCombo.add("00");
+			startMinuteCombo.add("01");
+			startMinuteCombo.add("02");
+			startMinuteCombo.add("03");
+			startMinuteCombo.add("04");
+			startMinuteCombo.add("05");
+			startMinuteCombo.add("06");
+			startMinuteCombo.add("07");
+			startMinuteCombo.add("08");
+			startMinuteCombo.add("09");
+			for (int i=10; i<=59; i=i+1) {
+				startMinuteCombo.add(Integer.toString(i));
+			}
+			startMinuteCombo.select(0);
+			
+			Button jumpToButton = new Button(timeComposite, SWT.PUSH);
+			jumpToButton.setText(I18N.getMessage("SimulationComposite.JumpTo"));
+			jumpToButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					applicationService.quitSimulation();
+					startNonResetSimulation();
+				}
+			});
+			
+			timeCompositeLayout.verticalSpacing = 10;
+			timeComposite.layout();
+			controllerComposite.layout();
 		}
 		else {
 			disposeComposite(timeComposite);
 			
 			Label departureLabel = new Label(timeComposite, SWT.NONE);
 		    departureLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		    departureLabel.setText("Beginn der Simulation:");
+		    departureLabel.setText(I18N.getMessage("SimulationComposite.BeginSimulation"));
 		    
 		    startDayCombo = new Combo(timeComposite, SWT.READ_ONLY);
 		    startDayCombo.add("Montag");
@@ -423,7 +488,9 @@ public class SimulationComposite implements Observer {
 			}
 			startMinuteCombo.select(0);
 			
+			timeCompositeLayout.verticalSpacing = 20;
 			timeComposite.layout();
+			controllerComposite.layout();
 		}
 	}
 	
@@ -446,14 +513,14 @@ public class SimulationComposite implements Observer {
 	 */
 	private int getDay() {
 		switch (startDayCombo.getItem(startDayCombo.getSelectionIndex())) {
-			case "Montag": return 5;
-			case "Dienstag": return 6;
-			case "Mittwoch": return 7;
-			case "Donnerstag": return 8;
-			case "Freitag": return 9;
-			case "Samstag": return 10;
-			case "Sonntag": return 11;
-			default: return 5;
+			case "Montag": 		return 5;
+			case "Dienstag":	return 6;
+			case "Mittwoch":	return 7;
+			case "Donnerstag":	return 8;
+			case "Freitag": 	return 9;
+			case "Samstag": 	return 10;
+			case "Sonntag": 	return 11;
+			default:			return 5;
 		}
 	}
 	
