@@ -125,7 +125,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		RailwaySystem railSys = model.getActiveRailwaySys();
 		List<ScheduleScheme> schemes = model.getActiveScheduleSchemes();
 		if (!ai.isRunning() && railSys != null) {
-			ai.startSimulation(time, railSys, schemes, o);
+			ai.startSimulation(time, railSys, schemes, o, resetData);
 		}
 		
 	}

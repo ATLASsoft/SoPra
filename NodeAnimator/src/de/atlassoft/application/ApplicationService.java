@@ -10,7 +10,6 @@ import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 
-//TODO: Interface auskommentieren
 /**
  * Interface providing access to the application service layer (highest
  * abstraction) of this application.
@@ -91,24 +90,95 @@ public interface ApplicationService {
 	 */
 	void setTimeLapse(int timeLapse);
 	
+	/**
+	 * Adds a schedule scheme to the model and saves it on the local
+	 * computer.
+	 * 
+	 * @param scheduleScheme
+	 * 		The schedule scheme to save
+	 */
 	void addScheduleScheme(ScheduleScheme scheduleScheme);
 	
+	/**
+	 * Deletes a schedule from the model.
+	 * 
+	 * @param scheduleScheme
+	 * 		The schedule scheme to delete
+	 */
 	void deleteScheduleScheme(ScheduleScheme scheduleScheme);
 	
+	/**
+	 * Saves the created railway system in the model and
+	 * on the local pc. This railway system is put as the
+	 * active railway system.
+	 * 
+	 * @param railSys
+	 * 		The created railway system
+	 */
 	void saveRailwaySystem(RailwaySystem railSys);
 	
+	/**
+	 * Deletes the given railway system from the model and from
+	 * the local pc. Also sets the active railway system null, if
+	 * this is the deleted railway system.
+	 * 
+	 * @param railSysID
+	 * 	  The ID of the railway system which should be deleted
+	 */
 	void deleteRailwaySystem(String railSysID);
 	
+	/**
+	 * Sets the railway system with the given ID as the new 
+	 * active railway system.
+	 * 
+	 * @param railsSysID
+	 * 		The ID of the railway system
+	 */
 	void setActiveRailwaySystem(String railsSysID);
 	
+	/**
+	 * Adds a train type to the model and saves it
+	 * on the pc.
+	 * 
+	 * @param trainType
+	 * 		The train type to save
+	 */
 	void addTrainType(TrainType trainType);
 	
+	/**
+	 * Deletes a train type from the model and the local
+	 * pc. Also deletes all schedules with this train type.
+	 * 
+	 * @param trainType
+	 * 		The train type to delete
+	 */
 	void deleteTrainType(TrainType trainType);
 	
+	/**
+	 * Creates and opens the statistic of the simulation
+	 * as a PDF file.
+	 * 
+	 * @param statistic
+	 * 		The statistic of the simulation
+	 */
 	void showStatisticDoc(SimulationStatistic statistic);
 	
+	/**
+	 * Creates and opens all information of the given
+	 * schedule scheme as a PDF file.
+	 * 
+	 * @param scheduleScheme
+	 * 		The schedule scheme to create the PDF
+	 */
 	void showScheduleDoc(ScheduleScheme scheduleScheme);
 	
+	/**
+	 * Creates and opens all departures from a given
+	 * node as a PDF file.
+	 * 
+	 * @param station
+	 * 		The station which should be regarded
+	 */
 	void showDepartureBoardDoc(Node station);
 	
 	/**
