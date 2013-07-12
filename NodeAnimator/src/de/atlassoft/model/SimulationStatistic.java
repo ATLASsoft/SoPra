@@ -62,7 +62,7 @@ public class SimulationStatistic {
 	 */
 	public double getMeanDelay() {
 		double meanDelay;
-		meanDelay = getTotalDelay() / getNumberOfRides();
+		meanDelay = getTotalDelay() / getInvolvedNodes().size();
 		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
@@ -104,7 +104,7 @@ public class SimulationStatistic {
 				}
 			}
 		}
-		meanDelay = meanDelay / getNumberOfRides(trainType);
+		meanDelay = meanDelay / getInvolvedNodes(trainType).size();
 		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
@@ -118,22 +118,18 @@ public class SimulationStatistic {
 	 */
 	public double getMeanDelay(Node station) {
 		double meanDelay = 0.0;
-		int numberOfRides = 0;
 		for (TrainRideStatistic statistic : trainRideStatistic) {
 			java.util.List<Node> stationList = statistic.getStations();
 			for (Node allStation : stationList) {
 				if (allStation.equals(station)) {
 					if (statistic.getDelay(station) > 0) {
 						meanDelay = meanDelay + statistic.getDelay(station);
-						numberOfRides++;
 					}
 				}
 			}
  		}
-		if (numberOfRides != 0) {
-			meanDelay = meanDelay / numberOfRides;
-			meanDelay = Math.round(meanDelay*100.0)/100.0;
-		}
+		meanDelay = meanDelay / getNumberOfRides(station);
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
 	
@@ -156,7 +152,7 @@ public class SimulationStatistic {
 				}
 			}
  		}
-		meanDelay = meanDelay / getNumberOfRides(scheduleScheme);
+		meanDelay = meanDelay / getInvolvedNodes(scheduleScheme).size();
 		meanDelay = Math.round(meanDelay*100.0)/100.0;
 		return meanDelay;
 	}
@@ -218,6 +214,26 @@ public class SimulationStatistic {
 	}
 	
 	/**
+	 * This method will get the number of all train rides
+	 * of the specified {@link Node} of the whole simulation.
+	 * 
+	 * @param trainType
+	 * @return numberOfRides
+	 */
+	public int getNumberOfRides(Node node) {
+		int numberOfRides = 0;
+		for (TrainRideStatistic statistic : trainRideStatistic){
+			java.util.List<Node> nodes = statistic.getScheduleScheme().getStations();
+			for (Node sameNode : nodes) {
+				if (sameNode.equals(node)) {
+					numberOfRides++;
+				}
+			}
+		}
+		return numberOfRides;
+	}
+	
+	/**
 	 * This method will get the number of all train rides of the specified
 	 * {@link ScheduleScheme} of the whole simulation.
 	 * 
@@ -259,9 +275,9 @@ public class SimulationStatistic {
 	 */
 	public List <TrainType> getInvolvedTrainTypes() {
 		java.util.List<TrainType> trainTypes= new ArrayList <TrainType>();
-		for (ScheduleScheme scheduleScheme : getInvolvedScheduleSchemes()) {
-			if (!trainTypes.contains(scheduleScheme.getTrainType())) {
-				trainTypes.add(scheduleScheme.getTrainType());
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			if (!trainTypes.contains(statistic.getScheduleScheme().getTrainType())) {
+				trainTypes.add(statistic.getScheduleScheme().getTrainType());
 			}
 		}
 		return trainTypes;
@@ -275,11 +291,11 @@ public class SimulationStatistic {
 	 */
 	public List <Node> getInvolvedNodes() {
 		java.util.List<Node> nodes= new ArrayList <Node>();
-		for (ScheduleScheme scheduleScheme : getInvolvedScheduleSchemes()) {
-			java.util.List<Node> addNode = scheduleScheme.getStations();
-			for (Node node : addNode) {
-				if (!nodes.contains(node)) {
-				nodes.add(node);
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			java.util.List<Node> addNodes = statistic.getStations();
+			for (Node addNode : addNodes) {
+				if (!nodes.contains(addNode)) {
+					nodes.add(addNode);
 				}
 			}
 		}
@@ -295,12 +311,32 @@ public class SimulationStatistic {
 	 */
 	public List <Node> getInvolvedNodes(ScheduleScheme scheduleScheme) {
 		java.util.List<Node> nodes= new ArrayList <Node>();
-		for (ScheduleScheme scheduleSchemes : getInvolvedScheduleSchemes()) {
-			if (scheduleSchemes.getID().equals(scheduleScheme)) {
-				java.util.List<Node> addNode = scheduleSchemes.getStations();
-				for (Node node : addNode) {
-					if (!nodes.contains(node)) {
-						nodes.add(node);
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			if (statistic.getScheduleScheme().equals(scheduleScheme)) {
+				java.util.List<Node> addNodes = statistic.getStations();
+				for (Node addNode : addNodes) {
+					if (!nodes.contains(addNode)) {
+						nodes.add(addNode);
+					}
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	/**
+	 * 
+	 * @param scheduleScheme
+	 * @return nodes
+	 */
+	public List <Node> getInvolvedNodes(TrainType trainType) {
+		java.util.List<Node> nodes= new ArrayList <Node>();
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			if (statistic.getScheduleScheme().getTrainType().equals(trainType)) {
+				java.util.List<Node> addNodes = statistic.getStations();
+				for (Node addNode : addNodes) {
+					if (!nodes.contains(addNode)) {
+						nodes.add(addNode);
 					}
 				}
 			}
