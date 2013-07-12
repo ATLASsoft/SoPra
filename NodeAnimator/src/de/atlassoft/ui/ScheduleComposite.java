@@ -39,6 +39,7 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.TrainType;
+import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
@@ -507,7 +508,20 @@ public class ScheduleComposite {
 		save.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				
+				//check the time combos
+				if (hourCombo.getSelectionIndex() > hourComboILR.getSelectionIndex()) {
+					ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
+												   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
+					return;
+				}
+				else if (hourCombo.getSelectionIndex() == hourComboILR.getSelectionIndex() &&
+						 minuteCombo.getSelectionIndex() > minuteComboILR.getSelectionIndex()) {
+					ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
+							   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
+					return;
+				}
+				
 				//check the arrays
 				if (nodeList.isEmpty() || nodeList.size()<2) {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
