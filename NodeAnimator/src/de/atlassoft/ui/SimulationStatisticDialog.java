@@ -60,7 +60,7 @@ public class SimulationStatisticDialog {
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setImage(ImageHelper.getImage("trainIcon"));
 		shell.setText(I18N.getMessage("SimulationStatisticDialog.Title"));
-		shell.setSize(880, 640);
+		shell.setSize(880, 600);
 		shell.setLayout(new GridLayout(1, true));
 		
 		tabFolder = new TabFolder(shell, SWT.NONE);
