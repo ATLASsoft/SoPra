@@ -309,7 +309,7 @@ class PDFCreator {
 		}
 		DecimalFormat doubleFormater = new DecimalFormat("#0.00");
 
-		List<TrainRideStatistic> test = stat.getStatistics();
+		List<TrainRideStatistic> tRS = stat.getStatistics();
 		Double trainTypeWithMostMDelay = 0.0;
 		Double scheduleSchemeMostMDelay = 0.0;
 		Double nodeMostMDelay = 0.0;
@@ -318,8 +318,10 @@ class PDFCreator {
 		String trainTypeMMD = "";
 		int scheduleNumberOfRides = 0;
 		int trainTypeNumberOfRides = 0;
-
-		for (TrainRideStatistic trs : test) {
+		List<ScheduleScheme> allScheduleIDS = stat.getInvolvedScheduleSchemes();
+		String railSysID = stat.getRailwaySystem().getID();
+		
+		for (TrainRideStatistic trs : tRS) {
 			// Liste über all Knoten der Statistik + Knoten mit most MeanDelay
 			List<Node> nodeStat = trs.getStations();
 			for (Node node : nodeStat) {
@@ -328,7 +330,7 @@ class PDFCreator {
 					nodeMMD = node.getName();
 				}
 			}
-
+		
 			// ScheduleScheme with most MeanDelay
 			if (stat.getMeanDelay(trs.getScheduleScheme()) > scheduleSchemeMostMDelay) {
 				scheduleSchemeMostMDelay = stat.getMeanDelay(trs
@@ -348,8 +350,29 @@ class PDFCreator {
 						.getScheduleScheme().getTrainType());
 				trainTypeMMD = trs.getScheduleScheme().getTrainType().getName();
 			}
+
 		}
 		// General Data
+		Paragraph involvedRailSysInf = new Paragraph ("Aktives Streckennetz: ", smallBold);
+		addEmptyLine(involvedRailSysInf, 1);
+		document.add(involvedRailSysInf);
+		Paragraph invovedRailSys = new Paragraph(railSysID);
+		addEmptyLine(invovedRailSys, 1);
+		document.add(invovedRailSys);
+		Paragraph involvedSchedulesInf = new Paragraph ("Aktive Fahrpläne: ", smallBold);
+		addEmptyLine(involvedSchedulesInf, 1);
+		document.add(involvedSchedulesInf);
+		Paragraph invovedSchedules = new Paragraph("");
+		for (ScheduleScheme scheduleScheme : allScheduleIDS) {
+			if (scheduleScheme
+					== (allScheduleIDS.get(allScheduleIDS.size() - 1))) {
+				invovedSchedules.add(scheduleScheme.getID());
+			} else{
+			invovedSchedules.add(scheduleScheme.getID() + ", ");
+			}
+		}
+		addEmptyLine(invovedSchedules, 1);
+		document.add(invovedSchedules);
 		Paragraph contentNumbers = new Paragraph(
 				"Gesamte Anzahl der Fahrten, innerhalb der Simulation: ",
 				smallBold);
@@ -563,22 +586,6 @@ class PDFCreator {
 		}
 
 		buildTable.add(table);
-	}
-
-	//TODO methode entfernen!
-	/**
-	 * Generates a list in the PDF document.If subCatPart is null, an
-	 * {@link IllegalArgumentException} is thrown.
-	 * 
-	 * @param subCatPart
-	 *            {@link Section} describes the structure and the content of the
-	 *            list.
-	 * 
-	 */
-	protected void createList(Section subCatPart) {
-		if (subCatPart == null) {
-			throw new IllegalArgumentException("document must not be null");
-		}
 	}
 
 }

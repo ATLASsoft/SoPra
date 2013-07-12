@@ -34,6 +34,10 @@ public class DocExportServicePDFImpl implements DocExportService {
 		pdfCreator.addTitlePage(document, "Statistikinformationen", "Dieses Dokument, beinhaltet alle relevanten Informationen zu der Statistik des letzten Simulationdurchlaufs", "");
 		pdfCreator.addStatisticContent(document, stat);
 		document.close();
+		try { 															
+			Runtime.getRuntime().exec("cmd.exe /c start " + STATISTIC_DOC_PATH.toString() + ".pdf");
+		} 
+		catch (Exception e) {System.out.println("Anzeigen fehlgeschlagen"); }
 	}
 
 	@Override
@@ -45,6 +49,10 @@ public class DocExportServicePDFImpl implements DocExportService {
 	      pdfCreator.addTitlePage(document, "Fahrplaninformationen" , "Dieses Dokument, beinhaltet alle relevanten Informationen zu dem Fahrplan: " , schedule.getID());
 	      pdfCreator.addScheduleContent(document, schedule);
 	      document.close();	
+			try { 															
+				Runtime.getRuntime().exec("cmd.exe /c start " + SCHEDULE_DOC_PATH.toString() + "_" + schedule.getID() + ".pdf");
+			} 
+			catch (Exception e) {System.out.println("Anzeigen fehlgeschlagen"); }
 	}
 
 	@Override
@@ -56,6 +64,10 @@ public class DocExportServicePDFImpl implements DocExportService {
 		pdfCreator.addTitlePage(document, "Abfahrtentafel", "Dieses Dokument, beinhaltet alle relevanten Informationen, zu allen Abfahrtszeiten, zu der Station: " , station.getName());
 		pdfCreator.addDepartureContent(document, station, scedList);
 		document.close();
+		try { 															
+			Runtime.getRuntime().exec("cmd.exe /c start " + DEPARTURE_DOC_PATH.toString() + "_"  + station.getName() + ".pdf");
+		} 
+		catch (Exception e) {System.out.println("Anzeigen fehlgeschlagen"); }
 	}
 
 }

@@ -554,9 +554,7 @@ class XMLParser {
 	protected void saveRailWaySystem(RailwaySystem railSys, Path path)
 			throws IOException {
 		FileOutputStream out = null;
-		if (!Files.exists(path)) {
-			createXML(path, "Railwaysystems");
-		}
+
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
