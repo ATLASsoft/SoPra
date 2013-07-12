@@ -186,6 +186,36 @@ public class SimulationStatistic {
 	}
 	
 	/**
+	 * This method will calculate the mean delay of the specified
+	 * {@link TrainType} and the specified {@link Node} of the whole
+	 * simulation.
+	 * 
+	 * @param TrainType
+	 * @param station
+	 * @return meanDelay
+	 */
+	public double getMeanDelay(TrainType trainType, Node station) {
+		double meanDelay = 0.0;
+		int numberOfRides = 0;
+		for (TrainRideStatistic statistic : trainRideStatistic) {
+			if (statistic.getScheduleScheme().getTrainType().equals(trainType)) {
+				java.util.List<Node> stationList = statistic.getStations();
+				for (Node allStation : stationList) {
+					if (allStation.equals(station)) {
+						if (statistic.getDelay(station) > 0) {
+							meanDelay = meanDelay + statistic.getDelay(station);
+						}
+						numberOfRides++;
+					}
+				}
+			}
+ 		}
+		meanDelay = meanDelay / numberOfRides;
+		meanDelay = Math.round(meanDelay*100.0)/100.0;
+		return meanDelay;
+	}
+	
+	/**
 	 * This method will get the number of all train rides
 	 * of the whole simulation.
 	 * 
