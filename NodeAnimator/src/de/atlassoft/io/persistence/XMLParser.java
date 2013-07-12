@@ -4,6 +4,7 @@ package de.atlassoft.io.persistence;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -69,7 +70,7 @@ class XMLParser {
 	 */
 	protected void saveTrainType(TrainType type, Path path, Path picpath) throws IOException {
 		// if file does not exist, create new
-		FileWriter out = null;
+		FileOutputStream out = null;
 
 		// add content
 
@@ -111,7 +112,8 @@ class XMLParser {
 
 			XMLOutputter xmlOutput = new XMLOutputter();
 
-			out = new FileWriter(path.toFile());
+			out = new FileOutputStream(path.toFile());
+			
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, out);
 
@@ -176,7 +178,7 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
-		FileWriter out = null;
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -200,7 +202,7 @@ class XMLParser {
 
 			XMLOutputter xmlOutput = new XMLOutputter();
 
-			out = new FileWriter(path.toFile());
+			out = new FileOutputStream(path.toFile());
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, out);
 			System.out.println("File deleted!");
@@ -222,10 +224,7 @@ class XMLParser {
 	protected void saveSchedule(ScheduleScheme schedule, Path path)
 			throws IOException {
 
-		FileWriter out = null;
-		if (!Files.exists(path)) {
-			createXML(path, "Schedules");
-		}
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -296,7 +295,7 @@ class XMLParser {
 
 			XMLOutputter xmlOutput = new XMLOutputter();
 
-			out = new FileWriter(path.toFile());
+			out = new FileOutputStream(path.toFile());
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, out);
 
@@ -425,7 +424,7 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
-		FileWriter out = null;
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -446,7 +445,7 @@ class XMLParser {
 
 				XMLOutputter xmlOutput = new XMLOutputter();
 
-				out = new FileWriter(path.toFile());
+				out = new FileOutputStream(path.toFile());
 				xmlOutput.setFormat(Format.getPrettyFormat());
 				xmlOutput.output(doc, out);
 				System.out.println("RailSysId deleted!");
@@ -471,7 +470,7 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
-		FileWriter out = null;
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -494,7 +493,7 @@ class XMLParser {
 				}
 				XMLOutputter xmlOutput = new XMLOutputter();
 
-				out = new FileWriter(path.toFile());
+				out = new FileOutputStream(path.toFile());
 				xmlOutput.setFormat(Format.getPrettyFormat());
 				xmlOutput.output(doc, out);
 			}
@@ -516,7 +515,7 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
-		FileWriter out = null;
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -538,7 +537,7 @@ class XMLParser {
 				}
 				XMLOutputter xmlOutput = new XMLOutputter();
 
-				out = new FileWriter(path.toFile());
+				out = new FileOutputStream(path.toFile());
 				xmlOutput.setFormat(Format.getPrettyFormat());
 				xmlOutput.output(doc, out);
 			}
@@ -554,7 +553,7 @@ class XMLParser {
 
 	protected void saveRailWaySystem(RailwaySystem railSys, Path path)
 			throws IOException {
-		FileWriter out = null;
+		FileOutputStream out = null;
 		if (!Files.exists(path)) {
 			createXML(path, "Railwaysystems");
 		}
@@ -604,7 +603,7 @@ class XMLParser {
 			railsys.addContent(paths);
 			
 			doc.getRootElement().addContent(railsys);		
-			out = new FileWriter(path.toFile());
+			out = new FileOutputStream(path.toFile());
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			xmlOutput.output(doc, out);
 
@@ -623,7 +622,7 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
-		FileWriter out = null;
+		FileOutputStream out = null;
 		try {
 
 			SAXBuilder builder = new SAXBuilder();
@@ -645,7 +644,7 @@ class XMLParser {
 				}
 				XMLOutputter xmlOutput = new XMLOutputter();
 
-				out = new FileWriter(path.toFile());
+				out = new FileOutputStream(path.toFile());
 				xmlOutput.setFormat(Format.getPrettyFormat());
 				xmlOutput.output(doc, out);
 			}
