@@ -28,7 +28,12 @@ public interface AIService {
 	 * @param start
 	 *            Simulation time the simulation should start at
 	 */
-	void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o);
+	void startSimulation(
+			Calendar start,
+			RailwaySystem railSys,
+			List<ScheduleScheme> schemes,
+			Observer o,
+			boolean resetData);
 	
 	/**
 	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no

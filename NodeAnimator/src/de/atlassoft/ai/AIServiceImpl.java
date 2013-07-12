@@ -36,7 +36,7 @@ public class AIServiceImpl implements AIService {
 	
 	//TODO: boolean ob man heatmap daten und statisik zurücksetzen soll
 	@Override
-	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
+	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o, boolean resetData) {
 		if (!running) {
 			railSys.clear();
 			loop = new SimulationLoop(new Graph(railSys), this);
