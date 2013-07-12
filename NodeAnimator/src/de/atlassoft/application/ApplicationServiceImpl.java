@@ -121,7 +121,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-	public void startSimulation(Calendar time, Observer o) {
+	public void startSimulation(Calendar time, Observer o, boolean resetData) {
 		RailwaySystem railSys = model.getActiveRailwaySys();
 		List<ScheduleScheme> schemes = model.getActiveScheduleSchemes();
 		if (!ai.isRunning() && railSys != null) {

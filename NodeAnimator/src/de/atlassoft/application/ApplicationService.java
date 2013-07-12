@@ -47,8 +47,9 @@ public interface ApplicationService {
 	 * 
 	 * @param time
 	 *            Simulation time the simulation should start at
+	 * @param resetData Indicates whether previously collected data should be erased
 	 */
-	void startSimulation(Calendar time, Observer o);
+	void startSimulation(Calendar time, Observer o, boolean resetData);
 	
 	/**
 	 * Pauses an ongoing simulation run. If there is no ongoing simulation, no
