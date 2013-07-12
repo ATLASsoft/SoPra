@@ -36,14 +36,24 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 		this.alternativeRoute = currentPath.subList(
 				currentPath.indexOf(currentPosition), currentPath.size());
 
-		List<Node> pathOther = blockingAgent.getCurrentPath();
-		nextAfterBlockO =
-				pathOther.get(1 + pathOther.indexOf(blockedNode));
+		List<Node> pathOther = blockingAgent.getCurrentPath(); //TODO: was wenn der block der letzte ist ist unds kein next after block gibt
+		
+		
+		// set the next node of the other agent after the block or null if the
+		// blocked node is a station of the other agent (in this case it's the
+		// last node in the current path list of the other agent)
+		int indexOfNextAfterBlockO = 1 + pathOther.indexOf(blockedNode);
+		if (indexOfNextAfterBlockO < pathOther.size()) {
+			nextAfterBlockO =
+					pathOther.get(indexOfNextAfterBlockO);
+		} else {
+			nextAfterBlockO = null;
+		}
 	}
 	
 	@Override
 	protected long getCosts() {
-		if (nextAfterBlockO.equals(currentPosition)) {
+		if (nextAfterBlockO != null && nextAfterBlockO.equals(currentPosition)) {
 			return Long.MAX_VALUE;
 		}
 		

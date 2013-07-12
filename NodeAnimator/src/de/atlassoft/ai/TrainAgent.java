@@ -196,7 +196,7 @@ public class TrainAgent implements Runnable {
 //								anim.setTimeLapse(timeLapse);
 //							}
 						PathFindingStrategy strategy = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
-						PathFindingStrategy s2 = new AlternativeRouteStrategy(graph, this, blockedNode);
+						PathFindingStrategy s2 = new AlternativeRouteStrategy(graph, this, currentPosition);
 						
 						if (strategy.getCosts() < s2.getCosts()) {
 							anim = strategy.execute();
