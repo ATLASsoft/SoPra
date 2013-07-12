@@ -3,7 +3,6 @@ package de.atlassoft.util;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -11,73 +10,15 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
-//TODO: alte sachen löschen, falls alles klappt
-public abstract class ScheduleFactory {
 
-	
-//	/**
-//	 * Returns a {@link PriorityQueue} containing all {@link Schedule}s that
-//	 * start after start at the same day.
-//	 * 
-//	 * @param schemes
-//	 *            Schemes to create schedules from
-//	 * @param start
-//	 *            Only schedules that start after start will be created
-//	 * @return Queue of schedules
-//	 */
-//	public static PriorityQueue<Schedule> createScheduleQueue(
-//			List<ScheduleScheme> schemes, Calendar start) {
-//		PriorityQueue<Schedule> queue = new PriorityQueue<>(1, new Comparator<Schedule>() {
-//			
-//			@Override
-//			public int compare(Schedule o1, Schedule o2) {
-//				boolean isBefore = isBefore(o1.getArrivalTimesXP()[0], o2.getArrivalTimesXP()[0]);
-//				if (isBefore) {
-//					return -1;
-//				} else {
-//					return +1;
-//				}
-//			}
-//		});
-//		
-//		
-//		Calendar begin = (Calendar) start.clone();
-//		Calendar cal;
-//		Calendar lastRide;
-//		int day = begin.get(Calendar.DAY_OF_WEEK);
-//		
-//		for (ScheduleScheme scheme : schemes) {
-//			if (scheme.getDays().contains(day)) {
-//				if (scheme.getScheduleType().equals(ScheduleType.INTERVALL)) {
-//					cal = setToFirstRide(scheme, begin);
-//					lastRide = new GregorianCalendar();
-//					lastRide.clear();
-//					lastRide.set(Calendar.DAY_OF_WEEK, day);
-//					lastRide.set(Calendar.HOUR_OF_DAY, scheme.getLastRide().get(Calendar.HOUR_OF_DAY));
-//					lastRide.set(Calendar.MINUTE, scheme.getLastRide().get(Calendar.MINUTE));
-//					lastRide.set(Calendar.SECOND, 0);
-//					lastRide.set(Calendar.MILLISECOND, 0);
-//					while (isBefore(cal, lastRide)) {
-//						queue.offer(createSchedule(scheme, cal));
-//						cal.add(Calendar.MINUTE, scheme.getInterval());
-//					}
-//				} else {
-//					cal = (Calendar) scheme.getFirstRide().clone();
-//					cal.set(Calendar.DAY_OF_WEEK, day);
-//					if (isAfter(cal, begin)) {
-//						queue.offer(createSchedule(scheme, cal));
-//					}
-//				}
-//			}
-//		}
-//		return queue;
-//	}
+public abstract class ScheduleFactory {
 
 	public static PriorityQueue<Schedule> createScheduleQueue(Calendar startOfSimulation, Calendar start, List<ScheduleScheme> schemes) {
 		PriorityQueue<Schedule> queue = new PriorityQueue<>(1, new Comparator<Schedule>() {
 			@Override
 			public int compare(Schedule o1, Schedule o2) {
-				return o1.getATs()[0] - o2.getATs()[0];
+				return o1.getArrivalTime(o1.getStations()[0])
+						- o2.getArrivalTime(o2.getStations()[0]);
 			}
 		});
 		
@@ -138,51 +79,24 @@ public abstract class ScheduleFactory {
 		return cal;
 	}
 	
-//	private static Schedule createSchedule(ScheduleScheme scheme, Calendar departureTime) {
-//		List<Node> stationList = scheme.getStations();
-//		Node[] stations = stationList.toArray(new Node[0]);
-//		
-//		List<Integer> arrivalList = scheme.getArrivalTimes();
-//		Calendar[] arrivalTimes = new Calendar[arrivalList.size()];
-//		Calendar cal;
-//		for (int i = 0; i < arrivalTimes.length; i++) {
-//			cal = (Calendar) departureTime.clone();
-//			cal.add(Calendar.SECOND, arrivalList.get(i));
-//			arrivalTimes[i] = cal;
-//		}
-//		
-//		List<Integer> idleList = scheme.getIdleTimes();
-//		int[] idleTimes = new int[idleList.size()];
-//		for (int i = 0; i < idleTimes.length; i++) {
-//			idleTimes[i] = idleList.get(i);
-//		}
-//		
-//		return new Schedule(scheme, stations, arrivalTimes, idleTimes);
-//	}
-	
 	private static Schedule createSchedule(ScheduleScheme scheme, Calendar departureTime, Calendar simStart) {
 		int normalizedDepartureTime = (int) (departureTime.getTimeInMillis() - simStart.getTimeInMillis());
 		
 		List<Node> stationList = scheme.getStations();
 		Node[] stations = stationList.toArray(new Node[0]);
 		
-		List<Integer> arrivalList = scheme.getArrivalTimes();
-		int[] arrivalTimes = new int[arrivalList.size()];
-		Iterator<Integer> it = arrivalList.iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			arrivalTimes[i] = normalizedDepartureTime + it.next();
-			i++;
-		}
+		Schedule schedule = new Schedule(scheme, stations);
 		
 		List<Integer> idleList = scheme.getIdleTimes();
-		int[] departureTimes = new int[idleList.size()];
-		it = idleList.iterator();
-		i = 0;
-		while (it.hasNext()) {
-			departureTimes[i] = arrivalTimes[i] + it.next();
+		List<Integer> arrivalList = scheme.getArrivalTimes();
+		for (int i = 0; i < stations.length; i++) {
+			schedule.addIdleTime(stations[i], idleList.get(i) * 1000);
+			
+			schedule.addArrivalTime(stations[i],
+					normalizedDepartureTime + (arrivalList.get(i) * 1000));
 		}
-		return new Schedule(scheme, stations, arrivalTimes, departureTimes);
+		
+		return schedule;
 	}
 	
 	/**

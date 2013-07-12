@@ -47,7 +47,7 @@ public class SimulationLoop extends Observable {
 	/**
 	 * Passed simulated time in ms since the start of the SimulationLoop
 	 */
-	private long passedSimTime;
+	private volatile long passedSimTime;
 
 	/**
 	 * Time lapse. For example timeLapse = 1000 means one second in real time
@@ -197,10 +197,10 @@ public class SimulationLoop extends Observable {
 	}
 
 	/**
-	 * Returns a {@link Calendar} instance, that represents the current
-	 * simulation time.
+	 * Returns the current simulation time in milliseconds after the start
+	 * of the simulation.
 	 * 
-	 * @return Copy of simTime
+	 * @return The simulation time
 	 */
 	protected long getSimTimeInMillis() {
 		return passedSimTime;
@@ -218,7 +218,7 @@ public class SimulationLoop extends Observable {
 	
 	
 	
-	private class Loop implements Runnable { // TODO: shutdown sicherstellen
+	private class Loop implements Runnable {
 
 		@Override
 		public void run() {
@@ -292,7 +292,8 @@ public class SimulationLoop extends Observable {
 	private void createNewTrains() {
 		// add trains that have to start to ready schedules
 		while (!schedules.isEmpty()
-				&& schedules.peek().getATs()[0] < passedSimTime) {
+				&& schedules.peek().getArrivalTime(
+						schedules.peek().getStations()[0]) < passedSimTime) {
 			readySchedules.add(schedules.poll());
 		}
 		
@@ -302,7 +303,7 @@ public class SimulationLoop extends Observable {
 		Iterator<Schedule> it = readySchedules.iterator();
 		while (it.hasNext()) {
 			s = it.next();
-			if (s.getStations()[0].getState().getState() != State.BLOCKED) {
+			if (s.getStations()[0].getState().getState() == State.UNBLOCKED) {
 				it.remove();
 				agent = new TrainAgent(graph, agentCounter, s, aiPort);
 				agentCounter++;

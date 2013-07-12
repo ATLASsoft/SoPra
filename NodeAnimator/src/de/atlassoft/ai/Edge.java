@@ -1,5 +1,8 @@
 package de.atlassoft.ai;
 
+import de.atlassoft.model.Path;
+import de.atlassoft.model.State;
+
 
 class Edge {
 
@@ -10,7 +13,7 @@ class Edge {
 	private double topSpeed;
 	private Vertex start;
 	private Vertex end;
-	private boolean blocked;
+	private Path modelObject;
 	
 	/**
 	 * 
@@ -19,15 +22,20 @@ class Edge {
 	 * @param distance
 	 * @param topSpeed
 	 */
-	Edge(Vertex start, Vertex end, double distance, double topSpeed) {
+	Edge(Vertex start, Vertex end, double distance, double topSpeed, Path modelObject) {
 		this.start = start;
 		this.end = end;
 		this.distance = distance;
 		this.topSpeed = topSpeed;
+		this.modelObject = modelObject;
 	}
 	
 	boolean isBlocked() {
-		return blocked;
+		if (modelObject.getState().getState() == State.BLOCKED) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -43,10 +51,6 @@ class Edge {
 		return distance / Math.min(this.topSpeed, mobileTopSpeed);
 	}
 	
-	void setBlocked(boolean blocked) {
-		this.blocked = blocked;
-	}
-
 	public double getDistance() {
 		return distance;
 	}

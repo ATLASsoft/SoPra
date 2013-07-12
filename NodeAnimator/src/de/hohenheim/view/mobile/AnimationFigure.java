@@ -131,7 +131,7 @@ public abstract class AnimationFigure extends Figure {
 	 * @param NodeFigure Sets the Room where the mobile object should be located actually.
 	 */
 	public void setNode(NodeFigure room) {
-		this.room = room;
+		this.room = room; //TODO: früher zeit messen
 		modellObject.block(room.getModellObject().getState());
 		room.getModellObject().incrementWorkLoad(
 				this.modellObject.getSchedule().getScheme());

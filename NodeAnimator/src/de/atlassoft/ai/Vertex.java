@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.atlassoft.model.Node;
+import de.atlassoft.model.State;
 
 class Vertex {
 
 	private Node modelObject;
 	private List<Edge> outgoingEdges;
-	private boolean blocked;
 	protected int id;
 	
 	Vertex(Node modelObject, int id) {
@@ -27,11 +27,11 @@ class Vertex {
 	}
 	
 	boolean isBlocked() {
-		return blocked;
-	}
-	
-	void setBlocked(boolean blocked) {
-		this.blocked = blocked;
+		if (modelObject.getState().getState() == State.BLOCKED) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	Node getModelObject() {

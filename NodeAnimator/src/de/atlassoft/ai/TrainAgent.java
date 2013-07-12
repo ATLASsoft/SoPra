@@ -18,18 +18,29 @@ import de.hohenheim.view.node.NodeFigure;
 
 //TODO: implementiern
 public class TrainAgent implements Runnable {
-
-	private int id;
-	private TrainFigure figure;
-	private Schedule schedule;
-	private TrainRideStatistic statistic;
-	private Graph graph;
-	private Set<State> blockedState;
-	private int timeLapse;
-	private SimpleWalkToAnimator anim;
-	private Thread runningThread;
+	
+	// constant attributes of this agent
+	private final int id;
+	private final TrainFigure figure;
+	private final Schedule schedule;
+	private final TrainRideStatistic statistic;
+	
 	private AIServiceImpl aiPort;
+	private final Graph graph;
+	private int timeLapse;
+	private Thread runningThread;
+	private SimpleWalkToAnimator anim;
+	private Set<State> blockedState;
+	private Set<State> requestedStates;
+	
+	/**
+	 * The current path from lastStation to nextStation.
+	 */
 	private List<Node>currentPath;
+	private Node lastStation;
+	private Node nextStation;
+	private Node currentPosition;
+	
 	
 	protected TrainAgent(Graph graph, int id, Schedule schedule, AIServiceImpl aiPort) {
 		this.statistic = new TrainRideStatistic(schedule.getScheme());
@@ -38,6 +49,7 @@ public class TrainAgent implements Runnable {
 		this.graph = graph;
 		this.aiPort = aiPort;
 		this.blockedState = new HashSet<>();
+		this.requestedStates = new HashSet<>();
 		figure = FigureFactory.createTrainFigure(
 				graph.getRailwaySystem().getNodeMap(),
 				schedule.getStations()[0].getNodeFigure(),
@@ -57,6 +69,8 @@ public class TrainAgent implements Runnable {
 		blockedState.remove(state);
 	}
 	
+	
+	
 	protected void continueRide() { //TODO: wenn nur start/stop aufgerufen wird überflüssig, da des auch in der loop gemacht werden kann
 		figure.startAnimation();
 	}
@@ -65,16 +79,27 @@ public class TrainAgent implements Runnable {
 		figure.stopAnimation();
 	}
 	
-	protected void setTimeLapse(int timeLapse) {
+	protected synchronized void setTimeLapse(int timeLapse) {
 		this.timeLapse = timeLapse;
 		if (anim != null) {
 			anim.setTimeLapse(timeLapse);
 		}
 	}
 	
+	protected synchronized int getTimeLapse() {
+		return timeLapse;
+	}
+	
+	protected long getSimTime() {
+		return aiPort.getLoop().getSimTimeInMillis();
+	}
 	
 	protected List<Node> getCurrentPath() {
 		return currentPath;
+	}
+	
+	protected void setCurrentPath(List<Node> path) {
+		currentPath = path;
 	}
 	
 	protected TrainFigure getTrainFigure() {
@@ -97,76 +122,99 @@ public class TrainAgent implements Runnable {
 	
 	@Override
 	public void run() {
-		runningThread = Thread.currentThread();
+		runningThread = Thread.currentThread(); //TODO: nicht thread safe
 		
 		for (int i = 0; i < schedule.getStations().length - 1; i++) {
-			currentPath = graph.getShortestPath(schedule.getStations()[i], schedule.getStations()[i + 1],
-					schedule.getScheme().getTrainType().getTopSpeed());
+			lastStation = schedule.getStations()[i];
+			nextStation = schedule.getStations()[i+1];
+			
+			// standard path finding algorithm
+			setCurrentPath(graph.getShortestPath(lastStation, nextStation,
+					schedule.getScheme().getTrainType().getTopSpeed()));
+			currentPosition = currentPath.get(0);
+			updateRequests(0);
+			
 			anim = figure.walkAlong(transformPath(currentPath));
 			anim.setTimeLapse(timeLapse);
 			figure.startAnimation();	
 			
 			// wait till animation ends or interrupted
-			synchronized (anim) { // acquire lock in order to wait
-				try {
-					// wait and maybe elude till next station is reached 
-					while (innerLoopCondition(i)) {
-						
-						// wait till animation stops since it reached the next station or
-						// the path is blocked
-						anim.wait();
-						
-						// animation is finished, next station reached
-						if (anim.isFinished()) {
-							
-							// compute delay and add it to the statistic
-							long simTime = aiPort.getLoop().getSimTimeInMillis();
-							int delay = (int) Math.round(((simTime - schedule.getATs()[i+1]) / 1000.0)); 
-							statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
-							figure.stopAnimation();
-							figure.clearAnimations();
-							
-							
-							//TODO: warten (idle time)
-						}
-						
-						// animation has been aborted before reaching goal,
-						// search for best alternative strategy
-						else {
-							System.out.println("train agent " + id + " waits");
-							
-							Node currentPosition = figure.getNodeFigure().getModellObject();
-							Node goal = schedule.getStations()[i+1];
-							Node blockedNode = currentPath.get
-									(1 + currentPath.indexOf(currentPosition));
-							TrainAgent blockingAgent = blockedNode.getState().getBlocker();
-							
-							// strategy 1: wait till other agent has passed
-							List<Node> pathOther = blockingAgent.getCurrentPath();
-							Node nextAfterBlockO =
-									pathOther.get(1 + pathOther.indexOf(blockedNode));
-							if (!nextAfterBlockO.equals(currentPosition)) {
-								
-							}
-							
-							
-							// strategy 2 compute alternative route
-							// strategy 3 draw back and let other pass
-							
-							
-							
-							
-							
-							figure.stopAnimation();//TODO: gscheit reagieren
-							figure.clearAnimations();
-							figure.busy(100);
-							figure.startAnimation();
-						}
+			try {
+				// wait and maybe elude till next station is reached 
+				while (!atNode(nextStation)) {
+					
+					// acquire lock in order to wait
+					synchronized (anim) {
+					// wait till animation stops since it reached the next station or
+					// the path is blocked
+					anim.wait();
 					}
-				} catch (InterruptedException e) {
-					System.out.println("train agent " + id + " has been interrupted, terminates");
-					return;
+					
+					System.out.println("agent " + id + " has been notifed");
+					
+					// animation is finished, next station reached
+					if (anim.isFinished()) {
+						// compute delay and add it to the statistic
+						long simTime = aiPort.getLoop().getSimTimeInMillis();
+						int delay = (int) Math.round(((simTime - schedule.getArrivalTime(nextStation)) / 1000.0)); 
+						statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
+						figure.stopAnimation();
+						figure.clearAnimations();
+
+						//TODO: warten (idle time)
+					}
+					
+					// animation has been aborted before reaching goal,
+					// search for best alternative strategy
+					else {
+						System.out.println("agent " + id + " seachres for alternative route");
+						figure.stopAnimation();    
+						figure.clearAnimations();
+						
+						// observe environment
+						NodeFigure curPosFig = figure.getNodeFigure();
+						if (curPosFig != null) { // agent is on node
+							currentPosition = curPosFig.getModellObject();
+						} else { // agent is on path
+							//TODO: agent ist auf path
+						}
+						
+						Node blockedNode = currentPath.get
+								(1 + currentPath.indexOf(currentPosition));
+						TrainAgent blockingAgent = blockedNode.getState().getBlocker();
+						
+						// strategy 1: wait till other agent has passed
+//							List<Node> pathOther = blockingAgent.getCurrentPath();
+//							Node nextAfterBlockO =
+//									pathOther.get(1 + pathOther.indexOf(blockedNode));
+//							if (!nextAfterBlockO.equals(currentPosition)) {
+//								figure.waitFor(blockedNode.getState());
+//								
+//								// chop current path
+//								currentPath = currentPath.subList(currentPath.indexOf(currentPosition), currentPath.size());
+//								anim = figure.walkAlong(this.transformPath(currentPath));
+//								anim.setTimeLapse(timeLapse);
+//							}
+						PathFindingStrategy strategy = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
+						PathFindingStrategy s2 = new AlternativeRouteStrategy(graph, this, blockedNode);
+						
+						if (strategy.getCosts() < s2.getCosts()) {
+							anim = strategy.execute();
+						} else {
+							anim = s2.execute();
+						}
+						
+						anim.setTimeLapse(timeLapse);
+						// strategy 2
+						// strategy 3 compute alternative route
+						// strategy 4 draw back and let other pass
+						
+//							figure.startAnimation();
+					}
 				}
+			} catch (InterruptedException e) {
+				System.out.println("train agent " + id + " has been interrupted, terminates");
+				return;
 			}
 			
 			
@@ -185,7 +233,6 @@ public class TrainAgent implements Runnable {
 		figure.stopAnimation();
 		figure.clearAnimations();
 		for (State s : blockedState) {
-			System.out.println(s);
 			s.setState(State.UNBLOCKED, null);
 		}
 		final NodeMap map = graph.getRailwaySystem().getNodeMap();
@@ -217,13 +264,49 @@ public class TrainAgent implements Runnable {
 		return figurePath;
 	}
 
-	private boolean innerLoopCondition(int i) {
+	private boolean atNode(Node node) {
 		NodeFigure currentNodeFigure = figure.getNodeFigure();
 		if (currentNodeFigure == null) {
-			return true;
+			return false;
 		}
-		return (!currentNodeFigure.getModellObject()
-				.equals(schedule.getStations()[i + 1]));
+		return (currentNodeFigure.getModellObject().equals(node));
+	}
+	
+	protected void updateRequests(int offset) {
+		List<Node> toWalk = currentPath.subList(
+				currentPath.indexOf(currentPosition), currentPath.size());
+		
+		for (State state : requestedStates) {
+			state.removeRequest(this);
+		}
+		requestedStates.clear();
+		
+		long simTime = aiPort.getLoop().getSimTimeInMillis();
+		List<Double> costList = graph.getCosts(toWalk, schedule.getScheme()
+				.getTrainType().getTopSpeed());
+		double fromD;
+		long fromL;
+		State state;
+		
+		// add first
+		state = toWalk.get(0).getState();
+		state.request(this, simTime, simTime + offset);
+		requestedStates.add(state);
+		
+		for (int i = 1; i < toWalk.size() - 1; i++) {
+			state = toWalk.get(i).getState();
+			fromD = simTime + offset + (costList.get(i) * 60 * 60 * 1000);
+			fromL = ((long) fromD) + 1;
+			state.request(this, fromL, fromL);
+			requestedStates.add(state);
+		}
+		
+		// add next station
+		state = toWalk.get(toWalk.size() - 1).getState();
+		fromD = simTime + offset + (costList.get(toWalk.size() - 1) * 60 * 60 * 1000);
+		fromL = ((long) fromD) + 1;
+		state.request(this, fromL, fromL + schedule.getIdleTime(nextStation));
+		requestedStates.add(state);
 	}
 	
 	

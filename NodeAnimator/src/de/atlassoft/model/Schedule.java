@@ -1,46 +1,15 @@
 package de.atlassoft.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //TODO: alte version löschen, falls alles klappt
 public class Schedule {
 
 	private ScheduleScheme scheme;
 	private Node[] stations;
-//	private Calendar[] arrivalTimes;
-//	private int[] idleTimes;
-    private int[] aTs;
-    private int[] departureTimes;
-
-
-//	/**
-//	 * Creates a new Schedule. Stations, arrivalTimes and idleTimes must have
-//	 * the same lengths.
-//	 * 
-//	 * @param scheme
-//	 *            {@link ScheduleScheme} of this schedule. Must not be null
-//	 * @param stations
-//	 *            {@link Node} the train stops at. . Must not be null
-//	 * @param arrivalTimes
-//	 *            Arrival time at each stop. Must not be null
-//	 * @param idleTimes
-//	 *            Idle time at each stop. Must not be null
-//	 */
-//	public Schedule(ScheduleScheme scheme, Node[] stations,
-//			Calendar[] arrivalTimes, int[] idleTimes) {
-//		if (scheme == null || stations == null || arrivalTimes == null
-//				|| idleTimes == null) {
-//			throw new IllegalArgumentException("parameters must not be null");
-//		}
-//		if (stations.length != arrivalTimes.length
-//				|| stations.length != idleTimes.length) {
-//			throw new IllegalArgumentException(
-//					"arrays must have the same length");
-//		}
-//
-//		this.scheme = scheme;
-//		this.stations = stations;
-//		this.arrivalTimes = arrivalTimes;
-//		this.idleTimes = idleTimes;
-//	}
+	private Map<Node, Integer> arrivalTimes;
+    private Map<Node, Integer> idleTimes;
 	
 	/**
 	 * Creates a new Schedule. <code>stations</code>, </code>arrivalTimes</code>
@@ -58,22 +27,15 @@ public class Schedule {
 	 *            Arrival time at each stop in milliseconds after the begin of
 	 *            the simulation. Must not be null
 	 */
-	public Schedule(ScheduleScheme scheme, Node[] stations,
-			int[] arrivalTimes, int[] departureTimes) {
-		if (scheme == null || stations == null || arrivalTimes == null
-				|| departureTimes == null) {
+	public Schedule(ScheduleScheme scheme, Node[] stations) {
+		if (scheme == null || stations == null) {
 			throw new IllegalArgumentException("parameters must not be null");
-		}
-		if (stations.length != arrivalTimes.length
-				|| stations.length != departureTimes.length) {
-			throw new IllegalArgumentException(
-					"arrays must have the same length");
 		}
 
 		this.scheme = scheme;
 		this.stations = stations;
-		this.aTs = arrivalTimes;
-		this.departureTimes = departureTimes;
+		this.arrivalTimes = new HashMap<>();
+		this.idleTimes = new HashMap<>();
 	}
 	
 	
@@ -92,26 +54,43 @@ public class Schedule {
 		return stations;
 	}
 
-//	/**
-//	 * @return the arrivalTimes
-//	 */
-//	public Calendar[] getArrivalTimesXP() {
-//		return arrivalTimes;
-//	}
-
-//	/**
-//	 * @return the idleTimes
-//	 */
-//	public int[] getIdleTimes() {
-//		return idleTimes;
-//	}
-	
-	public int[] getATs() {
-		return aTs;
+	/**
+	 * Sets the idle time for the specified station.
+	 * 
+	 * @param station
+	 *            {@link Node} where to wait
+	 * @param idleTime
+	 *            Time to wait in milliseconds
+	 */
+	public void addIdleTime(Node station, int idleTime) {
+		idleTimes.put(station, idleTime);
 	}
 	
-	public int[] getDepartureTimes() {
-		return departureTimes;
+	/**
+	 * Sets the arrival time for the specified station.
+	 * 
+	 * @param station
+	 *            {@link Node} to reach
+	 * @param idleTime
+	 *            arrival time at <code>station</code> in milliseconds after the
+	 *            start of the simulation
+	 */
+	public void addArrivalTime(Node station, int idleTime) {
+		arrivalTimes.put(station, idleTime);
+	}
+	
+	/**
+	 * @return The idle time at the specified station in milliseconds
+	 */
+	public int getIdleTime(Node station) {
+		return idleTimes.get(station);
+	}
+	
+	/**
+	 * @return The arrival time at the specified station in milliseconds
+	 */
+	public int getArrivalTime(Node station) {
+		return arrivalTimes.get(station);
 	}
 
 }

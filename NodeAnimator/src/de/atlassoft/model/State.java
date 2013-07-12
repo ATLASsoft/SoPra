@@ -1,5 +1,8 @@
 package de.atlassoft.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.atlassoft.ai.TrainAgent;
 
 /**
@@ -27,6 +30,10 @@ public class State {
 	 */
 	private TrainAgent owner;
 
+	private Map<TrainAgent, Long> requestedFrom;
+	
+	private Map<TrainAgent, Long> requestedTill;
+	
 
 	/**
 	 * Creates a new instance of this class for the specified object.
@@ -36,6 +43,9 @@ public class State {
 	public State(Object obj) {
 		this.obj = obj;
 		this.state = UNBLOCKED;
+		
+		requestedFrom = new HashMap<>();
+		requestedTill = new HashMap<>();
 	}
 
 
@@ -61,6 +71,24 @@ public class State {
 			this.owner = owner;
 		System.out.println("agent " + owner + " has set the state of " + obj
 				+ " to " + (state == 0 ? "UNBLOCKED" : "BLOCKED"));
+	}
+	
+	public synchronized void request(TrainAgent owner, long from, long till) {
+		requestedFrom.put(owner, from);
+		requestedTill.put(owner, till);
+	}
+	
+	public synchronized void removeRequest(TrainAgent owner) {
+		requestedFrom.remove(owner);
+		requestedTill.remove(owner);
+	}
+	
+	public synchronized long getFromRequest(TrainAgent owner) {
+		return requestedFrom.get(owner);
+	}
+	
+	public synchronized long getTillRequest(TrainAgent owner) {
+		return requestedTill.get(owner);
 	}
 	
 	/**

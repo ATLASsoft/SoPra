@@ -34,7 +34,7 @@ public class AIServiceImpl implements AIService {
 		application = app;
 	}
 	
-	
+	//TODO: boolean ob man heatmap daten und statisik zurücksetzen soll
 	@Override
 	public void startSimulation(Calendar start, RailwaySystem railSys, List<ScheduleScheme> schemes, Observer o) {
 		if (!running) {

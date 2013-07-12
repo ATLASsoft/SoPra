@@ -22,7 +22,7 @@ class Graph {
 	 * Maps nodes to their affiliated vertexes.
 	 */
 	private Map<Node, Vertex> vertexMap;
-	Vertex[] vertexes;
+	private Vertex[] vertexes;
 	
 	/**
 	 * Creates a new instance from the specified {@link RailwaySystem}.
@@ -60,8 +60,8 @@ class Graph {
 			end = vertexMap.get(mPath.getEnd());
 			distance = mPath.getPathFigure().getDistance() / 10.0; // convert distance from pixel to km
 			topSpeed = mPath.getTopSpeed();
-			e1 = new Edge(start, end, distance, topSpeed); // edges in both directions
-			e2 = new Edge(end, start, distance, topSpeed);
+			e1 = new Edge(start, end, distance, topSpeed, mPath); // edges in both directions
+			e2 = new Edge(end, start, distance, topSpeed, mPath);
 			
 			// add edges to vertexes
 			start.addOutgoingEdge(e1);
@@ -82,6 +82,15 @@ class Graph {
 	 */
 	protected Vertex getVertex(Node n) {
 		return vertexMap.get(n);
+	}
+	
+	/**
+	 * Return the array containing all vertexes.
+	 * 
+	 * @return Array of {@link Vertex vertexes}
+	 */
+	protected Vertex[] getVertexes() {
+		return vertexes;
 	}
 	
 	/**
@@ -144,12 +153,43 @@ class Graph {
 	 */
 	protected double getShortestTravelTime(Node source, Node target, double topSpeed) {
 		// Dijkstra
-		Double[] dist = new Double[vertexes.length];
+		double[] dist = new double[vertexes.length];
 		Vertex[] predecessor = new Vertex[vertexes.length];
-		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
+		sssp_Dijkstra_ingnoreBlocks(source, topSpeed, predecessor, dist);
 		
 		// compute travel time
 		return dist[getVertex(target).id]; // in hours
+	}
+	
+	/**
+	 * Computes the time in hours an object with the specified topSpeed needs to
+	 * walk along the passed path.
+	 * 
+	 * @param path
+	 * @param mobileTopSpeed
+	 * @return
+	 */
+	protected List<Double> getCosts(List<Node> path, double mobileTopSpeed) {
+		double cost = 0;
+		Vertex start;
+		Vertex end;
+		List<Double> res = new ArrayList<Double>();
+		
+		res.add(cost); // cost to reach first node
+		for (int i = 0; i < path.size() - 1; i++) {
+			start = vertexMap.get(path.get(i));
+			end = vertexMap.get(path.get(i + 1));
+			
+			for (Edge e : start.getOutgoingEdges()) {
+				if (e.getEnd().equals(end)) {
+					cost += e.getActualCost(mobileTopSpeed);
+					break;
+				}
+			}
+			res.add(cost);
+		}
+		
+		return res;
 	}
 	
 	/**
@@ -160,9 +200,9 @@ class Graph {
 	 * @return
 	 */
 	protected List<Node> getShortestPath(Node source, Node target, double topSpeed) {
-		Double[] dist = new Double[vertexes.length];
+		double[] dist = new double[vertexes.length];
 		Vertex[] predecessor = new Vertex[vertexes.length];
-		SSSP_Dijkstra(source, target, topSpeed, predecessor, dist);
+		sssp_Dijkstra_ingnoreBlocks(source, topSpeed, predecessor, dist);
 		
 		// construct list from predecessor array
 		List<Node> path = new ArrayList<>();
@@ -188,33 +228,48 @@ class Graph {
 	 * 
 	 */
 	private class VertexComperator implements Comparator<Vertex> {
-		private Double[] dist;
+		private double[] dist;
 
-		private VertexComperator(Double[] distArray) {
+		private VertexComperator(double[] distArray) {
 			dist = distArray;
 		}
 		
 		@Override
 		public int compare(Vertex o1, Vertex o2) {
-			return dist[o1.id].compareTo(dist[o2.id]);
+			if (dist[o1.id] < dist[o2.id]) {
+				return -1;
+			}
+			if (dist[o1.id] > dist[o2.id]) {
+				return 1;
+			}
+			
+			return 0;
 		}
 	}
 	
 	/**
 	 * Computes shortest paths from start to every other vertex using a
-	 * implementation of Dijkstra's algorithm. The algorithm alters the two passed arrays
-	 * but other than that causes no side effects at all. The predecessor array contains all vertexes where the entry
-	 * at position i is the predecessor of the vertex with the id i along every
-	 * shortest path from start through the vertex with the id i.
-	 * The dist array //TODO: kommentar
+	 * implementation of Dijkstra's algorithm. Ignores all possible blockades.
+	 * The algorithm alters the two passed arrays but other than that causes no
+	 * side effects at all. The predecessor array contains all vertexes where
+	 * the entry at position i is the predecessor of the vertex with the id i
+	 * along every shortest path from start through the vertex with the id i.
+	 * The dist array entry at position i equals the simulation time, a mobile
+	 * object with <code>trainTopSpeed</code> needs to get from source to
+	 * vertexes[i] in hours.
 	 * 
 	 * @param start
 	 *            Source vertex of the algorithm
 	 * @param trainTopSpeed
+	 *            Top speed of the mobile object
+	 * @param predecessor
+	 *            The predecessor array, will be altered
+	 * @param dist
+	 *            The dist array, will be altered
 	 * @return Predecessor array
 	 */
-	private void SSSP_Dijkstra(Node source, Node target, double trainTopSpeed,
-			Vertex[] predecessor, Double[] dist) {
+	private void sssp_Dijkstra_ingnoreBlocks(Node source, double trainTopSpeed,
+			Vertex[] predecessor, double[] dist) {
 		
 		Vertex start = vertexMap.get(source);
 		
@@ -239,6 +294,74 @@ class Graph {
 				u = e.getEnd();
 				
 				if (closedList[u.id]) {
+					continue;
+				}
+				
+				d = e.getActualCost(trainTopSpeed) + dist[v.id];
+				if (d < dist[u.id]) {
+					openList.remove(u);
+					dist[u.id] = d;
+					openList.offer(u);
+					predecessor[u.id] = v;
+				}
+
+			}
+			
+		}
+	}
+	
+	/**
+	 * Computes shortest paths from start to every other vertex using a
+	 * implementation of Dijkstra's algorithm. This algorithm considers only
+	 * nodes and paths that are not blocked. The algorithm alters the two passed
+	 * arrays but other than that causes no side effects at all. The predecessor
+	 * array contains all vertexes where the entry at position i is the
+	 * predecessor of the vertex with the id i along every shortest path from
+	 * start through the vertex with the id i. The dist array entry at position
+	 * i equals the simulation time, a mobile object with
+	 * <code>trainTopSpeed</code> needs to get from source to vertexes[i] in
+	 * hours.
+	 * 
+	 * @param start
+	 *            Source vertex of the algorithm
+	 * @param trainTopSpeed
+	 *            Top speed of the mobile object
+	 * @param predecessor
+	 *            The predecessor array, will be altered
+	 * @param dist
+	 *            The dist array, will be altered. Shortest distance in hours
+	 * @return Predecessor array
+	 */
+	protected void sssp_Dijkstra_considerBlocks(Node source, double trainTopSpeed,
+			Vertex[] predecessor, double[] dist) {
+		
+		Vertex start = vertexMap.get(source);
+		
+		// init dist array
+		for (int i = 0; i < dist.length; i++) {
+			dist[i] = Double.POSITIVE_INFINITY;
+		}
+
+		// init open and closed list
+		PriorityQueue<Vertex> openList = new PriorityQueue<>(dist.length, new VertexComperator(dist));
+		boolean[] closedList = new boolean[vertexes.length];
+		dist[start.id] = 0.0;
+		openList.offer(start);
+		
+		// compute shortest paths from start
+		Vertex v, u;
+		double d;
+		while (!openList.isEmpty()) {
+			v = openList.poll();
+			closedList[v.id] = true;;
+			for (Edge e : v.getOutgoingEdges()) {
+				u = e.getEnd();
+
+				if (closedList[u.id]) {
+					continue;
+				}
+				
+				if (e.isBlocked() || u.isBlocked()) {
 					continue;
 				}
 				

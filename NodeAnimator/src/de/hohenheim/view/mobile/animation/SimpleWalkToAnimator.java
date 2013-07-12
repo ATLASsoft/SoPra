@@ -257,7 +257,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			//TODO: versteh ich noch nicht
 			if (segments.size() == 0) {
-				this.finished=true;
+				
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
 				animationFigure.setNode(end_node);
@@ -276,16 +276,16 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				return;
 			}
 			
-			// path is blocked TODO: besser lösen, synchronisieren, reicht nicht auch der node check
-			if ((path.getModellObject().getState().getState() == State.BLOCKED) || end_node.getModellObject().getState().getState() == State.BLOCKED)  {
+			// path is blocked TODO: besser lösen, synchronisieren, reicht nicht auch der node check auch bei reservierung wecken?
+			if ((path.getModellObject().getState().getState() != State.UNBLOCKED) || end_node.getModellObject().getState().getState() != State.UNBLOCKED)  {
 				synchronized (this) { // acquire lock
 					this.notifyAll();
 				}
 				return;
 			}
-			
-			animationFigure.setDirection_to_node(end_node);
+			//TODO: überprüfen und laufen muss aufjedenfall synchronisiert werden, vllt über state
 			animationFigure.setPath(path);
+			animationFigure.setDirection_to_node(end_node);
 			
 			parent = animationFigure.getParent();
 			init = false;		
@@ -306,6 +306,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 		}
 		// end_node reached
 		else {
+			//TODO: hier die zeit messen für statistik
 			animationFigure.setLocation(segments.getPoint(segments.size() - 1));
 			animationFigure.setNode(end_node);
 			segment_nr = 0;
