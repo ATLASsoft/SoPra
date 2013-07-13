@@ -307,6 +307,9 @@ class PDFCreator {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
 		}
+		if (stat == null) {
+			throw new IllegalArgumentException("stat must not be null");
+		}
 		DecimalFormat doubleFormater = new DecimalFormat("#0.00");
 
 		List<TrainRideStatistic> tRS = stat.getStatistics();
@@ -472,6 +475,12 @@ class PDFCreator {
 			List<ScheduleScheme> scedList) throws DocumentException {
 		if (document == null) {
 			throw new IllegalArgumentException("document must not be null");
+		}
+		if (station == null) {
+			throw new IllegalArgumentException("station must not be null");
+		}
+		if (scedList == null) {
+			throw new IllegalArgumentException("scedList must not be null");
 		}
 		List<Integer> relevantSpots = new ArrayList<Integer>();
 		for (ScheduleScheme sced : scedList) {
