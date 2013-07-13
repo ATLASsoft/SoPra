@@ -22,6 +22,8 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 	boolean finished     = false;
 	boolean stopped      = false;
 	State state;
+	volatile int timeLapse;
+	int counter;
 	
 	/**
 	 * 
@@ -66,8 +68,12 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 			notifyObservers(this.animationFigure);
 		    return;
 		}
-		this.animationFigure.showBusy(!this.animationFigure.isShowBusy());
-		map.getDisplay().timerExec(500, this);			
+		if (counter >= 5) {
+			counter = 0;
+			this.animationFigure.showBusy(!this.animationFigure.isShowBusy());
+		}
+		counter++;
+		map.getDisplay().timerExec(100, this);			
 	}
 	
 	/**
@@ -78,7 +84,7 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 		if (animationFigure instanceof TrainFigure) {
 			((TrainFigure) animationFigure).setBusyColor(org.eclipse.draw2d.ColorConstants.red);
 		}
-		
+		counter = 1;
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));
 		this.stopped=false;
@@ -98,6 +104,11 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 	 */
 	public boolean isStopped() {
 		return this.stopped;
+	}
+
+	@Override
+	public void setTimeLapse(int timeLapse) {
+		this.timeLapse = timeLapse;
 	}
 }
 

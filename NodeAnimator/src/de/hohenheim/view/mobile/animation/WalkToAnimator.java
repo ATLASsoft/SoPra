@@ -252,7 +252,13 @@ public class WalkToAnimator extends Observable implements Runnable, Animator {
 	 */
 	public void stop() {
 		this.stop=true;				
-	}	
+	}
+	
+	@Override
+	public void setTimeLapse(int timeLapse) {
+		throw new UnsupportedOperationException();
+		
+	}
 }
 
 

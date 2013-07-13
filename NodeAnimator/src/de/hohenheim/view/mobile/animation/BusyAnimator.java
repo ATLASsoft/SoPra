@@ -22,11 +22,18 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	boolean stopped      = false;
 	long busy_time;
 	int time_left;
+	volatile int timeLapse = 1;
+	
+	/**
+	 * frequency of the pauses
+	 */
+	int waitTime;
+	
 	/**
 	 * 
 	 * @param {@link NodeMap} map - The map where the animated figure is located. 
 	 * @param {@link AnimationFigure} figure - The AnimationFigure itself.
-	 * @param int busy_time - A time in milliseconds for which the truck is busy. 
+	 * @param int busy_time - A time in milliseconds for which the truck is busy (in simulation time). 
 	 */
 	public BusyAnimator(NodeMap map, AnimationFigure figure, int busy_time) {
 		this.animationFigure = figure;
@@ -51,20 +58,33 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	public void run() {		
 		if(this.stopped)
 			return;
-		if(this.time_left<0) {
+		if(this.time_left < 0) {
 			this.finished=true;
 			this.animationFigure.showBusy(false);
 			
 			//notify Listeners
 			animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.BUSY_FINISHED));
-			//notfy observers
+			
+			//notify observers
 			setChanged();
 			notifyObservers(this.animationFigure);
+			
+			// notify waiting threads
+			synchronized (this) {
+				this.notifyAll();
+			}
 			return;
 		}
-		this.time_left-=500;
+		this.time_left -= 500 * timeLapse;
 		this.animationFigure.showBusy(!this.animationFigure.isShowBusy());
-		map.getDisplay().timerExec(500, this);			
+
+		this.waitTime = 500;
+		
+		// less than 500 ms to wait
+		if (time_left < 0) {
+			waitTime = 500 + (time_left / timeLapse);
+		}
+		map.getDisplay().timerExec(waitTime, this);			
 	}
 	
 	/**
@@ -92,6 +112,11 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	
 	public boolean isStopped() {
 		return this.stopped;
+	}
+	
+	@Override
+	public void setTimeLapse(int timeLapse) {
+		this.timeLapse = timeLapse;
 	}
 }
 

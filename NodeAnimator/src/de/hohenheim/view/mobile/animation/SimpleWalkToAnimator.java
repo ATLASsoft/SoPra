@@ -124,7 +124,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	/**
 	 * Time lapse of the simulation.
 	 */
-	int timeLapse;
+	volatile int timeLapse;
 	
 	/**
 	 * Constructor. creates the Animation.
@@ -153,6 +153,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 * 
 	 * @param timeLapse
 	 */
+	@Override
 	public void setTimeLapse(int timeLapse) {
 		this.timeLapse = timeLapse;
 	}

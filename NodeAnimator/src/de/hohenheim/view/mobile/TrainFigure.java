@@ -95,7 +95,6 @@ public class TrainFigure extends AnimationFigure {
 	
 	public void setBusyColor(Color c) {
 		this.busyColor = c;
-		this.repaint();
 	}
 	
 	/**
@@ -146,11 +145,12 @@ public class TrainFigure extends AnimationFigure {
 	 * Waits till the busy_time is over.
 	 * @param int busy_time. The time the fork truck is waiting/busy.
 	 */
-	public void busy(int busy_time) {
+	public BusyAnimator busy(int busy_time) {
 		BusyAnimator anim = new BusyAnimator(this.map, this, busy_time);
 		AnimationFinishedQueueObserver handler = new AnimationFinishedQueueObserver();
 		anim.addObserver(handler);		
 		addAnimation(anim);
+		return anim;
 	}		
 	/**
 	 * Starts an animation which shows that the fork truck is waiting/busy.

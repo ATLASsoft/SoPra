@@ -13,7 +13,8 @@ import de.atlassoft.model.TrainRideStatistic;
 import de.hohenheim.view.FigureFactory;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.TrainFigure;
-import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
+import de.hohenheim.view.mobile.animation.Animator;
+import de.hohenheim.view.mobile.animation.BusyAnimator;
 import de.hohenheim.view.node.NodeFigure;
 
 //TODO: implementiern
@@ -28,8 +29,8 @@ public class TrainAgent implements Runnable {
 	private AIServiceImpl aiPort;
 	private final Graph graph;
 	private int timeLapse;
-	private Thread runningThread;
-	private SimpleWalkToAnimator anim;
+	private Thread executingThread;
+	private Animator anim;
 	private Set<State> blockedState;
 	private Set<State> requestedStates;
 	
@@ -79,6 +80,11 @@ public class TrainAgent implements Runnable {
 		figure.stopAnimation();
 	}
 	
+	protected void terminate() {
+		executingThread.interrupt(); //TODO: states cleanen
+		removeFigure();
+	}
+	
 	protected synchronized void setTimeLapse(int timeLapse) {
 		this.timeLapse = timeLapse;
 		if (anim != null) {
@@ -122,7 +128,7 @@ public class TrainAgent implements Runnable {
 	
 	@Override
 	public void run() {
-		runningThread = Thread.currentThread(); //TODO: nicht thread safe
+		executingThread = Thread.currentThread(); //TODO: nicht thread safe
 		
 		for (int i = 0; i < schedule.getStations().length - 1; i++) {
 			lastStation = schedule.getStations()[i];
@@ -154,14 +160,7 @@ public class TrainAgent implements Runnable {
 					
 					// animation is finished, next station reached
 					if (anim.isFinished()) {
-						// compute delay and add it to the statistic
-						long simTime = aiPort.getLoop().getSimTimeInMillis();
-						int delay = (int) Math.round(((simTime - schedule.getArrivalTime(nextStation)) / 1000.0)); 
-						statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
-						figure.stopAnimation();
-						figure.clearAnimations();
-
-						//TODO: warten (idle time)
+						doStationReachedAction();
 					}
 					
 					// animation has been aborted before reaching goal,
@@ -183,18 +182,7 @@ public class TrainAgent implements Runnable {
 								(1 + currentPath.indexOf(currentPosition));
 						TrainAgent blockingAgent = blockedNode.getState().getBlocker();
 						
-						// strategy 1: wait till other agent has passed
-//							List<Node> pathOther = blockingAgent.getCurrentPath();
-//							Node nextAfterBlockO =
-//									pathOther.get(1 + pathOther.indexOf(blockedNode));
-//							if (!nextAfterBlockO.equals(currentPosition)) {
-//								figure.waitFor(blockedNode.getState());
-//								
-//								// chop current path
-//								currentPath = currentPath.subList(currentPath.indexOf(currentPosition), currentPath.size());
-//								anim = figure.walkAlong(this.transformPath(currentPath));
-//								anim.setTimeLapse(timeLapse);
-//							}
+						
 							PathFindingStrategy strategy = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
 							PathFindingStrategy s2 = new AlternativeRouteStrategy(graph, this, currentPosition);
 						
@@ -215,6 +203,7 @@ public class TrainAgent implements Runnable {
 				}
 			} catch (InterruptedException e) {
 				System.out.println("train agent " + id + " has been interrupted, terminates");
+				executingThread.interrupt();
 				return;
 			}
 			
@@ -225,11 +214,45 @@ public class TrainAgent implements Runnable {
 		aiPort.getSimStat().addStatistic(statistic);
 	}
 	
-	protected void terminate() {
-		runningThread.interrupt(); //TODO: states cleanen
-		removeFigure();
+	
+	
+	
+	private void doStationReachedAction() {
+		// compute delay and add it to the statistic
+		long simTime = aiPort.getLoop().getSimTimeInMillis();
+		int delay = (int) Math.round(((simTime - schedule.getArrivalTime(nextStation)) / 1000.0)); 
+		statistic.addStop(figure.getNodeFigure().getModellObject(), delay);
+		figure.stopAnimation();
+		figure.clearAnimations();
+
+		anim = figure.busy(schedule.getIdleTime(nextStation) * 60);//TODO: * 60 weg wenn der der bug dass im schedScheme min statt sekunden hinzugegügt werden weg ist
+		anim.setTimeLapse(timeLapse);
+		figure.startAnimation();
+		
+		synchronized(anim) { // acquire monitor in order to wait
+			while (!anim.isFinished()) {
+				try {
+					anim.wait();
+				} catch (InterruptedException e) {
+					System.out.println("train agent " + id + " has been interrupted, terminates");
+					executingThread.interrupt();
+					return;
+				}
+			}
+			
+		}
 	}
 	
+	
+	
+	
+	
+	/**
+	 * Stops all animations of the {@link TrainAgent#figure TrainFigure}
+	 * associated with this agent. Then removes the figure from the
+	 * {@link NodeMap} and clears all states that are currently blocked or
+	 * requested by this agent.
+	 */
 	private void removeFigure() {
 		figure.stopAnimation();
 		figure.clearAnimations();
@@ -265,6 +288,24 @@ public class TrainAgent implements Runnable {
 		return figurePath;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Checks whether the {@link TrainFigure} is currently at the specified
+	 * {@link Node}.
+	 * 
+	 * @param node
+	 *            The node to check
+	 * @return true if the {@link TrainFigure} is currently at <code>node</code>
+	 *         , otherwise false
+	 */
 	private boolean atNode(Node node) {
 		NodeFigure currentNodeFigure = figure.getNodeFigure();
 		if (currentNodeFigure == null) {
@@ -309,6 +350,14 @@ public class TrainAgent implements Runnable {
 		state.request(this, fromL, fromL + schedule.getIdleTime(nextStation));
 		requestedStates.add(state);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@Override

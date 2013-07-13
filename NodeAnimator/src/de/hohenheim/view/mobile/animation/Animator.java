@@ -31,5 +31,11 @@ public interface Animator {
    */
   public boolean isStopped();
 	
-	
+	/**
+	 * Sets the time lapse factor for this animation. Thereby,
+	 * <code>timeLapse = 2</code> means that one second in real time equals two
+	 * seconds in simulation time.
+	 */
+	public void setTimeLapse(int timeLapse);
+
 }
