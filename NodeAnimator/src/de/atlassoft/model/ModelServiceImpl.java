@@ -1,5 +1,6 @@
 package de.atlassoft.model;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -17,15 +18,46 @@ import java.util.List;
  */
 public class ModelServiceImpl implements ModelService {
 
+	/**
+	 * Provides methods to generate and distribute {@link PropertyChangeEvent
+	 * PropertyChangeEvents}.
+	 */
 	private PropertyChangeSupport pcSupport;
+	
+	/**
+	 * The active {@link RailwaySystem}.
+	 */
 	private RailwaySystem activeRailSys;
+	
+	/**
+	 * List containing the id of every {@link RailwaySystem}.
+	 */
 	private List<String> railSysIDs;
+	
+	/**
+	 * List of all {@link TrainType TrainTypes}.
+	 */
 	private List<TrainType> trainTypes;
+	
+	/**
+	 * List of all active {@link ScheduleScheme ScheduleSchemes} that belong to
+	 * {@link ModelServiceImpl#activeRailSys} i.e. the schemes that will
+	 * participate in the simulation.
+	 */
 	private List<ScheduleScheme> activeSchemes;
+	
+	/**
+	 * List of all passive {@link ScheduleScheme ScheduleSchemes} that belong to
+	 * {@link ModelServiceImpl#activeRailSys} i.e. the schemes that will not
+	 * participate in the simulation.
+	 */
 	private List<ScheduleScheme> passiveSchemes;
 
 
 
+	/**
+	 * Create a new instance of this class.
+	 */
 	public ModelServiceImpl() {
 		pcSupport = new PropertyChangeSupport(this);
 		railSysIDs = new ArrayList<String>();
@@ -157,12 +189,6 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public List<ScheduleScheme> getPassiveScheduleSchemes() {
 		return Collections.unmodifiableList(passiveSchemes);
-	}
-
-	@Override
-	public SimulationStatistic getStatistic() {
-		// TODO: noch unklar
-		return null;
 	}
 
 }

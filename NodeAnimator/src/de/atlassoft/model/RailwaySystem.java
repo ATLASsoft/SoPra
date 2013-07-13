@@ -15,14 +15,32 @@ import de.hohenheim.view.path.PathFigure;
  */
 public class RailwaySystem {
 
+	/**
+	 * The graphical representation of the {@link RailwaySystem}.
+	 */
 	private NodeMap map;
+	
+	/**
+	 * The id of this {@link RailwaySystem}. Must be unique among all railway
+	 * systems of this application.
+	 */
 	private String id;
+	
+	/**
+	 * List of all {@link Node nodes} of this {@link RailwaySystem}.
+	 */
 	private List<Node> nodes;
+	
+	/**
+	 * List of all {@link Path paths} of this {@link RailwaySystem}.
+	 */
 	private List<Path> paths;
+	
 	
 	
 	/**
 	 * Creates a new railway system.
+	 * 
 	 * @param id Name of this railway system. Must not be null or empty
 	 */
 	public RailwaySystem(String id) {
@@ -39,6 +57,7 @@ public class RailwaySystem {
 	
 	/**
 	 * Sets the id of this railway system.
+	 * 
 	 * @param id ID to be set. Must not be null or empty
 	 */
 	public void setID(String id) {
@@ -114,18 +133,23 @@ public class RailwaySystem {
 	}
 	
 	/**
-	 * Removes all data that has been collected during one or multiple
-	 * simulations.
+	 * Sets the state of all {@link Path paths} and {@link Node nodes} to
+	 * {@link State#UNBLOCKED}. Additionally removes all data that has been
+	 * collected during one or multiple simulations if <code>resetDate</code> is
+	 * set <code>true</code>.
 	 * 
+	 * @param resetDate
+	 *            set true if all collected data should be reseted or to false
+	 *            if only the states should be cleared.
 	 * @see {@link Path#incrementWorkLoad(ScheduleScheme)},
 	 *      {@link Node#incrementWorkLoad(ScheduleScheme)}, {@link State}
 	 */
-	public void clear() {
+	public void clear(boolean resetData) {
 		for (Node n : nodes) {
-			n.clear();
+			n.clear(resetData);
 		}
 		for (Path p : paths) {
-			p.clear();
+			p.clear(resetData);
 		}
 	}
 	

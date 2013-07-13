@@ -48,6 +48,7 @@ public class Node implements Blockable {
 	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
+	
 	/**
 	 * Constructor for creating a new Node with standard size (15x15)
 	 * 
@@ -111,14 +112,23 @@ public class Node implements Blockable {
 	
 	
 	/**
-	 * Removes all data that has been collected during one or multiple
-	 * simulations from this node.
-	 * @see {@link Node#trainTypeMap}, {@link Node#schemeMap}, {@link Node#state}
+	 * Clears the state of this {@link Node} and removes all data that has been
+	 * collected during one or multiple simulations from this node if resetData
+	 * is true.
+	 * 
+	 * @param resetData
+	 *            indicates whether all data should be reseted or only the state
+	 *            should be cleared
+	 * @see {@link Node#trainTypeMap}, {@link Node#schemeMap},
+	 *      {@link Node#state}
 	 */
-	protected void clear() {
+	protected void clear(boolean resetData) {
 		state.setState(State.UNBLOCKED, null);
-		trainTypeMap.clear();
-		schemeMap.clear();
+		
+		if (resetData) {
+			trainTypeMap.clear();
+			schemeMap.clear();
+		}
 	}
 	
 	/**

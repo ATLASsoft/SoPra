@@ -62,6 +62,7 @@ public class Path implements Blockable {
 	private Map<ScheduleScheme, Integer> schemeMap;
 	
 	
+	
 	/**
 	 * The constructor for the Path.
 	 * 
@@ -102,14 +103,23 @@ public class Path implements Blockable {
 	
 	
 	/**
-	 * Removes all data that has been collected during one or multiple
-	 * simulations from this path.
-	 * @see {@link Path#trainTypeMap}, {@link Path#schemeMap}, {@link Path#state}
+	 * Clears the state of this {@link Path} and removes all data that has been
+	 * collected during one or multiple simulations from this path if resetData
+	 * is true.
+	 * 
+	 * @param resetData
+	 *            indicates whether all data should be reseted or only the state
+	 *            should be cleared
+	 * @see {@link Path#trainTypeMap}, {@link Path#schemeMap},
+	 *      {@link Path#state}
 	 */
-	protected void clear() {
+	protected void clear(boolean resetData) {
 		state.setState(State.UNBLOCKED, null);
-		trainTypeMap.clear();
-		schemeMap.clear();
+		
+		if (resetData) {
+			trainTypeMap.clear();
+			schemeMap.clear();
+		}
 	}
 	
 	/**

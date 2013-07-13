@@ -195,12 +195,5 @@ public interface ModelService {
 	 *         there are no schedule schemes
 	 */
 	List<ScheduleScheme> getPassiveScheduleSchemes();
-	
-	/**
-	 * Returns the latest {@link SimulationStatistic}.
-	 * 
-	 * @return The latest {@link SimulationStatistic} or null if there is
-	 *         no statistic
-	 */
-	SimulationStatistic getStatistic();
+
 }

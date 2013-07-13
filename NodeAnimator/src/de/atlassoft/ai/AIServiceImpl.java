@@ -26,13 +26,10 @@ public class AIServiceImpl implements AIService {
 	 * Indicates if there is an ongoing simulation.
 	 */
 	private boolean running = false;
-	private ApplicationService application;
 	
 	public AIServiceImpl(ApplicationService app) {
-		application = app;
 	}
 	
-	//TODO: boolean ob man heatmap daten und statisik zurücksetzen soll
 	@Override
 	public void startSimulation(
 			Calendar start,
@@ -42,8 +39,8 @@ public class AIServiceImpl implements AIService {
 			boolean resetData) {
 		
 		if (!running) {
+			railSys.clear(resetData);
 			if (resetData) {
-				railSys.clear();
 				statistic = new SimulationStatistic(railSys);
 			}
 			loop = new SimulationLoop(new Graph(railSys), this);

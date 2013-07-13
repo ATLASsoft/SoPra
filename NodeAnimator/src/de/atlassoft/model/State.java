@@ -6,13 +6,20 @@ import java.util.Map;
 import de.atlassoft.ai.TrainAgent;
 
 /**
- * Specifes the state of a train, node or path.
+ * Specifies the state of a {@link Node} or {@link Path}.
  * 
  * @author Alexander Balogh
  */
 public class State {
 
+	/**
+	 * State is unblocked.
+	 */
 	public static final int UNBLOCKED = 0;
+	
+	/**
+	 * State is blocked.
+	 */
 	public static final int BLOCKED = 1;
 	
 	/**
@@ -29,10 +36,21 @@ public class State {
 	 * The {@link TrainAgent} that owns the block.
 	 */
 	private TrainAgent owner;
-
-	private Map<TrainAgent, Long> requestedFrom;
 	
-	private Map<TrainAgent, Long> requestedTill;
+	/**
+	 * Map containing all reservations for this state. The key is the
+	 * {@link TrainAgent} that has requested the state. The value is the start
+	 * time of the request in milliseconds after the start of the simulation.
+	 */
+	private Map<TrainAgent, Long> reservedFrom;
+	
+	/**
+	 * Map containing all reservations for this state. The key is the
+	 * {@link TrainAgent} that has reserved the state. The value is the end
+	 * time of the reservation in milliseconds after the start of the simulation.
+	 */
+	private Map<TrainAgent, Long> reservedTill;
+	
 	
 
 	/**
@@ -44,8 +62,8 @@ public class State {
 		this.obj = obj;
 		this.state = UNBLOCKED;
 		
-		requestedFrom = new HashMap<>();
-		requestedTill = new HashMap<>();
+		reservedFrom = new HashMap<>();
+		reservedTill = new HashMap<>();
 	}
 
 
@@ -60,11 +78,12 @@ public class State {
 	}
 	
 	/**
-	 * Sets the state. Legal values are only the constants defined int this class.
-	 * Nevertheless other values can be set.
+	 * Sets the state. Legal values are only the constants defined in this class.
+	 * Nevertheless other values can be set with unknown consequences.
 	 * 
 	 * @param state to be set
 	 * @param owner Agent that owns the block
+	 * @see {@link State#BLOCKED}, {@link State#UNBLOCKED}
 	 */
 	public synchronized void setState(int state, TrainAgent owner) {
 			this.state = state;
@@ -73,22 +92,66 @@ public class State {
 				+ " to " + (state == 0 ? "UNBLOCKED" : "BLOCKED"));
 	}
 	
-	public synchronized void request(TrainAgent owner, long from, long till) {
-		requestedFrom.put(owner, from);
-		requestedTill.put(owner, till);
+	/**
+	 * Reserve this state from <code>from</code> till <code>till</code> i.e.
+	 * announce that the {@link TrainAgent} <code>owner</code> will probably
+	 * block this state within the specified time. Other agents can consider
+	 * this reservation during their path finding routine but have no obligation
+	 * to to so. Multiple requests from the same agent are not supported, only
+	 * the reservation will be saved.
+	 * 
+	 * @param owner
+	 *            {@link TrainAgent} that will own the block
+	 * @param from
+	 *            Start time of the alleged block in milliseconds after the
+	 *            start of the simulation (in simulation time)
+	 * @param till
+	 *            End time of the alleged block in milliseconds after the start
+	 *            of the simulation (in simulation time)
+	 */
+	public synchronized void reserve(TrainAgent owner, long from, long till) {
+		reservedFrom.put(owner, from);
+		reservedTill.put(owner, till);
 	}
 	
+	/**
+	 * Removes the reservation associated with <code>owner</code>. If there is
+	 * no such reservation no action is taken and no exception is thrown.
+	 * 
+	 * @param owner
+	 *            Owner of the alleged reservation
+	 */
 	public synchronized void removeRequest(TrainAgent owner) {
-		requestedFrom.remove(owner);
-		requestedTill.remove(owner);
+		reservedFrom.remove(owner);
+		reservedTill.remove(owner);
 	}
 	
+	/**
+	 * Returns the start time of the reservation that the {@link TrainAgent}
+	 * owner has made for this state. if <code>owner</code> has not made such a
+	 * reservation, this method will return null.
+	 * 
+	 * @param owner
+	 *            {@link TrainAgent} that made the reservation
+	 * @return Start time of the reservation in milliseconds after the start of
+	 *         the simulation (i simulation time), or null
+	 */
 	public synchronized Long getFromRequest(TrainAgent owner) {
-		return requestedFrom.get(owner);
+		return reservedFrom.get(owner);
 	}
 	
+	/**
+	 * Returns the end time of the reservation that the {@link TrainAgent}
+	 * owner has made for this state. if <code>owner</code> has not made such a
+	 * reservation, this method will return null.
+	 * 
+	 * @param owner
+	 *            {@link TrainAgent} that made the reservation
+	 * @return End time of the reservation in milliseconds after the start of
+	 *         the simulation (i simulation time), or null
+	 */
 	public synchronized Long getTillRequest(TrainAgent owner) {
-		return requestedTill.get(owner);
+		return reservedTill.get(owner);
 	}
 	
 	/**
