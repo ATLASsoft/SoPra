@@ -37,7 +37,6 @@ import de.atlassoft.util.ImageHelper;
  * @author Tobias Ilg
  */
 public class SimulationStatisticDialog {
-	//TODO: zu 2 Labels anordnern
 	private Shell shell;
 	private ApplicationService applicationService;
 	private SimulationStatistic simulationStatistic;
@@ -134,7 +133,6 @@ public class SimulationStatisticDialog {
 		Label meanDelayRides = new Label(firstStatisticComposite, SWT.NONE);
 		meanDelayRides.setText(String.valueOf(simulationStatistic.getNumberOfRides()
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Rides")));
-//		toTheEnd(meanDelayRides);
 		
 		//Twelfth row with "NomberOfNodes"
 		new Label(firstStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.NumberOfNodes") + "\t");
@@ -142,7 +140,6 @@ public class SimulationStatisticDialog {
 		Label meanDelayNodes = new Label(firstStatisticComposite, SWT.NONE);
 		meanDelayNodes.setText(String.valueOf(simulationStatistic.getInvolvedNodes().size()
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Nodes")));
-//		toTheEnd(meanDelayNodes);
 		
 		// First row with three labels for "TotalDelay"
 		new Label(firstStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.TotalDelay") + "\t");
@@ -152,7 +149,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		totalDelay.setText(min + " min " + sec + " s");
-//		toTheEnd(totalDelay);
 		
 		// Second row with three labels for "MeanDelay"
 		new Label(firstStatisticComposite, SWT.NONE).setText(I18N.getMessage("SimulationStatisticDialog.MeanDelay") + "\t");
@@ -162,10 +158,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		meanDelay.setText(min + " min " + sec + " s");
-//		toTheEnd(meanDelay);
-		
-		//Empty Row
-//		new Label(overallStatisticComposite, SWT.NONE);
 		
 		// Top of the Composite "TrainType"
 		final Composite TrainTypeStatisticComposite = new Composite (overallStatisticComposite, SWT.BORDER);
@@ -195,7 +187,6 @@ public class SimulationStatisticDialog {
 		final Combo comboTrainType = new Combo(secondStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboTrainType.setItems(trainTypeSelection);
 	    comboTrainType.select(0);
-//	    toTheEnd(comboTrainType);
 		
 		// Fourth row with the result of "MeanDelay (TrainType)"
 		new Label(secondStatisticComposite, SWT.NONE);
@@ -211,7 +202,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		meanDelayTrainType.setText(min + " min " + sec + " s");
-//		toTheEnd(meanDelayTrainType);
 		
 		//row with Number of TrainRides (TrainType)
 		new Label(secondStatisticComposite, SWT.NONE);
@@ -219,7 +209,6 @@ public class SimulationStatisticDialog {
 		final Label numberOfRidesTT =new Label(secondStatisticComposite, SWT.NONE);
 		numberOfRidesTT.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedTT))
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
-//		toTheEnd(numberOfRidesTT);
 		
 		//row with Number of Stations (TrainType)
 		new Label(secondStatisticComposite, SWT.NONE);
@@ -227,7 +216,6 @@ public class SimulationStatisticDialog {
 		final Label numberOfNodesTT =new Label(secondStatisticComposite, SWT.NONE);
 		numberOfNodesTT.setText(String.valueOf(simulationStatistic.getInvolvedNodes(selectedTT).size())
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Nodes"));
-		toTheEnd(numberOfNodesTT);
 		
 		// Listener for the combo TrainType
 		comboTrainType.addSelectionListener(new SelectionAdapter() {
@@ -250,9 +238,6 @@ public class SimulationStatisticDialog {
 				secondStatisticComposite.layout();
 			}
 		});
-		
-		//Empty Row
-//		new Label(overallStatisticComposite, SWT.NONE);
 		
 		// Top of the Composite "Node"
 		final Composite nodeStatisticComposite = new Composite (overallStatisticComposite, SWT.BORDER);
@@ -282,7 +267,6 @@ public class SimulationStatisticDialog {
 		final Combo comboNode = new Combo(thirdStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    comboNode.setItems(nodeSelection);
 	    comboNode.select(0);
-//	    toTheEnd(comboNode);
 		
 		// Sixth row with the result of "MeanDelay (Node)"
 		new Label(thirdStatisticComposite, SWT.NONE);
@@ -298,7 +282,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		meanDelayNode.setText(min + " min " + sec + " s");
-//		toTheEnd(meanDelayNode);
 		
 		//row with Number of TrainRides (Node)
 		new Label(thirdStatisticComposite, SWT.NONE);
@@ -306,7 +289,6 @@ public class SimulationStatisticDialog {
 		final Label numberOfRidesN =new Label(thirdStatisticComposite, SWT.NONE);
 		numberOfRidesN.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedN))
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
-//		toTheEnd(numberOfRidesN);
 		
 		// Listener for the combo Node
 		comboNode.addSelectionListener(new SelectionAdapter() {
@@ -328,9 +310,6 @@ public class SimulationStatisticDialog {
 				thirdStatisticComposite.layout();
 			}
 		});
-		
-		//Empty Row
-//		new Label(overallStatisticComposite, SWT.NONE);
 		
 		// Top of the Composite
 		final Composite scheduleSchemeStatisticComposite = new Composite (overallStatisticComposite, SWT.BORDER);
@@ -360,7 +339,6 @@ public class SimulationStatisticDialog {
 		final Combo comboScheduleScheme = new Combo(fourthStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboScheduleScheme.setItems(scheduleSchemeSelection);
 		comboScheduleScheme.select(0);
-//		toTheEnd(comboScheduleScheme);
 		
 		// Eighth row with the result of "MeanDelay (ScheduleScheme)"
 		new Label(fourthStatisticComposite, SWT.NONE);
@@ -376,7 +354,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		meanDelayScheduleScheme.setText(min + " min " + sec + " s");
-//		toTheEnd(meanDelayScheduleScheme);
 		
 		//row with Number of TrainRides (ScheduleScheme)
 		new Label(fourthStatisticComposite, SWT.NONE);
@@ -384,7 +361,6 @@ public class SimulationStatisticDialog {
 		final Label numberOfRidesSS =new Label(fourthStatisticComposite, SWT.NONE);
 		numberOfRidesSS.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedSS))
 								+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
-//		toTheEnd(numberOfRidesSS);
 		
 		//row with Number of Stations (ScheduleScheme)
 		new Label(fourthStatisticComposite, SWT.NONE);
@@ -415,9 +391,6 @@ public class SimulationStatisticDialog {
 				fourthStatisticComposite.layout();
 			}
 		});
-		
-		//Empty Row
-//		new Label(mainStatisticComposite, SWT.NONE);
 
 		//Design
 		final Composite scheduleSchemeAndNodeStatisticComposite = new Composite (mainStatisticComposite, SWT.BORDER);
@@ -439,7 +412,6 @@ public class SimulationStatisticDialog {
 		final Combo comboScheduleScheme2 = new Combo(fifthStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboScheduleScheme2.setItems(scheduleSchemeSelection);
 		comboScheduleScheme2.select(0);
-		toTheEnd(comboScheduleScheme2);
 		final Combo comboNode2 = new Combo(fifthStatisticComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		ScheduleScheme selectedScheduleScheme2 = null;
 		for (ScheduleScheme scheduleScheme : scheduleSchemes) {
@@ -478,7 +450,6 @@ public class SimulationStatisticDialog {
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
 		meanDelayScheduleSchemeAndNode.setText(min + " min " + sec);
-		toTheEnd(meanDelayScheduleSchemeAndNode);
 		new Label(fifthStatisticComposite, SWT.NONE).setText("s");
 		
 		// Listener for the combo scheduleScheme and Node
@@ -572,17 +543,5 @@ public class SimulationStatisticDialog {
 	            shell.close();
 	        }
 	    });
-	}
-	
-	private void toTheEnd(Label label) {
-		GridData dataEnd = new GridData(GridData.FILL);
-		dataEnd.horizontalAlignment = GridData.END;
-		label.setLayoutData(dataEnd);
-	}
-	
-	private void toTheEnd(Combo combo) {
-		GridData dataEnd = new GridData(GridData.FILL);
-		dataEnd.horizontalAlignment = GridData.END;
-		combo.setLayoutData(dataEnd);
 	}
 }
