@@ -250,6 +250,7 @@ public class TrainTypeDialog {
 				if (name.getText().trim().equals("")) {
 					errorField.setText(I18N.getMessage("TrainTypeDialog.ErrorField.NoName"));
 					errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					shell.layout();
 		    		save.setEnabled(false);
 		    		errorField.setVisible(true);
 		    		return;
@@ -265,11 +266,15 @@ public class TrainTypeDialog {
 		   		}
 		    	if (twice == true) {
 		    		errorField.setText(I18N.getMessage("TrainTypeDialog.ErrorField.ExistingName"));
+					errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					shell.layout();
 		    		errorField.setVisible(true);
 		   		  	save.setEnabled(false);
 		    	} else {
-		    		errorField.setVisible(false);
-		    		if (errorField2.getVisible() == false) {
+		    		errorField.setText(I18N.getMessage("TrainTypeDialog.ErrorField.NameAvailable"));
+					errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+					shell.layout();
+		    		if (errorField2.getText().equals(I18N.getMessage("TrainTypeDialog.ErrorField2.InputAccepted"))) {
 		    			save.setEnabled(true);
 		    		}
 		    	}
@@ -283,6 +288,7 @@ public class TrainTypeDialog {
 				if (textSpeed.getText().trim().equals("")) {
 					errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.NoSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					shell.layout();
 		    		save.setEnabled(false);
 		    		errorField2.setVisible(true);
 		    		return;
@@ -290,12 +296,15 @@ public class TrainTypeDialog {
 				} else if (textSpeed.getText().substring(0, 1).equals("0")){
         			errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.ZeroSpeed"));
 					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					shell.layout();
 					save.setEnabled(false);
 		    		errorField2.setVisible(true);
 		    	// if everything allrigth 
         		} else {
-		    		errorField2.setVisible(false);
-		    		if (errorField.getVisible() == false) {
+        			errorField2.setText(I18N.getMessage("TrainTypeDialog.ErrorField2.InputAccepted"));
+					errorField2.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+					shell.layout();
+		    		if (errorField.getText().equals(I18N.getMessage("TrainTypeDialog.ErrorField.NameAvailable"))) {
         				save.setEnabled(true);
         			}
         		}

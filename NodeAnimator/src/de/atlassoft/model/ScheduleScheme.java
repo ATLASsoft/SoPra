@@ -86,6 +86,8 @@ public class ScheduleScheme {
 	 */
 	private List<Integer> days;
 
+
+
 	/**
 	 * Creates a new instance of this class. Throws an IllegalArgumentException
 	 * if at least one parameter is null or invalid.
@@ -147,19 +149,18 @@ public class ScheduleScheme {
 		this.days = days;
 		this.firstRide = firstRide;
 		this.railSysID = railSysID;
-		this.name = name; //TODO: sicherstellen, dass name für streckennetz eindeutig
+		this.name = name;
 
 		stations = new ArrayList<Node>();
 		arrivalTimes = new ArrayList<Integer>();
 		idleTimes = new ArrayList<Integer>();
 	}
 
+
+
 	/**
 	 * Adds a new stop to this schedule scheme. arrivalTime of the first stop
-	 * must be 0. The arrival time for every other stop must be later than the
-	 * arrival time at the last top + the idle time at the last stop meaning
-	 * there had to be a negative traveling time in order to reach this stop in
-	 * time.
+	 * must be 0.
 	 * 
 	 * @param station
 	 *            of this stop, must not be null
@@ -169,8 +170,7 @@ public class ScheduleScheme {
 	 * @param idleTime
 	 *            time the train should wait at the station in seconds
 	 * @throws IllegalArgumentException
-	 *             if station is null</br> if idleTime is a negative number</br>
-	 *             if arrival is too early.
+	 *             if station is null</br> if idleTime is a negative number
 	 */
 	public void addStop(Node station, int arrival, int idleTime) {
 		// check constraints
@@ -181,19 +181,10 @@ public class ScheduleScheme {
 			throw new IllegalArgumentException("idleTime must not be negative");
 		}
 		// special constraints if first stop is added
-		if (arrivalTimes.isEmpty()) {
-			if (arrival != 0) {
-				throw new IllegalArgumentException(
-						"arrival must be 0 at the first stop");
-			}
-		}
-		// special constraints if added stop is not the first
-		else {
-			if (arrival < (arrivalTimes.get(arrivalTimes.size() - 1) + idleTimes
-					.get(arrivalTimes.size() - 1))) {
-				throw new IllegalArgumentException(
-						"arrival to early to be possible");
-			}
+		if (arrivalTimes.isEmpty() && arrival != 0) {
+			throw new IllegalArgumentException(
+					"arrival must be 0 at the first stop");
+
 		}
 
 		// set values

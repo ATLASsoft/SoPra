@@ -3,14 +3,40 @@ package de.atlassoft.model;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO: alte version löschen, falls alles klappt
+/**
+ * A concrete schedule that can be used exactly once. The specified arrival
+ * times are relative to the start of a specific simulation run. Instances of
+ * this class can be generated from a {@link ScheduleScheme} which is a broader
+ * definition for schedules.
+ * 
+ * @author Alexander Balogh
+ * 
+ */
 public class Schedule {
 
+	/**
+	 * The scheme this schedule was created from.
+	 */
 	private ScheduleScheme scheme;
-	private Node[] stations;
-	private Map<Node, Integer> arrivalTimes;
-    private Map<Node, Integer> idleTimes;
 	
+	/**
+	 * The stations the train must stop at.
+	 */
+	private Node[] stations;
+	
+	/**
+	 * The arrival time at the each station in milliseconds after the
+	 * start of the simulation (in simulation time).
+	 */
+	private Map<Node, Integer> arrivalTimes;
+   
+	/**
+	 * The idle times at each station in milliseconds (simulation time).
+	 */
+	private Map<Node, Integer> idleTimes;
+
+
+
 	/**
 	 * Creates a new Schedule. <code>stations</code>, </code>arrivalTimes</code>
 	 * and </code>departureTimes</code> must have the same lengths.
@@ -37,9 +63,9 @@ public class Schedule {
 		this.arrivalTimes = new HashMap<>();
 		this.idleTimes = new HashMap<>();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @return the scheme
 	 */

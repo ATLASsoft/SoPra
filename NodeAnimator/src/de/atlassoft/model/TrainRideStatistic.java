@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO: Klasse testen
 /**
  * Represents the statistic of one single train ride, i.e. the work-off of one
  * specific {@link Schedule} object.

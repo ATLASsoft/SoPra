@@ -332,14 +332,14 @@ public class TrainAgent implements Runnable {
 		
 		// add first
 		state = toWalk.get(0).getState();
-		state.request(this, simTime, simTime + offset);
+		state.reserve(this, simTime, simTime + offset);
 		requestedStates.add(state);
 		
 		for (int i = 1; i < toWalk.size() - 1; i++) {
 			state = toWalk.get(i).getState();
 			fromD = simTime + offset + (costList.get(i) * 60 * 60 * 1000);
 			fromL = ((long) fromD) + 1;
-			state.request(this, fromL, fromL);
+			state.reserve(this, fromL, fromL);
 			requestedStates.add(state);
 		}
 		
@@ -347,7 +347,7 @@ public class TrainAgent implements Runnable {
 		state = toWalk.get(toWalk.size() - 1).getState();
 		fromD = simTime + offset + (costList.get(toWalk.size() - 1) * 60 * 60 * 1000);
 		fromL = ((long) fromD) + 1;
-		state.request(this, fromL, fromL + schedule.getIdleTime(nextStation));
+		state.reserve(this, fromL, fromL + schedule.getIdleTime(nextStation));
 		requestedStates.add(state);
 	}
 	

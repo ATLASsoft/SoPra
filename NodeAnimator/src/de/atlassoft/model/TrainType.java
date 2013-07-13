@@ -3,8 +3,6 @@ package de.atlassoft.model;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.atlassoft.util.ImageHelper;
-// TODO: Klasse testen
 /**
  * Describes a train type.
  * 
@@ -35,6 +33,7 @@ public class TrainType {
 	private Image img;
 
 
+	
 	/**
 	 * Creates a new instance of this class. Throws an
 	 * <code>IllegalArgumentException</code> if one ore more parameter are not
@@ -75,6 +74,7 @@ public class TrainType {
 		this.priority = priority;
 	}
 
+	
 
 	/**
 	 * Sets the image property of this object. img may be null. If img is not
