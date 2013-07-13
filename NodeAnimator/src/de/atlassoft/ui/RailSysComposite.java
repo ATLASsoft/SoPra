@@ -15,6 +15,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
@@ -61,6 +63,7 @@ public class RailSysComposite {
 	private Label errorRailSysName, errorStationName;
 	private List<Node> nodeList;
 	private Combo startCombo, endCombo;
+	private FontData fontData;
 	
 	/**
 	 * The constructor for the class RailSysComposite.
@@ -83,12 +86,18 @@ public class RailSysComposite {
 		map = railSys.getNodeMap();
 		manualCoordActive = false;
 		nodeList = new ArrayList<Node>();
+		fontData = new FontData();
 		
 		railSysComposite.setLayout(new GridLayout(2, false));
 		initUI();
 	}
 	
 	private void initUI() {
+		
+		//Font for the titles of the schedules lists
+		fontData.setStyle(SWT.BOLD);
+		fontData.setHeight(9);
+		
 		//Controls
 		Composite buttonComposite = new Composite(railSysComposite, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(SWT.NULL, SWT.TOP, false, true));
@@ -107,6 +116,7 @@ public class RailSysComposite {
 		railSysNameComposite.setLayout(new GridLayout(2, false));
 		
 		Label railSysLabel = new Label(railSysNameComposite, SWT.NONE);
+		railSysLabel.setFont(new Font(Display.getCurrent(), fontData));
 		railSysLabel.setText(I18N.getMessage("RailSysComposite.Railsystem"));
 		railSysLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 2, 1));
 		
@@ -160,6 +170,7 @@ public class RailSysComposite {
 		stationButtons.setLayout(stationButtonsLayout);
 		
 		Label stationLabel = new Label(stationButtons, SWT.NONE);
+		stationLabel.setFont(new Font(Display.getCurrent(), fontData));
 		stationLabel.setText(I18N.getMessage("RailSysComposite.NewStation"));
 		stationLabel.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, 3, 1));
 		
@@ -338,8 +349,11 @@ public class RailSysComposite {
 		createPathButtons.setLayout(new GridLayout(2, true));
 		
 		Label addPathLabel = new Label(createPathButtons, SWT.NONE);
+		addPathLabel.setFont(new Font(Display.getCurrent(), fontData));
 		addPathLabel.setText(I18N.getMessage("RailSysComposite.AddPath"));
-		addPathLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		GridData addPathLabelData = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		addPathLabelData.heightHint = 27;
+		addPathLabel.setLayoutData(addPathLabelData);
 		
 		startCombo = new Combo(createPathButtons, SWT.DROP_DOWN|SWT.READ_ONLY);
 		startCombo.setEnabled(false);
@@ -463,8 +477,8 @@ public class RailSysComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!applicationService.isConnected(railSys)) {
-					//TODO: Internationalisieren
-					ErrorHelper.createErrorMessage("Fehler", "Das Streckennetz ist nicht zusammenhängend");
+					ErrorHelper.createErrorMessage(I18N.getMessage("RailSysComposite.Error.Title"),
+							I18N.getMessage("RailSysComposite.Error.NotConnected"));
 				}
 				else {
 					railSys.setID(railSysNameText.getText());
