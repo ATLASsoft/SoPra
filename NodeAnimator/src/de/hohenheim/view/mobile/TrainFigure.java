@@ -11,6 +11,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
@@ -49,6 +50,7 @@ public class TrainFigure extends AnimationFigure {
 	ArrayList<Animator> animationList = new ArrayList<Animator>();
 	Iterator<Animator> animationIterator = animationList.iterator();
 	private Image image;
+	private Color busyColor = ColorConstants.red;
 	
 	/**
 	 * Constructor. Sets the mobile object we want to create inside a room (as starting point)
@@ -91,6 +93,11 @@ public class TrainFigure extends AnimationFigure {
 		return this.showBusy;
 	}
 	
+	public void setBusyColor(Color c) {
+		this.busyColor = c;
+		this.repaint();
+	}
+	
 	/**
 	 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 	 */
@@ -107,7 +114,7 @@ public class TrainFigure extends AnimationFigure {
 	    
 	    g.drawText(""+getFigureId(),new Point(r.x+x+8, r.y+y+4));
 	    if(showBusy) {
-	    	g.setBackgroundColor(ColorConstants.red);
+	    	g.setBackgroundColor(busyColor);
 	    	g.fillRectangle(r.x+r.width-5, r.y+10, 5, 5);
 	    }	   
 	}

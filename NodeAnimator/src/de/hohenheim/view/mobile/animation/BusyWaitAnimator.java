@@ -5,6 +5,7 @@ import java.util.Observable;
 import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
+import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
 import de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent;
 
@@ -74,6 +75,10 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 	 * To start(run) the animation only use this method!
 	 */
 	public void start() {
+		if (animationFigure instanceof TrainFigure) {
+			((TrainFigure) animationFigure).setBusyColor(org.eclipse.draw2d.ColorConstants.red);
+		}
+		
 		//notify Listeners
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));
 		this.stopped=false;

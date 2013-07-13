@@ -14,10 +14,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
 
+import de.atlassoft.model.Node;
 import de.atlassoft.model.Schedule;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.State;
 import de.atlassoft.util.ScheduleFactory;
+import de.hohenheim.view.path.PathFigure;
 
 //TODO: unvollständig
 /**
@@ -303,7 +305,7 @@ public class SimulationLoop extends Observable {
 		Iterator<Schedule> it = readySchedules.iterator();
 		while (it.hasNext()) {
 			s = it.next();
-			if (s.getStations()[0].getState().getState() == State.UNBLOCKED) {
+			if (canSet(s)) {
 				it.remove();
 				agent = new TrainAgent(graph, agentCounter, s, aiPort);
 				agentCounter++;
@@ -313,4 +315,71 @@ public class SimulationLoop extends Observable {
 			}
 		}
 	}
+	
+	/**
+	 * Checks whether the specified {@link Schedule} can start at the moment.
+	 * The schedule can start if at least one of the two following conditions is
+	 * true:</p>
+	 * a) the start node of the schedule is unblocked <br>
+	 * b) the start node of the schedule is blocked, by a train that is moving
+	 * towards it AND the new created train will not drive in the direction the
+	 * blocking train is coming from AND the next node the new created train
+	 * would move to is unblocked
+	 * 
+	 * @param schedule
+	 *            {@link Schedule} whose creation should be considered
+	 * @return true if the train can be safely created, otherwise false
+	 */
+	private boolean canSet(Schedule schedule) {
+		State state = schedule.getStations()[0].getState();
+		
+		// return true if the start node is unblocked
+		if (state.getState() == State.UNBLOCKED) {
+			return true;
+		} 
+		
+		// safety check, return false if the blocking agent has not set any
+		// requests or has already cleared them
+		TrainAgent blockingAgent = state.getBlocker();
+		Long fromO = state.getFromRequest(blockingAgent);
+		if (fromO == null) {
+			return false;
+		}
+
+		// return false for safety reasons, if the arrival time of the blocking
+		// agent at the star node is in less than 10 seconds (in simulation time).
+		if (fromO < passedSimTime + 10000) {
+			return false;
+		}
+		
+		PathFigure pathO = blockingAgent.getTrainFigure().getPath();
+		
+		// return false for safety reasons, if the blocking agent has no set
+		// path for whatever reasons.
+		if (pathO == null) {
+			return false;
+		}
+		
+		// compute the path the new created train would take
+		Node nextNodeA = graph.getShortestPath(schedule.getStations()[0],
+				schedule.getStations()[1],
+				schedule.getScheme().getTrainType().getTopSpeed()).get(1);
+
+		// return false if the new created train would drive in the same
+		// direction than the blocking agent is coming from
+		if (nextNodeA.equals(pathO.getModellObject().getStart())
+				|| nextNodeA.equals(pathO.getModellObject().getEnd())) {
+			return false;
+		}
+		
+		// return false if the new created train could not immediately
+		// start to drive in the direction of nextNodeA
+		if (nextNodeA.getState().getState() == State.BLOCKED) {
+			return false;
+		}
+
+		// everything went good, train can start :)
+		return true;	
+	}
+	
 }

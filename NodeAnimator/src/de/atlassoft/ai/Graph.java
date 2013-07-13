@@ -21,8 +21,8 @@ class Graph {
 	/**
 	 * Maps nodes to their affiliated vertexes.
 	 */
-	private Map<Node, Vertex> vertexMap;
-	private Vertex[] vertexes;
+	protected Map<Node, Vertex> vertexMap;
+	protected Vertex[] vertexes;
 	
 	/**
 	 * Creates a new instance from the specified {@link RailwaySystem}.
@@ -113,28 +113,28 @@ class Graph {
 		}
 
 		// init BFS
-		boolean[] reached = new boolean[vertexes.length]; // bool inits with
-															// false
-		Queue<Vertex> R = new LinkedList<>();
+		boolean[] closedList = new boolean[vertexes.length];
+		
+		Queue<Vertex> openList = new LinkedList<>();
 		Vertex start = vertexes[0];
-		reached[start.id] = true;
-		R.add(start);
+		closedList[start.id] = true;
+		openList.add(start);
 
 		// BFS
 		Vertex v, u;
-		while (!R.isEmpty()) {
-			v = R.poll();
+		while (!openList.isEmpty()) {
+			v = openList.poll();
 			for (Edge e : v.getOutgoingEdges()) {
 				u = e.getEnd();
-				if (!reached[u.id]) {
-					reached[u.id] = true;
-					R.offer(u);
+				if (!closedList[u.id]) {
+					closedList[u.id] = true;
+					openList.offer(u);
 				}
 			}
 		}
 
 		// return false if at least one vertex was not reached
-		for (boolean isReached : reached) {
+		for (boolean isReached : closedList) {
 			if (!isReached) {
 				return false;
 			}
@@ -227,10 +227,10 @@ class Graph {
 	 * @author Alexander Balogh
 	 * 
 	 */
-	private class VertexComperator implements Comparator<Vertex> {
+	protected class VertexComperator implements Comparator<Vertex> {
 		private double[] dist;
 
-		private VertexComperator(double[] distArray) {
+		protected VertexComperator(double[] distArray) {
 			dist = distArray;
 		}
 		
@@ -377,6 +377,8 @@ class Graph {
 			
 		}
 	}
+	
+	
 	
 	
 	

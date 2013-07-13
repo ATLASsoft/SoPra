@@ -173,8 +173,43 @@ abstract class SaveDataAssistent {
 	    new PersistenceServiceImpl().saveRailwaySystem(railSys);
 	}
 	
+	private static void createAIChallenge() throws IOException {
+		RailwaySystem railSys = new RailwaySystem("AI Challenge 1");
+		
+		Node n1 = new Node("1", 25, 100); railSys.addNode(n1);
+		Node n2 = new Node("2", 75, 100); railSys.addNode(n2);
+		Node n3 = new Node("3", 175, 100); railSys.addNode(n3);
+		Node n4 = new Node("4", 250, 100); railSys.addNode(n4);
+		Node n5 = new Node("5", 175, 150); railSys.addNode(n5);
+		Node n6 = new Node("6", 175, 225); railSys.addNode(n6);
+		Node n7 = new Node("7", 275, 150); railSys.addNode(n7);
+		Node n8 = new Node("8", 275, 100); railSys.addNode(n8);
+		Node n9 = new Node("9", 275, 50); railSys.addNode(n9);
+		Node n10 = new Node("10", 75, 50); railSys.addNode(n10);
+//		Node n = new Node("", , ); railSys.addNode(n);
+		
+		
+        
+	    // create paths
+	    railSys.addPath(new Path(n1, n2, 100.0));
+	    railSys.addPath(new Path(n2, n3, 100.0));
+	    railSys.addPath(new Path(n3, n4, 100.0));
+	    railSys.addPath(new Path(n3, n5, 100.0));
+	    railSys.addPath(new Path(n5, n6, 100.0));
+	    railSys.addPath(new Path(n5, n7, 100.0));
+	    railSys.addPath(new Path(n7, n8, 100.0));
+	    railSys.addPath(new Path(n8, n9, 100.0));
+	    railSys.addPath(new Path(n9, n10, 100.0));
+	    railSys.addPath(new Path(n10, n2, 100.0));
+//	    railSys.addPath(new Path(n, n, 100.0));
+//	    railSys.addPath(new Path(n, n, 100.0));
+		
+		new PersistenceServiceImpl().saveRailwaySystem(railSys);
+	}
+	
 	public static void main(String[] args) throws IOException {
 //		createRailSys1();
 //		createRailSysNodeServerLarge();
+//		createAIChallenge();
 	}
 }

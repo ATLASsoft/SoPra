@@ -4,6 +4,7 @@ import java.util.Observable;
 
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
+import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.mobile.animation.listeners.AnimationFinishedEvent;
 import de.hohenheim.view.mobile.animation.listeners.AnimationStartedEvent;
 
@@ -72,6 +73,10 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	 */
 	public void start() {
 		//notify Listeners
+		if (animationFigure instanceof TrainFigure) {
+			((TrainFigure) animationFigure).setBusyColor(org.eclipse.draw2d.ColorConstants.green);
+		}
+		
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));
 		this.stopped=false;
 		map.getDisplay().asyncExec(this);

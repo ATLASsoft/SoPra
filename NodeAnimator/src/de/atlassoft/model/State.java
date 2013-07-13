@@ -83,11 +83,11 @@ public class State {
 		requestedTill.remove(owner);
 	}
 	
-	public synchronized long getFromRequest(TrainAgent owner) {
+	public synchronized Long getFromRequest(TrainAgent owner) {
 		return requestedFrom.get(owner);
 	}
 	
-	public synchronized long getTillRequest(TrainAgent owner) {
+	public synchronized Long getTillRequest(TrainAgent owner) {
 		return requestedTill.get(owner);
 	}
 	

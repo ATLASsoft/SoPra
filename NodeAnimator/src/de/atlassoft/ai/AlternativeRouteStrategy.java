@@ -52,6 +52,8 @@ public class AlternativeRouteStrategy extends PathFindingStrategy {
 		// construct walking path from predecessor array
 		List<NodeFigure> walkingPath = new ArrayList<>();
 		walkingPath.add(goal.getNodeFigure());
+		alternativeRoute.add(goal);
+		
 		int i = 0;
 		Vertex pre;
 		while ((pre = predecessor[g.getVertex(walkingPath.get(i).getModellObject()).id]) != null) {
