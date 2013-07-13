@@ -105,9 +105,22 @@ public class TrainTypeDialog {
 		textSpeed.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
 				if (!Character.isDigit(e.character) && !Character.isISOControl(e.character)) {
-		          e.doit = false;
-		          display.beep();
-		        }
+			          e.doit = false;
+			          display.beep();
+			        }
+				// Catches the copy paste exception
+				try {
+					if (e.text.equals("") == false) {
+						if (Integer.parseInt(e.text) < 0) {
+						    e.doit = false;
+						    display.beep();
+						}
+					}
+				}
+				catch (NumberFormatException exception) {
+			          e.doit = false;
+			          display.beep();
+				}
 			}
 		});
 		new Label(shell, SWT.NONE);

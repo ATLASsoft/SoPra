@@ -241,7 +241,13 @@ public class RailSysComposite {
 				else if(e.text.equals("") == false) {
 					final String oldS = xCoord.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
-					if(Integer.parseInt(newS) > 600) {
+					try {
+						if(Integer.parseInt(newS) > 600) {
+							e.doit = false;
+							Display.getCurrent().beep();
+						}
+					}
+					catch (NumberFormatException exception) {
 						e.doit = false;
 						Display.getCurrent().beep();
 					}
@@ -271,7 +277,13 @@ public class RailSysComposite {
 				else if(e.text.equals("") == false) {
 					final String oldS = yCoord.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
-					if(Integer.parseInt(newS) > 500) {
+					try{
+						if(Integer.parseInt(newS) > 500) {
+							e.doit = false;
+							Display.getCurrent().beep();
+						}
+					}
+					catch (NumberFormatException exception) {
 						e.doit = false;
 						Display.getCurrent().beep();
 					}
@@ -416,11 +428,17 @@ public class RailSysComposite {
 				else if(e.text.equals("") == false) {
 					final String oldS = topSpeed.getText();
 					String newS = oldS.substring(0, e.start) + e.text + oldS.substring(e.end);
-					if(Integer.parseInt(newS) > 500) {
-						e.doit = false;
-						Display.getCurrent().beep();
+					try  {
+						if(Integer.parseInt(newS) > 500) {
+							e.doit = false;
+							Display.getCurrent().beep();
+						}
+						else if(Integer.parseInt(newS) < 1) {
+							e.doit = false;
+							Display.getCurrent().beep();
+						}
 					}
-					else if(Integer.parseInt(newS) < 1) {
+					catch (NumberFormatException exception) {
 						e.doit = false;
 						Display.getCurrent().beep();
 					}
