@@ -12,9 +12,12 @@ public class ColorHelper {
 
 	private static Color darkRed = new Color(null, 205, 0, 0);
 	private static Color red = new Color(null, 255, 0, 0);
-	private static Color darkOrange = new Color(null, 255, 127, 0);
-	private static Color orange = new Color(null, 255, 158, 15);
-	private static Color yellow = new Color(null, 255, 255, 0);
+	//real orange
+	private static Color darkOrange = new Color(null, 255, 140, 0);
+	//yellow
+	private static Color orange = new Color(null, 255, 255, 0);
+	//black
+	private static Color yellow = new Color(null, 0, 0, 0);
 
 	/**
 	 * Returns the color which the user wants

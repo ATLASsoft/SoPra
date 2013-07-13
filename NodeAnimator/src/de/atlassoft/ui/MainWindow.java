@@ -160,7 +160,7 @@ public class MainWindow {
 				}
 			}
 		});
-		
+		System.out.println(createScheduleItem.getBounds());
 		//Create railway system item
 		ToolItem createRailSystemItem = new ToolItem(toolBar, SWT.PUSH);
 		createRailSystemItem.setImage(ImageHelper.getImage("railwaySysIcon"));

@@ -26,19 +26,19 @@ public class HeatPathFigure extends PathFigure {
 	public HeatPathFigure(float workload) {
 		super();
 		
-		if (workload >= 0.0 && workload <= 0.2) {
+		if (workload <= 0.0) {
 			attr = new LineAttributes(2);
 			super.setForegroundColor(ColorHelper.getColor("yellow"));
 		}
-		else if (workload > 0.2 && workload <= 0.4) {
+		else if (workload > 0.0 && workload <= 0.25) {
 			attr = new LineAttributes(4);
 			super.setForegroundColor(ColorHelper.getColor("orange"));
 		}
-		else if (workload > 0.4 && workload <= 0.6) {
+		else if (workload > 0.25 && workload <= 0.5) {
 			attr = new LineAttributes(6);
 			super.setForegroundColor(ColorHelper.getColor("darkOrange"));
 		}
-		else if (workload > 0.6 && workload <= 0.8) {
+		else if (workload > 0.5 && workload <= 0.75) {
 			attr = new LineAttributes(8);
 			super.setForegroundColor(ColorHelper.getColor("red"));
 		}

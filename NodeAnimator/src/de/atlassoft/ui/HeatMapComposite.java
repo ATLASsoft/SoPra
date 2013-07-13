@@ -44,7 +44,6 @@ import de.hohenheim.view.path.PathFigure;
  */
 public class HeatMapComposite {
 	
-	//TODO: Internationalisieren
 	private Composite heatMapComposite, informationComposite, nodeInformationComposite;
 	private NodeMap map;
 	private I18NService I18N;

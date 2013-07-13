@@ -510,16 +510,18 @@ public class ScheduleComposite {
 			public void widgetSelected(SelectionEvent e) {
 				
 				//check the time combos
-				if (hourCombo.getSelectionIndex() > hourComboILR.getSelectionIndex()) {
-					ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
-												   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
-					return;
-				}
-				else if (hourCombo.getSelectionIndex() == hourComboILR.getSelectionIndex() &&
-						 minuteCombo.getSelectionIndex() > minuteComboILR.getSelectionIndex()) {
-					ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
-							   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
-					return;
+				if (hourComboILR != null) {
+					if (hourCombo.getSelectionIndex() >= hourComboILR.getSelectionIndex()) {
+						ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
+													   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
+						return;
+					}
+					else if (hourCombo.getSelectionIndex() == hourComboILR.getSelectionIndex() &&
+							 minuteCombo.getSelectionIndex() >= minuteComboILR.getSelectionIndex()) {
+						ErrorHelper.createErrorMessage(I18N.getMessage("ScheduleComposite.ErrorMessage.Title"),
+								   I18N.getMessage("ScheduleComposite.ErrorMessage.WrongTime"));
+						return;
+					}
 				}
 				
 				//check the arrays
@@ -606,8 +608,8 @@ public class ScheduleComposite {
 				for(int i=0; i<arrivalTime.size(); i++) {
 					arrivalTime.set(i, arrivalTime.get(i) * 60);
 				}
-				for(int idle : idleTime) {
-					idle = idle * 60;
+				for(int i=1; i < idleTime.size(); i++) {
+					idleTime.set(i, idleTime.get(i) * 60);
 				}
 				idleTime.set(idleTime.size()-1, 0);
 				

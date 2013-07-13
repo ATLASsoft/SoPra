@@ -58,7 +58,6 @@ public class SimulationComposite implements Observer {
 	private Scale speedScale;
 	private Text speedText;
 	private GridLayout timeCompositeLayout;
-	private int startDay;
 	
 	/**
 	 * Constructor for the SimulationComposite class.
@@ -359,7 +358,6 @@ public class SimulationComposite implements Observer {
 		int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
 		startTime.clear();
 		startTime.set(0, 0, getDay(), startHour, startMinute);
-		startDay = getDay();
 		applicationService.startSimulation(startTime, SimulationComposite.this, true);
 		createTimeDisplay();
 	}
@@ -372,7 +370,7 @@ public class SimulationComposite implements Observer {
 		int startHour = Integer.parseInt(startHourCombo.getItem(startHourCombo.getSelectionIndex()));
 		int startMinute = Integer.parseInt(startMinuteCombo.getItem(startMinuteCombo.getSelectionIndex()));
 		startTime.clear();
-		startTime.set(0, 0, startDay, startHour, startMinute);
+		startTime.set(0, 0, getDay(), startHour, startMinute);
 		applicationService.startSimulation(startTime, SimulationComposite.this, false);
 		speedScale.setSelection(0);
 		speedText.setText(I18N.getMessage("SimulationComposite.RealTimeSpeed"));
@@ -392,6 +390,16 @@ public class SimulationComposite implements Observer {
 			
 			time = new Label(timeComposite, SWT.NONE);
 			time.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+			
+			startDayCombo = new Combo(timeComposite, SWT.READ_ONLY);
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Monday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Tuesday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Wednesday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Thursday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Friday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Saturday"));
+		    startDayCombo.add(I18N.getMessage("SimulationComposite.Sunday"));
+		    startDayCombo.select(0);
 			
 			startHourCombo = new Combo(timeComposite, SWT.READ_ONLY);
 		    startHourCombo.add("00");
@@ -426,6 +434,10 @@ public class SimulationComposite implements Observer {
 			startMinuteCombo.select(0);
 			
 			Button jumpToButton = new Button(timeComposite, SWT.PUSH);
+			GridData jumpToData = new GridData();
+			jumpToData.widthHint = 183;
+			jumpToData.horizontalSpan = 3;
+			jumpToButton.setLayoutData(jumpToData);
 			jumpToButton.setText(I18N.getMessage("SimulationComposite.JumpTo"));
 			jumpToButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
