@@ -232,9 +232,11 @@ public class SimulationStatisticDialog {
 				allSec = simulationStatistic.getMeanDelay(selectedTrainType);
 				min = (int) allSec / 60;
 				sec = (int) allSec % 60;
-				meanDelayTrainType.setText(min + " min " + sec);
-				numberOfRidesTT.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedTrainType)));
-				numberOfNodesTT.setText(String.valueOf(simulationStatistic.getInvolvedNodes(selectedTrainType).size()));
+				meanDelayTrainType.setText(min + " min " + sec + " s");
+				numberOfRidesTT.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedTrainType))
+										+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
+				numberOfNodesTT.setText(String.valueOf(simulationStatistic.getInvolvedNodes(selectedTrainType).size())
+										+ " " + I18N.getMessage("SimulationStatisticDialog.Nodes"));
 				secondStatisticComposite.layout();
 			}
 		});
@@ -305,8 +307,9 @@ public class SimulationStatisticDialog {
 				allSec = simulationStatistic.getMeanDelay(selectedNode);
 				min = (int) allSec / 60;
 				sec = (int) allSec % 60;
-				meanDelayNode.setText(min + " min " + sec);
-				numberOfRidesN.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedNode)));
+				meanDelayNode.setText(min + " min " + sec + " s");
+				numberOfRidesN.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedNode))
+										+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
 				thirdStatisticComposite.layout();
 			}
 		});
@@ -385,9 +388,11 @@ public class SimulationStatisticDialog {
 				allSec = simulationStatistic.getMeanDelay(selectedScheduleScheme);
 				min = (int) allSec / 60;
 				sec = (int) allSec % 60;
-				meanDelayScheduleScheme.setText(min + " min " + sec);
-				numberOfRidesSS.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedScheduleScheme)));
-				numberOfNodesSS.setText(String.valueOf(simulationStatistic.getInvolvedNodes(selectedScheduleScheme).size()));
+				meanDelayScheduleScheme.setText(min + " min " + sec + " s");
+				numberOfRidesSS.setText(String.valueOf(simulationStatistic.getNumberOfRides(selectedScheduleScheme))
+										+ " " + I18N.getMessage("SimulationStatisticDialog.Rides"));
+				numberOfNodesSS.setText(String.valueOf(simulationStatistic.getInvolvedNodes(selectedScheduleScheme).size())
+										+ " " + I18N.getMessage("SimulationStatisticDialog.Nodes"));
 				fourthStatisticComposite.layout();
 			}
 		});
@@ -445,12 +450,12 @@ public class SimulationStatisticDialog {
 				selectedN2 = node;
 			}
 		}
+		new Label(fifthStatisticComposite, SWT.NONE);
 		final Label meanDelayScheduleSchemeAndNode = new Label(fifthStatisticComposite, SWT.NONE);
 		allSec = simulationStatistic.getMeanDelay(selectedSS2, selectedN2);
 		min = (int) allSec / 60;
 		sec = (int) allSec % 60;
-		meanDelayScheduleSchemeAndNode.setText(min + " min " + sec);
-		new Label(fifthStatisticComposite, SWT.NONE).setText("s");
+		meanDelayScheduleSchemeAndNode.setText(min + " min " + sec + " s");
 		
 		// Listener for the combo scheduleScheme and Node
 		comboScheduleScheme2.addSelectionListener(new SelectionAdapter() {
@@ -484,7 +489,7 @@ public class SimulationStatisticDialog {
 				allSec = simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2);
 				min = (int) allSec / 60;
 				sec = (int) allSec % 60;
-				meanDelayScheduleSchemeAndNode.setText(min + " min " + sec);
+				meanDelayScheduleSchemeAndNode.setText(min + " min " + sec + " s");
 				fifthStatisticComposite.layout();
 			}
 		});
@@ -508,7 +513,7 @@ public class SimulationStatisticDialog {
 				}allSec = simulationStatistic.getMeanDelay(selectedScheduleScheme2, selectedNode2);
 				min = (int) allSec / 60;
 				sec = (int) allSec % 60;
-				meanDelayScheduleSchemeAndNode.setText(min + " min " + sec);				
+				meanDelayScheduleSchemeAndNode.setText(min + " min " + sec + " s");				
 				fifthStatisticComposite.layout();
 			}
 		});
