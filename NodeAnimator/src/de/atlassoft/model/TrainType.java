@@ -88,7 +88,8 @@ public class TrainType {
 	public void setImg(Image img) {
 		if (img != null) {
 			Rectangle rec = img.getBounds();
-			if (rec.height != 32 || rec.width != 32) {
+			if (rec.height > 32 || rec.width != 32) {
+				System.out.println(rec.height + " " + rec.width);
 				throw new IllegalArgumentException(
 						"img must be of size 32x32 pixel");
 			}

@@ -165,7 +165,7 @@ public class TrainTypeDialog {
 	            while ((selected =fd.open()) != null) {
 	            	Image imageTrainType = new Image (null, selected);
 	            	Rectangle xy = imageTrainType.getBounds();
-	            	if (xy.width == 32 && xy.height == 32) {
+	            	if (xy.width == 32 && xy.height <= 32 && xy.height >= 16) {
 	            		textImage.setText(selected);
 	            		break;
 	            	} else {
