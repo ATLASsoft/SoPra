@@ -33,6 +33,11 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		// avoid this nodes in order to get out of the other agents way
 		List<Node> tabooNodes = blockingAgent.getCurrentPath();
 		
+		// if agent is not in the way of the other agent this strategy cannot be applied
+		if (!tabooNodes.contains(currentPosition)) {
+			return Long.MAX_VALUE;
+		}
+		
 		// compute the closet safe spot i.e. the closest node to fall back to
 		double[] dist = new double[g.getVertexes().length];
 		Vertex[] predecessor = new Vertex[g.getVertexes().length];
@@ -83,7 +88,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		Long waitTill = pathToSafeSpot.get(pathToSafeSpot.size() - 2)
 				.getState().getTillRequest(blockingAgent);
 		if (waitTill == null) { //TODO: kein request
-			
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<kein request in draw back get cost");
 		}
 		long waitCost = waitTill - simTime;
 		
@@ -136,6 +141,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		PriorityQueue<Vertex> openList = new PriorityQueue<>(dist.length, g.new VertexComperator(dist));
 		boolean[] closedList = new boolean[g.vertexes.length];
 		dist[start.id] = 0.0;
+		
 		openList.offer(start);
 		
 		// compute shortest paths from start

@@ -9,25 +9,30 @@ import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
 import de.hohenheim.view.node.NodeFigure;
 
-public class AlternativeRouteStrategy extends PathFindingStrategy {
+/**
+ * Finds the shortest route to the next station without using currently blocked paths
+ * or nodes.
+ * 
+ * @author Alexander Balogh
+ *
+ */
+public class FreeRouteStrategy extends PathFindingStrategy {
 
 	private Graph g;
 	private Node currentPosition;
 	private Node goal;
-	double topSpeed;
-	TrainFigure figure;
-	TrainAgent agent;
+	private TrainFigure figure;
+	private TrainAgent agent;
 	
 	private List<NodeFigure> alternativeFigureRoute;
 	private List<Node> alternativeRoute;
 	
-	public AlternativeRouteStrategy(Graph graph, TrainAgent agent, Node currentPosition) {
+	public FreeRouteStrategy(Graph graph, TrainAgent agent, Node currentPosition, Node goal) {
 		this.g = graph;
 		this.agent = agent;
+		this.goal = goal;
 		this.currentPosition = currentPosition;
 		this.figure = agent.getTrainFigure();
-		List<Node> curPath = agent.getCurrentPath();
-		this.goal = curPath.get(curPath.size() - 1);
 		alternativeRoute = new ArrayList<>(15);
 	}
 

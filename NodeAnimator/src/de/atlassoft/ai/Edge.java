@@ -3,16 +3,38 @@ package de.atlassoft.ai;
 import de.atlassoft.model.Path;
 import de.atlassoft.model.State;
 
-
+/**
+ * Representation of a {@link Path} within the AI component. Optimized structure
+ * for graph algorithm.
+ * 
+ * @author Alexander Balogh
+ *
+ */
 class Edge {
 
 	/**
 	 * Distance from start to end in km.
 	 */
 	private double distance;
+	
+	/**
+	 * Allowed top speed in km/h
+	 */
 	private double topSpeed;
+	
+	/**
+	 * Start node of this edge
+	 */
 	private Vertex start;
+	
+	/**
+	 * End node of this edge
+	 */
 	private Vertex end;
+	
+	/**
+	 * Model object of this edge
+	 */
 	private Path modelObject;
 	
 	/**
@@ -22,14 +44,19 @@ class Edge {
 	 * @param distance
 	 * @param topSpeed
 	 */
-	Edge(Vertex start, Vertex end, double distance, double topSpeed, Path modelObject) {
+	Edge(Vertex start, Vertex end, double distance, Path modelObject) {
 		this.start = start;
 		this.end = end;
 		this.distance = distance;
-		this.topSpeed = topSpeed;
+		this.topSpeed = modelObject.getTopSpeed();
 		this.modelObject = modelObject;
 	}
 	
+	/**
+	 * Returns true when this edge is currently blocked
+	 * 
+	 * @return true if blocked, otherwise false
+	 */
 	boolean isBlocked() {
 		if (modelObject.getState().getState() == State.BLOCKED) {
 			return true;
@@ -51,20 +78,31 @@ class Edge {
 		return distance / Math.min(this.topSpeed, mobileTopSpeed);
 	}
 	
-	public double getDistance() {
-		return distance;
-	}
-
-	public double getTopSpeed() {
-		return topSpeed;
-	}
-
+	/**
+	 * Returns the start vertex of this edge.
+	 * 
+	 * @return The start vertex
+	 */
 	public Vertex getStart() {
 		return start;
 	}
 
+	/**
+	 * Returns the end vertex of this edge.
+	 * 
+	 * @return The end vertex
+	 */
 	public Vertex getEnd() {
 		return end;
+	}
+	
+	/**
+	 * Return the model object of this edge.
+	 * 
+	 * @return The {@link Path} this edge is associated with
+	 */
+	public Path getModelObject() {
+		return modelObject;
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
@@ -53,15 +54,13 @@ class Graph {
 		Vertex start;
 		Vertex end;
 		double distance;
-		double topSpeed;
 		List<Path> modelPaths = railSys.getPaths();
 		for (Path mPath : modelPaths) {
 			start = vertexMap.get(mPath.getStart());
 			end = vertexMap.get(mPath.getEnd());
 			distance = mPath.getPathFigure().getDistance() / 10.0; // convert distance from pixel to km
-			topSpeed = mPath.getTopSpeed();
-			e1 = new Edge(start, end, distance, topSpeed, mPath); // edges in both directions
-			e2 = new Edge(end, start, distance, topSpeed, mPath);
+			e1 = new Edge(start, end, distance, mPath); // edges in both directions
+			e2 = new Edge(end, start, distance, mPath);
 			
 			// add edges to vertexes
 			start.addOutgoingEdge(e1);
@@ -266,7 +265,6 @@ class Graph {
 	 *            The predecessor array, will be altered
 	 * @param dist
 	 *            The dist array, will be altered
-	 * @return Predecessor array
 	 */
 	private void sssp_Dijkstra_ingnoreBlocks(Node source, double trainTopSpeed,
 			Vertex[] predecessor, double[] dist) {
@@ -330,7 +328,6 @@ class Graph {
 	 *            The predecessor array, will be altered
 	 * @param dist
 	 *            The dist array, will be altered. Shortest distance in hours
-	 * @return Predecessor array
 	 */
 	protected void sssp_Dijkstra_considerBlocks(Node source, double trainTopSpeed,
 			Vertex[] predecessor, double[] dist) {
@@ -378,7 +375,76 @@ class Graph {
 		}
 	}
 	
-	
+	/**
+	 * Computes shortest paths from start to every other vertex using a
+	 * implementation of Dijkstra's algorithm. This algorithm considers all
+	 * nodes and paths that are not on their corresponding ignore list. The
+	 * algorithm alters the two passed arrays but other than that causes no side
+	 * effects at all. The predecessor array contains all vertexes where the
+	 * entry at position i is the predecessor of the vertex with the id i along
+	 * every shortest path from start through the vertex with the id i. The dist
+	 * array entry at position i equals the simulation time, a mobile object
+	 * with <code>trainTopSpeed</code> needs to get from source to vertexes[i]
+	 * in hours.
+	 * 
+	 * @param start
+	 *            Source vertex of the algorithm
+	 * @param trainTopSpeed
+	 *            Top speed of the mobile object
+	 * @param predecessor
+	 *            The predecessor array, will be altered
+	 * @param dist
+	 *            The dist array, will be altered. Shortest distance in hours
+	 * @param ignoreNodes
+	 *            The algorithm will ignore this nodes
+	 * @param ignorePaths
+	 *            The algorithm will ignore this paths
+	 */
+	protected void sssp_Dijkstra_ignoreSet(Node source, double trainTopSpeed,
+			Vertex[] predecessor, double[] dist, Set<Node> ignoreNodes, Set<Path> ignorePaths) {
+		
+		Vertex start = vertexMap.get(source);
+		
+		// init dist array
+		for (int i = 0; i < dist.length; i++) {
+			dist[i] = Double.POSITIVE_INFINITY;
+		}
+
+		// init open and closed list
+		PriorityQueue<Vertex> openList = new PriorityQueue<>(dist.length, new VertexComperator(dist));
+		boolean[] closedList = new boolean[vertexes.length];
+		dist[start.id] = 0.0;
+		openList.offer(start);
+		
+		// compute shortest paths from start
+		Vertex v, u;
+		double d;
+		while (!openList.isEmpty()) {
+			v = openList.poll();
+			closedList[v.id] = true;;
+			for (Edge e : v.getOutgoingEdges()) {
+				u = e.getEnd();
+
+				if (closedList[u.id]) {
+					continue;
+				}
+				
+				if (ignorePaths.contains(e.getModelObject()) || ignoreNodes.contains(u.getModelObject())) {
+					continue;
+				}
+				
+				d = e.getActualCost(trainTopSpeed) + dist[v.id];
+				if (d < dist[u.id]) {
+					openList.remove(u);
+					dist[u.id] = d;
+					openList.offer(u);
+					predecessor[u.id] = v;
+				}
+
+			}
+			
+		}
+	}
 	
 	
 	

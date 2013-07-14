@@ -26,7 +26,7 @@ import de.hohenheim.view.node.NodeFigure;
  */
 public class TrainAgent implements Runnable {
 	
-	private static enum Status {STATION_REACHED, PATH_BLOCKED, UNKNOWN, }
+	private static enum Status {STATION_REACHED, PATH_BLOCKED, NODE_BLOCKED, UNKNOWN, }
 	
 	// constant attributes of this agent
 	private final int id;
@@ -143,7 +143,7 @@ public class TrainAgent implements Runnable {
 		if (blockade instanceof Path) {
 			status = Status.PATH_BLOCKED;
 		} else {
-//			
+			status = Status.NODE_BLOCKED;
 		}
 		
 		
@@ -164,105 +164,131 @@ public class TrainAgent implements Runnable {
 	public void run() {
 		executingThread = Thread.currentThread(); //TODO: nicht thread safe
 		
-		for (int i = 0; i < schedule.getStations().length - 1; i++) {
-			lastStation = schedule.getStations()[i];
-			nextStation = schedule.getStations()[i+1];
-			
-			// standard path finding algorithm
-			setCurrentPath(graph.getShortestPath(lastStation, nextStation,
-					schedule.getScheme().getTrainType().getTopSpeed()));
-			currentPosition = currentPath.get(0);
-			updateRequests(0, schedule.getIdleTime(nextStation));
-			
-			anim = figure.walkAlong(transformPath(currentPath));
-			anim.setTimeLapse(timeLapse);
-			figure.startAnimation();	
-			
-			// wait till animation ends or interrupted
-			try {
+		try {
+			for (int i = 0; i < schedule.getStations().length - 1; i++) {
+				lastStation = schedule.getStations()[i];
+				nextStation = schedule.getStations()[i + 1];
+
+				currentPosition = lastStation;
+				PathFindingStrategy strategy = factory.defaultStrategy(
+						currentPosition, nextStation);
+				anim = strategy.execute();
+
+
 				// wait and maybe elude till next station is reached 
 				while (!atNode(nextStation)) {
-					
+
 					// acquire lock in order to wait
 					synchronized (schedule) {
-					// wait till animation stops since it reached the next station or
-					// the path is blocked
-					schedule.wait();
+						// wait till animation stops since it reached the next
+						// station or
+						// the path is blocked
+						schedule.wait();
 					}
-					
+
 					System.out.println("agent " + id + " has been notifed");
 					observeEnvironment();
-					
-					
+
 					// if next station is reached
 					if (status == Status.STATION_REACHED) {
+						System.out.println("agent + " + id + " has reached the next station");
 						doStationReachedAction();
+						status = Status.UNKNOWN;
 					}
 					
+					// facing blocked path
 					else if (status == Status.PATH_BLOCKED) {
 						figure.stopAnimation();
 						figure.clearAnimations();
+						System.out.println("agent + " + id + " is facing blocked path, searches for best strategy");
+						strategy = factory.pathBlockedStrategy(
+								blockade.getState().getBlocker(),
+								(Path) blockade,
+								currentPosition,
+								nextStation);
 						
-						observeEnvironment();
-						PathFindingStrategy strategy = factory.pathBlockedStrategy(
-								blockade.getState().getBlocker(), (Path) blockade);
 						anim = strategy.execute();
 						status = Status.UNKNOWN;
 					}
 					
-					// animation has been aborted before reaching goal,
-					// search for best alternative strategy
-					else {
-						System.out.println("agent " + id + " seachres for alternative route");
-						figure.stopAnimation();    
+					else if (status == Status.NODE_BLOCKED) {
+						figure.stopAnimation();
 						figure.clearAnimations();
 						
-						// observe environment
-						NodeFigure curPosFig = figure.getNodeFigure();
-						if (curPosFig != null) { // agent is on node
-							currentPosition = curPosFig.getModellObject();
-						} else { // agent is on path
-							//TODO: agent ist auf path
+						// agent is on a path / emergency stop
+						if (figure.getPath() != null) {
+							System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EMERCENCY STOP");
 						}
 						
-						Node blockedNode = currentPath.get
-								(1 + currentPath.indexOf(currentPosition));
-						TrainAgent blockingAgent = blockedNode.getState().getBlocker();
-						
-						PathFindingStrategy s1 = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
-						PathFindingStrategy s2 = new AlternativeRouteStrategy(graph, this, currentPosition);
-						PathFindingStrategy s3 = new DrawBackStrategy(this, graph, currentPosition, blockingAgent);
-						
-						long s1Costs = s1.getCosts();
-						long s2Costs = s2.getCosts();
-						long s3Costs = s3.getCosts();
-						
-						if (s1Costs < s2Costs) {
-							if (s1Costs < s3Costs) {
-								anim = s1.execute();
-							} else {
-								anim = s3.execute();
-							}
-						} else {
-							if (s2Costs < s3Costs) {
-								anim = s2.execute();
-							} else {
-								anim = s3.execute();
-							} 
+						else {
+							System.out.println("agent " + id + " faces blocked node, seachres for alternative route");
+							
+							strategy = factory.nodeBlockedStrategy(
+									currentPosition,
+									blockade.getState().getBlocker(),
+									(Node) blockade,
+									nextStation);
+							anim = strategy.execute();
+							
 						}
 						
-						
-						anim.setTimeLapse(timeLapse);
-					
 					}
+					
+					// animation has been aborted before reaching goal,
+					// search for best alternative strategy
+//					else {
+//						System.out.println("agent " + id + " seachres for alternative route");
+//						figure.stopAnimation();    
+//						figure.clearAnimations();
+//						
+//						// observe environment
+//						NodeFigure curPosFig = figure.getNodeFigure();
+//						if (curPosFig != null) { // agent is on node
+//							currentPosition = curPosFig.getModellObject();
+//						} else { // agent is on path
+//							//TODO: agent ist auf path
+//						}
+//						
+//						Node blockedNode = currentPath.get
+//								(1 + currentPath.indexOf(currentPosition));
+//						TrainAgent blockingAgent = blockedNode.getState().getBlocker();
+//						
+//						PathFindingStrategy s1 = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
+//						PathFindingStrategy s2 = new FreeRouteStrategy(graph, this, currentPosition, nextStation);
+//						PathFindingStrategy s3 = new DrawBackStrategy(this, graph, currentPosition, blockingAgent);
+//						
+//						long s1Costs = s1.getCosts();
+//						long s2Costs = s2.getCosts();
+//						long s3Costs = s3.getCosts();
+//						
+//						if (s1Costs < s2Costs) {
+//							if (s1Costs < s3Costs) {
+//								anim = s1.execute();
+//							} else {
+//								anim = s3.execute();
+//							}
+//						} else {
+//							if (s2Costs < s3Costs) {
+//								anim = s2.execute();
+//							} else {
+//								anim = s3.execute();
+//							} 
+//						}
+//						
+//						
+//						anim.setTimeLapse(timeLapse);
+//					
+//					}
+				
+				
 				}
-			} catch (InterruptedException e) {
-				System.out.println("train agent " + id + " has been interrupted, terminates");
-				executingThread.interrupt();
-				return;
+			
+			
 			}
-			
-			
+		} catch (InterruptedException e) {
+			System.out.println("train agent " + id + " has been interrupted, terminates");
+			executingThread.interrupt();
+			return;
 		}
 		removeFigure();//TODO: animation/warten bevor die züge verschwinden, sound
 		aiPort.getLoop().activeAgents.remove(this);
@@ -273,6 +299,7 @@ public class TrainAgent implements Runnable {
 	
 	private void observeEnvironment() {
 		NodeFigure curFig = figure.getNodeFigure();
+		// at node
 		if (curFig != null) {
 			currentPosition = curFig.getModellObject();
 			
@@ -283,7 +310,21 @@ public class TrainAgent implements Runnable {
 			}
 		}
 		
+		// at path
+		else {
+			
+		}
 		
+		NodeFigure curPosFig = figure.getNodeFigure();
+//		if (curPosFig != null) { // agent is on node
+//			currentPosition = curPosFig.getModellObject();
+//		} else { // agent is on path
+//			//TODO: agent ist auf path
+//		}
+//		
+//		Node blockedNode = currentPath.get
+//				(1 + currentPath.indexOf(currentPosition));
+//		TrainAgent blockingAgent = blockedNode.getState().getBlocker();
 	}
 	
 	private void doStationReachedAction() {
@@ -311,7 +352,7 @@ public class TrainAgent implements Runnable {
 			
 		}
 		
-		status = Status.UNKNOWN;
+		
 	}
 	
 	
