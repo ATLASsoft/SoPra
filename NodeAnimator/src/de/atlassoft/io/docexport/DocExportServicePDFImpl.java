@@ -30,7 +30,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 	private static final Path STATISTIC_DOC_PATH = SAVE_DATA_PATH
 			.resolve("simulationStatistic");
 	private static final Path DEPARTURE_DOC_PATH = SAVE_DATA_PATH
-			.resolve("departure");
+			.resolve("departureBoard");
 
 	@Override
 	public void createStatisticDoc(SimulationStatistic stat)
@@ -62,8 +62,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 			throws DocumentException, MalformedURLException, IOException {
 		Document document = new Document();
 		PdfWriter.getInstance(document,
-				new FileOutputStream(SCHEDULE_DOC_PATH.toString() + "_"
-						+ schedule.getID() + ".pdf"));
+				new FileOutputStream(SCHEDULE_DOC_PATH.toString() + ".pdf"));
 		document.open();
 		pdfCreator.addMetaData(document, "ScheduleScheme_" + schedule.getID());
 		pdfCreator
@@ -76,8 +75,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		document.close();
 		try {
 			Runtime.getRuntime().exec(
-					"cmd.exe /c start " + SCHEDULE_DOC_PATH.toString() + "_"
-							+ schedule.getID() + ".pdf");
+					"cmd.exe /c start " + SCHEDULE_DOC_PATH.toString() + ".pdf");
 		} catch (Exception e) {
 			System.out.println("Anzeigen fehlgeschlagen");
 		}
@@ -88,8 +86,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 			throws DocumentException, MalformedURLException, IOException {
 		Document document = new Document();
 		PdfWriter.getInstance(document,
-				new FileOutputStream(DEPARTURE_DOC_PATH.toString() + "_"
-						+ station.getName() + ".pdf"));
+				new FileOutputStream(DEPARTURE_DOC_PATH.toString() + ".pdf"));
 		document.open();
 		pdfCreator.addMetaData(document, "DepartureBoard_" + station.getName());
 		pdfCreator
@@ -102,8 +99,7 @@ public class DocExportServicePDFImpl implements DocExportService {
 		document.close();
 		try {
 			Runtime.getRuntime().exec(
-					"cmd.exe /c start " + DEPARTURE_DOC_PATH.toString() + "_"
-							+ station.getName() + ".pdf");
+					"cmd.exe /c start " + DEPARTURE_DOC_PATH.toString() + ".pdf");
 		} catch (Exception e) {
 			System.out.println("Anzeigen fehlgeschlagen");
 		}
