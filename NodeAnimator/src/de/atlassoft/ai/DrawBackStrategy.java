@@ -2,12 +2,9 @@ package de.atlassoft.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Set;
 
-import de.atlassoft.ai.Graph.VertexComperator;
 import de.atlassoft.model.Node;
 import de.hohenheim.view.mobile.TrainFigure;
 import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
@@ -17,26 +14,26 @@ public class DrawBackStrategy extends PathFindingStrategy {
 
 	private TrainAgent agent;
 	private TrainFigure figure;
-	private Node blockedNode;//
-	private TrainAgent blockingAgent;//
+	private TrainAgent blockingAgent;
 	private Graph g;
 	private Node currentPosition;
 	private List<Node> pathToSafeSpot;
 	
 	
-	public DrawBackStrategy(TrainAgent agent, Graph graph, Node currentPosition) {
+	public DrawBackStrategy(TrainAgent agent, Graph graph, Node currentPosition, TrainAgent blockingAgent) {
 		this.agent = agent;
 		this.figure = agent.getTrainFigure();
 		this.g = graph;
 		this.currentPosition = currentPosition;
-		
+		this.blockingAgent = blockingAgent;
 	}
 	
 	@Override
 	long getCosts() {
-		
+		// avoid this nodes in order to get out of the other agents way
 		List<Node> tabooNodes = blockingAgent.getCurrentPath();
 		
+		// compute the closet safe spot i.e. the closest node to fall back to
 		double[] dist = new double[g.getVertexes().length];
 		Vertex[] predecessor = new Vertex[g.getVertexes().length];
 		
@@ -47,6 +44,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 				dist,
 				tabooNodes);
 		
+		// no safe spot could be found
 		if (safeSpot == null) {
 			return Long.MAX_VALUE;
 		}
@@ -68,16 +66,33 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		Collections.reverse(figurePathToSafeSpot);
 		figurePathToSafeSpot.remove(0);
 		
+		
+		
+		// original path from the current node through the blocked node to the next station
+		List<Node> currentPath = agent.getCurrentPath();
+		List<Node> originalPathToGoal = currentPath.subList(
+				currentPath.indexOf(currentPosition), currentPath.size());
+		
+		
 		this.pathToSafeSpot = pathToSafeSpot;
 		
 		long toSafeSpotCost = Math.round(dist[g.getVertex(safeSpot).id] * 60 * 60 * 1000);
 		long simTime = agent.getSimTime();
 		
 		// time point agent can leave the safe spot if other agent can move as planned
-		long waitTill = pathToSafeSpot.get(pathToSafeSpot.size() - 2)
+		Long waitTill = pathToSafeSpot.get(pathToSafeSpot.size() - 2)
 				.getState().getTillRequest(blockingAgent);
+		if (waitTill == null) { //TODO: kein request
+			
+		}
+		long waitCost = waitTill - simTime;
 		
-		return 0;
+		// costs as the time till both agents are at the safe spot + the time back
+		// to the initial point + time from the initial point to the next station
+		// on the normal route
+		return Math.max(toSafeSpotCost, waitCost) + toSafeSpotCost
+				+ routeCost(originalPathToGoal, g, agent);
+		
 	}
 
 	@Override
@@ -86,14 +101,16 @@ public class DrawBackStrategy extends PathFindingStrategy {
 			getCosts();
 		}
 		
-		figure.walkAlong(transformPath(pathToSafeSpot));
-		figure.waitFor(pathToSafeSpot.get(pathToSafeSpot.size() - 2).getState()); //TODO: waitfor
+		SimpleWalkToAnimator anim = figure.walkAlong(transformPath(pathToSafeSpot));
+		anim.setTimeLapse(agent.getTimeLapse());
+		figure.startAnimation();
 		
-		Collections.reverse(pathToSafeSpot);
-		figure.walkAlong(transformPath(pathToSafeSpot));
+//		figure.waitFor(pathToSafeSpot.get(pathToSafeSpot.size() - 2).getState()); //TODO: waitfor
+//		Collections.reverse(pathToSafeSpot);
+//		figure.walkAlong(transformPath(pathToSafeSpot));
 		
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("agent " + agent.getID() + " choose DrawBackStrategy");
+		return anim;
 	}
 
 	/**

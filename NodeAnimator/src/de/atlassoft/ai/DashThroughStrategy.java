@@ -46,7 +46,7 @@ public class DashThroughStrategy extends PathFindingStrategy {
 			// agent will disappear at the blockedNode
 			else {
 				if (tillAtBlockA + SECURITY_MARGIN < fromAtBlockO) {
-					return this.routeConst(alternativeRoute, g, agent);
+					return this.routeCost(alternativeRoute, g, agent);
 				}
 			}
 		}
@@ -76,7 +76,7 @@ public class DashThroughStrategy extends PathFindingStrategy {
 		}
 		
 		if (tillAtBlockA + SECURITY_MARGIN < fromAtBlockO) {
-			return this.routeConst(alternativeRoute, g, agent);
+			return this.routeCost(alternativeRoute, g, agent);
 		} else {
 			return Long.MAX_VALUE;
 		}

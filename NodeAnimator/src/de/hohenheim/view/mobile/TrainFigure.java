@@ -15,10 +15,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
+import com.sun.imageio.plugins.common.I18N;
+
 import de.atlassoft.ai.TrainAgent;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.State;
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 import de.atlassoft.util.ImageHelper;
 import de.hohenheim.view.constants.Constants;
 import de.hohenheim.view.map.NodeMap;
@@ -63,16 +67,17 @@ public class TrainFigure extends AnimationFigure {
 		this.setFont(Constants.TRAIN_FONT);
 		
 		// set tool tip
+		I18NService I18N = I18NSingleton.getInstance();
 		ScheduleScheme scheme = modellObject.getSchedule().getScheme();
 		StringBuilder toolTip = new StringBuilder();
-		toolTip.append("Linie: ");
+		toolTip.append(I18N.getMessage("TrainFigure.Schedule"));
 		toolTip.append(scheme.getID() + "\n");
-		toolTip.append("Ziel: ");
+		toolTip.append(I18N.getMessage("TrainFigure.Goal"));
 		List<Node> stations = scheme.getStations();
 		toolTip.append((stations.get(stations.size() - 1)).getName() + "\n");
-		toolTip.append("Zugtyp: ");
+		toolTip.append(I18N.getMessage("TrainFigure.TrainType"));
 		toolTip.append(scheme.getTrainType().getName() + "\n");
-		toolTip.append("Priorität: ");
+		toolTip.append(I18N.getMessage("TrainFigure.Priority"));
 		toolTip.append(scheme.getTrainType().getPriority());
 		this.setToolTip(new Label(toolTip.toString()));
 
@@ -157,11 +162,12 @@ public class TrainFigure extends AnimationFigure {
 	 * Waits till the state object has the value UNBLOCKED.
 	 * @param State state. The State of n object the fork truck is waiting for.
 	 */
-	public void waitFor(State state) {
+	public Animator waitFor(State state) {
 		BusyWaitAnimator anim = new BusyWaitAnimator(this.map, this, state);
 		AnimationFinishedQueueObserver handler = new AnimationFinishedQueueObserver();
 		anim.addObserver(handler);		
 		addAnimation(anim);
+		return anim;
 	}
 	
 }

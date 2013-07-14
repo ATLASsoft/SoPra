@@ -6,6 +6,8 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.swt.graphics.LineAttributes;
 
 import de.atlassoft.model.Path;
+import de.atlassoft.util.I18NService;
+import de.atlassoft.util.I18NSingleton;
 import de.hohenheim.view.mobile.Utility;
 
 /**
@@ -39,14 +41,15 @@ public class PathFigure extends PolylineConnection {
 	  public PathFigure(Path modellObject) {
 		this();
 		this.modellObject = modellObject;
+		I18NService I18N = I18NSingleton.getInstance();
 	    StringBuilder toolTip = new StringBuilder();
-	    toolTip.append("Höchstgeschwindigkeit: ");
+	    toolTip.append(I18N.getMessage("PathFigure.ToolTip1"));
 	    toolTip.append(Math.round(modellObject.getTopSpeed()));
-	    toolTip.append(" km/h");
+	    toolTip.append(" " + I18N.getMessage("PathFigure.ToolTip2"));
 //	    toolTip.append("Länge: "); //TODO: wtf
 //	    toolTip.append(Math.round(this.getDistance() * 100));
 //	    toolTip.append(" Meter");
-	    this.setToolTip(new Label(toolTip.toString()));
+		this.setToolTip(new Label(toolTip.toString()));
 	  }
 	  
 	  /**

@@ -31,7 +31,7 @@ public abstract class PathFindingStrategy {
 	 * @return The {@link SimpleWalkToAnimator} that will animate the move to
 	 *         the next station.
 	 */
-	abstract SimpleWalkToAnimator execute();
+	abstract SimpleWalkToAnimator execute() throws InterruptedException;
 	
 	
 	
@@ -69,10 +69,11 @@ public abstract class PathFindingStrategy {
 	 * 
 	 * @return Needed time in milliseconds
 	 */
-	protected long routeConst(List<Node> route, Graph g, TrainAgent agent) {
+	protected long routeCost(List<Node> route, Graph g, TrainAgent agent) {
 		
 		List<Double> costList = g.getCosts(route,
 				agent.getSchedule().getScheme().getTrainType().getTopSpeed());
+		
 		
 		return Math.round(costList.get(costList.size() - 1) * 60 *60 * 1000 );
 	}

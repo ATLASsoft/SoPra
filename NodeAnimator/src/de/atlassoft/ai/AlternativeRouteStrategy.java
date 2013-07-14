@@ -79,11 +79,13 @@ public class AlternativeRouteStrategy extends PathFindingStrategy {
 		}
 		
 		agent.setCurrentPath(alternativeRoute);
-		agent.updateRequests(0);
+		agent.updateRequests(0,
+				agent.getSchedule().getIdleTime(alternativeRoute.get(alternativeRoute.size() - 1)));
+		
 		SimpleWalkToAnimator anim = figure.walkAlong(alternativeFigureRoute);
 		anim.setTimeLapse(agent.getTimeLapse());
 		figure.startAnimation();
-		System.out.println("agent 1 choose WaitForUnblockStrategy");
+		System.out.println("agent " + agent.getID() + " choose AlternativeRouteStrategy");
 		return anim;
 		
 	}

@@ -2,6 +2,7 @@ package de.atlassoft.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.atlassoft.ai.TrainAgent;
 
@@ -152,6 +153,29 @@ public class State {
 	 */
 	public synchronized Long getTillRequest(TrainAgent owner) {
 		return reservedTill.get(owner);
+	}
+	
+	/**
+	 * Returns true when the state has not been reserved in the time period
+	 * between <code>from</code> and <code>till</code>.
+	 * 
+	 * @param from
+	 *            start of the period in milliseconds after the start of the
+	 *            simulation (simulation time)
+	 * @param till
+	 *            end of the period in milliseconds after the start of the
+	 *            simulation (simulation time)
+	 * @return true if there is no reservation between from and till
+	 */
+	public synchronized boolean freeBetween(long from, long till) {
+		
+		for (Entry<TrainAgent, Long> entry : reservedFrom.entrySet()) {
+			if (entry.getValue() <= till && reservedTill.get(entry.getKey()) >= from) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	/**

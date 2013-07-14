@@ -60,7 +60,7 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 		long blockedTill = blockedNode.getState().getTillRequest(blockingAgent);
 		long simTime = agent.getSimTime();
 		
-		return (blockedTill - simTime) + this.routeConst(alternativeRoute, g, agent);
+		return (blockedTill - simTime) + this.routeCost(alternativeRoute, g, agent);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 		SimpleWalkToAnimator anim = figure.walkAlong(transformPath(alternativeRoute));
 		anim.setTimeLapse(agent.getTimeLapse());
 		figure.startAnimation();
-		System.out.println("agent 1 choose WaitForUnblockStrategy");
+		System.out.println("agent " + agent.getID() + " choose WaitForUnblockStrategy");
 		return anim;
 	}
 

@@ -227,7 +227,6 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				this.finished=true;
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
-//				animationFigure.setNode(end_node); //TODO: auskommentiert damit nicht doppelt gezählt wird für heapmap, ausprobieren ob noch alles klappt
 				
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
@@ -237,9 +236,8 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				notifyObservers(animationFigure);
 				
 				//notify waiting threads
-				synchronized (this) { // acquire lock
-					this.notifyAll();
-				}
+				animationFigure.getModelObject().targetReached();
+				
 				return;
 			}
 			
@@ -258,10 +256,11 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			//TODO: versteh ich noch nicht
 			if (segments.size() == 0) {
-				
+				System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+				System.out.println("segsize = 0");
+				System.out.println(">>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
-				animationFigure.setNode(end_node);
 				
 				//notify Listeners
 				animationFigure.notifyAnimationListener(new AnimationFinishedEvent(animationFigure, AnimationFinishedEvent.MOVE_FINISHED));
@@ -271,19 +270,22 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				notifyObservers(animationFigure);
 				
 				//notify waiting threads
-				synchronized (this) { // acquire lock
-					this.notifyAll();
-				}
+				animationFigure.getModelObject().targetReached();
+			}
+			
+			//TODO: listener observer etc benachrichtigen?
+			// path is blocked
+			if (path.getModellObject().getState().getState() != State.UNBLOCKED) {
+				animationFigure.getModelObject().blockadeDetected(path.getModellObject());
+				return;
+			// next node is blocked	
+			} else if (end_node.getModellObject().getState().getState() != State.UNBLOCKED) {
+				animationFigure.getModelObject().blockadeDetected(end_node.getModellObject());
 				return;
 			}
 			
-			// path is blocked TODO: besser lösen, synchronisieren, reicht nicht auch der node check auch bei reservierung wecken?
-			if ((path.getModellObject().getState().getState() != State.UNBLOCKED) || end_node.getModellObject().getState().getState() != State.UNBLOCKED)  {
-				synchronized (this) { // acquire lock
-					this.notifyAll();
-				}
-				return;
-			}
+			
+			
 			//TODO: überprüfen und laufen muss aufjedenfall synchronisiert werden, vllt über state
 			animationFigure.setPath(path);
 			animationFigure.setDirection_to_node(end_node);

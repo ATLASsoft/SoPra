@@ -66,6 +66,11 @@ public class BusyWaitAnimator extends Observable implements Runnable, Animator {
 			//after each finished 
 			setChanged();
 			notifyObservers(this.animationFigure);
+			
+			// notify waiting threads
+			synchronized (this) {
+				this.notifyAll();
+			}
 		    return;
 		}
 		if (counter >= 5) {
