@@ -28,7 +28,7 @@ import de.atlassoft.model.ScheduleType;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainRideStatistic;
 
-//TODO: implementieren, Konstruktor fehlt noch.
+
 /**
  * Is used to generate a PDF document.
  * 

@@ -42,6 +42,6 @@ public interface DocExportService {
 	 *
 	 * @param station The Node from which the departure board is requested.
 	 */
-	//TODO: Entwurf der methode ist noch unklar, nochmal diskutieren bevor implementieren
+	
 	void createDepartureBoard (Node station, List<ScheduleScheme> scedList) throws DocumentException, MalformedURLException, IOException;
 }

@@ -22,7 +22,6 @@ import de.atlassoft.model.SimulationStatistic;
  * @author Linus Neﬂler & Andreas Szlatki
  */
 public class DocExportServicePDFImpl implements DocExportService {
-	// TODO Exception Handling!
 	PDFCreator pdfCreator = new PDFCreator();
 	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");
 	private static final Path SCHEDULE_DOC_PATH = SAVE_DATA_PATH
