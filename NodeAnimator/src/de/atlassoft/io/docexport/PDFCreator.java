@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -482,32 +483,35 @@ class PDFCreator {
 		if (scedList == null) {
 			throw new IllegalArgumentException("scedList must not be null");
 		}
-		List<Integer> relevantSpots = new ArrayList<Integer>();
+		List<String> res = new ArrayList<String>();
+		
 		for (ScheduleScheme sced : scedList) {
-//TODO comments entfernen!
-			int remove = 0;
+			
+			List<Integer> relevantSpots = new ArrayList<Integer>();
+			
 			List<Node> nodeList = sced.getStations();
-			//System.out.println(nodeList.size());
 			for (int i = 0; i < nodeList.size(); i++) {
 				if (station.getName().equals(nodeList.get(i).getName())) {
 					relevantSpots.add(i);
-					remove = i;
 				}
 			}
-			//System.out.println(relevantSpots.size());
+			
 			for (int relevantSpot : relevantSpots) {
 				int result = sced.getArrivalTimes().get(relevantSpot)
 						+ sced.getIdleTimes().get(relevantSpot);
-				//System.out.println(result);
+				
 				Calendar newCal;
 				newCal = sced.getFirstRide();
 				newCal.add(Calendar.SECOND, result);
 				DateFormat arrivalFormat = new SimpleDateFormat("HH:mm");
+				res.add(arrivalFormat.format(newCal
+						.getTime()));
+			
 				Paragraph name = new Paragraph(station.getName(), smallBold);
 				for (int y = relevantSpot + 1; y < nodeList.size(); y++) {
 					name.add(" - " + nodeList.get(y).getName());
 				}
-				Paragraph zeit = new Paragraph(arrivalFormat.format(newCal
+				Paragraph zeit2 = new Paragraph(arrivalFormat.format(newCal
 						.getTime()));
 
 				String scedType;
@@ -517,13 +521,18 @@ class PDFCreator {
 					scedType = "Intervallfahrt, fährt alle: "
 							+ sced.getInterval() + " Minuten";
 				}
-				zeit.add("     " + scedType + " mit "
+				zeit2.add("     " + scedType + " mit "
 						+ sced.getTrainType().getName());
 				document.add(name);
-				document.add(zeit);
+				document.add(zeit2);
 			}
-			relevantSpots.remove(remove);
+			
 		}
+//		Collections.sort(res);
+//		for (String s : res){
+//			Paragraph zeit = new Paragraph(s);
+//			document.add(zeit);
+//		}
 		System.out.println("Departureboard saved!");
 	}
 
