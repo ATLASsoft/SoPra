@@ -2,6 +2,8 @@ package de.hohenheim.view.mobile.animation;
 
 import java.util.Observable;
 
+import org.eclipse.swt.graphics.Color;
+
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
 import de.hohenheim.view.mobile.TrainFigure;
@@ -30,16 +32,22 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	int waitTime;
 	
 	/**
+	 * Color of the busy indicator
+	 */
+	Color color;
+	
+	/**
 	 * 
 	 * @param {@link NodeMap} map - The map where the animated figure is located. 
 	 * @param {@link AnimationFigure} figure - The AnimationFigure itself.
 	 * @param int busy_time - A time in milliseconds for which the truck is busy (in simulation time). 
 	 */
-	public BusyAnimator(NodeMap map, AnimationFigure figure, int busy_time) {
+	public BusyAnimator(NodeMap map, AnimationFigure figure, int busy_time, Color color) {
 		this.animationFigure = figure;
 		this.map             = map;
 		this.busy_time       = busy_time;
-		this.time_left       = busy_time; 		
+		this.time_left       = busy_time;
+		this.color = color;
 	}
 		
 	/**
@@ -94,7 +102,7 @@ public class BusyAnimator extends Observable implements Runnable, Animator {
 	public void start() {
 		//notify Listeners
 		if (animationFigure instanceof TrainFigure) {
-			((TrainFigure) animationFigure).setBusyColor(org.eclipse.draw2d.ColorConstants.green);
+			((TrainFigure) animationFigure).setBusyColor(color);
 		}
 		
 		animationFigure.notifyAnimationListener(new AnimationStartedEvent(animationFigure, AnimationStartedEvent.BUSY_STARTED));

@@ -66,8 +66,12 @@ public final class StrategyFactory {
 		long costAltRouteAgent = s2.getCosts();
 		
 		// draw back
-		PathFindingStrategy s3 = new DrawBackStrategy(agent, graph, currentPosition, blockingAgent);
+		PathFindingStrategy s3 = new DrawBackStrategy(agent, graph, currentPosition, goal, blockingAgent);
 		long costDrawBackAgent = s3.getCosts();
+		
+		
+		
+		
 		
 		
 		
@@ -111,7 +115,7 @@ public final class StrategyFactory {
 		PathFindingStrategy s1 = new WaitForPathStrategy(agent, graph, blockingAgent, blockedPath);
 		long costS1 = s1.getCosts();
 
-		PathFindingStrategy s2 = new FreeRouteStrategy(graph, blockingAgent, currentPosition, goal);
+		PathFindingStrategy s2 = new FreeRouteStrategy(graph, agent, currentPosition, goal);
 		long costS2 = s2.getCosts();
 		
 		//TODO: kosten bei s1 mit geschwindigkeitsdifferenz gewichten

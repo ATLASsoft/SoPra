@@ -1,10 +1,10 @@
 package de.atlassoft.ai;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.eclipse.draw2d.ColorConstants;
 
 import de.atlassoft.model.Blockable;
 import de.atlassoft.model.Node;
@@ -26,8 +26,10 @@ import de.hohenheim.view.node.NodeFigure;
  */
 public class TrainAgent implements Runnable {
 	
-	private static enum Status {STATION_REACHED, PATH_BLOCKED, NODE_BLOCKED, UNKNOWN, }
-	
+	protected static enum Status {
+		STATION_REACHED, TMP_TARGET_REACHED, PATH_BLOCKED, NODE_BLOCKED, INCOMING_BLOCK, UNKNOWN,
+	}
+
 	// constant attributes of this agent
 	private final int id;
 	private final TrainFigure figure;
@@ -43,7 +45,7 @@ public class TrainAgent implements Runnable {
 	private Set<State> blockedState;
 	private Set<State> requestedStates;
 	
-	private Status status;
+	private volatile Status status;
 	/**
 	 * The current path from lastStation to nextStation.
 	 */
@@ -52,6 +54,8 @@ public class TrainAgent implements Runnable {
 	private Node nextStation;
 	private Node currentPosition;
 	private Blockable blockade;
+	
+	protected volatile boolean wait = true;
 	
 	
 	protected TrainAgent(Graph graph, int id, Schedule schedule, AIServiceImpl aiPort) {
@@ -109,6 +113,10 @@ public class TrainAgent implements Runnable {
 		return timeLapse;
 	}
 	
+	protected void setAnimator(Animator anim) {
+		this.anim = anim;
+	}
+	
 	protected long getSimTime() {
 		return aiPort.getLoop().getSimTimeInMillis();
 	}
@@ -152,11 +160,25 @@ public class TrainAgent implements Runnable {
 		}
 	}
 	
-	public void targetReached() {
-		status = Status.STATION_REACHED; //TODO: anderes target als station
+	public void targetReached(Node target) {
+		if (nextStation.equals(target)) {
+			status = Status.STATION_REACHED; //TODO: anderes target als station
+		} else {
+			status = Status.TMP_TARGET_REACHED;
+		}
+		
 		synchronized(schedule) {
 			schedule.notifyAll();
 		}
+	}
+	
+	public void blockedAgent() {
+		status = Status.INCOMING_BLOCK;
+		
+		synchronized(schedule) {
+			schedule.notifyAll();
+		}
+		
 	}
 	
 	
@@ -179,13 +201,15 @@ public class TrainAgent implements Runnable {
 				while (!atNode(nextStation)) {
 
 					// acquire lock in order to wait
-					synchronized (schedule) {
-						// wait till animation stops since it reached the next
-						// station or
-						// the path is blocked
-						schedule.wait();
+					if (wait) {
+						synchronized (schedule) {
+							// wait till animation stops since it reached the next
+							// station or
+							// the path is blocked
+							schedule.wait();
+						}
 					}
-
+					wait = true;
 					System.out.println("agent " + id + " has been notifed");
 					observeEnvironment();
 
@@ -208,6 +232,9 @@ public class TrainAgent implements Runnable {
 								nextStation);
 						
 						anim = strategy.execute();
+						
+						
+						
 						status = Status.UNKNOWN;
 					}
 					
@@ -227,59 +254,13 @@ public class TrainAgent implements Runnable {
 									currentPosition,
 									blockade.getState().getBlocker(),
 									(Node) blockade,
-									nextStation);
+									currentPath.get(currentPath.size() - 1));
 							anim = strategy.execute();
-							
 						}
 						
+					} else if (status == Status.UNKNOWN) {
+						
 					}
-					
-					// animation has been aborted before reaching goal,
-					// search for best alternative strategy
-//					else {
-//						System.out.println("agent " + id + " seachres for alternative route");
-//						figure.stopAnimation();    
-//						figure.clearAnimations();
-//						
-//						// observe environment
-//						NodeFigure curPosFig = figure.getNodeFigure();
-//						if (curPosFig != null) { // agent is on node
-//							currentPosition = curPosFig.getModellObject();
-//						} else { // agent is on path
-//							//TODO: agent ist auf path
-//						}
-//						
-//						Node blockedNode = currentPath.get
-//								(1 + currentPath.indexOf(currentPosition));
-//						TrainAgent blockingAgent = blockedNode.getState().getBlocker();
-//						
-//						PathFindingStrategy s1 = new WaitForUnblockStrategy(this, currentPosition, blockingAgent, blockedNode, graph);
-//						PathFindingStrategy s2 = new FreeRouteStrategy(graph, this, currentPosition, nextStation);
-//						PathFindingStrategy s3 = new DrawBackStrategy(this, graph, currentPosition, blockingAgent);
-//						
-//						long s1Costs = s1.getCosts();
-//						long s2Costs = s2.getCosts();
-//						long s3Costs = s3.getCosts();
-//						
-//						if (s1Costs < s2Costs) {
-//							if (s1Costs < s3Costs) {
-//								anim = s1.execute();
-//							} else {
-//								anim = s3.execute();
-//							}
-//						} else {
-//							if (s2Costs < s3Costs) {
-//								anim = s2.execute();
-//							} else {
-//								anim = s3.execute();
-//							} 
-//						}
-//						
-//						
-//						anim.setTimeLapse(timeLapse);
-//					
-//					}
-				
 				
 				}
 			
@@ -315,7 +296,6 @@ public class TrainAgent implements Runnable {
 			
 		}
 		
-		NodeFigure curPosFig = figure.getNodeFigure();
 //		if (curPosFig != null) { // agent is on node
 //			currentPosition = curPosFig.getModellObject();
 //		} else { // agent is on path
@@ -335,7 +315,7 @@ public class TrainAgent implements Runnable {
 		figure.stopAnimation();
 		figure.clearAnimations();
 
-		anim = figure.busy(schedule.getIdleTime(nextStation));
+		anim = figure.busy(schedule.getIdleTime(nextStation), ColorConstants.green);
 		anim.setTimeLapse(timeLapse);
 		figure.startAnimation();
 		
@@ -381,31 +361,8 @@ public class TrainAgent implements Runnable {
 		});
 	}
 	
-	/**
-	 * Transforms list of {@link Node}s into a list of {@link NodeFigure}s. Also
-	 * the first element of the list will be left out and therefore the size of
-	 * new list is decreases by one.
-	 * 
-	 * @param walkingPath
-	 *            The list of {@link Node}s to be transformed
-	 * @return Transformed list
-	 */
-	private List<NodeFigure> transformPath(List<Node> walkingPath) {
-		Iterator<Node> it = walkingPath.iterator();
-		List<NodeFigure> figurePath = new ArrayList<>();
-		it.next(); // skip first element
-		while (it.hasNext()) {
-			figurePath.add(it.next().getNodeFigure());
-		}
-		return figurePath;
-	}
 
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

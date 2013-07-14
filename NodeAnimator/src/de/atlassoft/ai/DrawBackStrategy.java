@@ -2,11 +2,16 @@ package de.atlassoft.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import org.eclipse.draw2d.ColorConstants;
+
 import de.atlassoft.model.Node;
+import de.atlassoft.model.Path;
 import de.hohenheim.view.mobile.TrainFigure;
+import de.hohenheim.view.mobile.animation.Animator;
 import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
 import de.hohenheim.view.node.NodeFigure;
 
@@ -18,10 +23,12 @@ public class DrawBackStrategy extends PathFindingStrategy {
 	private Graph g;
 	private Node currentPosition;
 	private List<Node> pathToSafeSpot;
+	private Node goal;
+	private long actualToSafeSpotCost;
 	
-	
-	public DrawBackStrategy(TrainAgent agent, Graph graph, Node currentPosition, TrainAgent blockingAgent) {
+	public DrawBackStrategy(TrainAgent agent, Graph graph, Node currentPosition, Node goal, TrainAgent blockingAgent) {
 		this.agent = agent;
+		this.goal = goal;
 		this.figure = agent.getTrainFigure();
 		this.g = graph;
 		this.currentPosition = currentPosition;
@@ -90,32 +97,77 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		if (waitTill == null) { //TODO: kein request
 			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<kein request in draw back get cost");
 		}
-		long waitCost = waitTill - simTime;
+		long toSafeOther = waitTill - simTime;
+		actualToSafeSpotCost = Math.max(toSafeSpotCost, toSafeOther);
 		
 		// costs as the time till both agents are at the safe spot + the time back
 		// to the initial point + time from the initial point to the next station
 		// on the normal route
-		return Math.max(toSafeSpotCost, waitCost) + toSafeSpotCost
+		return actualToSafeSpotCost + toSafeSpotCost
 				+ routeCost(originalPathToGoal, g, agent);
 		
 	}
 
 	@Override
-	SimpleWalkToAnimator execute() {
+	Animator execute() throws InterruptedException {
+		System.out.println("agent " + agent.getID() + " choose DrawBackStrategy");
 		if (pathToSafeSpot == null) {
 			getCosts();
 		}
 		
-		SimpleWalkToAnimator anim = figure.walkAlong(transformPath(pathToSafeSpot));
+		Animator anim = figure.walkAlong(transformPath(pathToSafeSpot));
+		agent.setAnimator(anim);
+		agent.setCurrentPath(pathToSafeSpot);
+		agent.updateRequests(0, (int) actualToSafeSpotCost);
 		anim.setTimeLapse(agent.getTimeLapse());
 		figure.startAnimation();
 		
-//		figure.waitFor(pathToSafeSpot.get(pathToSafeSpot.size() - 2).getState()); //TODO: waitfor
-//		Collections.reverse(pathToSafeSpot);
-//		figure.walkAlong(transformPath(pathToSafeSpot));
+		synchronized (agent.getSchedule()) {
+			agent.getSchedule().wait();
+			
+			// collision while trying to reach safe spot //TODO:
+			if (!anim.isFinished()) {
+				agent.wait = false;
+				return (SimpleWalkToAnimator) anim;
+			}
+		}
 		
-		System.out.println("agent " + agent.getID() + " choose DrawBackStrategy");
-		return anim;
+		// wait till other train has passed by
+		Long tillOther = pathToSafeSpot.get(pathToSafeSpot.size() - 2)
+				.getState().getTillRequest(blockingAgent);
+		long waitTime = 0;
+		if (tillOther != null) {
+			waitTime = tillOther - agent.getSimTime();
+		}
+		System.out.println(tillOther);
+		System.out.println(agent.getSimTime());
+		System.out.println(waitTime);
+		if (waitTime > 0) {
+			anim = figure.busy((int) waitTime, ColorConstants.red);
+			anim.setTimeLapse(agent.getTimeLapse());
+			agent.setAnimator(anim);
+		}
+		
+		Object lock = figure.waitFor(pathToSafeSpot.get(pathToSafeSpot.size() - 2).getState());
+		figure.startAnimation();
+		
+		// wait till state is clear, ignore other agents
+		synchronized (lock) {
+			lock.wait();
+		}
+		
+		// find route to the next station
+		PathFindingStrategy s = new ShortestPathStrategy(
+				g, 
+				agent,
+				pathToSafeSpot.get(pathToSafeSpot.size() - 1),
+				goal,
+				new HashSet<Node>(),
+				new HashSet<Path>());
+		s.getCosts();
+		
+		return s.execute();
+		
 	}
 
 	/**

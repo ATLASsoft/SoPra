@@ -236,7 +236,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				notifyObservers(animationFigure);
 				
 				//notify waiting threads
-				animationFigure.getModelObject().targetReached();
+				animationFigure.getModelObject().targetReached(animationFigure.getNodeFigure().getModellObject());
 				
 				return;
 			}
@@ -270,7 +270,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				notifyObservers(animationFigure);
 				
 				//notify waiting threads
-				animationFigure.getModelObject().targetReached();
+				animationFigure.getModelObject().targetReached(animationFigure.getNodeFigure().getModellObject());
 			}
 			
 			//TODO: listener observer etc benachrichtigen?

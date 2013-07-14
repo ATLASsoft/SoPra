@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.atlassoft.model.Node;
+import de.hohenheim.view.mobile.animation.Animator;
 import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
 import de.hohenheim.view.node.NodeFigure;
 
@@ -31,7 +32,7 @@ public abstract class PathFindingStrategy {
 	 * @return The {@link SimpleWalkToAnimator} that will animate the move to
 	 *         the next station.
 	 */
-	abstract SimpleWalkToAnimator execute() throws InterruptedException;
+	abstract Animator execute() throws InterruptedException;
 	
 	
 	
