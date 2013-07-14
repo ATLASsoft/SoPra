@@ -140,7 +140,9 @@ public class TrainTypeDialog {
 		final Text textImage = new Text(shell, SWT.READ_ONLY | SWT.BORDER);
 		textImage.setLayoutData(dataFill);
 		textImage.setToolTipText(I18N.getMessage("TrainTypeDialog.toolTipImage"));
-		new Label(shell, SWT.NONE).setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
+		Label infoPic = new Label(shell, SWT.NONE);
+		infoPic.setText(I18N.getMessage("TrainTypeDialog.labelImage2"));
+		infoPic.setToolTipText(I18N.getMessage("TrainTypeDialog.toolTipInfoImage"));
 		
 		// Search row for the optics
 		new Label(shell, SWT.NONE);
