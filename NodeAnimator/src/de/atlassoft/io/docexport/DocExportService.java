@@ -13,6 +13,8 @@ import de.atlassoft.model.SimulationStatistic;
 
 /**
  * Service interface providing access to the docexport layer.
+ * 
+ * @author Linus Neﬂler & Andreas Szlatki
  */
 public interface DocExportService {
 	

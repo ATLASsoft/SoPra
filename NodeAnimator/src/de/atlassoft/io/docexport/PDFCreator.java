@@ -10,8 +10,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-
-
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -324,7 +322,7 @@ class PDFCreator {
 		int trainTypeNumberOfRides = 0;
 		List<ScheduleScheme> allScheduleIDS = stat.getInvolvedScheduleSchemes();
 		String railSysID = stat.getRailwaySystem().getID();
-		
+
 		for (TrainRideStatistic trs : tRS) {
 			// Liste über all Knoten der Statistik + Knoten mit most MeanDelay
 			List<Node> nodeStat = trs.getStations();
@@ -334,7 +332,7 @@ class PDFCreator {
 					nodeMMD = node.getName();
 				}
 			}
-		
+
 			// ScheduleScheme with most MeanDelay
 			if (stat.getMeanDelay(trs.getScheduleScheme()) > scheduleSchemeMostMDelay) {
 				scheduleSchemeMostMDelay = stat.getMeanDelay(trs
@@ -357,22 +355,24 @@ class PDFCreator {
 
 		}
 		// General Data
-		Paragraph involvedRailSysInf = new Paragraph ("Aktives Streckennetz: ", smallBold);
+		Paragraph involvedRailSysInf = new Paragraph("Aktives Streckennetz: ",
+				smallBold);
 		addEmptyLine(involvedRailSysInf, 1);
 		document.add(involvedRailSysInf);
 		Paragraph invovedRailSys = new Paragraph(railSysID);
 		addEmptyLine(invovedRailSys, 1);
 		document.add(invovedRailSys);
-		Paragraph involvedSchedulesInf = new Paragraph ("Aktive Fahrpläne: ", smallBold);
+		Paragraph involvedSchedulesInf = new Paragraph("Aktive Fahrpläne: ",
+				smallBold);
 		addEmptyLine(involvedSchedulesInf, 1);
 		document.add(involvedSchedulesInf);
 		Paragraph invovedSchedules = new Paragraph("");
 		for (ScheduleScheme scheduleScheme : allScheduleIDS) {
-			if (scheduleScheme
-					== (allScheduleIDS.get(allScheduleIDS.size() - 1))) {
+			if (scheduleScheme == (allScheduleIDS
+					.get(allScheduleIDS.size() - 1))) {
 				invovedSchedules.add(scheduleScheme.getID());
-			} else{
-			invovedSchedules.add(scheduleScheme.getID() + ", ");
+			} else {
+				invovedSchedules.add(scheduleScheme.getID() + ", ");
 			}
 		}
 		addEmptyLine(invovedSchedules, 1);
@@ -382,21 +382,26 @@ class PDFCreator {
 				smallBold);
 		addEmptyLine(contentNumbers, 1);
 		document.add(contentNumbers);
-		Paragraph numberOfRides = new Paragraph(Integer.toString(stat.getNumberOfRides()) + "  Fahrt/en");
+		Paragraph numberOfRides = new Paragraph(Integer.toString(stat
+				.getNumberOfRides()) + "  Fahrt/en");
 		addEmptyLine(numberOfRides, 1);
 		document.add(numberOfRides);
-		Paragraph contentMMD = new Paragraph("Durchschnittliche Verspätung, innerhalb der Simulation: ", smallBold);
+		Paragraph contentMMD = new Paragraph(
+				"Durchschnittliche Verspätung, innerhalb der Simulation: ",
+				smallBold);
 		addEmptyLine(contentMMD, 1);
 		document.add(contentMMD);
-		Paragraph MMD = new Paragraph(doubleFormater.format(stat.getMeanDelay() / 60.0)
-				+ "  Minute/n");
+		Paragraph MMD = new Paragraph(
+				doubleFormater.format(stat.getMeanDelay() / 60.0)
+						+ "  Minute/n");
 		addEmptyLine(MMD, 1);
 		document.add(MMD);
-		Paragraph contentDelay = new Paragraph("Gesamte Verspätung der Simulation: ", smallBold);
+		Paragraph contentDelay = new Paragraph(
+				"Gesamte Verspätung der Simulation: ", smallBold);
 		addEmptyLine(contentDelay, 1);
 		document.add(contentDelay);
-		Paragraph delay = new Paragraph(doubleFormater.format(stat.getTotalDelay() / 60.0)
-				+ "  Minute/n");
+		Paragraph delay = new Paragraph(doubleFormater.format(stat
+				.getTotalDelay() / 60.0) + "  Minute/n");
 		addEmptyLine(delay, 2);
 		document.add(delay);
 		// Significant Statistics
@@ -456,7 +461,7 @@ class PDFCreator {
 		trainTypeDelay.add("Anzahl der Fahrten des Zugtyps: "
 				+ trainTypeNumberOfRides);
 		document.add(trainTypeDelay);
-		
+
 		System.out.println("Statistic saved!");
 	}
 
@@ -484,55 +489,56 @@ class PDFCreator {
 			throw new IllegalArgumentException("scedList must not be null");
 		}
 		List<String> res = new ArrayList<String>();
-		
+
 		for (ScheduleScheme sced : scedList) {
-			
+
 			List<Integer> relevantSpots = new ArrayList<Integer>();
-			
+
 			List<Node> nodeList = sced.getStations();
 			for (int i = 0; i < nodeList.size(); i++) {
 				if (station.getName().equals(nodeList.get(i).getName())) {
 					relevantSpots.add(i);
 				}
 			}
-			
+
 			for (int relevantSpot : relevantSpots) {
 				int result = sced.getArrivalTimes().get(relevantSpot)
 						+ sced.getIdleTimes().get(relevantSpot);
-				
+
 				Calendar newCal;
 				newCal = sced.getFirstRide();
 				newCal.add(Calendar.SECOND, result);
 				DateFormat arrivalFormat = new SimpleDateFormat("HH:mm");
-				res.add(arrivalFormat.format(newCal
-						.getTime()));
-			
-				Paragraph name = new Paragraph(station.getName(), smallBold);
-				for (int y = relevantSpot + 1; y < nodeList.size(); y++) {
-					name.add(" - " + nodeList.get(y).getName());
-				}
-				Paragraph zeit2 = new Paragraph(arrivalFormat.format(newCal
-						.getTime()));
 
+				// All stations
+				List<String> statsions = new ArrayList<String>();
+				String sta = "";
+				for (int y = relevantSpot + 1; y < nodeList.size(); y++) {
+					statsions.add(" - " + nodeList.get(y).getName());
+				}
+				for (String s : statsions) {
+					sta = sta + s;
+				}
+
+				// Scedule Type
 				String scedType;
 				if (sced.getScheduleType() == ScheduleType.SINGLE_RIDE) {
 					scedType = "Einzelfahrt";
 				} else {
-					scedType = "Intervallfahrt, fährt alle: "
-							+ sced.getInterval() + " Minuten";
+					scedType = "Fährt alle: " + sced.getInterval() + " Minuten";
 				}
-				zeit2.add("     " + scedType + " mit "
-						+ sced.getTrainType().getName());
-				document.add(name);
-				document.add(zeit2);
+
+				res.add(arrivalFormat.format(newCal.getTime()) + "    über:  "
+						+ station.getName() + sta + "     mit:  "
+						+ sced.getTrainType().getName() + ",    " + scedType);
 			}
-			
 		}
-//		Collections.sort(res);
-//		for (String s : res){
-//			Paragraph zeit = new Paragraph(s);
-//			document.add(zeit);
-//		}
+		Collections.sort(res);
+		for (String s : res) {
+			Paragraph result = new Paragraph(s, smallBold);
+			addEmptyLine(result, 1);
+			document.add(result);
+		}
 		System.out.println("Departureboard saved!");
 	}
 

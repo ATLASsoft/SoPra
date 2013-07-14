@@ -37,7 +37,7 @@ import de.atlassoft.model.TrainType;
 /**
  * Class which provides methods to create, delete, modify and read XML-Files
  * 
- * @author Linus and Andy
+ * @author Linus Neﬂler & Andreas Szlatki
  */
 class XMLParser {
 	

@@ -13,7 +13,7 @@ import de.atlassoft.model.TrainType;
 /**
  * Class which implements the PersistenceService
  * 
- * @author Linus, Andreas
+ * @author Linus Neﬂler & Andreas Szlatki
  */
 public class PersistenceServiceImpl implements PersistenceService {
 
