@@ -175,6 +175,12 @@ class XMLParser {
 	 */
 	protected void deleteTrainType(TrainType type, Path path)
 			throws IOException {
+		if (type == null){
+			throw new IllegalArgumentException("type must not be null"); 
+		}
+		if (path == null){
+			throw new IllegalArgumentException("path must not be null");
+		}
 		if (!Files.exists(path)) {
 			return;
 		}
@@ -223,7 +229,12 @@ class XMLParser {
 	 */
 	protected void saveSchedule(ScheduleScheme schedule, Path path)
 			throws IOException {
-
+		if (schedule == null) {
+			throw new IllegalArgumentException("schedule must not be null");
+		}
+		if (path == null) {
+			throw new IllegalArgumentException("path must not be null");
+		}
 		FileOutputStream out = null;
 		try {
 
@@ -424,6 +435,12 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
+		if (railSysID == null){
+			throw new IllegalArgumentException("railSysID must not be null");
+		}
+		if (path == null){
+			throw new IllegalArgumentException("path must not be null");
+		}
 		FileOutputStream out = null;
 		try {
 
@@ -515,6 +532,12 @@ class XMLParser {
 		if (!Files.exists(path)) {
 			return;
 		}
+		if (train == null){
+			throw new IllegalArgumentException("train must not be null");
+		}
+		if (path == null){
+			throw new IllegalArgumentException("path must not be null");
+		}
 		FileOutputStream out = null;
 		try {
 
@@ -553,6 +576,12 @@ class XMLParser {
 
 	protected void saveRailWaySystem(RailwaySystem railSys, Path path)
 			throws IOException {
+		if (railSys == null){
+			throw new IllegalArgumentException("railSys must not be null");
+		}
+		if (path == null){
+			throw new IllegalArgumentException("path must not be null");
+		}
 		FileOutputStream out = null;
 
 		try {
