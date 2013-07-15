@@ -214,9 +214,7 @@ public class CurrentRailSysComposite {
 	    }
 	    
 	    for (int i=0; i<titles.length; i++) {
-	    	if (i > 0) {
-	    		informationTable.getColumn(i).setResizable(false);
-	    	}
+	    	informationTable.getColumn(i).setResizable(false);
 	    } 
 //	    informationTable.setSize(informationTable.computeSize(300, 130));
 		informationTable.setVisible(false);
