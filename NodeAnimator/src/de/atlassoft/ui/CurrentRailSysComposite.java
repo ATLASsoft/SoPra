@@ -120,14 +120,14 @@ public class CurrentRailSysComposite {
 								   item.setText(3, String.valueOf(path.getTopSpeed()) + " km/h");
 								}
 							}
-							for (int i=0; i<3; i++) {
+							for (int i=0; i<4; i++) {
 						    	informationTable.getColumn (i).pack ();
 						    } 
-						    informationTable.pack(true);
-						    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						    informationTable.setSize(292, 100);
 						    informationTable.setRedraw(true);
 						    informationTable.setVisible(true);
 		        			exportScheduleButton.setVisible(true);
+		        			currentRailSysComposite.layout();
 						}
 					}
 				}
@@ -206,10 +206,6 @@ public class CurrentRailSysComposite {
 		informationTable = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		informationTable.setLinesVisible(true);
 		informationTable.setHeaderVisible(true);
-		GridData dataTable = new GridData();
-		dataTable.widthHint = 300;
-		dataTable.heightHint = 130;
-		informationTable.setLayoutData(dataTable);
 		
 		String[] titles = { I18N.getMessage("CurrentRailSysComposite.tableTitel1"), "X", "Y", I18N.getMessage("CurrentRailSysComposite.tableTitel2")};
 		for (int i = 0; i < titles.length; i++) {
@@ -218,10 +214,11 @@ public class CurrentRailSysComposite {
 	    }
 	    
 	    for (int i=0; i<titles.length; i++) {
-	    	informationTable.getColumn(i).pack ();
+	    	if (i > 0) {
+	    		informationTable.getColumn(i).setResizable(false);
+	    	}
 	    } 
-	    informationTable.pack();
-	    informationTable.setSize(informationTable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+//	    informationTable.setSize(informationTable.computeSize(300, 130));
 		informationTable.setVisible(false);
 		
 		//PDF
