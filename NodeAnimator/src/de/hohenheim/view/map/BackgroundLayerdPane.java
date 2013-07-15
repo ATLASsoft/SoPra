@@ -6,12 +6,11 @@ import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 
 
 /**
- * @author Marc Fernandes
+ * @author Marc Fernandes, Silvan Haeussermann
  * 
  * This class extends a LayeredPane to draw a grid and a vertical gradient in the background. 
  */
@@ -46,6 +45,14 @@ public class BackgroundLayerdPane extends LayeredPane {
 			graphics.drawText(i+"", p1);
 			graphics.setForegroundColor(ColorConstants.titleGradient);
 		}
+		
+		//draw the scale
+		graphics.setForegroundColor(ColorConstants.black);
+		graphics.setBackgroundColor(ColorConstants.black);
+		graphics.drawRectangle(525, 480, 26, 7);
+		Rectangle scale = new Rectangle(550, 480, 26, 8);
+		graphics.fillRectangle(scale);
+		graphics.drawText("2,5 km", new Point(534, 465));
 		
 		//#2269B5
 		Color c = new Color(null, new RGB(22, 69, 120));
