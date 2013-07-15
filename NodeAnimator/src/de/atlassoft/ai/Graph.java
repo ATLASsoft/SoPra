@@ -192,11 +192,16 @@ class Graph {
 	}
 	
 	/**
+	 * Returns the shortest path from source to target for a train with the
+	 * specified top speed. The algorithm does not care if nodes are blocked.
 	 * 
 	 * @param source
+	 *            Source {@link Node}
 	 * @param target
+	 *            Target {@link Node}
 	 * @param topSpeed
-	 * @return
+	 *            top speed of the train
+	 * @return List containing all nodes of the shortest path
 	 */
 	protected List<Node> getShortestPath(Node source, Node target, double topSpeed) {
 		double[] dist = new double[vertexes.length];

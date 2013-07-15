@@ -17,12 +17,18 @@ import de.atlassoft.model.TrainType;
  */
 public class PersistenceServiceImpl implements PersistenceService {
 
-	private static final Path SAVE_DATA_PATH = Paths.get("C:\\SOPRAsavedata");// getJarPath().resolveSibling("savedata");
+	/**
+	 * {@link Path} to the root directory of all save data 
+	 */
+	private static final Path SAVE_DATA_PATH = Paths.get("src", "de", "atlassoft", "res", "savedata");
 	private static final Path TRAIN_TYPE_PATH = SAVE_DATA_PATH.resolve("traintypes.xml");
 	private static final Path SCHEDULESCHEME_PATH = SAVE_DATA_PATH.resolve("schedulescheme.xml");
 	private static final Path RAILWAYSYS_PATH = SAVE_DATA_PATH.resolve("railwaysys.xml");
 	private static final Path PIC_PATH = SAVE_DATA_PATH.resolve("image_");
 	
+	/**
+	 * Returns the {@link Path} to the location of the jar file.
+	 */
 	private static Path getJarPath() {
 		String classpath = System.getProperty("java.class.path");
 		if (classpath.contains(";")) {
@@ -32,6 +38,10 @@ public class PersistenceServiceImpl implements PersistenceService {
 		return Paths.get(classpath);
 	}
 
+	/**
+	 * Create the save date directory.
+	 * @throws IOException
+	 */
 	protected static void createSaveDataDir() throws IOException {
 		if (!Files.exists(SAVE_DATA_PATH)) {
 			Files.createDirectory(SAVE_DATA_PATH);
@@ -40,6 +50,9 @@ public class PersistenceServiceImpl implements PersistenceService {
 
 	private XMLParser xmlParser;
 
+	/**
+	 * Create a new instance of this class.
+	 */
 	public PersistenceServiceImpl() {
 		xmlParser = new XMLParser();
 	}

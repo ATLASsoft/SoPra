@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -26,12 +27,10 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-
 import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
-
 import de.atlassoft.model.TrainType;
 
 /**
@@ -43,8 +42,14 @@ class XMLParser {
 	
 
 
-	/*
-	 * CREATE XML
+	/**
+	 * Create a new XML-File.
+	 * 
+	 * @param path
+	 *            Location where to create the file.
+	 * @param rootElement
+	 *            The RootElement of the XML-File
+	 * @throws IOException
 	 */
 	protected void createXML(Path path, String rootElement) throws IOException {
 		FileWriter out = null;
@@ -65,8 +70,16 @@ class XMLParser {
 		}
 	}
 
-	/*
-	 * SAVE TrainType
+	/**
+	 * Saves a {@link TrainType}.
+	 * 
+	 * @param type
+	 *            {@link TrainType} to save
+	 * @param path
+	 *            where to save the train type
+	 * @param picpath
+	 *            where to save the icon of the type
+	 * @throws IOException
 	 */
 	protected void saveTrainType(TrainType type, Path path, Path picpath) throws IOException {
 		// if file does not exist, create new
@@ -88,12 +101,7 @@ class XMLParser {
 			train.addContent(new Element("priority").setText(Integer
 					.toString(type.getPriority())));
 			
-//			Image test = type.getImg();
-//			File outPutFile = new File(".png");
-//			ImageIO.write(test, "png", outPutFile);
 			String imgToAddInXML;
-			//Display d = Display.getDefault();
-			
 	
 			Image image = type.getImg();
 
@@ -129,10 +137,14 @@ class XMLParser {
 
 	}
 
-	/*
-	 * LOAD TrainTypes
+	/**
+	 * Load all {@link TrainType TrainTypes} that are stored in the specified file.
+	 * 
+	 * @param path {@link Path} where to find the train types
+	 * 
+	 * @return List containing all train typess
 	 */
-	protected List<TrainType> loadTrainTypes(Path path) {
+	protected List<TrainType> loadTrainTypes(Path path) throws IOException {
 		List<TrainType> res = new ArrayList<TrainType>();
 		if (!Files.exists(path)) {
 			return res;
@@ -161,17 +173,19 @@ class XMLParser {
 				res.add(newTrainType);
 			}
 
-		} catch (IOException io) {
-			System.out.println(io.getMessage());
 		} catch (JDOMException jdomex) {
-			System.out.println(jdomex.getMessage());
+			throw new IOException(jdomex);
 		}
 
 		return res;
 	}
 
-	/*
-	 * DELETE TrainType
+	/**
+	 * Delete the specified {@link TrainType}.
+	 * 
+	 * @param type {@link TrainType} to delete
+	 * @param path {@link Path} where to find the train type
+	 * @throws IOException
 	 */
 	protected void deleteTrainType(TrainType type, Path path)
 			throws IOException {
@@ -224,8 +238,11 @@ class XMLParser {
 
 	}
 
-	/*
-	 * SAVE Schedule
+	/**
+	 * Save the specified {@link ScheduleScheme}.
+	 * @param schedule {@link ScheduleScheme} to save
+	 * @param path {@link Path} where to save the scheme
+	 * @throws IOException
 	 */
 	protected void saveSchedule(ScheduleScheme schedule, Path path)
 			throws IOException {
@@ -241,12 +258,11 @@ class XMLParser {
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = (Document) builder.build(path.toFile());
 
-			// Element RailSysID = new Element("RailSysID");
 			Element sced = new Element("Schedule");
 			Element abfahrten = new Element("Departures");
 			Element fahrTage = new Element("DrivingDays");
 
-			// Schleife über alle Stationen
+			// loop over all stations
 			List<Node> stationList = schedule.getStations();
 
 			sced.setAttribute(new Attribute("id", schedule.getID()));
@@ -320,8 +336,13 @@ class XMLParser {
 		}
 	}
 	
-	/*
-	 * LOAD Schedules
+	/**
+	 * Load all {@link ScheduleScheme ScheduleSchemes} that belong to the specified {@link RailwaySystem}.
+	 * @param railSys {@link RailwaySystem} of the schemes
+	 * @param path {@link Path} where to find the schemes
+	 * @param trainTypes List of all train types
+	 * @return List of all schemes belonging to railSys
+	 * @throws IOException
 	 */
 	protected List<ScheduleScheme> loadSchedules(RailwaySystem railSys, Path path, List<TrainType> trainTypes)
 			throws IOException {
@@ -364,14 +385,14 @@ class XMLParser {
 					newCalFirst.set(Calendar.HOUR_OF_DAY, Integer.parseInt(firstRide[1]));
 					newCalFirst.set(Calendar.MINUTE, Integer.parseInt(firstRide[2]));
 					
-					// schleife über drivingDays
+					// loop over drivingDays
 					List<Element> drivingDays = node.getChild("DrivingDays")
 							.getChildren();
 					for (int x = 0; x < drivingDays.size(); x++) {
 						newDrivingDays.add(Integer.parseInt(drivingDays.get(x).getText()));
 					}
 
-					// trainType aus dem Model holen
+					// get the train type from the model
 					TrainType newTrainType = null;
 					
 					for (TrainType singleTrainType : trainTypes){
@@ -380,7 +401,7 @@ class XMLParser {
 						}
 					}
 					
-					// neues ScheduleScheme erstellen
+					// create new ScheduleScheme
 					ScheduleScheme newSchedule = new ScheduleScheme(
 							ScheduleType.valueOf(scheduleType),
 							newTrainType,
@@ -389,7 +410,7 @@ class XMLParser {
 							railSysId,
 							newName);
 					
-					// schleife über departures
+					// loop over departures
 					List<Element> abfahrten = node.getChild("Departures")
 							.getChildren();
 					for (int x = 0; x < abfahrten.size(); x++) {
@@ -427,8 +448,11 @@ class XMLParser {
 		} 
 	}
 
-	/*
-	 * DELETE SCHEDULES by RailSysID
+	/**
+	 * Delete all {@link ScheduleScheme ScheduleSchemes} that belong to the specified {@link RailwaySystem}.
+	 * @param railSysID ID of the {@link RailwaySystem} whose schemes we want to delete
+	 * @param path {@link Path} where to find the schemes
+	 * @throws IOException
 	 */
 	protected void deleteSchedules(String railSysID, Path path)
 			throws IOException {
@@ -479,8 +503,11 @@ class XMLParser {
 
 	}
 
-	/*
-	 * DELETE SINGLE SCHEDULE by name and RailSysID
+	/**
+	 * Delete a single schedule.
+	 * @param scheduleToDelete The {@link ScheduleScheme} to delete
+	 * @param path {@link Path} where to finde the scheme
+	 * @throws IOException
 	 */
 	protected void deleteSingleSchedule(ScheduleScheme scheduleToDelete,
 			Path path) throws IOException {
@@ -524,8 +551,11 @@ class XMLParser {
 		}
 	}
 
-	/*
-	 * DELETE SCHEDULES by TrainType
+	/**
+	 * Delete all {@link ScheduleScheme ScheduleSchemes} whose {@link TrainType} is the specified.
+	 * @param train {@link TrainType} of the schedules to delete
+	 * @param path {@link Path} where to find the schedules
+	 * @throws IOException
 	 */
 	protected void deleteScheduleByTrainType(TrainType train, Path path)
 			throws IOException {
@@ -574,6 +604,12 @@ class XMLParser {
 		}
 	}
 
+	/**
+	 * Save the specified {@link RailwaySystem}.
+	 * @param railSys {@link RailwaySystem} to save
+	 * @param path {@link Path} where to save the railway system
+	 * @throws IOException
+	 */
 	protected void saveRailWaySystem(RailwaySystem railSys, Path path)
 			throws IOException {
 		if (railSys == null){
@@ -645,6 +681,13 @@ class XMLParser {
 		}
 	}
 
+	/**
+	 * Delete the {@link RailwaySystem} with the specified id.
+	 * 
+	 * @param railSysID ID of the {@link RailwaySystem} to delete
+	 * @param path {@link Path} where to find the railway system
+	 * @throws IOException
+	 */
 	protected void deleteRailwaySystem(String railSysID, Path path) throws IOException {
 		if (!Files.exists(path)) {
 			return;
@@ -686,6 +729,13 @@ class XMLParser {
 
 	}
 	
+	/**
+	 * Load the {@link RailwaySystem} with the specified id.
+	 * @param railSysID ID of the {@link RailwaySystem} to load.
+	 * @param path {@link Path} where to find the railway system
+	 * @return the {@link RailwaySystem}
+	 * @throws IOException
+	 */
 	protected RailwaySystem loadRailwaySystem(String railSysID, Path path) throws IOException {
 		RailwaySystem res = null;
 		if (!Files.exists(path)) {
@@ -752,6 +802,12 @@ class XMLParser {
 			} 
 	}
 	
+	/**
+	 * Returns a List containing the ids of every {@link RailwaySystem} that is saved.
+	 * @param path {@link Path} where to find the {@link RailwaySystem RailwaySystems}
+	 * @return List of all ids
+	 * @throws IOException
+	 */
 	protected List<String> getRailwaySystemIDs(Path path) throws IOException {
 
 		List<String> res = new ArrayList<String>();

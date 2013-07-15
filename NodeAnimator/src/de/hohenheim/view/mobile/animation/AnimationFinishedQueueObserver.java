@@ -21,10 +21,11 @@ public class AnimationFinishedQueueObserver implements Observer {
 	public void update(Observable o, Object arg) {
 		if(arg instanceof AnimationFigure) {			
 			AnimationFigure fig = (AnimationFigure)arg;
-			if(fig.getCurrentAnimation().isFinished()) {				
-				if(fig.hasNextAnimation()) {
-					fig.nextAnimation().start();
-				}				
+			if(fig.getCurrentAnimation() != null)
+				if (fig.getCurrentAnimation().isFinished()) {				
+					if (fig.hasNextAnimation()) {
+						fig.nextAnimation().start();
+					}	
 			}
 		} 
 	}

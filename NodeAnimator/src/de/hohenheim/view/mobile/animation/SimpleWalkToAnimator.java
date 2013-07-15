@@ -10,6 +10,7 @@ import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 
 import de.atlassoft.ai.TrainAgent;
+import de.atlassoft.model.Node;
 import de.atlassoft.model.State;
 import de.hohenheim.view.map.NodeMap;
 import de.hohenheim.view.mobile.AnimationFigure;
@@ -64,7 +65,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 */
 	private double pixelCarry;
 	
-	NodeFigure start_node; //TODO: scheint man nicht zu brauchen
+	NodeFigure start_node;
 	
 	/**
 	 * The room where the figure should go. this is a temporal position at a moment during the animation
@@ -126,6 +127,9 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	 */
 	volatile int timeLapse;
 	
+	NodeFigure ignoreBlock;
+	
+	
 	/**
 	 * Constructor. creates the Animation.
 	 * 
@@ -140,7 +144,7 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 		this.init = true;
 		this.walking_path = path.iterator();
 		this.map = map;
-
+		System.out.println(path);
 		stop = false;
 		stopped = false;
 		finished = false;
@@ -192,6 +196,10 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 	  return null;
 	}
 	
+	public void ignoreNode(Node node) {
+		this.ignoreBlock = node.getNodeFigure();
+	}
+	
 	/**
 	 * Indicates if the animation is finished.
 	 */
@@ -218,11 +226,6 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			PathFigure path;
 			start_node = animationFigure.getNodeFigure();			
 			
-			if (start_node == null) {
-				// TODO: wurde aufgerufen während sich die animationFigure auf einem Pfad aufgehalten hat (nur interessant beim ersten durchlauf)
-				throw new RuntimeException("unklar");
-			}
-			
 			if (!walking_path.hasNext()) {
 				this.finished=true;
 				//Inform the observer that animation is finished.
@@ -243,6 +246,9 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			end_node = walking_path.next();			
 			path = getPathTo(end_node);
+			if (path == null) {
+				return;
+			}
 			
 			// set speed as maximal possible speed (minimum of train and path
 			// top speed) on the current path
@@ -254,11 +260,8 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 			
 			segments = Utils.getSegments(path, end_node, animationFigure);
 			
-			//TODO: versteh ich noch nicht
 			if (segments.size() == 0) {
-				System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 				System.out.println("segsize = 0");
-				System.out.println(">>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 				//Inform the observer that animation is finished.
 				//this is needed, so that we can e.g. start a new animation after this one is finished.
 				
@@ -273,22 +276,25 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 				animationFigure.getModelObject().targetReached(animationFigure.getNodeFigure().getModellObject());
 			}
 			
-			//TODO: listener observer etc benachrichtigen?
 			// path is blocked
 			if (path.getModellObject().getState().getState() != State.UNBLOCKED) {
 				animationFigure.getModelObject().blockadeDetected(path.getModellObject());
 				return;
-			// next node is blocked	
-			} else if (end_node.getModellObject().getState().getState() != State.UNBLOCKED) {
+				// next node is blocked	
+			} else if (end_node.getModellObject().getState().getState() != State.UNBLOCKED
+					&& !end_node.equals(ignoreBlock)) {
 				animationFigure.getModelObject().blockadeDetected(end_node.getModellObject());
 				return;
 			}
 			
 			
-			
-			//TODO: überprüfen und laufen muss aufjedenfall synchronisiert werden, vllt über state
-			animationFigure.setPath(path);
-			animationFigure.setDirection_to_node(end_node);
+			if (ignoreBlock == null) {
+				animationFigure.setPath(path);
+				animationFigure.setDirection_to_node(end_node);
+			} else {
+				animationFigure.setPath(path, ignoreBlock);
+				animationFigure.setDirection_to_node(end_node, ignoreBlock);
+			}
 			
 			parent = animationFigure.getParent();
 			init = false;		
@@ -309,9 +315,13 @@ public class SimpleWalkToAnimator extends Observable implements Runnable, Animat
 		}
 		// end_node reached
 		else {
-			//TODO: hier die zeit messen für statistik
 			animationFigure.setLocation(segments.getPoint(segments.size() - 1));
-			animationFigure.setNode(end_node);
+			if (ignoreBlock == null) {
+				animationFigure.setNode(end_node);
+			} else {
+				animationFigure.setNode(end_node, ignoreBlock);
+			}
+			
 			segment_nr = 0;
 			init = true;
 		}

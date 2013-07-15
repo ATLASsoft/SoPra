@@ -124,6 +124,7 @@ public class Node implements Blockable {
 	 */
 	protected void clear(boolean resetData) {
 		state.setState(State.UNBLOCKED, null);
+		state.removeReservations();
 		
 		if (resetData) {
 			trainTypeMap.clear();

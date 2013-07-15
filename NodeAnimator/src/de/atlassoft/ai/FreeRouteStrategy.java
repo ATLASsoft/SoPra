@@ -74,7 +74,10 @@ public class FreeRouteStrategy extends PathFindingStrategy {
 		double alternativeRouteCost = dist[g.getVertex(goal).id] * 60 * 60 * 1000;
 		this.alternativeFigureRoute = walkingPath;
 		
-		return Math.round(alternativeRouteCost);
+		double fastestTime = g.getShortestTravelTime(currentPosition, goal,
+				agent.getSchedule().getScheme().getTrainType().getTopSpeed()) * 60 * 60 * 1000;
+		
+		return Math.round(alternativeRouteCost - fastestTime);
 	}
 
 	@Override
@@ -84,7 +87,7 @@ public class FreeRouteStrategy extends PathFindingStrategy {
 		}
 		
 		agent.setCurrentPath(alternativeRoute);
-		agent.updateRequests(0,
+		agent.updateReservations(0,
 				agent.getSchedule().getIdleTime(alternativeRoute.get(alternativeRoute.size() - 1)));
 		
 		SimpleWalkToAnimator anim = figure.walkAlong(alternativeFigureRoute);

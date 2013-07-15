@@ -19,10 +19,10 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 	
 	public WaitForUnblockStrategy(
 			TrainAgent agent,
+			Graph graph,
 			Node currentPosition,
 			TrainAgent blockingAgent,
-			Node blockedNode,
-			Graph graph) {
+			Node blockedNode) {
 		
 		this.agent = agent;
 		this.currentPosition = currentPosition;
@@ -38,7 +38,6 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 
 		List<Node> pathOther = blockingAgent.getCurrentPath();
 		
-		//TODO: block ist station vom anderen agent und nextAfterBlock (im neuen pfad) ist currentPosition
 		// set the next node of the other agent after the block or null if the
 		// blocked node is a station of the other agent (in this case it's the
 		// last node in the current path list of the other agent)
@@ -57,15 +56,45 @@ public class WaitForUnblockStrategy extends PathFindingStrategy {
 			return Long.MAX_VALUE;
 		}
 		
+		// block is target of other agent
+		if (nextAfterBlockO == null) {
+			Node[] stationsOther = blockingAgent.getSchedule().getStations();
+			
+			// if it is the last station it does not matter
+			if (!stationsOther[stationsOther.length - 1].equals(blockedNode)) {
+
+				Node nextStationO = null;
+				for (int i = 0; i< stationsOther.length; i++) {
+					if (stationsOther[i].equals(blockedNode)) {
+						nextStationO = stationsOther[i + 1];
+					}
+				}
+				
+				// target was no station
+				if (nextStationO == null) {
+					return Long.MAX_VALUE;
+				}
+				
+				nextAfterBlockO = g.getShortestPath(blockedNode,
+						nextStationO, 
+						blockingAgent.getSchedule().getScheme().getTrainType().getTopSpeed()).get(1);
+				if (nextAfterBlockO.equals(currentPosition)) {
+					return Long.MAX_VALUE;
+				}
+			}
+		}
+		
 		long blockedTill = blockedNode.getState().getTillRequest(blockingAgent);
 		long simTime = agent.getSimTime();
 		
-		return (blockedTill - simTime) + this.routeCost(alternativeRoute, g, agent);
+		return (blockedTill - simTime);
 	}
 
 	@Override
 	SimpleWalkToAnimator execute() {
-		// wait till next node is blocked
+		
+		
+		// wait till next node is unblocked
 		figure.waitFor(blockedNode.getState());
 		
 		agent.setCurrentPath(alternativeRoute);

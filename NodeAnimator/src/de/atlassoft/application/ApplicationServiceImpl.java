@@ -23,6 +23,7 @@ import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
 import de.atlassoft.model.TrainType;
 import de.atlassoft.ui.MainWindow;
+import de.atlassoft.ui.SplashScreen;
 import de.atlassoft.util.ErrorHelper;
 import de.atlassoft.util.I18NService;
 import de.atlassoft.util.I18NSingleton;
@@ -52,7 +53,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		ai = new AIServiceImpl(this);
 		docExport = new DocExportServicePDFImpl();
 		I18N = I18NSingleton.getInstance();
-		// TODO: unvollständig
 		
 		// load images
 		ImageHelper.loadImage("greenCheck", "img/greencheck.png");
@@ -101,14 +101,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 					I18N.getMessage("ApplicationService.TrainTypeErrorMsg"));
 		}
 		
-		//TODO: Wieder aktivieren
-//		SplashScreen.showSplashScreen(3);		
+		SplashScreen.showSplashScreen(3);		
 		new MainWindow(this);
 	}
 
 	@Override
 	public void shutDown() {
-		// TODO: unvollständig
 		if (ai != null && ai.isRunning()) {
 			ai.finishSimulation();
 		}

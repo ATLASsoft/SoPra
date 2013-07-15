@@ -8,7 +8,7 @@ import de.atlassoft.model.Node;
 import de.atlassoft.model.RailwaySystem;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.SimulationStatistic;
-//TODO: unvollständig
+
 /**
  * Provides access to the AI layer and the graph processing algorithms of this
  * application.
@@ -27,6 +27,17 @@ public interface AIService {
 	 * 
 	 * @param start
 	 *            Simulation time the simulation should start at
+	 * @param railSys
+	 *            The {@link RailwaySystem} the the simulation takes place on
+	 * @param schemes
+	 *            The {@link ScheduleScheme ScheduleSchemes} that will
+	 *            participate in the simulation
+	 * @param o
+	 *            {@link Observer} that is interested in updates of simulation
+	 *            time
+	 * @param resetData
+	 *            Set true if all data that has been collected during previous
+	 *            simulations should be reseted
 	 */
 	void startSimulation(
 			Calendar start,
@@ -47,7 +58,23 @@ public interface AIService {
 	 * is thrown.
 	 */
 	void continueSimulation();
+	
+	/**
+	 * Stops and ultimately terminates an ongoing simulation. If there is no
+	 * ongoing simulation no action is taken, no exception is thrown and null is
+	 * returned.
+	 * 
+	 * @return The {@link SimulationStatistic} of the finished simulation
+	 */
 	SimulationStatistic finishSimulation();
+	
+	/**
+	 * Checks whether the specified {@link RailwaySystem} is connected.
+	 * 
+	 * @param railSys The {@link RailwaySystem} to check
+	 * 
+	 * @return ture if <code>railSys</code> is connected, otherwise false.
+	 */
 	boolean isConnected(RailwaySystem railSys);
 	
 	/**
@@ -60,8 +87,19 @@ public interface AIService {
 	 */
 	int fastestArrival(RailwaySystem railSys, Node start, Node goal, double topSpeed);
 	
+	/**
+	 * Returns true if there is currently an ongoing simulation run.
+	 * 
+	 * @return True if there is an ongoing simulation, otherwise false
+	 */
 	boolean isRunning();
 	
+	/**
+	 * Set the time lapse factor for the ongoing simulation. If there is no ongoing simulation,
+	 * no action is taken and no exception is thrown.
+	 * 
+	 * @param timeLapse The time Lapse factor to set
+	 */
 	void setTimeLapse(int timeLapse);
 	
 }

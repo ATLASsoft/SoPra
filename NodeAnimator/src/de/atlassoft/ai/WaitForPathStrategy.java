@@ -11,7 +11,6 @@ import de.hohenheim.view.mobile.animation.SimpleWalkToAnimator;
 public class WaitForPathStrategy extends PathFindingStrategy {
 
 	private TrainAgent agent;
-	private Graph g;
 	private TrainFigure figure;
 	
 	private List<Node> currentPath;
@@ -22,11 +21,9 @@ public class WaitForPathStrategy extends PathFindingStrategy {
 	
 	public WaitForPathStrategy(
 			TrainAgent agent,
-			Graph graph,
 			TrainAgent blockingAgent,
 			Path blockedPath) {
 		this.agent = agent;
-		this.g = graph;
 		this.figure = agent.getTrainFigure();
 		this.currentPath = agent.getCurrentPath();
 		this.blockedPath = blockedPath;
@@ -36,10 +33,7 @@ public class WaitForPathStrategy extends PathFindingStrategy {
 	
 	@Override
 	long getCosts() {
-		long costCurrentPath = routeCost(currentPath, g, agent);
-		
 		// compute time agent has to wait till it can move onto the blocked path
-		long waitingCost;
 		if (currentPath.get(0).equals(blockedPath.getStart())) {
 			nextNodeOther = blockedPath.getEnd();
 		} else {
@@ -49,18 +43,14 @@ public class WaitForPathStrategy extends PathFindingStrategy {
 		Long reservedTill = (nextNodeOther.getState().getTillRequest(blockingAgent));
 		// other agent has not reserved nextNodeOther for whatever reasons, assign 0
 		if (reservedTill == null) {
-			waitingCost = 0;
+			return 0;
 		} else {
-			waitingCost = reservedTill - agent.getSimTime();
+			return reservedTill - agent.getSimTime();
 		}
-		
-		return costCurrentPath + waitingCost;
 	}
 
 	@Override
 	SimpleWalkToAnimator execute() throws InterruptedException {
-		//TODO: update reservaton
-		
 		if (nextNodeOther == null) {
 			getCosts();
 		}
@@ -74,7 +64,7 @@ public class WaitForPathStrategy extends PathFindingStrategy {
 			}
 		}
 		
-		agent.updateRequests(0, 
+		agent.updateReservations(0, 
 				agent.getSchedule().getIdleTime(currentPath.get(currentPath.size() - 1)));
 		anim = figure.walkAlong(transformPath(currentPath));
 		anim.setTimeLapse(agent.getTimeLapse());

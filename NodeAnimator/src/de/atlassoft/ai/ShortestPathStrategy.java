@@ -77,15 +77,24 @@ public class ShortestPathStrategy extends PathFindingStrategy {
 
 		Collections.reverse(route);
 
-		double routeCost = dist[g.getVertex(goal).id] * 60 * 60 * 1000;
-		return Math.round(routeCost);
+		
+		if (ignoreNodes.isEmpty() && ignorePaths.isEmpty()) {
+			return 0;
+		} else {
+			double routeCost = dist[g.getVertex(goal).id] * 60 * 60 * 1000;
+			double fastestTime = g.getShortestTravelTime(currentPosition, goal,
+					agent.getSchedule().getScheme().getTrainType().getTopSpeed()) * 60 * 60 * 1000;
+			
+			return Math.round(routeCost - fastestTime);
+		}
+
 	}
 
 	@Override
 	SimpleWalkToAnimator execute() throws InterruptedException {
 		
 		agent.setCurrentPath(route);
-		agent.updateRequests(0,
+		agent.updateReservations(0,
 				agent.getSchedule().getIdleTime(route.get(route.size() - 1)));
 		
 		SimpleWalkToAnimator anim = figure.walkAlong(transformPath(route));

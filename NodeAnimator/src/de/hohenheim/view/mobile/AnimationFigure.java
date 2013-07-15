@@ -130,8 +130,29 @@ public abstract class AnimationFigure extends Figure {
 	 *  
 	 * @param NodeFigure Sets the Room where the mobile object should be located actually.
 	 */
+	public void setNode(NodeFigure room, NodeFigure ignoreNode) {
+		this.room = room;
+		room.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+		if (!room.equals(ignoreNode)) {
+			modellObject.block(room.getModellObject().getState());
+		}
+
+		if (this.path != null) {
+			modellObject.unBlock(path.getModellObject().getState());
+			this.path = null;
+		}
+	}
+	
+	/**
+	 * Setter method to set the room in which the mobile object is located in the moment.
+	 * We must set the path to <code>null</code> when a room ist set. A mobile object can not
+	 * be in a room and on a path.
+	 *  
+	 * @param NodeFigure Sets the Room where the mobile object should be located actually.
+	 */
 	public void setNode(NodeFigure room) {
-		this.room = room; //TODO: früher zeit messen
+		this.room = room;
 		modellObject.block(room.getModellObject().getState());
 		room.getModellObject().incrementWorkLoad(
 				this.modellObject.getSchedule().getScheme());
@@ -149,6 +170,17 @@ public abstract class AnimationFigure extends Figure {
 	public void setDirection_to_node(NodeFigure room) {
 		this.direction_to_room = room;
 		modellObject.block(direction_to_room.getModellObject().getState());
+	}
+	
+	/**
+	 * Sets the RoomFigure to which the current animated Figure is walking to and reserves it. 
+	 * @param room RoomFigure, to which the mobile object is actually walking to.
+	 */
+	public void setDirection_to_node(NodeFigure room, NodeFigure ignoreNode) {
+		this.direction_to_room = room;
+		if (!direction_to_room.equals(ignoreNode)) {
+			modellObject.block(direction_to_room.getModellObject().getState());
+		}
 	}
 	
 	/**
@@ -181,6 +213,25 @@ public abstract class AnimationFigure extends Figure {
 
 		if (this.room != null) {
 			modellObject.unBlock(room.getModellObject().getState());
+			this.room = null;
+		}
+	}
+	
+	/**
+	 * Setter Method. Sets the path where a mobile object is actually located. --> Room is then set to <code>null</code>.
+	 * A mobile object can be inside a room or on a path.
+	 * @param on_path
+	 */
+	public void setPath(PathFigure on_path, NodeFigure ignoreNode) {
+		this.path = on_path;
+		modellObject.block(path.getModellObject().getState());
+		path.getModellObject().incrementWorkLoad(
+				this.modellObject.getSchedule().getScheme());
+
+		if (this.room != null) {
+			if (!room.equals(ignoreNode)) {
+				modellObject.unBlock(room.getModellObject().getState());
+			}
 			this.room = null;
 		}
 	}

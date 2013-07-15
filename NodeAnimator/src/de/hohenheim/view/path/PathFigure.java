@@ -46,9 +46,6 @@ public class PathFigure extends PolylineConnection {
 	    toolTip.append(I18N.getMessage("PathFigure.ToolTip1"));
 	    toolTip.append(Math.round(modellObject.getTopSpeed()));
 	    toolTip.append(" " + I18N.getMessage("PathFigure.ToolTip2"));
-//	    toolTip.append("Länge: "); //TODO: wtf
-//	    toolTip.append(Math.round(this.getDistance() * 100));
-//	    toolTip.append(" Meter");
 		this.setToolTip(new Label(toolTip.toString()));
 	  }
 	  

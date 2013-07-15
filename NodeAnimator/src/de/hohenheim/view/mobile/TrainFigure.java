@@ -15,8 +15,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-import com.sun.imageio.plugins.common.I18N;
-
 import de.atlassoft.ai.TrainAgent;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;

@@ -122,9 +122,17 @@ public class State {
 	 * @param owner
 	 *            Owner of the alleged reservation
 	 */
-	public synchronized void removeRequest(TrainAgent owner) {
+	public synchronized void removeReservation(TrainAgent owner) {
 		reservedFrom.remove(owner);
 		reservedTill.remove(owner);
+	}
+	
+	/**
+	 * Removes all reservations.
+	 */
+	public synchronized void removeReservations() {
+		reservedFrom.clear();
+		reservedTill.clear();
 	}
 	
 	/**

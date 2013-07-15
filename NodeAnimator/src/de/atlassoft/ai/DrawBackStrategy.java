@@ -39,6 +39,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 	long getCosts() {
 		// avoid this nodes in order to get out of the other agents way
 		List<Node> tabooNodes = blockingAgent.getCurrentPath();
+		Node[] stationsO = blockingAgent.getSchedule().getStations();
 		
 		// if agent is not in the way of the other agent this strategy cannot be applied
 		if (!tabooNodes.contains(currentPosition)) {
@@ -78,15 +79,16 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		Collections.reverse(figurePathToSafeSpot);
 		figurePathToSafeSpot.remove(0);
 		
-		
-		
-		// original path from the current node through the blocked node to the next station
-		List<Node> currentPath = agent.getCurrentPath();
-		List<Node> originalPathToGoal = currentPath.subList(
-				currentPath.indexOf(currentPosition), currentPath.size());
-		
-		
+		// if the node agent would wait for in the safe spot a station and not the
+		// last station do not use this strategy
 		this.pathToSafeSpot = pathToSafeSpot;
+		Node[] stationsOther = blockingAgent.getSchedule().getStations();
+		Node nodeBeforeSpot = pathToSafeSpot.get(pathToSafeSpot.size() - 2); 
+		if (nodeBeforeSpot.equals(tabooNodes.get(tabooNodes.size() - 1))
+				&& !nodeBeforeSpot.equals(stationsOther[stationsOther.length - 1])) {
+			return Long.MAX_VALUE;
+		}
+		
 		
 		long toSafeSpotCost = Math.round(dist[g.getVertex(safeSpot).id] * 60 * 60 * 1000);
 		long simTime = agent.getSimTime();
@@ -94,8 +96,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		// time point agent can leave the safe spot if other agent can move as planned
 		Long waitTill = pathToSafeSpot.get(pathToSafeSpot.size() - 2)
 				.getState().getTillRequest(blockingAgent);
-		if (waitTill == null) { //TODO: kein request
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<kein request in draw back get cost");
+		if (waitTill == null) {
 		}
 		long toSafeOther = waitTill - simTime;
 		actualToSafeSpotCost = Math.max(toSafeSpotCost, toSafeOther);
@@ -103,8 +104,7 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		// costs as the time till both agents are at the safe spot + the time back
 		// to the initial point + time from the initial point to the next station
 		// on the normal route
-		return actualToSafeSpotCost + toSafeSpotCost
-				+ routeCost(originalPathToGoal, g, agent);
+		return actualToSafeSpotCost + toSafeSpotCost;
 		
 	}
 
@@ -118,14 +118,14 @@ public class DrawBackStrategy extends PathFindingStrategy {
 		Animator anim = figure.walkAlong(transformPath(pathToSafeSpot));
 		agent.setAnimator(anim);
 		agent.setCurrentPath(pathToSafeSpot);
-		agent.updateRequests(0, (int) actualToSafeSpotCost);
+		agent.updateReservations(0, (int) actualToSafeSpotCost);
 		anim.setTimeLapse(agent.getTimeLapse());
 		figure.startAnimation();
 		
 		synchronized (agent.getSchedule()) {
 			agent.getSchedule().wait();
 			
-			// collision while trying to reach safe spot //TODO:
+			// collision while trying to reach safe spot
 			if (!anim.isFinished()) {
 				agent.wait = false;
 				return (SimpleWalkToAnimator) anim;

@@ -101,14 +101,18 @@ public class AIServiceImpl implements AIService {
 	
 	
 	
-	
+	/**
+	 * @return The {@link SimulationLoop} of the ongoing simulation or null if
+	 *         there is no ongoing simulation
+	 */
 	protected SimulationLoop getLoop() {
 		return loop;
 	}
 	
+	/**
+	 * @return The {@link SimulationStatistic} of the ongoing simulation.
+	 */
 	protected SimulationStatistic getSimStat() {
 		return statistic;
 	}
-	
-	
 }

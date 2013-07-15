@@ -1,6 +1,9 @@
 package de.atlassoft.ai;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import de.atlassoft.model.Node;
 import de.atlassoft.model.Path;
@@ -50,45 +53,84 @@ public final class StrategyFactory {
 	
 	public PathFindingStrategy nodeBlockedStrategy(Node currentPosition, TrainAgent blockingAgent, Node blockedNode, Node goal) {
 		// wait till other agent has passed
-		PathFindingStrategy s1 = new WaitForUnblockStrategy(agent, currentPosition, blockingAgent, blockedNode, graph);
-		long costWaitAgent = s1.getCosts();
+		PathFindingStrategy waitA = new WaitForUnblockStrategy(agent, graph, currentPosition, blockingAgent, blockedNode);
+		long waitCostAgent = waitA.getCosts();
+		
+		// dash through
+		PathFindingStrategy dash = new DashThroughStrategy(agent, graph, currentPosition, blockingAgent, blockedNode);
+		long dashCostAgent = dash.getCosts();
 		
 		// find alternative route
 		HashSet<Node> ignoredNodes = new HashSet<>();
 		ignoredNodes.add(blockedNode);
-		PathFindingStrategy s2 = new ShortestPathStrategy(
+		PathFindingStrategy altRouteA = new ShortestPathStrategy(
 				graph,
 				agent,
 				currentPosition,
 				goal,
 				ignoredNodes,	
 				new HashSet<Path>());   // do not ignore any paths
-		long costAltRouteAgent = s2.getCosts();
+		long altRouteCostAgent = altRouteA.getCosts();
 		
 		// draw back
-		PathFindingStrategy s3 = new DrawBackStrategy(agent, graph, currentPosition, goal, blockingAgent);
-		long costDrawBackAgent = s3.getCosts();
+		PathFindingStrategy drawBackA = new DrawBackStrategy(agent, graph, currentPosition, goal, blockingAgent);
+		long drawBackCostAgent = drawBackA.getCosts();
+
 		
-		
-		
-		
-		
-		
-		
-		if (costWaitAgent < costAltRouteAgent) {
-			if (costWaitAgent < costDrawBackAgent) {
-				return s1;
+		// alternative strategies for the blocking agent:
+		PathFindingStrategy bestStrategyOther = null;
+		long bestStratOtherCost = 0;
+		List<Node> curPathOther = blockingAgent.getCurrentPath();
+		Long tillAtBlock = blockedNode.getState().getTillRequest(blockingAgent);
+		if (curPathOther != null && tillAtBlock != null) {
+			Node goalOther = curPathOther.get(curPathOther.size() - 1);
+			
+			// time the other agent needs to reach the blocked node, must be added to the costs
+			// of the algorithms of the other agent
+			long timeTillAtBlockO = tillAtBlock - agent.getSimTime();
+			
+			// other agent alternative route
+			HashSet<Node> ignoreNodesOther = new HashSet<>();
+			ignoreNodesOther.add(currentPosition);
+			PathFindingStrategy altRouteO = new ShortestPathStrategy(graph, blockingAgent, blockedNode, goalOther, ignoreNodesOther, new HashSet<Path>());
+			long altRouteCostOther = altRouteO.getCosts();
+			
+			// draw back other
+			PathFindingStrategy drawBackO = new DrawBackStrategy(blockingAgent, graph, blockedNode, goalOther, agent);
+			long drawBackCostOther = drawBackO.getCosts();
+			
+			
+			if (altRouteCostOther < drawBackCostOther) {
+				bestStrategyOther = altRouteO;
+				bestStratOtherCost = altRouteCostOther;
 			} else {
-				return s3;
-			}
-		} else {
-			if (costAltRouteAgent < costDrawBackAgent) {
-				return s2;
-			} else {
-				return s3;
+				bestStrategyOther = drawBackO;
+				bestStratOtherCost = drawBackCostOther;
 			}
 			
+			if (bestStratOtherCost < Long.MAX_VALUE) {
+				bestStratOtherCost += 2 * timeTillAtBlockO;
+			}
 		}
+		
+		
+		// use treemap to find element with fewest costs
+		TreeMap<Long, PathFindingStrategy> map = new TreeMap<>();
+		map.put(waitCostAgent, waitA);
+		map.put(dashCostAgent, dash);
+		map.put(altRouteCostAgent, altRouteA);
+		map.put(drawBackCostAgent, drawBackA);
+		
+		Entry<Long, PathFindingStrategy> bestStrategyAgent = map.firstEntry();
+		
+//		if (bestStrategyOther == null || bestStrategyAgent.getKey() < bestStratOtherCost) {
+//			return bestStrategyAgent.getValue();
+//		} else {
+//			blockingAgent.applyStrategy(bestStrategyOther);
+//			return waitA;
+//		}
+	
+		return bestStrategyAgent.getValue();
 	}
 	
 	
@@ -112,7 +154,7 @@ public final class StrategyFactory {
 			Node currentPosition,
 			Node goal) {
 		
-		PathFindingStrategy s1 = new WaitForPathStrategy(agent, graph, blockingAgent, blockedPath);
+		PathFindingStrategy s1 = new WaitForPathStrategy(agent, blockingAgent, blockedPath);
 		long costS1 = s1.getCosts();
 
 		PathFindingStrategy s2 = new FreeRouteStrategy(graph, agent, currentPosition, goal);
