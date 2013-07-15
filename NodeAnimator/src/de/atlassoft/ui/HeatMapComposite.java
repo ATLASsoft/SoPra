@@ -1,5 +1,6 @@
 package de.atlassoft.ui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -54,6 +55,7 @@ public class HeatMapComposite {
 	private ScheduleScheme activeSchedule;
 	private TrainType activeTrainType;
 	private Font captionFont;
+	private DecimalFormat df;
 	
 	/**
 	 * Constructor for the class HeatMapComposite
@@ -69,6 +71,9 @@ public class HeatMapComposite {
 		highestWorkload = 0;
 		nodeFigures = new HashMap<NodeFigure, NodeFigure>();
 		captionFont = new Font(Display.getCurrent(), "Arial", 9, SWT.BOLD);
+		
+		//format the counter
+		df = new DecimalFormat("########0.00");
 		
 		calculateHighestOverallWorkload();
 		
@@ -581,7 +586,7 @@ public class HeatMapComposite {
 		meanDelayTitle.setText(I18N.getMessage("HeatMapComposite.MeanDelay"));
 		
 		Label meanDelay = new Label(composite, SWT.NONE);
-		meanDelay.setText(String.valueOf(meanDelayM/60) + " m");
+		meanDelay.setText(String.valueOf(df.format(meanDelayM/60) + " m"));
 		
 		composite.layout();
 		informationComposite.layout();

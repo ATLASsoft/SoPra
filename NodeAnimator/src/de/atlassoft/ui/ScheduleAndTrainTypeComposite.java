@@ -53,7 +53,6 @@ import de.atlassoft.util.ImageHelper;
  *
  */
 public class ScheduleAndTrainTypeComposite {
-	// TODO: Nach Löschen Infos neuer Auswahl oder keine Infos falls keine Auswahl mehr möglich! 
 	
 	private Shell shell;
 	private Composite scheduleAndTrainTypeComposite, scheduleComposite, informationComposite;
@@ -140,7 +139,9 @@ public class ScheduleAndTrainTypeComposite {
 		
 		//Shows the information about the schedule
 		informationComposite = new Composite(scheduleComposite, SWT.BORDER);
-		informationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridData informationCompositeData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		informationCompositeData.widthHint = 220;
+		informationComposite.setLayoutData(informationCompositeData);
 		informationComposite.setLayout(new GridLayout(2, false));
 		
 		Label noSelection = new Label(informationComposite, SWT.NONE);
@@ -414,12 +415,14 @@ public class ScheduleAndTrainTypeComposite {
 	private void createInformation() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		
+		//Name of the schedule
 		Label name = new Label(informationComposite, SWT.NONE);
 		name.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Name"));
 		
 		Label nameInformation = new Label(informationComposite, SWT.NONE);
 		nameInformation.setText(activeSchedule.getID());
 		
+		//Train type
 		Label trainType = new Label(informationComposite, SWT.NONE);
 		trainType.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.TrainType"));
 		
@@ -429,6 +432,7 @@ public class ScheduleAndTrainTypeComposite {
 		Label repetition = new Label(informationComposite, SWT.NONE);
 		repetition.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Repetition"));
 
+		//Departure time
 		if (activeSchedule.getScheduleType() == ScheduleType.SINGLE_RIDE) {
 			Label repetitionInformation = new Label(informationComposite, SWT.NONE);
 			repetitionInformation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.NoRepetition"));
@@ -462,6 +466,7 @@ public class ScheduleAndTrainTypeComposite {
 			intervalInformation.setText(String.valueOf(activeSchedule.getInterval()) + " minütig");
 		}
 		
+		//Days
 		Label days = new Label(informationComposite, SWT.NONE);
 		days.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
 		days.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.Days"));
@@ -501,6 +506,7 @@ public class ScheduleAndTrainTypeComposite {
 			}
 		}
 		
+		//First station
 		Label firstStation = new Label(informationComposite, SWT.NONE);
 		firstStation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.FirstStation"));
 		
@@ -508,15 +514,25 @@ public class ScheduleAndTrainTypeComposite {
 		firstStationInformation.setText(activeSchedule.getStations().get(0).getName());
 		
 		if (activeSchedule.getStations().size() > 2) {
-			Label stopOverStations = new Label (informationComposite, SWT.NONE);
-			stopOverStations.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
+			Composite stopOverTextComposite = new Composite(informationComposite, SWT.NONE);
+			stopOverTextComposite.setLayoutData(new GridData(SWT.NULL, SWT.UP, false, false));
+			GridLayout stopOverTextCompositeLayout = new GridLayout();
+			stopOverTextCompositeLayout.verticalSpacing = 0;
+			stopOverTextCompositeLayout.marginWidth = 0;
+			stopOverTextCompositeLayout.marginHeight = 0;
+			stopOverTextComposite.setLayout(stopOverTextCompositeLayout);
+			Label stopOverStations = new Label (stopOverTextComposite, SWT.NONE);
 			stopOverStations.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.StopOverStations"));
+			
+			Label waitingTime = new Label(stopOverTextComposite, SWT.NONE);
+			waitingTime.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.IdleTime"));
 			
 			Composite stopOverComposite = new Composite(informationComposite, SWT.NONE);
 			GridLayout stopOverCompositeLayout = new GridLayout();
 			stopOverCompositeLayout.numColumns = 2;
 			stopOverCompositeLayout.marginWidth = 0;
 			stopOverCompositeLayout.marginHeight = 0;
+			stopOverCompositeLayout.verticalSpacing = 0;
 			stopOverComposite.setLayout(stopOverCompositeLayout);
 			
 			for (int i=1; i<activeSchedule.getStations().size()-1; i++) {
@@ -525,9 +541,13 @@ public class ScheduleAndTrainTypeComposite {
 				station.setText(activeSchedule.getStations().get(i).getName());
 				Label delay = new Label(stopOverComposite, SWT.NONE);
 				delay.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.After") + activeSchedule.getArrivalTimes().get(i)/60 + " mins");
+				Label wait = new Label(stopOverComposite, SWT.NONE);
+				wait.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+				wait.setText("(" + activeSchedule.getIdleTimes().get(i)/60 + " mins)");
 			}
 		}
 		
+		//Last station
 		Label lastStation = new Label(informationComposite, SWT.NONE);
 		lastStation.setText(I18N.getMessage("ScheduleAndTrainTypeComposite.Info.LastStation"));
 		
