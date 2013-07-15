@@ -150,7 +150,7 @@ public class ScheduleComposite {
 		nameField.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
-		    	if (nameField.getCharCount() == 0) {
+		    	if (nameField.getText().trim().equals("")) {
 		    		errorField.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 		    		errorField.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    		save.setEnabled(false);
@@ -637,7 +637,7 @@ public class ScheduleComposite {
 				}
 				idleTime.set(idleTime.size()-1, 0);
 				
-				ScheduleScheme schedule = new ScheduleScheme(scheduleType, trainType, days, firstRide, railSysID, nameField.getText());
+				ScheduleScheme schedule = new ScheduleScheme(scheduleType, trainType, days, firstRide, railSysID, nameField.getText().trim());
 				
 				//Check whether it's a singular or repeated ride
 				if (repeatCombo.getText().equals(I18N.getMessage("ScheduleComposite.RepeatComboIntervall"))) {

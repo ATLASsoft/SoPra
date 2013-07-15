@@ -133,7 +133,7 @@ public class RailSysComposite {
 		railSysNameText.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
-		    	if (railSysNameText.getCharCount() == 0) {
+		    	if (railSysNameText.getText().trim().equals("")) {
 		    		errorRailSysName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 		    		errorRailSysName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    		save.setEnabled(false);
@@ -190,7 +190,7 @@ public class RailSysComposite {
 		stationNameText.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event e) {
 		    	Boolean twice = false;
-		    	if (stationNameText.getCharCount() == 0) {
+		    	if (stationNameText.getText().trim().equals("")) {
 		    		errorStationName.setText(I18N.getMessage("ScheduleComposite.ErrorField.NoName"));
 		    		errorStationName.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		    		addStation.setEnabled(false);
@@ -327,7 +327,7 @@ public class RailSysComposite {
 					return;
 				}
 				
-				Node node = new Node(stationNameText.getText(),
+				Node node = new Node(stationNameText.getText().trim(),
 						Integer.parseInt(xCoord.getText()), Integer.parseInt(yCoord.getText()));
 				nodeList.add(node);
 				railSys.addNode(node);
@@ -499,7 +499,7 @@ public class RailSysComposite {
 							I18N.getMessage("RailSysComposite.Error.NotConnected"));
 				}
 				else {
-					railSys.setID(railSysNameText.getText());
+					railSys.setID(railSysNameText.getText().trim());
 					applicationService.saveRailwaySystem(railSys);
 					HomeScreenComposite homeScreenComposite = new HomeScreenComposite(shell, mainComposite, applicationService);		
 		    		layout.topControl = homeScreenComposite.getComposite();
@@ -582,10 +582,10 @@ public class RailSysComposite {
 	 * it is allowed it sets the button active otherwise passive.
 	 */
 	private void checkStationButton() {
-		if (yCoord.getText().equals("") || xCoord.getText().equals("") || stationNameText.getText().equals("")) {
+		if (yCoord.getText().equals("") || xCoord.getText().equals("") || stationNameText.getText().trim().equals("")) {
 			addStation.setEnabled(false);
 		}
-		else if (!yCoord.getText().equals("") && !xCoord.getText().equals("") && !stationNameText.getText().equals("")){
+		else if (!yCoord.getText().equals("") && !xCoord.getText().equals("") && !stationNameText.getText().trim().equals("")){
 			boolean bol = false;
     		for (Node temp : nodeList) {
     			if (temp.getName().toLowerCase().equals(stationNameText.getText().toLowerCase().trim())) {
