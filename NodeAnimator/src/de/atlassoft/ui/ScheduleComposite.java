@@ -2,6 +2,8 @@ package de.atlassoft.ui;
 
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -35,6 +37,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import de.atlassoft.application.ApplicationService;
+import de.atlassoft.model.ModelService;
 import de.atlassoft.model.Node;
 import de.atlassoft.model.ScheduleScheme;
 import de.atlassoft.model.ScheduleType;
@@ -91,6 +94,22 @@ public class ScheduleComposite {
 		idleTime = new ArrayList<Integer>();
 		arrivalTime = new ArrayList<Integer>();
 		nodeList = new ArrayList<Node>();
+		
+		applicationService.getModel().addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if (!scheduleComposite.isDisposed()) {
+					if (evt.getPropertyName().equals(ModelService.TRAIN_TYPES_PROPNAME)) {
+						trainTypeCombo.removeAll();
+					for (TrainType temp: ScheduleComposite.this.applicationService.getModel().getTrainTypes()) {
+						trainTypeCombo.add(temp.getName());
+						}
+					trainTypeCombo.select(0);
+					}
+				}
+			}
+		});
+		
 		initUI();
 	}
 	
@@ -138,6 +157,11 @@ public class ScheduleComposite {
 		    		return;
 		    	}
 		    	for (ScheduleScheme schedule : applicationService.getModel().getActiveScheduleSchemes()) {
+		    		if (schedule.getID().toLowerCase().equals(nameField.getText().toLowerCase().trim())) {
+		    			twice = true;
+		    		}
+		    	}
+		      	for (ScheduleScheme schedule : applicationService.getModel().getPassiveScheduleSchemes()) {
 		    		if (schedule.getID().toLowerCase().equals(nameField.getText().toLowerCase().trim())) {
 		    			twice = true;
 		    		}

@@ -1,7 +1,5 @@
 package de.atlassoft.ui;
 
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
@@ -16,7 +14,7 @@ import de.atlassoft.util.ImageHelper;
  * This is the class for the about dialog where the name of our
  * company and the date is shown.
  * 
- * @author Silvan Haeussermann
+ * @author Silvan Haeussermann, Tobias Ilg
  */
 public class AboutDialog {
 	
@@ -43,7 +41,7 @@ public class AboutDialog {
 	}
 	
 	private void initUI(Display display){
-		//TODO: Verschönern, falls die Zeit reicht
+		
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.marginTop = 10;
 		rowLayout.marginBottom = 10;
@@ -55,10 +53,6 @@ public class AboutDialog {
 		shell.setLayout(rowLayout);
 		
 		Label atlassoft = new Label(shell, SWT.NONE);
-//		Font f = new Font (display,"Calibri", 26, SWT.BOLD);
-//		atlassoft.setText("ATLASsoft");
-//		atlassoft.setFont(f);
-//		atlassoft.setSize(20, 10);
 		atlassoft.setImage(ImageHelper.getImage("ATLASsoftLogo"));
 		
 		
